@@ -1,9 +1,11 @@
 # Tactical plan — 2026-10-06
 
-Status: planning checkpoint; final review synthesis recorded below. This session
-establishes a local repo, validates tooling, and runs bounded experiments; it does
-not implement the full M0–M1 assignment in the charter. The charter remains the
-product baseline. Source: /home/s/org/projects/orbital-logistics/charter.md.
+Status: **M0 initial implementation complete**; M1 manual editor is next. See
+[M0 evidence](evidence/m0.md) for the executable scene, canonical runner tests,
+independent calibration and conservative surface policy. No manual-editor human
+gate has been passed. The remainder records the reviewed planning checkpoint and
+the intended subsequent sequence. The charter remains the product baseline.
+Source: /home/s/org/projects/orbital-logistics/charter.md.
 
 ## Recommendation
 

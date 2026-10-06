@@ -15,7 +15,7 @@ repos:
         files: ^spikes/numerics/
       - id: ty
         name: numerics ty typecheck
-        entry: uv run --project spikes/numerics ty check spikes/numerics/oracle.py
+        entry: uv run --project spikes/numerics ty check spikes/numerics
         language: system
         pass_filenames: false
         files: ^spikes/numerics/.*\.py$

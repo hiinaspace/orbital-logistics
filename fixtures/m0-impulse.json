@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "id": "m0-impulse-v1",
+  "burns": [{"id": "departure", "t": 1.137, "referenceBodyId": "primary", "basis": "radial-transverse-ccw-v1", "radial": 0, "transverse": 0.12}]
+}

@@ -1,0 +1,14 @@
+{
+  "scenario": {
+    "schemaVersion": 1,
+    "modelVersion": "rk4-canonical-v1",
+    "id": "m0-central-body-v1",
+    "units": {"length": "reference orbital radius", "time": "inverse circular angular rate", "mass": "reference dry mass"},
+    "epoch": 0,
+    "duration": 16,
+    "policy": {"step": 0.001953125, "maxNodes": 16384, "maxSubdivision": 16},
+    "bodies": [{"id": "primary", "mu": 1, "radius": 0.08, "rail": {"kind": "fixed", "position": [0, 0]}}],
+    "ship": {"id": "ship", "state": [1, 0, 0, 1], "dryMass": 1, "cargoMass": 0.2, "propellant": 0.6, "tankCapacity": 0.6, "exhaustVelocity": 3}
+  },
+  "program": {"schemaVersion": 1, "id": "m0-coast-v1", "burns": []}
+}

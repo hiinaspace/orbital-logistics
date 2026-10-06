@@ -1,0 +1,95 @@
+{
+  "environment": {
+    "host": "natto",
+    "node": "v22.22.1",
+    "cpu": "AMD Ryzen 7 7840U w/ Radeon  780M Graphics"
+  },
+  "model": "rk4-canonical-v1",
+  "twoBody": [
+    {
+      "eccentricity": 0,
+      "horizon": 6.283185307179586,
+      "steps": [
+        {
+          "step": 0.0078125,
+          "maxStateError": 7.924327531710993e-10,
+          "maxPositionError": 5.706976992693577e-10,
+          "maxEnergyDrift": 2.5406343695522082e-12,
+          "maxAngularDrift": 2.5406343695522082e-12
+        },
+        {
+          "step": 0.00390625,
+          "maxStateError": 4.8503947198926085e-11,
+          "maxPositionError": 3.5097762328932695e-11,
+          "maxEnergyDrift": 8.215650382226158e-14,
+          "maxAngularDrift": 8.215650382226158e-14
+        },
+        {
+          "step": 0.001953125,
+          "maxStateError": 3.024873276976718e-12,
+          "maxPositionError": 2.1957206238387247e-12,
+          "maxEnergyDrift": 4.107825191113079e-15,
+          "maxAngularDrift": 3.9968028886505635e-15
+        }
+      ]
+    },
+    {
+      "eccentricity": 0.6,
+      "horizon": 6.283185307179586,
+      "steps": [
+        {
+          "step": 0.0078125,
+          "maxStateError": 0.0000017184407446796975,
+          "maxPositionError": 5.097361168052692e-7,
+          "maxEnergyDrift": 1.3563064227284372e-8,
+          "maxAngularDrift": 5.587995621780806e-10
+        },
+        {
+          "step": 0.00390625,
+          "maxStateError": 1.0119628184042386e-7,
+          "maxPositionError": 2.996473086542826e-8,
+          "maxEnergyDrift": 7.974884086436873e-10,
+          "maxAngularDrift": 1.7467360891032513e-11
+        },
+        {
+          "step": 0.001953125,
+          "maxStateError": 6.13249971318191e-9,
+          "maxPositionError": 1.8138381140146345e-9,
+          "maxEnergyDrift": 4.8282156051016045e-11,
+          "maxAngularDrift": 5.49671419491915e-13
+        }
+      ]
+    },
+    {
+      "eccentricity": 1.5,
+      "horizon": 4,
+      "steps": [
+        {
+          "step": 0.0078125,
+          "maxStateError": 4.5376106875222445e-8,
+          "maxPositionError": 4.382914803044184e-8,
+          "maxEnergyDrift": 7.653724987122246e-9,
+          "maxAngularDrift": 7.177858307727547e-11
+        },
+        {
+          "step": 0.00390625,
+          "maxStateError": 2.7973337946762253e-9,
+          "maxPositionError": 2.702492705783034e-9,
+          "maxEnergyDrift": 4.6440229439781433e-10,
+          "maxAngularDrift": 2.2315482794965646e-12
+        },
+        {
+          "step": 0.001953125,
+          "maxStateError": 1.736093942133151e-10,
+          "maxPositionError": 1.6774011881211185e-10,
+          "maxEnergyDrift": 2.8590685374751956e-11,
+          "maxAngularDrift": 7.860379014346108e-14
+        }
+      ]
+    }
+  ],
+  "canonicalPartitionDifference": 0,
+  "fixture": "fixtures/m0-circular.json",
+  "impulseProgram": "fixtures/m0-impulse.json",
+  "limitations": "Short bounded fixtures only; conservative near-surface stop; no refined collision epoch or apsis locator."
+}

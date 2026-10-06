@@ -1,0 +1,49 @@
+{
+  "method": "DOP853",
+  "branches": [
+    {
+      "name": "coast",
+      "oracleRefinement": 3.4293630432659057e-12,
+      "propellantAfter": 0.6,
+      "steps": [
+        {
+          "step": 0.0078125,
+          "maxPositionError": 6.571108209459171e-08,
+          "maxStateError": 7.11722804752628e-08
+        },
+        {
+          "step": 0.00390625,
+          "maxPositionError": 4.001897670751107e-09,
+          "maxStateError": 4.332808946370126e-09
+        },
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.467734454639678e-10,
+          "maxStateError": 2.671255134944158e-10
+        }
+      ]
+    },
+    {
+      "name": "impulse",
+      "oracleRefinement": 2.864425647138895e-12,
+      "propellantAfter": 0.5892157811710601,
+      "steps": [
+        {
+          "step": 0.0078125,
+          "maxPositionError": 2.737925112199622e-08,
+          "maxStateError": 2.9080510647880427e-08
+        },
+        {
+          "step": 0.00390625,
+          "maxPositionError": 1.6652018166715253e-09,
+          "maxStateError": 1.7674072620389107e-09
+        },
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.0281059957301703e-10,
+          "maxStateError": 1.090830660955414e-10
+        }
+      ]
+    }
+  ]
+}
