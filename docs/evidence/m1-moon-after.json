@@ -1,0 +1,122 @@
+{
+  "scenario": {
+    "schemaVersion": 1,
+    "modelVersion": "rk4-canonical-v1",
+    "id": "m0-binary-regression-v1",
+    "units": {
+      "length": "reference orbital radius",
+      "time": "inverse circular angular rate",
+      "mass": "reference dry mass"
+    },
+    "epoch": 0,
+    "duration": 6,
+    "policy": {
+      "step": 0.001953125,
+      "maxNodes": 16384,
+      "maxSubdivision": 16
+    },
+    "bodies": [
+      {
+        "id": "primary",
+        "mu": 0.98,
+        "radius": 0.08,
+        "rail": {
+          "kind": "circular",
+          "center": [
+            0,
+            0
+          ],
+          "radius": 0.02,
+          "rate": 1,
+          "phase": 3.141592653589793
+        }
+      },
+      {
+        "id": "moon",
+        "mu": 0.02,
+        "radius": 0.025,
+        "rail": {
+          "kind": "circular",
+          "center": [
+            0,
+            0
+          ],
+          "radius": 0.98,
+          "rate": 1,
+          "phase": 0
+        }
+      }
+    ],
+    "ship": {
+      "id": "ship",
+      "state": [
+        1.831588135066403,
+        1.1554226967793058,
+        -0.8584162086330673,
+        0.2617205685421131
+      ],
+      "dryMass": 1,
+      "cargoMass": 0.2,
+      "propellant": 0.6,
+      "tankCapacity": 0.6,
+      "exhaustVelocity": 3
+    }
+  },
+  "program": {
+    "schemaVersion": 1,
+    "id": "binary-coast-v1",
+    "burns": [
+      {
+        "id": "burn-1",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.0016486763551805822,
+        "transverse": -0.017952210623649344
+      }
+    ]
+  },
+  "editor": {
+    "schemaVersion": 1,
+    "baseline": {
+      "schemaVersion": 1,
+      "id": "binary-coast-v1",
+      "burns": []
+    },
+    "accepted": {
+      "schemaVersion": 1,
+      "id": "binary-coast-v1",
+      "burns": [
+        {
+          "id": "burn-1",
+          "t": 1.137,
+          "referenceBodyId": "primary",
+          "basis": "radial-transverse-ccw-v1",
+          "radial": -0.0016486763551805822,
+          "transverse": -0.017952210623649344
+        }
+      ]
+    },
+    "previewEpoch": 2.5,
+    "snapshot": {
+      "schemaVersion": 1,
+      "modelVersion": "rk4-canonical-v1",
+      "requestedEpoch": 0,
+      "anchor": {
+        "t": 0,
+        "y": [
+          1.831588135066403,
+          1.1554226967793058,
+          -0.8584162086330673,
+          0.2617205685421131
+        ],
+        "propellant": 0.6,
+        "burnCursor": 0,
+        "nextGridIndex": 1,
+        "status": "running",
+        "detail": ""
+      },
+      "ledger": []
+    }
+  }
+}

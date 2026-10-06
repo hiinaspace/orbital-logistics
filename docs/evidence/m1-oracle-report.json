@@ -1,0 +1,3503 @@
+{
+  "environment": {
+    "host": "natto",
+    "node": "v22.22.1"
+  },
+  "acceptance": {
+    "position": 1e-05,
+    "eventTime": 1e-05,
+    "relativeVelocity": 1e-05,
+    "pixelScale": 5000
+  },
+  "cases": [
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.25,
+        "transverse": -0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 7.994092549199388e-10,
+          "maxStateError": 9.371207637344877e-10,
+          "maxOracleRefinement": 8.315615135040493e-11,
+          "maxEventTimeError": 1.0809131367750524e-10,
+          "maxEventSpeedError": 8.374589910431496e-11,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 4.8391185934266593e-11,
+          "maxStateError": 5.607053838549671e-11,
+          "maxOracleRefinement": 8.315615135040493e-11,
+          "maxEventTimeError": 1.5862866575844237e-11,
+          "maxEventSpeedError": 5.28221910656157e-12,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.999402943942758e-12,
+          "maxStateError": 3.4625273812161673e-12,
+          "maxOracleRefinement": 8.315615135040493e-11,
+          "maxEventTimeError": 1.5862866575844237e-11,
+          "maxEventSpeedError": 3.3595348725157237e-13,
+          "eventsChecked": 4
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.25,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 6.8426866938357e-12,
+          "maxStateError": 7.569063145626984e-12,
+          "maxOracleRefinement": 7.917630050426009e-14,
+          "maxEventTimeError": 1.982747299678067e-11,
+          "maxEventSpeedError": 6.814548925149211e-13,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 4.2271817111047024e-13,
+          "maxStateError": 4.682668686775312e-13,
+          "maxOracleRefinement": 7.917630050426009e-14,
+          "maxEventTimeError": 1.982747299678067e-11,
+          "maxEventSpeedError": 3.9745984281580604e-14,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 4.460416858176688e-14,
+          "maxStateError": 5.83098602751639e-14,
+          "maxOracleRefinement": 7.917630050426009e-14,
+          "maxEventTimeError": 1.982747299678067e-11,
+          "maxEventSpeedError": 6.217248937900877e-15,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.25,
+        "transverse": 0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 4.970589568042736e-12,
+          "maxStateError": 5.013682885150424e-12,
+          "maxOracleRefinement": 1.663297882675673e-14,
+          "maxEventTimeError": 2.3751001165805974e-12,
+          "maxEventSpeedError": 1.0147438445073931e-13,
+          "eventsChecked": 1
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.734493733948588e-13,
+          "maxStateError": 2.744589390616678e-13,
+          "maxOracleRefinement": 1.663297882675673e-14,
+          "maxEventTimeError": 2.3751001165805974e-12,
+          "maxEventSpeedError": 6.8833827526759706e-15,
+          "eventsChecked": 1
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 9.103835571576356e-14,
+          "maxStateError": 9.320549177159213e-14,
+          "maxOracleRefinement": 1.663297882675673e-14,
+          "maxEventTimeError": 2.3751001165805974e-12,
+          "maxEventSpeedError": 8.881784197001252e-16,
+          "eventsChecked": 1
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": -0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 6.496393335375533e-10,
+          "maxStateError": 7.918665803850313e-10,
+          "maxOracleRefinement": 4.1559598301762994e-11,
+          "maxEventTimeError": 1.0030376529357454e-10,
+          "maxEventSpeedError": 7.110179112146398e-11,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 3.938392724543556e-11,
+          "maxStateError": 4.721702441597678e-11,
+          "maxOracleRefinement": 4.1559598301762994e-11,
+          "maxEventTimeError": 2.7037039274091512e-11,
+          "maxEventSpeedError": 4.469091763326105e-12,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.4365437185838643e-12,
+          "maxStateError": 2.9149745984809045e-12,
+          "maxOracleRefinement": 4.1559598301762994e-11,
+          "maxEventTimeError": 2.7037039274091512e-11,
+          "maxEventSpeedError": 2.9554136915521667e-13,
+          "eventsChecked": 4
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.281912239122358e-12,
+          "maxStateError": 3.3891448504894544e-12,
+          "maxOracleRefinement": 3.652604223689316e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.352046537978253e-13,
+          "maxStateError": 1.866984565442364e-13,
+          "maxOracleRefinement": 3.652604223689316e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 9.696392365923357e-14,
+          "maxStateError": 1.332295211367944e-13,
+          "maxOracleRefinement": 3.652604223689316e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.921460926804247e-12,
+          "maxStateError": 2.9635489876790172e-12,
+          "maxOracleRefinement": 1.0511414297682208e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.8662106018507785e-13,
+          "maxStateError": 1.8974400901481643e-13,
+          "maxOracleRefinement": 1.0511414297682208e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.0632427822446324e-13,
+          "maxStateError": 2.101883560981434e-13,
+          "maxOracleRefinement": 1.0511414297682208e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.25,
+        "transverse": -0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 7.639159496068471e-10,
+          "maxStateError": 9.158119906863923e-10,
+          "maxOracleRefinement": 7.707457753359765e-12,
+          "maxEventTimeError": 8.710188126315188e-11,
+          "maxEventSpeedError": 8.374434479208048e-11,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 4.646328139916435e-11,
+          "maxStateError": 5.523670695030901e-11,
+          "maxOracleRefinement": 7.707457753359765e-12,
+          "maxEventTimeError": 2.8894220349684474e-11,
+          "maxEventSpeedError": 5.269118474870993e-12,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.8686094038678593e-12,
+          "maxStateError": 3.39835012763531e-12,
+          "maxOracleRefinement": 7.707457753359765e-12,
+          "maxEventTimeError": 2.8894220349684474e-11,
+          "maxEventSpeedError": 3.5438318946034997e-13,
+          "eventsChecked": 4
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.25,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 6.067753088655037e-12,
+          "maxStateError": 7.13976670120882e-12,
+          "maxOracleRefinement": 3.731257916775908e-14,
+          "maxEventTimeError": 2.8387958650455403e-11,
+          "maxEventSpeedError": 6.850076061937216e-13,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 3.372935935931544e-13,
+          "maxStateError": 3.9184854143502117e-13,
+          "maxOracleRefinement": 3.731257916775908e-14,
+          "maxEventTimeError": 2.8387958650455403e-11,
+          "maxEventSpeedError": 3.6193270602780103e-14,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 4.825809500194531e-14,
+          "maxStateError": 6.886106289312861e-14,
+          "maxOracleRefinement": 3.731257916775908e-14,
+          "maxEventTimeError": 2.8387958650455403e-11,
+          "maxEventSpeedError": 7.549516567451064e-15,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.25,
+        "transverse": 0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.7388488667327217e-12,
+          "maxStateError": 1.7651442219201682e-12,
+          "maxOracleRefinement": 3.4653366920464297e-15,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 4.805406418616647e-14,
+          "maxStateError": 4.838546444968348e-14,
+          "maxOracleRefinement": 3.4653366920464297e-15,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.6223363540591742e-13,
+          "maxStateError": 1.6579412734050378e-13,
+          "maxOracleRefinement": 3.4653366920464297e-15,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.25,
+        "transverse": -0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 7.711508904258621e-10,
+          "maxStateError": 9.18519963201968e-10,
+          "maxOracleRefinement": 2.825595221528281e-11,
+          "maxEventTimeError": 9.600231720696684e-11,
+          "maxEventSpeedError": 8.359823944203981e-11,
+          "eventsChecked": 3
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 4.6835513413738014e-11,
+          "maxStateError": 5.529325518210292e-11,
+          "maxOracleRefinement": 2.825595221528281e-11,
+          "maxEventTimeError": 2.0413004619967978e-11,
+          "maxEventSpeedError": 5.267786207241443e-12,
+          "eventsChecked": 3
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.865900332167053e-12,
+          "maxStateError": 3.35897320534197e-12,
+          "maxOracleRefinement": 2.825595221528281e-11,
+          "maxEventTimeError": 2.0413004619967978e-11,
+          "maxEventSpeedError": 3.319566843629218e-13,
+          "eventsChecked": 3
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.25,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 6.274031651951538e-12,
+          "maxStateError": 6.930213436086623e-12,
+          "maxOracleRefinement": 1.4194935131434624e-14,
+          "maxEventTimeError": 3.183142638363279e-11,
+          "maxEventSpeedError": 8.899547765395255e-13,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 4.54618705654753e-13,
+          "maxStateError": 5.060891865856746e-13,
+          "maxOracleRefinement": 1.4194935131434624e-14,
+          "maxEventTimeError": 2.637623452983462e-11,
+          "maxEventSpeedError": 5.395683899678261e-14,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 4.615284044853691e-14,
+          "maxStateError": 4.953443419909633e-14,
+          "maxOracleRefinement": 1.4194935131434624e-14,
+          "maxEventTimeError": 2.637623452983462e-11,
+          "maxEventSpeedError": 2.886579864025407e-15,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.25,
+        "transverse": 0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 4.478544895800983e-12,
+          "maxStateError": 4.506995941188115e-12,
+          "maxOracleRefinement": 7.888835772847054e-15,
+          "maxEventTimeError": 9.731992989259197e-12,
+          "maxEventSpeedError": 3.184119634624949e-13,
+          "eventsChecked": 1
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.656307831771385e-13,
+          "maxStateError": 2.6720131191241536e-13,
+          "maxOracleRefinement": 7.888835772847054e-15,
+          "maxEventTimeError": 9.731992989259197e-12,
+          "maxEventSpeedError": 1.865174681370263e-14,
+          "eventsChecked": 1
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.0308706257071522e-13,
+          "maxStateError": 1.0629154868216153e-13,
+          "maxOracleRefinement": 7.888835772847054e-15,
+          "maxEventTimeError": 9.731992989259197e-12,
+          "maxEventSpeedError": 5.10702591327572e-15,
+          "eventsChecked": 1
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": -0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 6.101193000905416e-10,
+          "maxStateError": 7.704379951164499e-10,
+          "maxOracleRefinement": 5.5071197149382715e-11,
+          "maxEventTimeError": 8.819966978990124e-11,
+          "maxEventSpeedError": 7.085976250209569e-11,
+          "eventsChecked": 3
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 3.709863606049544e-11,
+          "maxStateError": 4.641907687003001e-11,
+          "maxOracleRefinement": 5.5071197149382715e-11,
+          "maxEventTimeError": 2.999200887643383e-11,
+          "maxEventSpeedError": 4.4575454438700035e-12,
+          "eventsChecked": 3
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.2877747875283063e-12,
+          "maxStateError": 2.8440346154825905e-12,
+          "maxOracleRefinement": 5.5071197149382715e-11,
+          "maxEventTimeError": 2.8215652037033578e-11,
+          "maxEventSpeedError": 3.0309088572266774e-13,
+          "eventsChecked": 3
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.234813815778156e-12,
+          "maxStateError": 3.3267674222538954e-12,
+          "maxOracleRefinement": 1.3544749338486826e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.311278205731451e-13,
+          "maxStateError": 1.7357189271889904e-13,
+          "maxOracleRefinement": 1.3544749338486826e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.2255942313934926e-13,
+          "maxStateError": 1.6866499685482085e-13,
+          "maxOracleRefinement": 1.3544749338486826e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.4270486323280444e-12,
+          "maxStateError": 3.46743239966401e-12,
+          "maxOracleRefinement": 2.502910105648195e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.5289895999573636e-13,
+          "maxStateError": 2.5712699973400304e-13,
+          "maxOracleRefinement": 2.502910105648195e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 3.9824676394753594e-14,
+          "maxStateError": 4.1797252088883595e-14,
+          "maxOracleRefinement": 2.502910105648195e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.25,
+        "transverse": -0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.878461093485333e-10,
+          "maxStateError": 9.014050262707597e-10,
+          "maxOracleRefinement": 6.936879406530435e-11,
+          "maxEventTimeError": 7.500489118683618e-11,
+          "maxEventSpeedError": 8.343770119267901e-11,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.3811869099006623e-11,
+          "maxStateError": 5.3108045349266726e-11,
+          "maxOracleRefinement": 6.936879406530435e-11,
+          "maxEventTimeError": 2.6368685013267168e-11,
+          "maxEventSpeedError": 5.253797397131166e-12,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.396955150372907e-12,
+          "maxStateError": 2.77736549614102e-12,
+          "maxOracleRefinement": 6.936879406530435e-11,
+          "maxEventTimeError": 2.6368685013267168e-11,
+          "maxEventSpeedError": 3.270717030545711e-13,
+          "eventsChecked": 4
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.25,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 4.574433857866605e-12,
+          "maxStateError": 6.977953366678986e-12,
+          "maxOracleRefinement": 2.4824119630123185e-14,
+          "maxEventTimeError": 1.6280310433103296e-11,
+          "maxEventSpeedError": 4.82280881897168e-13,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.786946400384989e-13,
+          "maxStateError": 4.297278092550471e-13,
+          "maxOracleRefinement": 2.4824119630123185e-14,
+          "maxEventTimeError": 1.6280310433103296e-11,
+          "maxEventSpeedError": 2.930988785010413e-14,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 6.750541726419833e-14,
+          "maxStateError": 9.968240228502363e-14,
+          "maxOracleRefinement": 2.4824119630123185e-14,
+          "maxEventTimeError": 1.6280310433103296e-11,
+          "maxEventSpeedError": 1.3766765505351941e-14,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.25,
+        "transverse": 0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.1227541478142113e-12,
+          "maxStateError": 3.1641583471688406e-12,
+          "maxOracleRefinement": 4.136977623555962e-15,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.6441863242032666e-13,
+          "maxStateError": 1.6562555499152955e-13,
+          "maxOracleRefinement": 4.136977623555962e-15,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.7546286667373243e-14,
+          "maxStateError": 2.8384279809213278e-14,
+          "maxOracleRefinement": 4.136977623555962e-15,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 3.5,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.25,
+        "transverse": -0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.8883618417150747e-10,
+          "maxStateError": 4.6001207944306044e-10,
+          "maxOracleRefinement": 1.490802425366647e-11,
+          "maxEventTimeError": 6.494627058373226e-11,
+          "maxEventSpeedError": 8.293521425173367e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.3837065281858537e-11,
+          "maxStateError": 2.7494533195071102e-11,
+          "maxOracleRefinement": 1.490802425366647e-11,
+          "maxEventTimeError": 6.73860967026485e-12,
+          "maxEventSpeedError": 5.1947335322211075e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.4520767410386398e-12,
+          "maxStateError": 1.6762187007877219e-12,
+          "maxOracleRefinement": 1.490802425366647e-11,
+          "maxEventTimeError": 6.73860967026485e-12,
+          "maxEventSpeedError": 3.228528555609955e-13,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 3.5,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.25,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 7.5497593107516e-12,
+          "maxStateError": 8.496557038800612e-12,
+          "maxOracleRefinement": 1.9368221713308615e-14,
+          "maxEventTimeError": 1.9817925078768894e-11,
+          "maxEventSpeedError": 6.095124405192109e-13,
+          "eventsChecked": 1
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 3.7444985239923196e-13,
+          "maxStateError": 4.161460021951594e-13,
+          "maxOracleRefinement": 1.9368221713308615e-14,
+          "maxEventTimeError": 1.9817925078768894e-11,
+          "maxEventSpeedError": 3.708144902248023e-14,
+          "eventsChecked": 1
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 9.91464748407639e-15,
+          "maxStateError": 1.1594258433824823e-14,
+          "maxOracleRefinement": 1.9368221713308615e-14,
+          "maxEventTimeError": 1.9817925078768894e-11,
+          "maxEventSpeedError": 4.440892098500626e-16,
+          "eventsChecked": 1
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 3.5,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.25,
+        "transverse": 0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 5.801772960618221e-12,
+          "maxStateError": 5.9230329268970565e-12,
+          "maxOracleRefinement": 1.3419839197854043e-14,
+          "maxEventTimeError": 2.3732127374387346e-12,
+          "maxEventSpeedError": 4.60964599824365e-13,
+          "eventsChecked": 1
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 3.25765961379848e-13,
+          "maxStateError": 3.3054349003227316e-13,
+          "maxOracleRefinement": 1.3419839197854043e-14,
+          "maxEventTimeError": 2.3732127374387346e-12,
+          "maxEventSpeedError": 3.4861002973229915e-14,
+          "eventsChecked": 1
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 9.91464748407639e-15,
+          "maxStateError": 1.2002224663134048e-14,
+          "maxOracleRefinement": 1.3419839197854043e-14,
+          "maxEventTimeError": 2.3732127374387346e-12,
+          "maxEventSpeedError": 5.551115123125783e-15,
+          "eventsChecked": 1
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 3.5,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": -0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.175065193831519e-10,
+          "maxStateError": 3.8330201583379645e-10,
+          "maxOracleRefinement": 6.1959744882972956e-12,
+          "maxEventTimeError": 5.715605766454246e-11,
+          "maxEventSpeedError": 7.026823567457541e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.951479144277463e-11,
+          "maxStateError": 2.331343485603481e-11,
+          "maxOracleRefinement": 6.1959744882972956e-12,
+          "maxEventTimeError": 1.4027889960743778e-11,
+          "maxEventSpeedError": 4.392708419231894e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.1786585367911366e-12,
+          "maxStateError": 1.3995261584667392e-12,
+          "maxOracleRefinement": 6.1959744882972956e-12,
+          "maxEventTimeError": 1.4027889960743778e-11,
+          "maxEventSpeedError": 2.533528942194607e-13,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 3.5,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.2631794281658728e-12,
+          "maxStateError": 3.3637361852747252e-12,
+          "maxOracleRefinement": 2.0571282248134352e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.3449133071249214e-13,
+          "maxStateError": 1.7866689816918747e-13,
+          "maxOracleRefinement": 2.0571282248134352e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.1590226226904178e-13,
+          "maxStateError": 1.5894703362744847e-13,
+          "maxOracleRefinement": 2.0571282248134352e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 3.5,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 4.735668558983657e-12,
+          "maxStateError": 4.813260312608758e-12,
+          "maxOracleRefinement": 1.2203997509148765e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.7160620965156577e-13,
+          "maxStateError": 2.7454457328736755e-13,
+          "maxOracleRefinement": 1.2203997509148765e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 5.2757443007149346e-14,
+          "maxStateError": 5.73049602268422e-14,
+          "maxOracleRefinement": 1.2203997509148765e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 3.5,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.25,
+        "transverse": -0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.8938919623243166e-10,
+          "maxStateError": 4.5104642936775714e-10,
+          "maxOracleRefinement": 5.232053372921147e-12,
+          "maxEventTimeError": 8.712230936680498e-11,
+          "maxEventSpeedError": 8.298939313533538e-11,
+          "eventsChecked": 3
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.3908514608656688e-11,
+          "maxStateError": 2.755109667797894e-11,
+          "maxOracleRefinement": 5.232053372921147e-12,
+          "maxEventTimeError": 2.8914648453337577e-11,
+          "maxEventSpeedError": 5.196287844455583e-12,
+          "eventsChecked": 3
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.518592082726205e-12,
+          "maxStateError": 1.7601882479980807e-12,
+          "maxOracleRefinement": 5.232053372921147e-12,
+          "maxEventTimeError": 2.8914648453337577e-11,
+          "maxEventSpeedError": 3.177458296477198e-13,
+          "eventsChecked": 3
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 3.5,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.25,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.8279278693579085e-12,
+          "maxStateError": 3.1480773162183987e-12,
+          "maxOracleRefinement": 2.945252404979334e-14,
+          "maxEventTimeError": 4.289901767151605e-12,
+          "maxEventSpeedError": 3.2307490016592055e-14,
+          "eventsChecked": 1
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.773975202210056e-13,
+          "maxStateError": 1.9412191844045866e-13,
+          "maxOracleRefinement": 2.945252404979334e-14,
+          "maxEventTimeError": 4.289901767151605e-12,
+          "maxEventSpeedError": 1.1102230246251565e-15,
+          "eventsChecked": 1
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 7.176198573685039e-14,
+          "maxStateError": 1.0033185659700668e-13,
+          "maxOracleRefinement": 2.945252404979334e-14,
+          "maxEventTimeError": 4.289901767151605e-12,
+          "maxEventSpeedError": 2.220446049250313e-16,
+          "eventsChecked": 1
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 3.5,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.25,
+        "transverse": 0.25
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 5.125821620577722e-12,
+          "maxStateError": 5.179508946372626e-12,
+          "maxOracleRefinement": 1.0482442501450782e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.977246398682957e-13,
+          "maxStateError": 2.994675638572387e-13,
+          "maxOracleRefinement": 1.0482442501450782e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.05051911106139e-14,
+          "maxStateError": 2.2246228602978133e-14,
+          "maxOracleRefinement": 1.0482442501450782e-14,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": -0.03
+      },
+      "status": "unsupported-approach",
+      "oracleSurfaceTermination": true,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 6.396887226605429e-10,
+          "maxStateError": 7.152613624071982e-08,
+          "maxOracleRefinement": 4.86096745604091e-13,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.2177849912919427e-10,
+          "maxStateError": 1.2659960027846925e-08,
+          "maxOracleRefinement": 4.860980039432265e-13,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.3410388141662816e-11,
+          "maxStateError": 1.3461425889781501e-09,
+          "maxOracleRefinement": 4.858421232368252e-13,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 4.507161789089966e-08,
+          "maxStateError": 8.211256498969235e-08,
+          "maxOracleRefinement": 1.4616203878254685e-11,
+          "maxEventTimeError": 3.803121462198078e-08,
+          "maxEventSpeedError": 2.1151963291998754e-08,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.7528642130451938e-09,
+          "maxStateError": 5.0458022852431136e-09,
+          "maxOracleRefinement": 1.4616203878254685e-11,
+          "maxEventTimeError": 2.3499184820252594e-09,
+          "maxEventSpeedError": 1.2982255270799214e-09,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.697731403113118e-10,
+          "maxStateError": 3.1222783327346426e-10,
+          "maxOracleRefinement": 1.4616203878254685e-11,
+          "maxEventTimeError": 1.566702323430036e-10,
+          "maxEventSpeedError": 8.026801445737419e-11,
+          "eventsChecked": 4
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 8.715564914653678e-11,
+          "maxStateError": 9.397832344319134e-11,
+          "maxOracleRefinement": 6.942403119866138e-13,
+          "maxEventTimeError": 3.1386004906153175e-11,
+          "maxEventSpeedError": 4.728217817273617e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 5.484708684214826e-12,
+          "maxStateError": 5.9154185808311554e-12,
+          "maxOracleRefinement": 6.942403119866138e-13,
+          "maxEventTimeError": 2.864686265979799e-11,
+          "maxEventSpeedError": 2.9907187837352467e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 8.225961858947639e-13,
+          "maxStateError": 8.888434926591413e-13,
+          "maxOracleRefinement": 6.942403119866138e-13,
+          "maxEventTimeError": 2.864686265979799e-11,
+          "maxEventSpeedError": 2.714939384418358e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.690090228477934e-07,
+          "maxStateError": 2.58171851416137e-07,
+          "maxOracleRefinement": 2.6575988772792367e-11,
+          "maxEventTimeError": 1.2601128585032484e-07,
+          "maxEventSpeedError": 7.345254515733757e-08,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 6.449591717204964e-08,
+          "maxStateError": 1.0777089481680562e-07,
+          "maxOracleRefinement": 2.6575988772792367e-11,
+          "maxEventTimeError": 5.0457741984644144e-08,
+          "maxEventSpeedError": 3.092286848804804e-08,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 3.834844781543519e-09,
+          "maxStateError": 6.590573548333913e-09,
+          "maxOracleRefinement": 2.6575988772792367e-11,
+          "maxEventTimeError": 3.076706001081675e-09,
+          "maxEventSpeedError": 1.8924004585585408e-09,
+          "eventsChecked": 4
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.467734454639678e-10,
+          "maxStateError": 2.671255134944158e-10,
+          "maxOracleRefinement": 3.739671918958482e-12,
+          "maxEventTimeError": 1.465090271324243e-10,
+          "maxEventSpeedError": 1.7002732555226885e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.4960271326237995e-11,
+          "maxStateError": 1.6188500210493967e-11,
+          "maxOracleRefinement": 3.739671918958482e-12,
+          "maxEventTimeError": 3.009370530548949e-11,
+          "maxEventSpeedError": 1.056044141023449e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 3.02728413283638e-13,
+          "maxStateError": 3.207629055806478e-13,
+          "maxOracleRefinement": 3.739671918958482e-12,
+          "maxEventTimeError": 2.9098945475425353e-11,
+          "maxEventSpeedError": 4.1522341120980855e-14,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.5061179557921105e-12,
+          "maxStateError": 3.656107314321335e-12,
+          "maxOracleRefinement": 4.5218253929999665e-14,
+          "maxEventTimeError": 2.8411051289367606e-11,
+          "maxEventSpeedError": 4.2512660058946494e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.2013435388881908e-13,
+          "maxStateError": 2.29640663335982e-13,
+          "maxOracleRefinement": 4.5218253929999665e-14,
+          "maxEventTimeError": 2.8411051289367606e-11,
+          "maxEventSpeedError": 4.946043574705072e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 4.532756586943673e-14,
+          "maxStateError": 4.633417606925609e-14,
+          "maxOracleRefinement": 4.5218253929999665e-14,
+          "maxEventTimeError": 2.8411051289367606e-11,
+          "maxEventSpeedError": 4.994782365486117e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 5.236970337652477e-10,
+          "maxStateError": 5.601559305876396e-10,
+          "maxOracleRefinement": 3.2060443378491227e-12,
+          "maxEventTimeError": 1.2226220036382074e-11,
+          "maxEventSpeedError": 4.803424324961725e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 3.245662069134994e-11,
+          "maxStateError": 3.470798475604291e-11,
+          "maxOracleRefinement": 3.2060443378491227e-12,
+          "maxEventTimeError": 1.2226220036382074e-11,
+          "maxEventSpeedError": 3.760325384405405e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.1340280403853195e-12,
+          "maxStateError": 2.2840583754699288e-12,
+          "maxOracleRefinement": 3.2060443378491227e-12,
+          "maxEventTimeError": 1.2226220036382074e-11,
+          "maxEventSpeedError": 3.821609695364714e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 4.609609381060402e-12,
+          "maxStateError": 4.907554617895262e-12,
+          "maxOracleRefinement": 3.218429173743982e-14,
+          "maxEventTimeError": 8.833822562337446e-12,
+          "maxEventSpeedError": 2.428390821762605e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.6190732963645685e-13,
+          "maxStateError": 2.8104895510016397e-13,
+          "maxOracleRefinement": 3.218429173743982e-14,
+          "maxEventTimeError": 8.833822562337446e-12,
+          "maxEventSpeedError": 2.0119461652257087e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.4797919433694162e-13,
+          "maxStateError": 1.527893266478411e-13,
+          "maxOracleRefinement": 3.218429173743982e-14,
+          "maxEventTimeError": 8.833822562337446e-12,
+          "maxEventSpeedError": 1.9821921881657545e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.0865747693990052e-12,
+          "maxStateError": 1.1441987968245607e-12,
+          "maxOracleRefinement": 3.401343589396975e-14,
+          "maxEventTimeError": 2.4483970406663502e-11,
+          "maxEventSpeedError": 8.67383942448896e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 6.95393223220129e-14,
+          "maxStateError": 7.459451788779911e-14,
+          "maxOracleRefinement": 3.401343589396975e-14,
+          "maxEventTimeError": 2.4483970406663502e-11,
+          "maxEventSpeedError": 8.499256853866655e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 5.4651849029955574e-14,
+          "maxStateError": 5.505508553116281e-14,
+          "maxOracleRefinement": 3.401343589396975e-14,
+          "maxEventTimeError": 2.4483970406663502e-11,
+          "maxEventSpeedError": 8.491873870752897e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.6345320586541886e-07,
+          "maxStateError": 2.3051224653290674e-07,
+          "maxOracleRefinement": 2.3685612567706392e-11,
+          "maxEventTimeError": 1.8601109985638686e-08,
+          "maxEventSpeedError": 4.8214078285369055e-08,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 9.785946500150484e-09,
+          "maxStateError": 1.3876725304862883e-08,
+          "maxOracleRefinement": 2.3685612567706392e-11,
+          "maxEventTimeError": 9.64188728858062e-10,
+          "maxEventSpeedError": 2.9477873475514116e-09,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 5.979097477952605e-10,
+          "maxStateError": 8.502312074312158e-10,
+          "maxOracleRefinement": 2.3685612567706392e-11,
+          "maxEventTimeError": 3.2866154242583434e-11,
+          "maxEventSpeedError": 1.8221935071949247e-10,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": 0
+      },
+      "status": "unsupported-approach",
+      "oracleSurfaceTermination": true,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.6751067344864984e-09,
+          "maxStateError": 1.7859399879788366e-07,
+          "maxOracleRefinement": 2.482267641506937e-11,
+          "maxEventTimeError": 1.5558780930291505e-09,
+          "maxEventSpeedError": 1.0553139195845773e-09,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 3.640449094803245e-10,
+          "maxStateError": 2.512164094558725e-08,
+          "maxOracleRefinement": 2.4822700581305055e-11,
+          "maxEventTimeError": 1.006865701924653e-10,
+          "maxEventSpeedError": 6.39212849318227e-11,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 3.0847085713506195e-11,
+          "maxStateError": 2.4550046701996614e-09,
+          "maxOracleRefinement": 2.482270468961042e-11,
+          "maxEventTimeError": 2.4562130107597113e-11,
+          "maxEventSpeedError": 4.412248344465297e-12,
+          "eventsChecked": 4
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 4.211437574038379e-10,
+          "maxStateError": 4.642238196623189e-10,
+          "maxOracleRefinement": 5.188265373726621e-12,
+          "maxEventTimeError": 8.525580241780517e-11,
+          "maxEventSpeedError": 5.210565312552262e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.596802137136147e-11,
+          "maxStateError": 2.862195322483956e-11,
+          "maxOracleRefinement": 5.188265373726621e-12,
+          "maxEventTimeError": 2.7048141504337764e-11,
+          "maxEventSpeedError": 1.595878984517185e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.2396659595615731e-12,
+          "maxStateError": 1.364660056484805e-12,
+          "maxOracleRefinement": 5.188265373726621e-12,
+          "maxEventTimeError": 2.7048141504337764e-11,
+          "maxEventSpeedError": 1.584044007074681e-11,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": -0.03
+      },
+      "status": "unsupported-approach",
+      "oracleSurfaceTermination": true,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.6790551082098533e-08,
+          "maxStateError": 7.22051135112784e-07,
+          "maxOracleRefinement": 3.898844391540273e-10,
+          "maxEventTimeError": 2.1597219124203093e-08,
+          "maxEventSpeedError": 6.492718584993895e-09,
+          "eventsChecked": 5
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.660262921381454e-09,
+          "maxStateError": 4.5641086666085335e-08,
+          "maxOracleRefinement": 3.898751663362776e-10,
+          "maxEventTimeError": 1.3409531263164354e-09,
+          "maxEventSpeedError": 3.0105251624945595e-10,
+          "eventsChecked": 5
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 9.834485176876146e-11,
+          "maxStateError": 2.80191985166554e-09,
+          "maxOracleRefinement": 3.898707177336306e-10,
+          "maxEventTimeError": 6.038458622015241e-11,
+          "maxEventSpeedError": 1.1148504341917942e-10,
+          "eventsChecked": 5
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.466857441673773e-10,
+          "maxStateError": 2.670302242296057e-10,
+          "maxOracleRefinement": 3.529769056217698e-12,
+          "maxEventTimeError": 1.4644196966173695e-10,
+          "maxEventSpeedError": 1.6999179841548084e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.4813026140527976e-11,
+          "maxStateError": 1.602779046104576e-11,
+          "maxOracleRefinement": 3.529769056217698e-12,
+          "maxEventTimeError": 3.0026647834802134e-11,
+          "maxEventSpeedError": 1.0506040482027856e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.297538953347288e-13,
+          "maxStateError": 2.411706801067667e-13,
+          "maxOracleRefinement": 3.529769056217698e-12,
+          "maxEventTimeError": 2.9099833653845053e-11,
+          "maxEventSpeedError": 3.697042672001771e-14,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.5953671939854856e-11,
+          "maxStateError": 2.6919885203932127e-11,
+          "maxOracleRefinement": 2.6085584813021153e-13,
+          "maxEventTimeError": 1.7744028468769102e-11,
+          "maxEventSpeedError": 3.017475158628713e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.5088995504805317e-12,
+          "maxStateError": 1.5634047733672488e-12,
+          "maxOracleRefinement": 2.6085584813021153e-13,
+          "maxEventTimeError": 1.7744028468769102e-11,
+          "maxEventSpeedError": 9.767742170652127e-13,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.994310809836307e-14,
+          "maxStateError": 3.315072085198685e-14,
+          "maxOracleRefinement": 2.6085584813021153e-13,
+          "maxEventTimeError": 1.7744028468769102e-11,
+          "maxEventSpeedError": 1.2353451595004117e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 9.830796671418787e-11,
+          "maxStateError": 1.0385536101502245e-10,
+          "maxOracleRefinement": 2.023994670212651e-12,
+          "maxEventTimeError": 1.3486989303146402e-11,
+          "maxEventSpeedError": 1.3745449223279138e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 5.9960767896565e-12,
+          "maxStateError": 6.332300694510511e-12,
+          "maxOracleRefinement": 2.023994670212651e-12,
+          "maxEventTimeError": 1.3486989303146402e-11,
+          "maxEventSpeedError": 6.6342487059500854e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.8181414546223697e-13,
+          "maxStateError": 2.969420369532896e-13,
+          "maxOracleRefinement": 2.023994670212651e-12,
+          "maxEventTimeError": 1.3486989303146402e-11,
+          "maxEventSpeedError": 6.744382829992901e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.2154610764365543e-11,
+          "maxStateError": 1.2453305933847751e-11,
+          "maxOracleRefinement": 1.2430136759655123e-13,
+          "maxEventTimeError": 2.0810020373573934e-11,
+          "maxEventSpeedError": 5.396794122702886e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 7.100195239972699e-13,
+          "maxStateError": 7.285128254356876e-13,
+          "maxOracleRefinement": 1.2430136759655123e-13,
+          "maxEventTimeError": 2.0810020373573934e-11,
+          "maxEventSpeedError": 6.416644993123555e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.523337655355518e-13,
+          "maxStateError": 1.6111711921374795e-13,
+          "maxOracleRefinement": 1.2430136759655123e-13,
+          "maxEventTimeError": 2.0810020373573934e-11,
+          "maxEventSpeedError": 6.48658904367494e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 5.3969109495152326e-12,
+          "maxStateError": 5.59359257353421e-12,
+          "maxOracleRefinement": 7.805193427625491e-14,
+          "maxEventTimeError": 2.6918467455061545e-11,
+          "maxEventSpeedError": 6.139588837328347e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 3.4827276893837854e-13,
+          "maxStateError": 3.601655364711516e-13,
+          "maxOracleRefinement": 7.805193427625491e-14,
+          "maxEventTimeError": 2.6918467455061545e-11,
+          "maxEventSpeedError": 4.830913447051444e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 3.058739991552273e-14,
+          "maxStateError": 3.1066797506336313e-14,
+          "maxOracleRefinement": 7.805193427625491e-14,
+          "maxEventTimeError": 2.6918467455061545e-11,
+          "maxEventSpeedError": 4.741207426661731e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 7.597025832670753e-10,
+          "maxStateError": 8.896010998423379e-10,
+          "maxOracleRefinement": 9.80443224863281e-12,
+          "maxEventTimeError": 1.0198197841759793e-10,
+          "maxEventSpeedError": 7.1812555901829e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 4.6331975161026196e-11,
+          "maxStateError": 5.4248128350566975e-11,
+          "maxOracleRefinement": 9.80443224863281e-12,
+          "maxEventTimeError": 1.4433343409336885e-11,
+          "maxEventSpeedError": 8.066880496926387e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.5462381019529924e-12,
+          "maxStateError": 1.8016376994075905e-12,
+          "maxOracleRefinement": 9.80443224863281e-12,
+          "maxEventTimeError": 1.4433343409336885e-11,
+          "maxEventSpeedError": 8.68571881085245e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 4.4286022320643284e-10,
+          "maxStateError": 4.896799821260487e-10,
+          "maxOracleRefinement": 5.1450534319874246e-12,
+          "maxEventTimeError": 1.3471401771880664e-10,
+          "maxEventSpeedError": 8.283662644714695e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.6975812602188158e-11,
+          "maxStateError": 2.982015986636801e-11,
+          "maxOracleRefinement": 5.1450534319874246e-12,
+          "maxEventTimeError": 1.829869589187183e-11,
+          "maxEventSpeedError": 1.1229239760268683e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 9.328536653166024e-13,
+          "maxStateError": 1.0253042022799061e-12,
+          "maxOracleRefinement": 5.1450534319874246e-12,
+          "maxEventTimeError": 1.829869589187183e-11,
+          "maxEventSpeedError": 1.1230794072503159e-11,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.269661903945605e-10,
+          "maxStateError": 3.530818077517707e-10,
+          "maxOracleRefinement": 3.456887866508657e-12,
+          "maxEventTimeError": 1.1540990385583427e-10,
+          "maxEventSpeedError": 5.562128535530064e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.9954888119879002e-11,
+          "maxStateError": 2.154312711206944e-11,
+          "maxOracleRefinement": 3.456887866508657e-12,
+          "maxEventTimeError": 1.9891643887604005e-11,
+          "maxEventSpeedError": 1.6592283103022964e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 6.628123748307731e-13,
+          "maxStateError": 7.082253087665987e-13,
+          "maxOracleRefinement": 3.456887866508657e-12,
+          "maxEventTimeError": 1.9891643887604005e-11,
+          "maxEventSpeedError": 5.795364188543317e-13,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.3832733082202997e-10,
+          "maxStateError": 3.758994787798856e-10,
+          "maxOracleRefinement": 5.478950919547529e-12,
+          "maxEventTimeError": 1.6403145508547823e-10,
+          "maxEventSpeedError": 7.566969273398172e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.044497422852e-11,
+          "maxStateError": 2.2708386262301487e-11,
+          "maxOracleRefinement": 5.478950919547529e-12,
+          "maxEventTimeError": 1.0591527654923993e-11,
+          "maxEventSpeedError": 5.7835958244822905e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 5.738659477150398e-13,
+          "maxStateError": 6.317361979150757e-13,
+          "maxOracleRefinement": 5.478950919547529e-12,
+          "maxEventTimeError": 1.0591527654923993e-11,
+          "maxEventSpeedError": 5.367928324062632e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.4735178190444176e-10,
+          "maxStateError": 2.677566322493697e-10,
+          "maxOracleRefinement": 3.645825117528999e-12,
+          "maxEventTimeError": 1.4648993129640075e-10,
+          "maxEventSpeedError": 1.6968759730673355e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.4922935540360042e-11,
+          "maxStateError": 1.614781409367989e-11,
+          "maxOracleRefinement": 3.645825117528999e-12,
+          "maxEventTimeError": 3.007460946946594e-11,
+          "maxEventSpeedError": 1.0540457395791236e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.657051651494486e-13,
+          "maxStateError": 2.804876552713969e-13,
+          "maxOracleRefinement": 3.645825117528999e-12,
+          "maxEventTimeError": 2.9098057297005653e-11,
+          "maxEventSpeedError": 4.0190073491430667e-14,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.0382524634470924e-10,
+          "maxStateError": 2.1740579454677286e-10,
+          "maxOracleRefinement": 2.695852318442887e-12,
+          "maxEventTimeError": 1.0202061417885488e-11,
+          "maxEventSpeedError": 1.7273737995537886e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.2293513939546732e-11,
+          "maxStateError": 1.3106735590238976e-11,
+          "maxOracleRefinement": 2.695852318442887e-12,
+          "maxEventTimeError": 1.0202061417885488e-11,
+          "maxEventSpeedError": 3.5988989566249074e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 3.0557658508161777e-13,
+          "maxStateError": 3.213833190000666e-13,
+          "maxOracleRefinement": 2.695852318442887e-12,
+          "maxEventTimeError": 1.0202061417885488e-11,
+          "maxEventSpeedError": 2.8417268538305507e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.790110562472102e-10,
+          "maxStateError": 1.937909884527986e-10,
+          "maxOracleRefinement": 2.927983251898198e-12,
+          "maxEventTimeError": 1.2136514015992361e-11,
+          "maxEventSpeedError": 1.2920886582890034e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.0572544532270795e-11,
+          "maxStateError": 1.1438208267532574e-11,
+          "maxOracleRefinement": 2.927983251898198e-12,
+          "maxEventTimeError": 1.2136514015992361e-11,
+          "maxEventSpeedError": 4.992450897134404e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 7.56865640789583e-14,
+          "maxStateError": 7.994196043357296e-14,
+          "maxOracleRefinement": 2.927983251898198e-12,
+          "maxEventTimeError": 1.2136514015992361e-11,
+          "maxEventSpeedError": 5.290878846153646e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.504159408804231e-10,
+          "maxStateError": 1.6037788910846314e-10,
+          "maxOracleRefinement": 2.3814169103128496e-12,
+          "maxEventTimeError": 1.1716405623474202e-11,
+          "maxEventSpeedError": 1.3649636976253987e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 9.000362066462554e-12,
+          "maxStateError": 9.591302869705375e-12,
+          "maxOracleRefinement": 2.3814169103128496e-12,
+          "maxEventTimeError": 1.1716405623474202e-11,
+          "maxEventSpeedError": 4.671374398412809e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 8.031510207919937e-14,
+          "maxStateError": 8.468556797311462e-14,
+          "maxOracleRefinement": 2.3814169103128496e-12,
+          "maxEventTimeError": 1.1716405623474202e-11,
+          "maxEventSpeedError": 4.945821530100147e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.3552979434199252e-10,
+          "maxStateError": 1.4309030114100594e-10,
+          "maxOracleRefinement": 2.746035658980984e-12,
+          "maxEventTimeError": 2.1730173216383264e-11,
+          "maxEventSpeedError": 1.4342749210527472e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 8.158262726238807e-12,
+          "maxStateError": 8.609102797256288e-12,
+          "maxOracleRefinement": 2.746035658980984e-12,
+          "maxEventTimeError": 2.1730173216383264e-11,
+          "maxEventSpeedError": 9.509504295124316e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.594104365261235e-13,
+          "maxStateError": 1.6553667295716112e-13,
+          "maxOracleRefinement": 2.746035658980984e-12,
+          "maxEventTimeError": 2.1730173216383264e-11,
+          "maxEventSpeedError": 9.771738973540778e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": -0.03
+      },
+      "status": "unsupported-approach",
+      "oracleSurfaceTermination": true,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 7.244725158218294e-10,
+          "maxStateError": 8.130987386293822e-08,
+          "maxOracleRefinement": 6.214830659573477e-13,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.4592242734250717e-10,
+          "maxStateError": 1.5345388608785456e-08,
+          "maxOracleRefinement": 6.214906024993415e-13,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.6498661298647276e-11,
+          "maxStateError": 1.6847238555001341e-09,
+          "maxOracleRefinement": 6.212663810364897e-13,
+          "maxEventTimeError": 0,
+          "maxEventSpeedError": 0,
+          "eventsChecked": 0
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.2279409884969977e-07,
+          "maxStateError": 4.829877577442812e-07,
+          "maxOracleRefinement": 2.8392531207852693e-11,
+          "maxEventTimeError": 1.1445326020265156e-07,
+          "maxEventSpeedError": 1.1375212283226688e-07,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 3.759738131697775e-08,
+          "maxStateError": 8.329662720168615e-08,
+          "maxOracleRefinement": 2.8392531207852693e-11,
+          "maxEventTimeError": 2.201949467206532e-08,
+          "maxEventSpeedError": 2.3476282251522207e-08,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.269324638440016e-09,
+          "maxStateError": 5.039679019834087e-09,
+          "maxOracleRefinement": 2.8392531207852693e-11,
+          "maxEventTimeError": 1.355775047784391e-09,
+          "maxEventSpeedError": 1.4456809083185362e-09,
+          "eventsChecked": 4
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.996728662325803e-09,
+          "maxStateError": 7.941131416755683e-09,
+          "maxOracleRefinement": 1.9258474708197465e-11,
+          "maxEventTimeError": 5.570206518257237e-09,
+          "maxEventSpeedError": 5.064360042439375e-10,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.468948011510008e-10,
+          "maxStateError": 4.898479844268916e-10,
+          "maxOracleRefinement": 1.9258474708197465e-11,
+          "maxEventTimeError": 3.3151703604517024e-10,
+          "maxEventSpeedError": 3.22697424337548e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.4886639040966567e-11,
+          "maxStateError": 2.9503237927084575e-11,
+          "maxOracleRefinement": 1.9258474708197465e-11,
+          "maxEventTimeError": 4.047873147783321e-11,
+          "maxEventSpeedError": 2.1616042289451798e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 6.101524031078552e-08,
+          "maxStateError": 1.0034860386849385e-07,
+          "maxOracleRefinement": 2.2577567605578544e-11,
+          "maxEventTimeError": 4.357215299677364e-08,
+          "maxEventSpeedError": 1.70544230959635e-08,
+          "eventsChecked": 5
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 3.712909811720814e-09,
+          "maxStateError": 6.079416269074066e-09,
+          "maxOracleRefinement": 2.2577567605578544e-11,
+          "maxEventTimeError": 2.6521673746060515e-09,
+          "maxEventSpeedError": 1.043233444075753e-09,
+          "eventsChecked": 5
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.2736969469193366e-10,
+          "maxStateError": 3.7151061616852863e-10,
+          "maxOracleRefinement": 2.2577567605578544e-11,
+          "maxEventTimeError": 1.4923795532695294e-10,
+          "maxEventSpeedError": 6.405653785179766e-11,
+          "eventsChecked": 5
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.467734454639678e-10,
+          "maxStateError": 2.671255134944158e-10,
+          "maxOracleRefinement": 3.739671918958482e-12,
+          "maxEventTimeError": 1.465090271324243e-10,
+          "maxEventSpeedError": 1.7002732555226885e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.4960271326237995e-11,
+          "maxStateError": 1.6188500210493967e-11,
+          "maxOracleRefinement": 3.739671918958482e-12,
+          "maxEventTimeError": 3.009370530548949e-11,
+          "maxEventSpeedError": 1.056044141023449e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 3.02728413283638e-13,
+          "maxStateError": 3.207629055806478e-13,
+          "maxOracleRefinement": 3.739671918958482e-12,
+          "maxEventTimeError": 2.9098945475425353e-11,
+          "maxEventSpeedError": 4.1522341120980855e-14,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 8.119009167498537e-12,
+          "maxStateError": 8.308722758406206e-12,
+          "maxOracleRefinement": 3.463628946013845e-14,
+          "maxEventTimeError": 1.8677059898664083e-11,
+          "maxEventSpeedError": 4.106659456937223e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 4.1315818814628165e-13,
+          "maxStateError": 4.240962664821927e-13,
+          "maxOracleRefinement": 3.463628946013845e-14,
+          "maxEventTimeError": 1.8677059898664083e-11,
+          "maxEventSpeedError": 2.4106827645198337e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.3550834847364866e-13,
+          "maxStateError": 1.408052250866892e-13,
+          "maxOracleRefinement": 3.463628946013845e-14,
+          "maxEventTimeError": 1.8677059898664083e-11,
+          "maxEventSpeedError": 2.3163693185779266e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 8.53998565844104e-12,
+          "maxStateError": 9.054896883259735e-12,
+          "maxOracleRefinement": 8.315952594358161e-14,
+          "maxEventTimeError": 1.6647572209649297e-11,
+          "maxEventSpeedError": 3.945732629517806e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 5.387895295079931e-13,
+          "maxStateError": 5.696174831015853e-13,
+          "maxOracleRefinement": 8.315952594358161e-14,
+          "maxEventTimeError": 1.6647572209649297e-11,
+          "maxEventSpeedError": 3.687050664780145e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.4290170442234164e-13,
+          "maxStateError": 1.4892690106971698e-13,
+          "maxOracleRefinement": 8.315952594358161e-14,
+          "maxEventTimeError": 1.6647572209649297e-11,
+          "maxEventSpeedError": 3.659517133769441e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.713501979238887e-12,
+          "maxStateError": 2.8944151944806723e-12,
+          "maxOracleRefinement": 8.456117724772362e-15,
+          "maxEventTimeError": 1.3019807454384136e-11,
+          "maxEventSpeedError": 2.5228708011582057e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.761780871506222e-13,
+          "maxStateError": 1.8998203093696217e-13,
+          "maxOracleRefinement": 8.456117724772362e-15,
+          "maxEventTimeError": 1.3019807454384136e-11,
+          "maxEventSpeedError": 2.974842594483107e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 6.178109330460141e-14,
+          "maxStateError": 6.362614442329902e-14,
+          "maxOracleRefinement": 8.456117724772362e-15,
+          "maxEventTimeError": 1.3019807454384136e-11,
+          "maxEventSpeedError": 3.009259508246487e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 0,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.2506287808195567e-12,
+          "maxStateError": 1.3141946731501436e-12,
+          "maxOracleRefinement": 1.3387771779819091e-14,
+          "maxEventTimeError": 2.6437962930003778e-11,
+          "maxEventSpeedError": 8.29958324288782e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 7.413231074384623e-14,
+          "maxStateError": 7.865058924395138e-14,
+          "maxOracleRefinement": 1.3387771779819091e-14,
+          "maxEventTimeError": 2.6437962930003778e-11,
+          "maxEventSpeedError": 8.505141035897168e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 4.628125509211426e-14,
+          "maxStateError": 4.73525738357354e-14,
+          "maxOracleRefinement": 1.3387771779819091e-14,
+          "maxEventTimeError": 2.6437962930003778e-11,
+          "maxEventSpeedError": 8.51363424203555e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.4841952300664634e-07,
+          "maxStateError": 2.0945206592137633e-07,
+          "maxOracleRefinement": 2.6342700538367624e-11,
+          "maxEventTimeError": 1.7330848312013813e-08,
+          "maxEventSpeedError": 4.359098815243101e-08,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 8.900126469659608e-09,
+          "maxStateError": 1.262357515484538e-08,
+          "maxOracleRefinement": 2.6342700538367624e-11,
+          "maxEventTimeError": 9.162879344160046e-10,
+          "maxEventSpeedError": 2.6671134190081602e-09,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 5.439164447796133e-10,
+          "maxStateError": 7.735906603172019e-10,
+          "maxOracleRefinement": 2.6342700538367624e-11,
+          "maxEventTimeError": 4.317302071399354e-11,
+          "maxEventSpeedError": 1.6478463038538393e-10,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": 0
+      },
+      "status": "unsupported-approach",
+      "oracleSurfaceTermination": true,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 4.7566739542423284e-09,
+          "maxStateError": 1.7747408049821397e-07,
+          "maxOracleRefinement": 2.1649504036446023e-10,
+          "maxEventTimeError": 1.1926459819733282e-09,
+          "maxEventSpeedError": 7.328885553992137e-10,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.8711229979429147e-10,
+          "maxStateError": 1.4390536115154509e-08,
+          "maxOracleRefinement": 2.1649565335569324e-10,
+          "maxEventTimeError": 8.670042461744742e-11,
+          "maxEventSpeedError": 4.5141862470288174e-11,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.7834641898118234e-11,
+          "maxStateError": 1.0642025942603386e-09,
+          "maxOracleRefinement": 2.1649589811618039e-10,
+          "maxEventTimeError": 2.8899549420202675e-11,
+          "maxEventSpeedError": 6.7869043718360444e-12,
+          "eventsChecked": 4
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.1753975668374945e-10,
+          "maxStateError": 2.3540607785621423e-10,
+          "maxOracleRefinement": 3.1441620366036013e-12,
+          "maxEventTimeError": 8.251621608224013e-11,
+          "maxEventSpeedError": 2.493716344531549e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.3500307555468341e-11,
+          "maxStateError": 1.4607473473338196e-11,
+          "maxOracleRefinement": 3.1441620366036013e-12,
+          "maxEventTimeError": 2.4308555168772727e-11,
+          "maxEventSpeedError": 8.943734641775336e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 6.860500110909347e-13,
+          "maxStateError": 7.427546721716974e-13,
+          "maxOracleRefinement": 3.1441620366036013e-12,
+          "maxEventTimeError": 2.4308555168772727e-11,
+          "maxEventSpeedError": 9.360734409824545e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": -0.03
+      },
+      "status": "unsupported-approach",
+      "oracleSurfaceTermination": true,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 4.168187085722303e-09,
+          "maxStateError": 2.1868684159196826e-07,
+          "maxOracleRefinement": 6.807401515973978e-11,
+          "maxEventTimeError": 1.771876867451283e-09,
+          "maxEventSpeedError": 1.376495528671029e-09,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.1364736214830063e-10,
+          "maxStateError": 1.8883426053849687e-08,
+          "maxOracleRefinement": 6.807426547414427e-11,
+          "maxEventTimeError": 8.385470096072822e-11,
+          "maxEventSpeedError": 8.550890551184409e-11,
+          "eventsChecked": 4
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.2119476791782954e-11,
+          "maxStateError": 1.5981783982307697e-09,
+          "maxOracleRefinement": 6.80745005224403e-11,
+          "maxEventTimeError": 2.5647040047260816e-11,
+          "maxEventSpeedError": 1.1021628054663779e-11,
+          "eventsChecked": 4
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.466857441673773e-10,
+          "maxStateError": 2.670302242296057e-10,
+          "maxOracleRefinement": 3.529769056217698e-12,
+          "maxEventTimeError": 1.4644196966173695e-10,
+          "maxEventSpeedError": 1.6999179841548084e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.4813026140527976e-11,
+          "maxStateError": 1.602779046104576e-11,
+          "maxOracleRefinement": 3.529769056217698e-12,
+          "maxEventTimeError": 3.0026647834802134e-11,
+          "maxEventSpeedError": 1.0506040482027856e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.297538953347288e-13,
+          "maxStateError": 2.411706801067667e-13,
+          "maxOracleRefinement": 3.529769056217698e-12,
+          "maxEventTimeError": 2.9099833653845053e-11,
+          "maxEventSpeedError": 3.697042672001771e-14,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.0054676940225143e-11,
+          "maxStateError": 2.0697131677066707e-11,
+          "maxOracleRefinement": 2.4692102773981556e-13,
+          "maxEventTimeError": 2.4503066242687055e-11,
+          "maxEventSpeedError": 5.118683255034284e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.1545349251219849e-12,
+          "maxStateError": 1.1896976134502889e-12,
+          "maxOracleRefinement": 2.4692102773981556e-13,
+          "maxEventTimeError": 2.4503066242687055e-11,
+          "maxEventSpeedError": 6.531442053869796e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.4656991119047386e-13,
+          "maxStateError": 2.591124790462779e-13,
+          "maxOracleRefinement": 2.4692102773981556e-13,
+          "maxEventTimeError": 2.4503066242687055e-11,
+          "maxEventSpeedError": 6.650235917504688e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.2526229209776935e-10,
+          "maxStateError": 2.4199952758826214e-10,
+          "maxOracleRefinement": 3.2899345464597398e-12,
+          "maxEventTimeError": 1.9311663379539823e-11,
+          "maxEventSpeedError": 2.030853263335075e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.3600705090890244e-11,
+          "maxStateError": 1.4603518566640868e-11,
+          "maxOracleRefinement": 3.2899345464597398e-12,
+          "maxEventTimeError": 1.9311663379539823e-11,
+          "maxEventSpeedError": 1.0826006757724826e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 5.778565332870082e-13,
+          "maxStateError": 6.193236185516111e-13,
+          "maxOracleRefinement": 3.2899345464597398e-12,
+          "maxEventTimeError": 1.9311663379539823e-11,
+          "maxEventSpeedError": 1.1010081735207677e-11,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.4411501062568391e-11,
+          "maxStateError": 1.4758892768459894e-11,
+          "maxOracleRefinement": 2.0749842787121847e-13,
+          "maxEventTimeError": 1.7467360891032513e-11,
+          "maxEventSpeedError": 2.795541576006144e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 7.880977084266973e-13,
+          "maxStateError": 8.079942626807487e-13,
+          "maxOracleRefinement": 2.0749842787121847e-13,
+          "maxEventTimeError": 1.7467360891032513e-11,
+          "maxEventSpeedError": 1.7810197761036761e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 5.923932005587376e-14,
+          "maxStateError": 6.698178944148175e-14,
+          "maxOracleRefinement": 2.0749842787121847e-13,
+          "maxEventTimeError": 1.7467360891032513e-11,
+          "maxEventSpeedError": 2.0123902544355587e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 1.137,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 5.2633766255498116e-12,
+          "maxStateError": 5.473749516737658e-12,
+          "maxOracleRefinement": 3.7891993948040286e-14,
+          "maxEventTimeError": 2.1477930545188428e-11,
+          "maxEventSpeedError": 5.267564162636518e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 3.1833677839648936e-13,
+          "maxStateError": 3.4111539115664063e-13,
+          "maxOracleRefinement": 3.7891993948040286e-14,
+          "maxEventTimeError": 2.1477930545188428e-11,
+          "maxEventSpeedError": 4.632516592550928e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 3.88070196211135e-14,
+          "maxStateError": 4.012130231270128e-14,
+          "maxOracleRefinement": 3.7891993948040286e-14,
+          "maxEventTimeError": 2.1477930545188428e-11,
+          "maxEventSpeedError": 4.596545366553073e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 6.634065599540088e-10,
+          "maxStateError": 7.536143469748146e-10,
+          "maxOracleRefinement": 6.6076196179310254e-12,
+          "maxEventTimeError": 1.4171952500419138e-10,
+          "maxEventSpeedError": 9.69857527621798e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 4.0537195574867765e-11,
+          "maxStateError": 4.604355495098077e-11,
+          "maxOracleRefinement": 6.6076196179310254e-12,
+          "maxEventTimeError": 2.5304203177256568e-11,
+          "maxEventSpeedError": 1.617506129036883e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.5545976941825568e-12,
+          "maxStateError": 1.758234929115546e-12,
+          "maxOracleRefinement": 6.6076196179310254e-12,
+          "maxEventTimeError": 2.5304203177256568e-11,
+          "maxEventSpeedError": 1.5618839555031627e-11,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.4228248285168713e-10,
+          "maxStateError": 3.7201928898011956e-10,
+          "maxOracleRefinement": 3.863655051274547e-12,
+          "maxEventTimeError": 1.2365575230433024e-10,
+          "maxEventSpeedError": 6.2915228582483e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.0805036364727333e-11,
+          "maxStateError": 2.2606423202344572e-11,
+          "maxOracleRefinement": 3.863655051274547e-12,
+          "maxEventTimeError": 2.7780444611380517e-11,
+          "maxEventSpeedError": 3.65019126036259e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 6.484391038299693e-13,
+          "maxStateError": 6.976014305309277e-13,
+          "maxOracleRefinement": 3.863655051274547e-12,
+          "maxEventTimeError": 2.7780444611380517e-11,
+          "maxEventSpeedError": 4.012790100205166e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.03,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.2207506398746647e-10,
+          "maxStateError": 2.36649310962036e-10,
+          "maxOracleRefinement": 2.6522021476576184e-12,
+          "maxEventTimeError": 3.005062865213404e-11,
+          "maxEventSpeedError": 2.138977883703319e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.3475324223554185e-11,
+          "maxStateError": 1.435381365335661e-11,
+          "maxOracleRefinement": 2.6522021476576184e-12,
+          "maxEventTimeError": 3.005062865213404e-11,
+          "maxEventSpeedError": 5.241140854650439e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 3.863057069540703e-13,
+          "maxStateError": 4.0847448653619543e-13,
+          "maxOracleRefinement": 2.6522021476576184e-12,
+          "maxEventTimeError": 2.815703226133337e-11,
+          "maxEventSpeedError": 3.86779497318912e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 4.6558907944501126e-10,
+          "maxStateError": 5.244428483231746e-10,
+          "maxOracleRefinement": 5.563784694675103e-12,
+          "maxEventTimeError": 8.572564880182654e-11,
+          "maxEventSpeedError": 5.129252578228716e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 2.8191672116493743e-11,
+          "maxStateError": 3.1750678686222293e-11,
+          "maxOracleRefinement": 5.563784694675103e-12,
+          "maxEventTimeError": 2.751798788835913e-11,
+          "maxEventSpeedError": 1.641153879461399e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 8.44293507351412e-13,
+          "maxStateError": 9.428120361199962e-13,
+          "maxOracleRefinement": 5.563784694675103e-12,
+          "maxEventTimeError": 2.751798788835913e-11,
+          "maxEventSpeedError": 1.6405543590281013e-11,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.4735178190444176e-10,
+          "maxStateError": 2.677566322493697e-10,
+          "maxOracleRefinement": 3.645825117528999e-12,
+          "maxEventTimeError": 1.4648993129640075e-10,
+          "maxEventSpeedError": 1.6968759730673355e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.4922935540360042e-11,
+          "maxStateError": 1.614781409367989e-11,
+          "maxOracleRefinement": 3.645825117528999e-12,
+          "maxEventTimeError": 3.007460946946594e-11,
+          "maxEventSpeedError": 1.0540457395791236e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.657051651494486e-13,
+          "maxStateError": 2.804876552713969e-13,
+          "maxOracleRefinement": 3.645825117528999e-12,
+          "maxEventTimeError": 2.9098057297005653e-11,
+          "maxEventSpeedError": 4.0190073491430667e-14,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.658145864137099e-10,
+          "maxStateError": 1.7612562895320124e-10,
+          "maxOracleRefinement": 2.793965713027047e-12,
+          "maxEventTimeError": 2.3643309532417334e-11,
+          "maxEventSpeedError": 1.6419310355786365e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 9.939419335196408e-12,
+          "maxStateError": 1.0550967946815846e-11,
+          "maxOracleRefinement": 2.793965713027047e-12,
+          "maxEventTimeError": 2.3643309532417334e-11,
+          "maxEventSpeedError": 1.006661420888122e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.0850381528845498e-13,
+          "maxStateError": 2.17615331623379e-13,
+          "maxOracleRefinement": 2.793965713027047e-12,
+          "maxEventTimeError": 2.3643309532417334e-11,
+          "maxEventSpeedError": 9.653611243720661e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": -0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 3.1264287946548775e-10,
+          "maxStateError": 3.484695195041247e-10,
+          "maxOracleRefinement": 5.082890690175374e-12,
+          "maxEventTimeError": 1.729771881286979e-10,
+          "maxEventSpeedError": 6.4926286569289e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.8878653066542187e-11,
+          "maxStateError": 2.1036798897958282e-11,
+          "maxOracleRefinement": 5.082890690175374e-12,
+          "maxEventTimeError": 2.041966595811573e-11,
+          "maxEventSpeedError": 1.2942980021080075e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 2.666015145501112e-13,
+          "maxStateError": 2.887432474792022e-13,
+          "maxOracleRefinement": 5.082890690175374e-12,
+          "maxEventTimeError": 2.041966595811573e-11,
+          "maxEventSpeedError": 7.394085344003543e-13,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": 0
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.750382326849492e-10,
+          "maxStateError": 1.8846334280297334e-10,
+          "maxOracleRefinement": 2.888588018122256e-12,
+          "maxEventTimeError": 1.0729639399187363e-11,
+          "maxEventSpeedError": 1.3909096097108886e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.0535350270760305e-11,
+          "maxStateError": 1.13384028924847e-11,
+          "maxOracleRefinement": 2.888588018122256e-12,
+          "maxEventTimeError": 1.0729639399187363e-11,
+          "maxEventSpeedError": 2.9947155866238973e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.0461613652304212e-13,
+          "maxStateError": 1.0749490416290298e-13,
+          "maxOracleRefinement": 2.888588018122256e-12,
+          "maxEventTimeError": 1.0729639399187363e-11,
+          "maxEventSpeedError": 3.3362201889985954e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1",
+      "burn": {
+        "id": "domain-burn",
+        "t": 2.3,
+        "referenceBodyId": "moon",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.03,
+        "transverse": 0.03
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 1.2279572442808504e-10,
+          "maxStateError": 1.2987974411813977e-10,
+          "maxOracleRefinement": 2.3113687074756425e-12,
+          "maxEventTimeError": 1.155653350792818e-11,
+          "maxEventSpeedError": 1.2554957073973583e-11,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 7.340507308419776e-12,
+          "maxStateError": 7.759247612735836e-12,
+          "maxOracleRefinement": 2.3113687074756425e-12,
+          "maxEventTimeError": 1.155653350792818e-11,
+          "maxEventSpeedError": 5.532685420917005e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 9.433061395555265e-14,
+          "maxStateError": 1.0091878439025867e-13,
+          "maxOracleRefinement": 2.3113687074756425e-12,
+          "maxEventTimeError": 1.155653350792818e-11,
+          "maxEventSpeedError": 5.333511410299252e-12,
+          "eventsChecked": 2
+        }
+      ]
+    },
+    {
+      "scenarioId": "m1-orbit-v1-authored-check",
+      "burn": {
+        "id": "burn-1",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.1
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.328310232009771e-12,
+          "maxStateError": 2.535454247666825e-12,
+          "maxOracleRefinement": 3.1683837539612856e-14,
+          "maxEventTimeError": 9.966250047455105e-12,
+          "maxEventSpeedError": 9.314771176605063e-14,
+          "eventsChecked": 1
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.237623108577334e-13,
+          "maxStateError": 1.3561387044967756e-13,
+          "maxOracleRefinement": 3.1683837539612856e-14,
+          "maxEventTimeError": 9.966250047455105e-12,
+          "maxEventSpeedError": 5.10702591327572e-15,
+          "eventsChecked": 1
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.407905068194333e-13,
+          "maxStateError": 1.6929311247915275e-13,
+          "maxOracleRefinement": 3.1683837539612856e-14,
+          "maxEventTimeError": 9.966250047455105e-12,
+          "maxEventSpeedError": 8.215650382226158e-15,
+          "eventsChecked": 1
+        }
+      ]
+    },
+    {
+      "scenarioId": "m0-binary-regression-v1-authored-check",
+      "burn": {
+        "id": "burn-1",
+        "t": 1.137,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": -0.0016486763551805822,
+        "transverse": -0.017952210623649344
+      },
+      "status": "horizon",
+      "oracleSurfaceTermination": false,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.3693246073381732e-09,
+          "maxStateError": 2.8446263584608024e-09,
+          "maxOracleRefinement": 7.673191140717503e-12,
+          "maxEventTimeError": 3.5260594444253e-10,
+          "maxEventSpeedError": 2.710383029125296e-10,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.4567565223801037e-10,
+          "maxStateError": 1.7488991686995265e-10,
+          "maxOracleRefinement": 7.673191140717503e-12,
+          "maxEventTimeError": 4.048761326203021e-12,
+          "maxEventSpeedError": 5.962119686842016e-12,
+          "eventsChecked": 2
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 8.24637001275105e-12,
+          "maxStateError": 9.893617650388148e-12,
+          "maxOracleRefinement": 7.673191140717503e-12,
+          "maxEventTimeError": 4.048761326203021e-12,
+          "maxEventSpeedError": 2.1529444893531036e-12,
+          "eventsChecked": 2
+        }
+      ]
+    }
+  ],
+  "maxPositionError": 2.2279409884969977e-07,
+  "maxEventTimeError": 1.2601128585032484e-07,
+  "maxEventSpeedError": 1.1375212283226688e-07
+}

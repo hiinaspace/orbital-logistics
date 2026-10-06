@@ -3,8 +3,8 @@
 Published hobby identity: Hiina <hiina@hiina.space>.
 
 Read docs/charter.md and docs/plan.md. The charter is design intent; evidence in
- docs/evidence/ describes what was actually tested. This checkout starts with
-planning and bounded feasibility spikes, not a completed M0 or M1.
+ docs/evidence/ describes what was actually tested. M0 and the M1 manual editor
+are implemented; the full M1 human gate remains before local targeting.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

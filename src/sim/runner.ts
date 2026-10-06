@@ -9,6 +9,7 @@ export interface LedgerEntry {
 export interface Sample {
   t: number; y: State; propellant: number; burnCursor: number; status: Status; detail: string;
 }
+export interface CoastSegment { t0: number; y0: State; t1: number; y1: State }
 interface Node extends Sample { nextGridIndex: number }
 export interface Snapshot {
   schemaVersion: 1; modelVersion: typeof MODEL; requestedEpoch: number;
@@ -124,6 +125,20 @@ export class Runner {
     return this.advanceTo(Math.min(this.#requestedEpoch + dt, this.#bundle.scenario.epoch + this.#bundle.scenario.duration));
   }
   seek(t: number): Sample { return this.advanceTo(t); }
+  // Continuous coast brackets, with pre-impulse endpoints. Event diagnostics
+  // use these canonical brackets, never decimated display samples or burn jumps.
+  coastSegments(horizon: number): CoastSegment[] {
+    this.sample(horizon);
+    const segments: CoastSegment[] = [];
+    for (let i = 1; i < this.#nodes.length; i++) {
+      const a = this.#nodes[i - 1], b = this.#nodes[i];
+      if (a.t >= horizon || a.status !== 'running') break;
+      const end = Math.min(b.t, horizon);
+      segments.push({ t0: a.t, y0: [...a.y], t1: end,
+        y1: end === b.t && a.burnCursor === b.burnCursor ? [...b.y] : rk4(this.#bundle.scenario, a.t, a.y, end - a.t) });
+    }
+    return segments;
+  }
   reset(): Sample { this.#requestedEpoch = this.#bundle.scenario.epoch; return this.current; }
   snapshot(): Snapshot {
     const current = this.current, anchor = this.#nodes[this.#index(current.t)];

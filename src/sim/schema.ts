@@ -17,6 +17,7 @@ export interface Scenario {
 export interface Burn {
   id: string; t: number; referenceBodyId: string;
   basis: 'radial-transverse-ccw-v1'; radial: number; transverse: number;
+  snap?: { bodyId: string; kind: 'periapsis' | 'apoapsis'; window: [number, number]; resolvedEpoch: number };
 }
 export interface Program { schemaVersion: 1; id: string; burns: Burn[] }
 export interface Bundle { scenario: Scenario; program: Program }
@@ -83,8 +84,16 @@ export function validateBundle(value: unknown): Bundle {
     const b = object(value), t = finite(b.t, 'burn epoch', epoch), referenceBodyId = name(b.referenceBodyId);
     if (t <= previous || t > epoch + duration || !bodies.some(body => body.id === referenceBodyId) || b.basis !== 'radial-transverse-ccw-v1') throw new Error('Invalid burn order, reference or basis');
     previous = t;
-    return { id: name(b.id), t, referenceBodyId, basis: 'radial-transverse-ccw-v1',
+    const burn: Burn = { id: name(b.id), t, referenceBodyId, basis: 'radial-transverse-ccw-v1',
       radial: finite(b.radial, 'radial impulse'), transverse: finite(b.transverse, 'transverse impulse') };
+    if (b.snap !== undefined) {
+      const snap = object(b.snap), window = vector(snap.window, 2) as [number, number];
+      if ((snap.kind !== 'periapsis' && snap.kind !== 'apoapsis') || snap.bodyId !== referenceBodyId ||
+          window[0] < epoch || window[1] > epoch + duration || window[0] >= window[1] ||
+          t < window[0] || t > window[1] || snap.resolvedEpoch !== t) throw new Error('Invalid apsis provenance');
+      burn.snap = { bodyId: referenceBodyId, kind: snap.kind, window, resolvedEpoch: t };
+    }
+    return burn;
   });
   if (new Set(burns.map(b => b.id)).size !== burns.length) throw new Error('Duplicate burn ID');
   return { scenario, program: { schemaVersion: 1, id: name(p.id), burns } };

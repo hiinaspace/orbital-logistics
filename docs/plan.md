@@ -1,9 +1,11 @@
 # Tactical plan — 2026-10-06
 
-Status: **M0 initial implementation complete**; M1 manual editor is next. See
-[M0 evidence](evidence/m0.md) for the executable scene, canonical runner tests,
-independent calibration and conservative surface policy. No manual-editor human
-gate has been passed. The remainder records the reviewed planning checkpoint and
+Status: **M1 manual editor implemented and validated; full human gate pending**.
+The user passed the early M1b orbit-edit check on 2026-10-06: "Clear; continue
+validating the rest of M1." See [M1 evidence](evidence/m1.md) for queue/replay,
+refined diagnostics, calibration and interaction measurements, and
+[M0 evidence](evidence/m0.md) for the underlying runner. The full moon-pass,
+two-frame and execution gate remains before M2. The remainder records the reviewed planning checkpoint and
 the intended subsequent sequence. The charter remains the product baseline.
 Source: /home/s/org/projects/orbital-logistics/charter.md.
 

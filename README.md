@@ -3,12 +3,12 @@
 A trajectory-programming logistics puzzle experiment by Hiina. Browser-first,
 2D, visual maneuver editing; later cargo and synchronized reusable services.
 
-**Current checkpoint: M0 executable numerical sketch.** The browser runs one
-ship around a fixed primary using the shared headless simulation. Choose a
-circular coast or prepared transverse impulse; play/pause, advance, change
-playback speed, seek/reset, and save/load scenario/program/snapshot JSON.
-The forecast and execution share the same dynamics and event runner.
-Manual maneuver editing remains M1.
+**Current checkpoint: M1 manual editor, awaiting the full human gate.** Choose
+Orbit shaping or Moon encounter. Plan a trajectory, click its path to place a
+maneuver, click R or T, move the pointer, then click to commit (Escape cancels).
+Precision controls, ordered maneuvers, apsis snaps, undo/redo, synchronized frames,
+execution and JSON replay use the shared headless simulation. The early orbit-edit
+interaction passed user review; local targeting waits for the full M1 review.
 
 ## Run
 
@@ -27,12 +27,25 @@ npm run build
 npm run test:sim
 npm run test:browser
 npm run evidence:m0
+npm run evidence:m1
 ```
 
 `evidence:m0` regenerates the production-core analytic/convergence and independent
 SciPy DOP853 comparisons under `docs/evidence/m0-*`. The moving-body fixture is a
-headless regression, while the opening scene is two-body. See
-[M0 evidence and limits](docs/evidence/m0.md).
+headless regression. `evidence:m1` checks the bounded edit fixtures at three step
+sizes against SciPy, retaining authored before/after plans. See
+[M0 evidence](docs/evidence/m0.md) and [M1 evidence](docs/evidence/m1.md).
+
+Browser tests run a temporary server on loopback 4179, separate from the retained
+review preview on 4178. To check production assets and record interaction metrics:
+
+```sh
+npm run build
+PLAYWRIGHT_PREVIEW=1 npm run test:browser
+npm run preview -- --port 4178 --strictPort
+# In another terminal, with the preview running:
+node scripts/m1-browser-evidence.mjs
+```
 
 Retained planning spikes can still be reproduced separately:
 
@@ -60,13 +73,13 @@ uv run --project spikes/numerics pre-commit run --config spikes/numerics/.pre-co
 
 ## Next
 
-Build M1, the manual prefix of a 2D **Children of a Dead Earth astrogation-tutorial
-adaptation**, based on the installed tutorial resource study. Match selection,
-future hover/pin, maneuver-handle and reference-frame semantics before adding
-local targeting. Stop for hands-on editor review before M2.
+Complete the human M1 gate: deliberately revise a moon pass's altitude or timing,
+inspect it in two frames, and execute the queue. Revise unclear controls before
+building M2 local targeting.
 
 - [Tactical plan](docs/plan.md): build slices, temporal/interaction contract, M2–M6 gates.
 - [M0 evidence](docs/evidence/m0.md): simulation contract, measured accuracy, and supported limits.
+- [M1 evidence](docs/evidence/m1.md): manual editor, calibration, replay and interaction measurements.
 - [Captured charter](docs/charter.md): product baseline copied from the org vault.
 - [CoaDE reference](docs/evidence/coade-reference.md): installed tutorial observations and remaining UI unknowns.
 - [KSP/mod references](docs/evidence/ksp-reference.md): precision controls and encounter feedback.
