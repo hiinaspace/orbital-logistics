@@ -1,0 +1,13 @@
+OpenAI Codex v0.153.4
+--------
+workdir: /home/s/code/orbital-logistics
+model: gpt-6-astra
+provider: openai
+approval: on-request
+sandbox: read-only
+reasoning effort: xhigh
+reasoning summaries: none
+session id: 01a11367-e777-7400-9494-f26634b9294e
+--------
+Process exit code: 0
+Final output: astra-review.md (nonempty)

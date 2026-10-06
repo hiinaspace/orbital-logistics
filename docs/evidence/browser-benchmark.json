@@ -1,0 +1,18 @@
+{
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+  "horizon": 6,
+  "step": 0.001953125,
+  "branches": 1,
+  "measuredRuns": 9,
+  "discardedWarmups": 3,
+  "medianMs": 8.699999988079071,
+  "minMs": 5.699999988079071,
+  "maxMs": 12.300000011920929,
+  "endpoint": [
+    0.7482357034583544,
+    -1.5580704860339885,
+    0.6839597388017699,
+    0.16661461496731367
+  ],
+  "scope": "Pure allocation-heavy RK4 propagation and node storage on main thread; excludes worker transfer, pointer-to-paint, solver, path rendering and browser startup."
+}

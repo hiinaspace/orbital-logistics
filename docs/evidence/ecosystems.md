@@ -1,0 +1,52 @@
+# M0–M1 ecosystem choice
+
+Date: 2026-10-06. Scope: the charter's executable numerical sketch and manual encounter editor. This is a documentation research note, not a benchmark or install report.
+
+## Recommendation
+
+Use **vanilla TypeScript + Canvas 2D + ordinary DOM controls + Vite** for the authoritative M0–M1 app. Keep the simulation core pure and renderer-independent, initially on the main thread, with a clean call boundary so prediction can move to a worker after actual latency measurements. Do not start with React, a game engine, a Python runtime, or WASM. This is the shortest path to the charter's actual test: edit a burn in a browser, inspect the predicted encounter, switch frames, execute the same queue, and save/replay it.
+
+Use a small, separate **Python/SciPy script only if needed as an offline numerical cross-check or level-authoring aid**. It can independently propagate the same prescribed-source equations and refine continuous event times. Keep its input/output scenario format explicit and compare it against M0 fixtures; do not make its trajectory output the authority for the live editor. The oracle must implement the same force law, initial state, impulse epochs, units, and event definition to say anything meaningful.
+
+## Options against this milestone
+
+| Option | What it buys for M0–M1 | Cost or mismatch here | Disposition |
+|---|---|---|---|
+| TypeScript + Canvas 2D + Vite | Browser-native viewport and DOM controls; one language/runtime for editor, model, scenario JSON, and replay; a small static build. TypeScript provides a static checker over JavaScript, and Canvas 2D is a browser drawing surface. | Vite needs a supported Node version at development/build time (currently documented as Node 20.19+ or 22.12+). The integrator, event semantics, and tests still need to be implemented and validated; the stack supplies none of the orbital behavior. | **Recommended.** Smallest direct route to the charter's human editor gate. Use Canvas for paths/handles and DOM for controls, without framework scaffolding unless actual UI complexity earns it. |
+| Python + SciPy + desktop UI (for example Pygame) | `scipy.integrate.solve_ivp` supplies adaptive IVP methods, dense output, and continuous zero-crossing events with direction and occurrence/termination controls. Python is convenient for independent analysis and parameter sweeps. | A desktop editor would validate a different UI and delivery path, then require a second implementation or an application port. SciPy's solver's adaptive steps/dense interpolation and event callbacks do not automatically match the browser core's canonical stepping, discrete event ordering, snapshots, or queue execution. Pygame adds no shortcut for those semantics. | Keep Python as an optional offline oracle/authoring tool; do not build the M1 editor in it. |
+| Pyodide + SciPy in browser | Keeps Python and SciPy callable in-browser/WASM; current Pyodide docs list SciPy among supported packages and document a JS/Python FFI. A worker can keep longer Python work off the UI thread. | Adds a Python/WASM runtime, cross-language data/ownership boundary, package/runtime payload and async startup to a milestone whose force law is small. It preserves the SciPy/model seam; it does not make the browser core and SciPy event semantics identical. Worth a tiny spike only if an established Python implementation proves hard to reproduce. | Defer. Reconsider only against a measured need or concrete reusable validated Python work. |
+| REBOUND (native or compiled WASM) | Mature gravitational N-body domain library, several integrators including adaptive IAS15 and symplectic WHFast; test-particle support can be useful for orbital science. Official docs show a browser/WASM example. | The product model prescribes planet/moon ephemerides while numerically propagating ships under their time-dependent gravity. REBOUND's natural abstraction is an N-body simulation whose source bodies are integrated. Mapping the charter's prescribed rails, maneuver queue, and discrete event contract into that API would need a custom adapter and still would not supply the editor semantics. REBOUND is GPL-3.0-or-later, a material distribution constraint to decide before embedding in a game. | Not the M0/M1 core. Potential reference implementation only if its model is deliberately adapted and GPL distribution is acceptable. |
+| PyKEP / heyoka | PyKEP is a trajectory-design toolbox with useful Lambert, flyby, Kepler and CR3BP routines; its current propagation stack includes Heyoka Taylor integration and variational equations. Good later for fixture seeds, trajectory design, or an optimizer experiment. | The charter explicitly defers the rendezvous/route optimizer. Lambert/flyby patched-conic tools solve neighboring problems and do not produce the authoritative integrated ship path through the prescribed multi-source force field. PyKEP's clean-room integration would be nontrivial in browser; its C++/Python API is not the editor runtime. | Do not add as a runtime dependency. Later use only for an offline candidate generator or independent reference where the equations line up; verify packaging/license for the exact release if adopted. |
+
+## Model implications
+
+The required propagation is a low-dimensional ODE: a ship state under the sum of specified gravity sources evaluated at time `t`, plus discrete impulses at authored epochs. The bodies' rails are inputs, not the unknowns of an N-body solve. In M0, an independent two-body analytical/Kepler propagation is the cleanest oracle. In M1, SciPy can be a useful independent numeric oracle for selected planet–moon test cases, but only if the prescribed body positions are directly evaluated by the same formulas and every burn splits/restarts propagation at the same epoch. Compare states at common epochs and compare event roots separately; agreement between two solvers is evidence, not proof.
+
+SciPy's event machinery detects roots of continuous event functions and can refine event times inside an adaptive integration. The game also needs stable event identity/arming, deterministic tie order, save/replay, and identical prediction/execution behavior. Those are application semantics around the integrator, so they remain explicit in the TS model even if an oracle uses SciPy events. For the first apsis snap, define the event function from ship-relative state (`r·v = 0`) with a direction and named body, then test occurrence selection around impulse boundaries.
+
+REBOUND's test particles omit their backreaction but remain within a model where the massive particles are simulated. That is close to, but not identical with, prescribed planet/moon ephemerides. It is not automatically an independent check of this fixture merely because both say “test particle.” A bespoke source interpolation/force scheme would have to be implemented and compared.
+
+PyKEP's Lambert and flyby routines are useful for generating rough candidate encounters under patched-conic assumptions; they do not buy the interaction the first editor is meant to prove. A generated trajectory must still be propagated and measured in the app's actual force model before it can be treated as a fixture.
+
+## Small decision and follow-up gate
+
+1. Verify the actual Node/browser/tool versions in the new checkout before selecting pinned tool versions; Vite's current published minimum is not evidence that the checkout already has a compatible Node runtime.
+2. Implement M0's tiny TS model and compare a circular/elliptic case against an analytical two-body reference before adding editor work.
+3. If an independent M1 oracle would materially improve confidence, write one small Python script with `uv` and SciPy that reads the same scenario JSON; do not build a desktop UI. Preserve its exact version and comparison epochs in the evidence record.
+4. Add a worker, Pyodide, native/WASM solver, or additional analysis package only when measured editor latency or a reproduced numerical defect identifies the need. Do not infer that time warp requires larger steps or a faster integrator.
+
+## Sources
+
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro) and [TypeScript for JavaScript programmers](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html): TypeScript is a static typechecker layer over JavaScript, not a separate browser runtime.
+- [MDN Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API): browser canvas rendering surface.
+- [Vite Getting Started](https://vite.dev/guide/): current Node.js minimum, dev server, and static production build behavior.
+- [SciPy `solve_ivp`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html): adaptive initial-value solvers, dense output, event roots, direction and terminal controls.
+- [Pyodide](https://pyodide.org/en/stable/) and [packages built for Pyodide](https://pyodide.org/en/stable/usage/packages-in-pyodide.html): Python/WebAssembly support and current SciPy package availability. [Pyodide worker usage](https://pyodide.org/en/stable/usage/webworker.html) describes off-main-thread operation.
+- [REBOUND documentation](https://rebound.hanno-rein.de/), [test-particle example](https://rebound.hanno-rein.de/ipython_examples/Testparticles/), [IAS15](https://rebound.hanno-rein.de/integrators/ias15/), and [project README/license](https://github.com/hannorein/rebound): N-body abstraction, available integrators, test particles, WASM example context, and GPL-3.0-or-later licensing.
+- [PyKEP 3.0.2 propagation](https://esa.github.io/pykep/propagation.html), [Lambert](https://esa.github.io/pykep/lambert.html), and [flyby routines](https://esa.github.io/pykep/flyby.html): current trajectory-design APIs and propagation basis.
+- [PyKEP source license marker](https://github.com/esa/pykep/blob/master/src/lambert_problem.cpp): the inspected v3 source identifies MPL-2.0; check the exact release and transitive dependencies before distribution.
+- [SciPy licensing](https://docs.scipy.org/doc/scipy/dev/core-dev/index.html#licensing): modified BSD license.
+
+## Evidence limits
+
+No implementation or environment was tested for this comparison. In particular, this note does not establish actual Node/browser versions, clean install success, numerical agreement, package size/load latency, run-time performance, or suitability of any integrator for the encounter fixture. Those are checkout/M0 measurements, not documentation facts.

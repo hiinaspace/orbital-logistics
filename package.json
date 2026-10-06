@@ -1,0 +1,25 @@
+{
+  "name": "orbital-logistics",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "author": "Hiina <hiina@hiina.space>",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test:browser": "playwright test",
+    "spike:numerics": "tsx spikes/numerics/run.ts",
+    "spike:oracle": "uv run --project spikes/numerics python spikes/numerics/oracle.py"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vite": "8.3.3"
+  }
+}

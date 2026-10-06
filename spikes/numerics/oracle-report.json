@@ -1,0 +1,83 @@
+{
+  "environment": {
+    "python": "3.13.13",
+    "scipy": "1.18.1"
+  },
+  "method": "DOP853",
+  "tolerances": {
+    "rtol": 1e-12,
+    "atol": 1e-14,
+    "max_step": 0.05
+  },
+  "tightened": {
+    "rtol": 3e-14,
+    "atol": 1e-15,
+    "max_step": 0.01
+  },
+  "branches": [
+    {
+      "name": "baseline",
+      "functionEvaluations": 1991,
+      "tightFunctionEvaluations": 9017,
+      "maxTsStateError": 2.671157248372269e-10,
+      "maxTsPositionError": 2.467644786359342e-10,
+      "maxOracleRefinementDifference": 3.4220531545113216e-12,
+      "closestMoonLocalRefinement": {
+        "t": 2.5000000000005005,
+        "distance": 0.1200000000001037
+      },
+      "sampledMinimumMoon": 0.12000000000010363,
+      "sampledMinimumPlanet": 1.1200000000001036,
+      "stepChecks": [
+        {
+          "step": 0.0078125,
+          "endpointStateError": 7.117227280725438e-08
+        },
+        {
+          "step": 0.00390625,
+          "endpointStateError": 4.332799190007894e-09
+        },
+        {
+          "step": 0.001953125,
+          "endpointStateError": 2.671157248372269e-10
+        },
+        {
+          "step": 0.0009765625,
+          "endpointStateError": 1.6178715552269185e-11
+        }
+      ]
+    },
+    {
+      "name": "edited",
+      "functionEvaluations": 2164,
+      "tightFunctionEvaluations": 9019,
+      "maxTsStateError": 2.8445102505753875e-09,
+      "maxTsPositionError": 2.3692280785141733e-09,
+      "maxOracleRefinementDifference": 9.877273386811153e-12,
+      "closestMoonLocalRefinement": {
+        "t": 2.506473628931799,
+        "distance": 0.092873354567602
+      },
+      "sampledMinimumMoon": 0.0928899396967121,
+      "sampledMinimumPlanet": 1.0604727130161744,
+      "stepChecks": [
+        {
+          "step": 0.0078125,
+          "endpointStateError": 7.746171252119418e-07
+        },
+        {
+          "step": 0.00390625,
+          "endpointStateError": 4.649650637603227e-08
+        },
+        {
+          "step": 0.001953125,
+          "endpointStateError": 2.8445102505753875e-09
+        },
+        {
+          "step": 0.0009765625,
+          "endpointStateError": 1.7477381047832693e-10
+        }
+      ]
+    }
+  ]
+}

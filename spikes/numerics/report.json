@@ -1,0 +1,436 @@
+{
+  "environment": {
+    "hostname": "natto",
+    "cpu": "AMD Ryzen 7 7840U w/ Radeon  780M Graphics",
+    "node": "v22.22.1",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "units": {
+    "distance": "planet–moon separation",
+    "time": "inverse binary angular rate",
+    "massParameter": "G(Mplanet+Mmoon)=1",
+    "binaryPeriod": 6.283185307179586
+  },
+  "twoBodyChecks": [
+    {
+      "name": "circular",
+      "horizon": 6.283185307179586,
+      "steps": [
+        {
+          "step": 0.0078125,
+          "stateError": 7.924327531710993e-10,
+          "positionError": 5.603974615286737e-10,
+          "maxEnergyDrift": 2.5409674364595958e-12,
+          "maxAngularMomentumDrift": 2.5406343695522082e-12
+        },
+        {
+          "step": 0.00390625,
+          "stateError": 4.8503947198926085e-11,
+          "positionError": 3.43008824902824e-11,
+          "maxEnergyDrift": 8.215650382226158e-14,
+          "maxAngularMomentumDrift": 8.215650382226158e-14
+        },
+        {
+          "step": 0.001953125,
+          "stateError": 3.0245686629263195e-12,
+          "positionError": 2.1408643727946124e-12,
+          "maxEnergyDrift": 4.218847493575595e-15,
+          "maxAngularMomentumDrift": 3.9968028886505635e-15
+        },
+        {
+          "step": 0.0009765625,
+          "stateError": 1.7420409316998548e-13,
+          "positionError": 1.2376253323997975e-13,
+          "maxEnergyDrift": 4.107825191113079e-15,
+          "maxAngularMomentumDrift": 3.9968028886505635e-15
+        }
+      ]
+    },
+    {
+      "name": "eccentric_e0.6",
+      "horizon": 6.283185307179586,
+      "steps": [
+        {
+          "step": 0.0078125,
+          "stateError": 0.0000017184407446796975,
+          "positionError": 5.095500560118409e-7,
+          "maxEnergyDrift": 1.3563064227284372e-8,
+          "maxAngularMomentumDrift": 5.587995621780806e-10
+        },
+        {
+          "step": 0.00390625,
+          "stateError": 1.0119628184042386e-7,
+          "positionError": 2.995387130494715e-8,
+          "maxEnergyDrift": 7.974884086436873e-10,
+          "maxAngularMomentumDrift": 1.7467360891032513e-11
+        },
+        {
+          "step": 0.001953125,
+          "stateError": 6.13249971318191e-9,
+          "positionError": 1.8130476717318825e-9,
+          "maxEnergyDrift": 4.828226707331851e-11,
+          "maxAngularMomentumDrift": 5.49671419491915e-13
+        },
+        {
+          "step": 0.0009765625,
+          "stateError": 3.770263101716515e-10,
+          "positionError": 1.1140816157393433e-10,
+          "maxEnergyDrift": 2.9682922786378185e-12,
+          "maxAngularMomentumDrift": 1.587618925213974e-14
+        }
+      ]
+    },
+    {
+      "name": "hyperbolic_e1.5",
+      "horizon": 4,
+      "steps": [
+        {
+          "step": 0.0078125,
+          "stateError": 4.5376106875222445e-8,
+          "positionError": 4.382914803044184e-8,
+          "maxEnergyDrift": 7.653765177195737e-9,
+          "maxAngularMomentumDrift": 7.177858307727547e-11
+        },
+        {
+          "step": 0.00390625,
+          "stateError": 2.7973337946762253e-9,
+          "positionError": 2.702492705783034e-9,
+          "maxEnergyDrift": 4.644125084496409e-10,
+          "maxAngularMomentumDrift": 2.2313262348916396e-12
+        },
+        {
+          "step": 0.001953125,
+          "stateError": 1.736093942133151e-10,
+          "positionError": 1.6774011881211185e-10,
+          "maxEnergyDrift": 2.859179559777658e-11,
+          "maxAngularMomentumDrift": 7.860379014346108e-14
+        },
+        {
+          "step": 0.0009765625,
+          "stateError": 1.0833159616019133e-11,
+          "positionError": 1.0466275805583617e-11,
+          "maxEnergyDrift": 1.7783552408445757e-12,
+          "maxAngularMomentumDrift": 1.687538997430238e-14
+        }
+      ]
+    }
+  ],
+  "fixture": {
+    "initial": [
+      1.831588135066403,
+      1.1554226967793058,
+      -0.8584162086330673,
+      0.2617205685421131
+    ],
+    "horizon": 6,
+    "step": 0.001953125,
+    "burns": [
+      {
+        "t": 1.137,
+        "dv": [
+          0.015,
+          -0.01
+        ]
+      }
+    ],
+    "deltaV": 0.018027756377319945,
+    "baseline": {
+      "closest": {
+        "t": 2.5,
+        "distance": 0.11999999999825653,
+        "speed": 0.6000000000169513
+      },
+      "minPlanet": 1.1199999999982564,
+      "minMoon": 0.11999999999825653
+    },
+    "edited": {
+      "closest": {
+        "t": 2.506,
+        "distance": 0.0928736539479385,
+        "speed": 0.6701921595048943
+      },
+      "minPlanet": 1.0604690542494637,
+      "minMoon": 0.0928736539479385
+    },
+    "endpointPositionChange": 1.4445144604276146
+  },
+  "convergence": [
+    {
+      "step": 0.0078125,
+      "baselineFinal": [
+        -0.07617745982967301,
+        -2.7442259504941715,
+        0.5207614190652565,
+        -0.5835688106752696
+      ],
+      "editedFinal": [
+        0.7482359116985998,
+        -1.5580698779567936,
+        0.68395971794997,
+        0.16661504167133454
+      ],
+      "maxBaselineJacobiDrift": 3.533707992886548e-9,
+      "baselineClosest": {
+        "t": 2.5,
+        "distance": 0.1199999995499209,
+        "speed": 0.6000000042342841
+      },
+      "editedClosest": {
+        "t": 2.506,
+        "distance": 0.0928736522763331,
+        "speed": 0.6701921756855062
+      }
+    },
+    {
+      "step": 0.00390625,
+      "baselineFinal": [
+        -0.07617751078163645,
+        -2.7442259853069455,
+        0.5207614044474398,
+        -0.5835688317895138
+      ],
+      "editedFinal": [
+        0.7482357153153902,
+        -1.5580704516650254,
+        0.6839597375816167,
+        0.16661463909599478
+      ],
+      "maxBaselineJacobiDrift": 2.2534996091394532e-10,
+      "baselineClosest": {
+        "t": 2.5,
+        "distance": 0.11999999997174943,
+        "speed": 0.6000000002694579
+      },
+      "editedClosest": {
+        "t": 2.506,
+        "distance": 0.0928736538479588,
+        "speed": 0.6701921604891554
+      }
+    },
+    {
+      "step": 0.001953125,
+      "baselineFinal": [
+        -0.07617751389424518,
+        -2.7442259874075723,
+        0.5207614035587202,
+        -0.5835688330697489
+      ],
+      "editedFinal": [
+        0.7482357034583544,
+        -1.5580704860339885,
+        0.6839597388017699,
+        0.16661461496731367
+      ],
+      "maxBaselineJacobiDrift": 1.4229062372805856e-11,
+      "baselineClosest": {
+        "t": 2.5,
+        "distance": 0.11999999999825653,
+        "speed": 0.6000000000169513
+      },
+      "editedClosest": {
+        "t": 2.506,
+        "distance": 0.0928736539479385,
+        "speed": 0.6701921595048943
+      }
+    },
+    {
+      "step": 0.0009765625,
+      "baselineFinal": [
+        -0.07617751408675602,
+        -2.7442259875367117,
+        0.5207614035038904,
+        -0.5835688331486523
+      ],
+      "editedFinal": [
+        0.748235702730497,
+        -1.5580704881351402,
+        0.6839597388778106,
+        0.16661461349181517
+      ],
+      "maxBaselineJacobiDrift": 8.912870441690757e-13,
+      "baselineClosest": {
+        "t": 2.5,
+        "distance": 0.11999999999992578,
+        "speed": 0.6000000000010046
+      },
+      "editedClosest": {
+        "t": 2.506,
+        "distance": 0.09287365395423977,
+        "speed": 0.6701921594423903
+      }
+    }
+  ],
+  "partition": {
+    "step": 0.03125,
+    "requestTimes": [
+      0.137,
+      0.234,
+      0.789,
+      1.137,
+      2.002,
+      2.999,
+      3.14159,
+      4.567,
+      5.912,
+      6
+    ],
+    "naiveEndpointDifference": 0.000020507013564943177,
+    "canonicalEndpointDifference": 0,
+    "naiveAnalyticError": 0.00034892135228620306,
+    "directAnalyticError": 0.00036942789070147934
+  },
+  "impulseCheck": {
+    "epoch": 1.137,
+    "gridRemainder": 0.004187500000000011,
+    "positionErrorAtBurn": 3.51207758064872e-11,
+    "velocityJumpError": 6.289340387965505e-13,
+    "note": "velocityJumpError compares different coast partitions; see exactSamePartitionJumpError",
+    "exactSamePartitionJumpError": 1.6365348541700844e-17
+  },
+  "apsisInvestigation": {
+    "criterion": "relative r dot relative v = 0; negative-to-positive is a periapsis candidate only on a continuous coast",
+    "circular": {
+      "maxAbsRadialProduct": 2.288958952934017e-13,
+      "brackets": [
+        {
+          "from": 3.15234375,
+          "to": 3.154296875,
+          "kind": "periapsis"
+        }
+      ]
+    },
+    "eccentric": {
+      "maxAbsRadialProduct": 0.5999999973139366,
+      "brackets": [
+        {
+          "from": 3.140625,
+          "to": 3.142578125,
+          "kind": "apoapsis"
+        }
+      ]
+    },
+    "moonBaseline": {
+      "maxAbsRadialProduct": 3.515043444125754,
+      "brackets": [
+        {
+          "from": 2.5,
+          "to": 2.501953125,
+          "kind": "periapsis"
+        }
+      ]
+    },
+    "moonEdited": {
+      "maxAbsRadialProduct": 1.5609334159567843,
+      "brackets": [
+        {
+          "from": 2.505859375,
+          "to": 2.5078125,
+          "kind": "periapsis"
+        }
+      ]
+    },
+    "warning": "No event locator implemented. Circular coast gives near-zero radial product everywhere; raw sign flips are meaningless. Burn discontinuities need separate handling; branch identity cannot be a mutable ordinal alone."
+  },
+  "tunnelingCounterexample": {
+    "radius": 0.025,
+    "stepStart": [
+      -0.1,
+      0
+    ],
+    "stepEnd": [
+      0.1,
+      0
+    ],
+    "midpoint": [
+      0,
+      0
+    ],
+    "bothEndpointsOutside": true,
+    "midpointInside": true,
+    "note": "Synthetic straight segment: endpoint-only collision checks cannot certify a continuous trajectory."
+  },
+  "timings": [
+    {
+      "horizon": 6,
+      "step": 0.00390625,
+      "steps": 1537,
+      "medianMs": 6.501436999999896,
+      "minMs": 5.6088069999998424,
+      "maxMs": 7.689663999999993,
+      "repetitions": 7
+    },
+    {
+      "horizon": 6,
+      "step": 0.001953125,
+      "steps": 3073,
+      "medianMs": 11.875692999999956,
+      "minMs": 11.142493000000059,
+      "maxMs": 12.116075000000137,
+      "repetitions": 7
+    },
+    {
+      "horizon": 6,
+      "step": 0.0009765625,
+      "steps": 6145,
+      "medianMs": 25.02952099999993,
+      "minMs": 24.44218500000011,
+      "maxMs": 26.798571000000038,
+      "repetitions": 7
+    },
+    {
+      "horizon": 20,
+      "step": 0.00390625,
+      "steps": 5121,
+      "medianMs": 21.161190000000033,
+      "minMs": 20.52135599999997,
+      "maxMs": 22.200426000000107,
+      "repetitions": 7
+    },
+    {
+      "horizon": 20,
+      "step": 0.001953125,
+      "steps": 10241,
+      "medianMs": 42.43490199999974,
+      "minMs": 38.92913300000009,
+      "maxMs": 43.3312890000002,
+      "repetitions": 7
+    },
+    {
+      "horizon": 20,
+      "step": 0.0009765625,
+      "steps": 20481,
+      "medianMs": 87.59652600000027,
+      "minMs": 86.55358299999989,
+      "maxMs": 97.16886299999987,
+      "repetitions": 7
+    },
+    {
+      "horizon": 60,
+      "step": 0.00390625,
+      "steps": 15361,
+      "medianMs": 64.990456,
+      "minMs": 54.960587999999916,
+      "maxMs": 67.80144699999983,
+      "repetitions": 7
+    },
+    {
+      "horizon": 60,
+      "step": 0.001953125,
+      "steps": 30721,
+      "medianMs": 131.30297999999993,
+      "minMs": 124.49639900000011,
+      "maxMs": 146.10753599999998,
+      "repetitions": 7
+    },
+    {
+      "horizon": 60,
+      "step": 0.0009765625,
+      "steps": 61441,
+      "medianMs": 236.5874389999999,
+      "minMs": 204.1828260000002,
+      "maxMs": 279.0501029999996,
+      "repetitions": 7
+    }
+  ]
+}

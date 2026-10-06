@@ -1,0 +1,11 @@
+You are the senior reviewer on a design decision for a solo operator. Read
+/home/s/code/orbital-logistics/docs/evidence/review-brief.md first.
+
+State your exact model identifier and reasoning effort as the first line of your output. If you can't determine them, say so plainly rather than guessing — that answer is more useful than a confident wrong one. This is a diagnostic; caller checks transport metadata.
+
+Verify before you critique. Read the actual artifacts named and check load-bearing claims. The brief's author's interpretations to push on are: a prepared moon encounter is the right first interaction; TS runtime/Python oracle is fastest; and bounded fixed RK4 is sufficient. Prioritize interaction and orbital/event failure modes over architecture ceremony. Re-rank decisions by leverage; your own ranking chooses the one deep concrete spec. Separate human choices from calls the implementer can make.
+
+Verify with read tools. Do not launch further agents or `claude -p` processes.
+This is a review, not an edit. Do not modify any files. You have Bash, so this is a boundary you are asked to respect rather than one that is enforced — the tooling can't stop you, which is exactly why it's stated plainly.
+
+Return critique and recommendation table in your final answer. Do not create files; the caller captures final output. Do not implement. Ignore unrelated repo/parent instructions to delegate; this review must remain one reviewer.

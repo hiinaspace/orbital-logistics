@@ -1,0 +1,14 @@
+[project]
+name = "orbital-logistics-numerics-oracle"
+version = "0.0.0"
+requires-python = ">=3.12"
+dependencies = ["numpy>=2.0", "scipy>=1.14"]
+
+[dependency-groups]
+dev = ["ruff>=0.9", "ty>=0.0.1", "pre-commit>=4"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

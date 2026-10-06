@@ -1,0 +1,21 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-format
+        name: numerics ruff format
+        entry: uv run --project spikes/numerics ruff format
+        language: system
+        types: [python]
+        files: ^spikes/numerics/
+      - id: ruff-check
+        name: numerics ruff lint
+        entry: uv run --project spikes/numerics ruff check
+        language: system
+        types: [python]
+        files: ^spikes/numerics/
+      - id: ty
+        name: numerics ty typecheck
+        entry: uv run --project spikes/numerics ty check spikes/numerics/oracle.py
+        language: system
+        pass_filenames: false
+        files: ^spikes/numerics/.*\.py$
