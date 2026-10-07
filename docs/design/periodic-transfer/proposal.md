@@ -1,5 +1,12 @@
 # Periodic transfer programming — design study, 2026-10-07
 
+**Subsequent design reconsideration:** the user questioned the construction-game
+premise and requested OpenTTD research plus an independent Astra consultant.
+The [topology study](../topology-study/proposal.md) now recommends a finite
+three-port courier probe before this recipe/timeline slice. This document retains
+the reviewed semantics and evidence; its immediate sequencing recommendation is
+deferred pending user design review. No recipe/timeline was implemented.
+
 Status: reviewed proposal, not yet user-approved for implementation. Astra ran
 as `gpt-6-astra`, xhigh, with successful CLI transport verified before synthesis;
 see [review](astra-review.md) and [disposition](review-disposition.md).

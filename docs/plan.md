@@ -19,17 +19,40 @@ optimization, hardware variation and a beneficial gravity assist remain open M4 
 The remainder records the reviewed plan and intended sequence.
 Source: /home/s/org/projects/orbital-logistics/charter.md.
 
-## Periodic programming study — 2026-10-07
+## Core-loop reconsideration — 2026-10-07
+
+The user subsequently questioned whether the periodic proposal offers the same
+kind of construction depth as Zachtronics or transport games, requested OpenTTD
+source research, and explicitly authorized a free-form Astra game-design
+consultant with its own experiments/subagents. The [new synthesis](design/topology-study/proposal.md),
+[OpenTTD source notes](design/topology-study/source-notes.md) and
+[independent consultation](design/topology-study/consultant/recommendation.md)
+recommend a finite three-port courier probe **before** the recipe/timeline build.
+This recommendation awaits user review; no app source was changed.
+
+An offline analytical scan found circuit versus serial-shuttle time/fuel choices
+with one tug, and a faster two-tug alternative. All ships return; both impulses
+are paid and cargo mass is accounted for. Six directed legs passed independent
+DOP853 checks. The experiment changes fuel/cargo allowances and is not a run in
+the app, global optimality or gameplay evidence. The proposed hands-on gate starts
+with one tug and asks whether the player voluntarily reorganizes routes. Keep
+intent/resolution/event seams and timeline diagnostics, but do not equate adding
+repetition with proving a new game. Runtime scheduling and joint ships remain
+deferred. Existing milestone acceptance is unchanged.
+
+## Prior periodic programming study — 2026-10-07
 
 The user reviewed M4a as largely working, identified departure/docking bookkeeping,
 and requested detailed periodic-service design and an Astra review before further
 implementation. [Reviewed proposal](design/periodic-transfer/proposal.md),
 [Astra review](design/periodic-transfer/astra-review.md) and
-[disposition](design/periodic-transfer/review-disposition.md) now define the proposed
-next slice. This is planning/evidence work; no reusable recipe or timeline is
+[disposition](design/periodic-transfer/review-disposition.md) record the prior
+proposed slice; the reconsideration above is the current recommendation.
+This is planning/evidence work; no reusable recipe or timeline is
 implemented yet, and the full M4 product gate remains open.
 
-Recommended sequence supersedes the tentative dynamic-terminal-match-first idea:
+Prior recommended sequence (retained for context, deferred by the new proposed gate)
+superseded the tentative dynamic-terminal-match-first idea:
 
 1. One recipe, two actual voyages, horizontal ship timeline and fuel/cargo/Δv traces.
    Commit departures/durations, derive service/waiting, and compile each complete

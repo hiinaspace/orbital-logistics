@@ -11,9 +11,13 @@ alternatives, saved solutions/replay and display layers. M3b joint handoffs,
 hardware alternatives, beneficial gravity assists and human optimization remain
 open; do not claim the full M4 gate passed. docs/route-intent.md preserves dynamic
 commands as later work; current burns/operations remain static.
-The 2026-10-07 reviewed periodic-service proposal is in
-docs/design/periodic-transfer/proposal.md. Next proposed slice is bounded recipe
-compilation/timeline before runtime scheduling; await the user's design review.
+The 2026-10-07 periodic-service proposal is retained in
+docs/design/periodic-transfer/proposal.md. The user's subsequent core-loop concern
+prompted independent Astra consultation and OpenTTD source research; read
+docs/design/topology-study/proposal.md first. It recommends testing finite
+three-port courier organization before recipe/timeline implementation. This is
+an analytical witness and proposed gate, not an app level or accepted product
+direction; await the user's design review. Runtime scheduling remains deferred.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

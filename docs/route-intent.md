@@ -5,6 +5,11 @@ phasing is useful, and reusable/cyclic services must adapt their corrections to
 the state at each voyage. Static epoch/component burns alone cannot express that.
 This is a direction for the next program design, not an implemented runtime helper.
 
+The [subsequent topology study](design/topology-study/proposal.md) recommends a
+finite courier-organization gameplay probe before implementing reusable recipes
+or runtime intent. The seams below remain architectural guidance, not permission
+to build a scheduler ahead of that design decision.
+
 ## Separate intent, resolution and execution
 
 - **Authored intent** names a target port/orbit, a semantic event or arrival window,
@@ -36,14 +41,16 @@ will need an explicit versioned command variant and snapshot/resolution cursor,
 not a reinterpretation of `assist` metadata or silent replacement of saved burns.
 Do not discard new command fields on JSON import and then execute their old cache.
 
-The initial terminal-velocity-match-first suggestion is superseded by the
-[2026-10-07 reviewed periodic study](design/periodic-transfer/proposal.md).
-First compile a bounded two-voyage recipe of complete dock-to-dock transfers
+The [2026-10-07 reviewed periodic study](design/periodic-transfer/proposal.md)
+superseded the initial terminal-velocity-match-first suggestion and proposed
+compiling a bounded two-voyage recipe of complete dock-to-dock transfers
 sequentially from their own simulated prefixes. Preserve authored recipe/version
 separately from generated v1 events. Resolve before playback for this deterministic
 finite experiment; this is state-dependent compilation, not runtime feedback.
 Keep accepted execution immutable, regenerate drafts on recipe edits/load, and
-use the current full-plan validation. A runtime resolver/scheduler follows only
+use the current full-plan validation. This remains a candidate implementation
+after the courier gameplay gate, rather than the immediate next slice.
+A runtime resolver/scheduler follows only
 when conditional joint actions or rolling prediction need it. A terminal velocity
 match remains a useful explicit component but cannot repair an arrival-position miss.
 
