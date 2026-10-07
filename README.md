@@ -3,12 +3,12 @@
 A trajectory-programming logistics puzzle experiment by Hiina. Browser-first,
 2D, visual maneuver editing; later cargo and synchronized reusable services.
 
-**Current checkpoint: M1 manual editor, awaiting the full human gate.** Choose
+**Current checkpoint: M1 manual editor accepted; M2 is next.** Choose
 Orbit shaping or Moon encounter. Plan a trajectory, click its path to place a
 maneuver, click R or T, move the pointer, then click to commit (Escape cancels).
 Precision controls, ordered maneuvers, apsis snaps, undo/redo, synchronized frames,
-execution and JSON replay use the shared headless simulation. The early orbit-edit
-interaction passed user review; local targeting waits for the full M1 review.
+execution and JSON replay use the shared headless simulation. The user accepted the manual editor and frame switching and authorized M2.
+Apsis dots place snapped maneuvers; clicking a node engages horizontal time editing.
 
 ## Run
 
@@ -73,9 +73,9 @@ uv run --project spikes/numerics pre-commit run --config spikes/numerics/.pre-co
 
 ## Next
 
-Complete the human M1 gate: deliberately revise a moon pass's altitude or timing,
-inspect it in two frames, and execute the queue. Revise unclear controls before
-building M2 local targeting.
+Build the bounded M2 rendezvous experiment: fixed departure/arrival epochs, one
+editable departure impulse and a charged arrival burn, with explicit proposal
+accept/reject and constrained branch/fuel/accuracy checks.
 
 - [Tactical plan](docs/plan.md): build slices, temporal/interaction contract, M2–M6 gates.
 - [M0 evidence](docs/evidence/m0.md): simulation contract, measured accuracy, and supported limits.

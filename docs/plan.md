@@ -1,12 +1,13 @@
 # Tactical plan — 2026-10-06
 
-Status: **M1 manual editor implemented and validated; full human gate pending**.
-The user passed the early M1b orbit-edit check on 2026-10-06: "Clear; continue
-validating the rest of M1." See [M1 evidence](evidence/m1.md) for queue/replay,
-refined diagnostics, calibration and interaction measurements, and
-[M0 evidence](evidence/m0.md) for the underlying runner. The full moon-pass,
-two-frame and execution gate remains before M2. The remainder records the reviewed planning checkpoint and
-the intended subsequent sequence. The charter remains the product baseline.
+Status: **M1 accepted by the user; proceeding to bounded M2 rendezvous**.
+On 2026-10-06 the user approved the important CoaDE UI behaviors and inertial
+frame switching, requested visible/clickable apsides and coarse node-time edits,
+and said "Otherwise I think good to proceed." This is approval to pass the manual
+editor gate, not a claim that a scripted moon exercise was observed. Both UI
+refinements are implemented. See [M1 evidence](evidence/m1.md) and
+[M0 evidence](evidence/m0.md). The remainder records the reviewed plan and intended
+sequence. The charter remains the product baseline.
 Source: /home/s/org/projects/orbital-logistics/charter.md.
 
 ## Recommendation

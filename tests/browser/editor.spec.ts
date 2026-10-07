@@ -132,6 +132,45 @@ test('moon preview and body-centered frames use synchronized sample-time origins
   await page.locator('#frame').selectOption('moon'); await page.screenshot({ path: 'docs/evidence/m1-moon.png', fullPage: true });
 });
 
+test('visible apsides place snapped nodes and node clicks edit time as one reversible gesture', async ({ page }) => {
+  const session = new EditorSession(orbit), first = session.addBurn(0, 'primary');
+  session.updateBurn(first, { transverse: 0.1 });
+  await load(page, session.serialize(4.7));
+  // Apsis markers are visible even outside planning mode and without a node there.
+  const apsis = (await state(page)).apsisPoints.find((a: any) => a.event.kind === 'apoapsis');
+  expect(apsis).toBeTruthy(); expect((await state(page)).draft.burns).toHaveLength(1);
+  await page.locator('#files').click(); await page.locator('#plan').click();
+  const p = await canvasPoint(page, [apsis.p[0] + 2, apsis.p[1] + 2]);
+  await page.mouse.move(...p); expect((await state(page)).previewTime).toBe(apsis.event.t);
+  await page.mouse.click(...p); await ready(page);
+  const snapped = (await state(page)).draft.burns[1];
+  expect(snapped.t).toBe(apsis.event.t); expect(snapped.snap.kind).toBe('apoapsis');
+  await expect(page.locator('#snap-state')).toContainText('Snapped');
+  await page.locator('#undo').click(); await ready(page); expect((await state(page)).draft.burns).toHaveLength(1);
+  await page.locator('#redo').click(); await ready(page);
+  const node = (await state(page)).nodePoints.find((n: any) => n.id === snapped.id);
+  await page.mouse.click(...await canvasPoint(page, node.p)); expect((await state(page)).mode).toBe('time-edit');
+  const moved = await canvasPoint(page, [node.p[0] + 40, node.p[1]]);
+  await page.mouse.move(...moved); await page.mouse.click(...moved); await ready(page);
+  const shifted = (await state(page)).draft.burns[1];
+  expect(shifted.t - snapped.t).toBeGreaterThan(0.37); expect(shifted.t - snapped.t).toBeLessThan(0.43); expect(shifted.snap).toBeUndefined();
+  expect(shifted.radial).toBe(snapped.radial); expect(shifted.transverse).toBe(snapped.transverse);
+  expect((await state(page)).accepted.burns).toHaveLength(0);
+  await page.locator('#undo').click(); await ready(page); expect((await state(page)).draft.burns[1]).toEqual(snapped);
+  const restored = (await state(page)).nodePoints.find((n: any) => n.id === snapped.id);
+  await page.mouse.click(...await canvasPoint(page, restored.p));
+  await page.mouse.move(...await canvasPoint(page, [restored.p[0] - 60, restored.p[1]]));
+  await page.keyboard.press('Escape'); await ready(page); expect((await state(page)).draft.burns[1]).toEqual(snapped);
+  // Time gestures cannot cross adjacent burns or create duplicate epochs.
+  await add(page, 6); const middle = (await state(page)).nodePoints.find((n: any) => n.id === snapped.id);
+  await page.mouse.click(...await canvasPoint(page, middle.p));
+  const far = await canvasPoint(page, [middle.p[0] + 500, middle.p[1]]);
+  await page.mouse.move(...far); await page.mouse.click(...far); await ready(page);
+  expect((await state(page)).draft.burns[1].t).toBeCloseTo(5.999999, 6);
+  await page.locator('#undo').click(); await ready(page);
+  await page.screenshot({ path: 'docs/evidence/m1-apsis-editor.png', fullPage: true });
+});
+
 test('rejected burn and unsupported approach block execution and truncate the path', async ({ page }) => {
   const bundle = structuredClone(orbit);
   bundle.program.burns = [{ id: 'bad', t: 1.137, referenceBodyId: 'primary', basis: 'radial-transverse-ccw-v1', radial: 0, transverse: 100 }];

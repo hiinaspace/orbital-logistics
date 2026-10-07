@@ -3,6 +3,7 @@ import orbit from '../fixtures/m1-orbit.json';
 import binary from '../fixtures/m0-binary.json';
 import { EditorSession } from './editor/session';
 import { predict, type Prediction } from './planning/predict';
+import type { Encounter } from './planning/events';
 import { Runner, type Sample } from './sim/runner';
 import { bodyState } from './sim/dynamics';
 import { validateBundle, type Burn, type Bundle, type State } from './sim/schema';
@@ -52,9 +53,10 @@ let planning = false, playing = false, previewTime: number | undefined, pinnedTi
 let worker: Worker | undefined, generation = 0, pending = false, predictionError = '';
 let lastEditAt = 0, latency: number[] = [], feedbackLatency: number[] = [], geometry: { t: number; p: number[] }[] = [];
 let snapEvents: ReturnType<EditorSession['snapCandidates']> = [];
-let handle: { axis: 'radial' | 'transverse'; origin: [number, number]; direction: [number, number]; start: number } | undefined;
+let handle: { axis: 'radial' | 'transverse' | 'time'; bounds?: [number, number]; origin: [number, number]; direction: [number, number]; start: number } | undefined;
 let pan: { point: [number, number]; center: [number, number] } | undefined;
 let handles: { axis: 'radial' | 'transverse'; p: [number, number]; direction: [number, number] }[] = [];
+let apsisPoints: { event: Encounter; p: [number, number] }[] = [];
 let nodePoints: { id: string; p: [number, number] }[] = [];
 let objectPoints: { id: string; p: [number, number]; radius: number }[] = [];
 const endTime = () => session.scenario.epoch + session.scenario.duration;
@@ -193,13 +195,26 @@ function edited(change: () => void, inspector = true) {
   }
   catch (error) { message((error as Error).message); if (inspector) refreshInspector(); render(); }
 }
-function addBurn(t: number) {
-  edited(() => { selectedBurn = session.addBurn(Math.round(t * 1e6) / 1e6, el<HTMLSelectElement>('burn-reference').value || session.scenario.bodies[0].id); pinnedTime = currentBurn()!.t; previewTime = pinnedTime; });
+function addBurn(t: number, apsis?: Encounter) {
+  edited(() => {
+    session.beginGesture();
+    try {
+      const id = session.addBurn(apsis ? t : Math.round(t * 1e6) / 1e6, apsis?.bodyId ?? (el<HTMLSelectElement>('burn-reference').value || session.scenario.bodies[0].id));
+      if (apsis) session.snap(id, apsis, [Math.max(session.scenario.epoch, t - 0.5), Math.min(endTime(), t + 0.5)]);
+      session.endGesture(true); selectedBurn = id; pinnedTime = currentBurn()!.t; previewTime = pinnedTime;
+    } catch (error) { session.endGesture(false); throw error; }
+  });
+}
+function hitApsis(p: [number, number]) {
+  return apsisPoints.filter(a => Math.hypot(p[0] - a.p[0], p[1] - a.p[1]) < 12)
+    .sort((a, b) => Math.abs(a.event.t - (previewTime ?? pinnedTime)) - Math.abs(b.event.t - (previewTime ?? pinnedTime)))[0];
 }
 function finishHandle(commit: boolean) {
   if (!handle) return;
   const inputAt = performance.now();
-  const previous = session.revision; handle = undefined; session.endGesture(commit); refreshInspector();
+  const previous = session.revision; handle = undefined; session.endGesture(commit);
+  if (currentBurn()) { pinnedTime = currentBurn()!.t; previewTime = pinnedTime; }
+  refreshInspector();
   if (session.revision !== previous) schedulePrediction(inputAt); else { updateUI(); render(); }
 }
 function render() {
@@ -208,7 +223,7 @@ function render() {
   const t = previewTime ?? live.t, ghost = samplePrediction(draft, t), s = session.scenario;
   el('time').textContent = live.t.toFixed(3); el('preview-time').textContent = t.toFixed(3); slider.value = String(t);
   el('status').textContent = live.status === 'running' ? (playing ? 'Running' : 'Paused') : statusLabel(live.status);
-  el('hint').textContent = handle ? 'Move · click to set · Esc to cancel' : planning && !selectedBurn ? 'Click the orbit to place a maneuver' : planning && selectedBurn ? 'Click R or T to adjust' : '';
+  el('hint').textContent = handle?.axis === 'time' ? 'Move left/right · click to set · Esc to cancel' : handle ? 'Move · click to set · Esc to cancel' : planning && !selectedBurn ? 'Click the orbit to place a maneuver' : planning && selectedBurn ? 'Click R, T or the node to adjust' : '';
   ctx.fillStyle = '#0f1821'; ctx.fillRect(0, 0, 1000, 650); ctx.strokeStyle = '#1b2a35'; ctx.lineWidth = 1;
   const spacing = 50;
   for (let x = 0; x <= 1000; x += spacing) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 650); ctx.stroke(); }
@@ -228,6 +243,14 @@ function render() {
     prediction.samples.forEach((sample, i) => { const p = point(sample.y, sample.t); if (i === 0) ctx.moveTo(...p); else ctx.lineTo(...p); }); ctx.stroke(); ctx.setLineDash([]);
   }
   path(baseline, '#5d798d88'); path(draft, pending ? '#c7a37488' : '#edbc74', pending);
+  apsisPoints = [];
+  const apsisBody = s.bodies.find(b => b.id === frameSelect.value)?.id ?? currentBurn()?.referenceBodyId ?? s.bodies[0].id;
+  for (const event of draft.diagnostics[apsisBody]?.apsides ?? []) {
+    const p = point(samplePrediction(draft, event.t).y, event.t);
+    apsisPoints.push({ event, p });
+    ctx.beginPath(); ctx.arc(...p, 4, 0, 2 * Math.PI); ctx.fillStyle = pending ? '#9c8b72' : '#edbc74'; ctx.fill();
+    ctx.font = '11px system-ui'; ctx.fillText(event.kind === 'periapsis' ? 'Pe' : 'Ap', p[0] + 8, p[1] - 8);
+  }
   geometry = draft.samples.map(p => ({ t: p.t, p: point(p.y, p.t) }));
   // A body's trail and its preview marker use the reference origin at each
   // sample's epoch, never the current body's position for an entire trajectory.
@@ -263,8 +286,8 @@ function render() {
   }
   el('state-json').textContent = JSON.stringify({ ...live, ledger: session.execution.ledger, draft: session.draft,
     accepted: session.accepted, baseline: session.baseline, revision: session.revision, readyRevision: draft.revision, pending,
-    previewTime: previewTime ?? null, pinnedTime, mode: handle ? 'handle-edit' : selectedBurn ? 'epoch-pinned' : planning ? 'hover-preview' : 'inspect',
-    selectedObject, selectedBurn, frame: frameSelect.value, camera, handles, nodePoints, objectPoints,
+    previewTime: previewTime ?? null, pinnedTime, mode: handle?.axis === 'time' ? 'time-edit' : handle ? 'handle-edit' : selectedBurn ? 'epoch-pinned' : planning ? 'hover-preview' : 'inspect',
+    selectedObject, selectedBurn, frame: frameSelect.value, camera, handles, nodePoints, apsisPoints, objectPoints,
     terminal: draft.terminal, diagnostics: draft.diagnostics, accuracy: draft.accuracy, latency, feedbackLatency }, null, 2);
 }
 
@@ -287,11 +310,16 @@ function pointer(event: MouseEvent): [number, number] {
 canvas.addEventListener('pointermove', event => {
   const p = pointer(event);
   if (pan) { camera.center = [pan.center[0] - (p[0] - pan.point[0]) / camera.scale, pan.center[1] + (p[1] - pan.point[1]) / camera.scale]; render(); return; }
+  if (handle?.axis === 'time' && selectedBurn) {
+    const value = Math.max(handle.bounds![0], Math.min(handle.bounds![1], Math.round((handle.start + (p[0] - handle.origin[0]) * session.scenario.duration / 800) * 1e6) / 1e6));
+    if (value !== currentBurn()!.t) edited(() => { session.updateBurn(selectedBurn!, { t: value }); pinnedTime = value; previewTime = value; }, false);
+    return;
+  }
   if (handle && selectedBurn) {
     const value = Math.max(-limit(), Math.min(limit(), handle.start + ((p[0] - handle.origin[0]) * handle.direction[0] + (p[1] - handle.origin[1]) * handle.direction[1]) / gain()));
     edited(() => session.updateBurn(selectedBurn!, { [handle!.axis]: Math.round(value * 1e6) / 1e6 }), false); return;
   }
-  if (planning && !selectedBurn && !pending) { const hit = hitPath(geometry, p, pinnedTime); if (hit) { previewTime = hit.t; render(); } }
+  if (planning && !selectedBurn && !pending) { const apsis = hitApsis(p); const hit = hitPath(geometry, p, pinnedTime); if (apsis || hit) { previewTime = apsis?.event.t ?? hit!.t; render(); } }
   canvas.style.cursor = handles.some(h => Math.hypot(p[0] - h.p[0], p[1] - h.p[1]) < 14) ? 'crosshair' : planning ? 'crosshair' : 'default';
 });
 canvas.addEventListener('click', event => {
@@ -301,8 +329,14 @@ canvas.addEventListener('click', event => {
   const hitHandle = handles.find(h => Math.hypot(p[0] - h.p[0], p[1] - h.p[1]) < 14);
   if (hitHandle && selectedBurn && !pending) { session.beginGesture(); handle = { axis: hitHandle.axis, origin: p, direction: hitHandle.direction, start: currentBurn()![hitHandle.axis] }; updateUI(); render(); return; }
   const node = nodePoints.find(n => Math.hypot(p[0] - n.p[0], p[1] - n.p[1]) < 12);
-  if (node) { selectBurn(node.id); return; }
-  if (planning && !pending) { const hit = hitPath(geometry, p, previewTime ?? pinnedTime); if (hit) { addBurn(hit.t); return; } }
+  if (node) {
+    if (pending) return;
+    selectBurn(node.id); const burns = session.draft.burns, at = burns.findIndex(b => b.id === node.id);
+    session.beginGesture(); handle = { axis: 'time', origin: p, direction: [1, 0], start: currentBurn()!.t,
+      bounds: [at > 0 ? burns[at - 1].t + 1e-6 : session.scenario.epoch, at < burns.length - 1 ? burns[at + 1].t - 1e-6 : endTime()] };
+    updateUI(); render(); return;
+  }
+  if (planning && !pending) { const apsis = hitApsis(p); if (apsis) { addBurn(apsis.event.t, apsis.event); return; } const hit = hitPath(geometry, p, previewTime ?? pinnedTime); if (hit) { addBurn(hit.t); return; } }
   const object = objectPoints.find(o => Math.hypot(p[0] - o.p[0], p[1] - o.p[1]) < Math.max(12, o.radius));
   if (object) { selectedObject = object.id; selectedBurn = undefined; planning = false; refreshInspector(); updateUI(); render(); }
 });
