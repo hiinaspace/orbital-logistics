@@ -175,7 +175,11 @@ def main() -> None:
     )
     fig.subplots_adjust(left=0.07, right=0.975, top=0.79, bottom=0.23, wspace=0.38)
     fig.savefig(ROOT / "route-comparison.png", dpi=160, facecolor=fig.get_facecolor())
-    fig.savefig(ROOT / "route-comparison.svg", facecolor=fig.get_facecolor())
+    svg_path = ROOT / "route-comparison.svg"
+    fig.savefig(svg_path, facecolor=fig.get_facecolor())
+    svg_path.write_text(
+        "\n".join(line.rstrip() for line in svg_path.read_text().splitlines()) + "\n"
+    )
     plt.close(fig)
 
 
