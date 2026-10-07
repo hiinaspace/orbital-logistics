@@ -3,7 +3,7 @@
 A trajectory-programming logistics puzzle experiment by Hiina. Browser-first,
 2D, visual maneuver editing; later cargo and synchronized reusable services.
 
-**Current checkpoint: M1 accepted; M2 rendezvous and manual encounter actions implemented.** Choose
+**Current checkpoint: M1 accepted; M2 reviewed; initial M3a delivery implemented.** Choose
 Orbit shaping, Moon encounter or Rendezvous. Plan a trajectory, click its path to place a
 maneuver, click R or T, move the pointer, then click to commit (Escape cancels).
 Precision controls, ordered maneuvers, apsis snaps, undo/redo, synchronized frames,
@@ -18,6 +18,12 @@ its authored epoch and earlier maneuvers inside the CCW, zero-revolution branch.
 Hover the path while a node is selected to scrub other bodies. Click M/I encounter
 markers for a paid orbit-match/intercept correction or a manual maneuver.
 Overlapping icons open a selection menu at the pointer.
+
+Choose **Delivery** for the one-tug logistics scene. The initial outbound program
+still needs a return; **Example round trip** adds a complete authored return to the
+draft. Edit Dock / Transfer / Undock in **Port operations**, then execute. Cargo,
+finite refueling stocks, service durations and the empty/fueled return requirement
+are part of prediction and replay. Home/Depot frames and inventories follow preview.
 
 ## Run
 
@@ -38,6 +44,8 @@ npm run test:browser
 npm run evidence:m0
 npm run evidence:m1
 npm run evidence:m2
+npm run evidence:m2-encounters
+npm run evidence:m3
 ```
 
 `evidence:m0` regenerates the production-core analytic/convergence and independent
@@ -58,6 +66,7 @@ npm run preview -- --port 4178 --strictPort
 # In another terminal, with the preview running:
 node scripts/m1-browser-evidence.mjs
 node scripts/m2-browser-evidence.mjs
+node scripts/m3-browser-evidence.mjs
 ```
 
 Retained planning spikes can still be reproduced separately:
@@ -86,12 +95,15 @@ uv run --project spikes/numerics pre-commit run --config spikes/numerics/.pre-co
 
 ## Next
 
-M2 was reviewed and M3 authorized. The next slice is one tug, finite inventories,
-docked service durations and a required return state, before a second ship.
+The initial M3a one-tug slice is implemented and ready to try. Review delivery,
+service timing and return authoring before the second ship/joint handoff.
+[Reusable route intent](docs/route-intent.md) records the direction for dynamically
+resolved corrections; current burns and port operations still use explicit epochs.
 
 - [Tactical plan](docs/plan.md): build slices, temporal/interaction contract, M2–M6 gates.
 - [M0 evidence](docs/evidence/m0.md): simulation contract, measured accuracy, and supported limits.
 - [M1 evidence](docs/evidence/m1.md): manual editor, calibration, replay and interaction measurements.
+- [M3a evidence](docs/evidence/m3.md): finite delivery/return, service ledger, independent oracle and replay.
 - [M2 encounter follow-up](docs/evidence/m2-encounters.md): manual corrections, hover and overlap menu.
 - [M2 evidence](docs/evidence/m2.md): bounded local rendezvous, costs, independent oracle and browser replay.
 - [Captured charter](docs/charter.md): product baseline copied from the org vault.

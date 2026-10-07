@@ -1,6 +1,10 @@
 import './style.css';
 import orbit from '../fixtures/m1-orbit.json';
 import binary from '../fixtures/m0-binary.json';
+import delivery from '../fixtures/m3-delivery.json';
+import roundTrip from '../fixtures/m3-round-trip.json';
+import { mountLogistics } from './editor/logistics-ui';
+import { portState } from './sim/logistics';
 import rendezvous from '../fixtures/m2-rendezvous.json';
 import { targetBundle } from './planning/target';
 import { departureUnavailable, type RendezvousProposal } from './planning/rendezvous';
@@ -15,7 +19,7 @@ import { frameState, hitPath, project, unproject, type Camera } from './view/coo
 
 document.body.innerHTML = `
 <main>
-  <header><h1>Orbital Logistics</h1><select id="scene" aria-label="Scenario"><option value="orbit">Orbit shaping</option><option value="moon">Moon encounter</option><option value="rendezvous">Rendezvous</option></select>
+  <header><h1>Orbital Logistics</h1><select id="scene" aria-label="Scenario"><option value="orbit">Orbit shaping</option><option value="moon">Moon encounter</option><option value="rendezvous">Rendezvous</option><option value="delivery">Delivery</option></select>
     <div class="header-actions"><button id="undo" title="Undo (Ctrl+Z)" aria-label="Undo">↶</button><button id="redo" title="Redo (Ctrl+Shift+Z)" aria-label="Redo">↷</button><button id="files">Save / load</button></div></header>
   <div class="workspace">
     <section class="scene"><div class="view-tools"><label>Frame <select id="frame" aria-label="View frame"></select></label><button id="fit">Fit</button><button id="focus">Focus</button><span id="prediction-status" role="status"></span></div>
@@ -41,6 +45,7 @@ document.body.innerHTML = `
       <section id="targeting" hidden><div class="section-title"><h2>Rendezvous</h2><button id="solve">Target</button></div>
         <dl><div><dt>Arrival miss</dt><dd id="target-miss"></dd></div><div><dt>Relative speed</dt><dd id="target-speed"></dd></div></dl><p id="solve-status" role="status"></p><div id="proposal" hidden><div id="proposal-values"></div><div class="buttons"><button id="accept-proposal">Accept</button><button id="reject-proposal">Reject</button></div></div>
       </section>
+      <section id="logistics" hidden></section>
       <p id="message" role="status"></p><button id="execute" class="primary">Execute plan</button>
     </aside>
   </div>
@@ -72,12 +77,15 @@ let nodePoints: { id: string; p: [number, number] }[] = [];
 let encounterPoints: { event: Opportunity; p: [number, number] }[] = [];
 let menuLabels: string[] = [];
 let objectPoints: { id: string; p: [number, number]; radius: number }[] = [];
+const logisticsUI = mountLogistics(el('logistics'), {session: () => session, edit: change => edited(change), epoch: () => previewTime ?? pinnedTime,
+  preview: t => {selectedBurn = undefined; previewTime = t; pinnedTime = t; setPlaying(false); refreshInspector(); updateUI(); render();},
+  example: () => edited(() => session.change(validateBundle(roundTrip).program))});
 const endTime = () => session.scenario.epoch + session.scenario.duration;
 const currentBurn = () => session.draft.burns.find(b => b.id === selectedBurn);
 const limit = () => session.scenario.bodies.length > 1 ? 0.03 : 0.25;
 const gain = () => session.scenario.bodies.length > 1 ? 4000 : 600;
 const statusLabel = (status: Sample['status']) => ({ running: 'Running', horizon: 'Complete', collision: 'Surface contact',
-  'unsupported-approach': 'Approach unresolved', 'burn-rejected': 'Not enough fuel', 'work-limit': 'Prediction incomplete' })[status];
+  'unsupported-approach': 'Approach unresolved', 'burn-rejected': 'Not enough fuel', 'work-limit': 'Prediction incomplete', 'operation-rejected': 'Operation blocked' })[status];
 
 function samplePrediction(prediction: Prediction, t: number): Sample {
   const rows = prediction.samples; t = Math.min(t, prediction.terminal.t);
@@ -91,6 +99,8 @@ function samplePrediction(prediction: Prediction, t: number): Sample {
 }
 function relative(y: State, t: number): State {
   if (frameSelect.value === session.scenario.rendezvous?.target.id && targetReference) return frameState(session.scenario, y, t, 'ship', targetReference.sample(t).y);
+  const port = session.scenario.logistics?.ports.find(p => p.id === frameSelect.value);
+  if (port) return frameState(session.scenario, y, t, 'ship', portState(port, t));
   return frameState(session.scenario, y, t, frameSelect.value,
     frameSelect.value === 'ship' ? acceptedReference.sample(t).y : [0, 0, 0, 0]);
 }
@@ -117,16 +127,16 @@ function install(next: EditorSession, preview = next.scenario.epoch) {
   baseline = predict({ scenario: session.scenario, program: session.baseline }, -1); draft = baseline;
   selectedObject = 'ship'; selectedBurn = undefined; planning = false; handle = undefined; previewTime = undefined;
   pinnedTime = preview; setPlaying(false); message(); latency = []; feedbackLatency = []; lastEditAt = 0;
-  selectOptions(frameSelect, [['inertial', 'Inertial'], ...session.scenario.bodies.map(b => [b.id, b.id + ' centered'] as [string, string]), ['ship', 'Execution ship'], ...(session.scenario.rendezvous ? [[session.scenario.rendezvous.target.id, 'Target centered'] as [string, string]] : [])]);
+  selectOptions(frameSelect, [['inertial', 'Inertial'], ...session.scenario.bodies.map(b => [b.id, b.id + ' centered'] as [string, string]), ['ship', 'Execution ship'], ...(session.scenario.logistics?.ports.map(p => [p.id, p.id + ' centered'] as [string,string]) ?? []), ...(session.scenario.rendezvous ? [[session.scenario.rendezvous.target.id, 'Target centered'] as [string, string]] : [])]);
   const bodies = session.scenario.bodies.map(b => [b.id, b.id] as [string, string]);
   selectOptions(el('burn-reference'), bodies); selectOptions(el('encounter-body'), bodies, bodies.at(-1)?.[0]);
-  el('objects').replaceChildren(...[['ship', 'Ship'], ...bodies, ...(session.scenario.rendezvous ? [[session.scenario.rendezvous.target.id, 'Target']] : [])].map(([id, label]) => {
+  el('objects').replaceChildren(...[['ship', 'Ship'], ...bodies, ...(session.scenario.logistics?.ports.map(p => [p.id,p.id]) ?? []), ...(session.scenario.rendezvous ? [[session.scenario.rendezvous.target.id, 'Target']] : [])].map(([id, label]) => {
     const button = document.createElement('button'); button.textContent = label; button.dataset.object = id;
     button.addEventListener('click', () => { selectedObject = id; planning = false; updateUI(); render(); }); return button;
   }));
   slider.min = String(session.scenario.epoch); slider.max = String(endTime());
-  el<HTMLSelectElement>('scene').value = session.scenario.id === 'm1-orbit-v1' ? 'orbit' : session.scenario.id === binary.scenario.id ? 'moon' : session.scenario.rendezvous ? 'rendezvous' : '';
-  el('goal').hidden = !session.scenario.rendezvous && session.scenario.id !== 'm1-orbit-v1' && session.scenario.id !== binary.scenario.id;
+  el<HTMLSelectElement>('scene').value = session.scenario.id === 'm1-orbit-v1' ? 'orbit' : session.scenario.id === binary.scenario.id ? 'moon' : session.scenario.logistics ? 'delivery' : session.scenario.rendezvous ? 'rendezvous' : '';
+  el('goal').hidden = !session.scenario.logistics && !session.scenario.rendezvous && session.scenario.id !== 'm1-orbit-v1' && session.scenario.id !== binary.scenario.id;
   el('goal-label').textContent = session.scenario.rendezvous ? `Meet target · t ${session.scenario.rendezvous.arrivalEpoch.toFixed(3)}` : session.scenario.id === binary.scenario.id ? 'Moon altitude · t 2.4–2.6' : 'Apoapsis in the band';
   el<HTMLTextAreaElement>('json').value = session.serialize(preview); fit(); refreshInspector(); schedulePrediction();
 }
@@ -177,6 +187,11 @@ function updateUI() {
     goalAchieved = !!meet && meet.positionError < tolerance.position && meet.relativeSpeed < tolerance.velocity;
     el('goal-label').textContent = meet?.kind === 'match-orbit' ? `Match orbit · t ${meet.t.toFixed(3)}` : `Meet target · t ${(meet?.t ?? session.scenario.rendezvous.arrivalEpoch).toFixed(3)}`;
     el('goal-value').textContent = pending ? '…' : goalAchieved ? (meet?.kind === 'match-orbit' ? 'Orbit matched' : 'Matched') : meet ? `Miss ${meet.positionError.toFixed(3)}` : '—';
+  }
+  if (session.scenario.logistics) {
+    const goal = session.scenario.logistics.objective; goalAchieved = !!draft.logistics?.complete && draft.terminal.status === 'horizon';
+    el('goal-label').textContent = `${goal.quota.toFixed(3)} to ${goal.destinationId} · return ${goal.returnPortId} ≥ ${goal.minPropellant.toFixed(3)} fuel`;
+    el('goal-value').textContent = pending ? '…' : draft.terminal.status === 'operation-rejected' ? 'Operation blocked' : draft.logistics?.reason ?? '—';
   }
   el('goal').classList.toggle('achieved', !pending && draft.accuracy?.status === 'converged' && goalAchieved);
   el('targeting').hidden = !session.scenario.rendezvous;
@@ -258,6 +273,8 @@ function render() {
   if (!session) return;
   const live = session.execution.current; if (live.status !== 'running') setPlaying(false);
   const t = previewTime ?? live.t, ghost = samplePrediction(draft, t), s = session.scenario;
+  logisticsUI.update(draft, previewTime === undefined ? live : ghost, pending);
+  if (s.logistics && !pending && draft.terminal.status === 'operation-rejected') message(draft.terminal.detail);
   el('time').textContent = live.t.toFixed(3); el('preview-time').textContent = t.toFixed(3); slider.value = String(t);
   el('status').textContent = live.status === 'running' ? (playing ? 'Running' : 'Paused') : statusLabel(live.status);
   el('hint').textContent = handle?.axis === 'time' ? 'Move left/right · click to set · Esc to cancel' : handle ? 'Move · click to set · Esc to cancel' : planning && !selectedBurn ? 'Click the orbit to place a maneuver' : planning && selectedBurn ? 'Click R, T or the node to adjust' : '';
@@ -304,6 +321,13 @@ function render() {
     if (selectedObject === body.id) { ctx.beginPath(); ctx.arc(...p, radius + 6, 0, 2 * Math.PI); ctx.strokeStyle = '#e8eff3'; ctx.lineWidth = 1; ctx.stroke(); }
     ctx.font = '13px system-ui'; ctx.fillStyle = '#a8bbc6'; ctx.fillText(body.id, p[0] + radius + 8, p[1] + 4);
   }
+  for (const port of s.logistics?.ports ?? []) {
+    ctx.beginPath(); ctx.strokeStyle = '#80c8be33'; ctx.lineWidth = 1;
+    draft.samples.forEach((sample, i) => {const p = point(portState(port, sample.t), sample.t); if (i) ctx.lineTo(...p); else ctx.moveTo(...p);}); ctx.stroke();
+    const p = point(portState(port, t), t); objectPoints.push({id: port.id, p, radius: 9});
+    ctx.strokeStyle = '#80c8be'; ctx.lineWidth = selectedObject === port.id ? 3 : 2; ctx.strokeRect(p[0]-7,p[1]-7,14,14);
+    ctx.font = '12px system-ui'; ctx.fillStyle = '#80c8be'; ctx.fillText(port.id,p[0]+12,p[1]-10);
+  }
   if (targetReference && s.rendezvous) {
     const target = targetReference.sample(t), p = point(target.y, target.t);
     objectPoints.push({ id: s.rendezvous.target.id, p, radius: 8 });
@@ -345,7 +369,7 @@ function render() {
     accepted: session.accepted, baseline: session.baseline, revision: session.revision, readyRevision: draft.revision, pending,
     previewTime: previewTime ?? null, pinnedTime, mode: handle?.axis === 'time' ? 'time-edit' : handle ? 'handle-edit' : selectedBurn ? 'epoch-pinned' : planning ? 'hover-preview' : 'inspect',
     selectedObject, selectedBurn, frame: frameSelect.value, camera, handles, nodePoints, apsisPoints, encounterPoints, objectPoints, menuLabels, geometry,
-    targeting: { solving, proposal: proposal?.value ?? null, revision: proposal?.revision, status: solveStatus }, rendezvous: draft.rendezvous, terminal: draft.terminal, diagnostics: draft.diagnostics, accuracy: draft.accuracy, latency, feedbackLatency }, null, 2);
+    targeting: { solving, proposal: proposal?.value ?? null, revision: proposal?.revision, status: solveStatus }, rendezvous: draft.rendezvous, logisticsResult: draft.logistics, terminal: draft.terminal, diagnostics: draft.diagnostics, accuracy: draft.accuracy, latency, feedbackLatency }, null, 2);
 }
 
 type Pick = { kind: 'handle' | 'node' | 'apsis' | 'encounter' | 'object' | 'manual'; label: string; t?: number; run: () => void };
@@ -467,7 +491,7 @@ document.addEventListener('keydown', event => {
 });
 frameSelect.addEventListener('change', () => { closeMenu(); if (handle) finishHandle(false); fit(); render(); });
 el('fit').addEventListener('click', () => { closeMenu(); if (!handle) { fit(); render(); } });
-el('focus').addEventListener('click', () => { if (handle) return; const t = previewTime ?? session.execution.current.t, y = selectedObject === 'ship' ? samplePrediction(draft, t).y : selectedObject === session.scenario.rendezvous?.target.id && targetReference ? targetReference.sample(t).y : bodyState(session.scenario.bodies.find(b => b.id === selectedObject)!, t); const r = relative(y, t); camera.center = [r[0], r[1]]; render(); });
+el('focus').addEventListener('click', () => { if (handle) return; const t = previewTime ?? session.execution.current.t, y = selectedObject === 'ship' ? samplePrediction(draft, t).y : selectedObject === session.scenario.rendezvous?.target.id && targetReference ? targetReference.sample(t).y : session.scenario.logistics?.ports.some(p => p.id === selectedObject) ? portState(session.scenario.logistics.ports.find(p => p.id === selectedObject)!, t) : bodyState(session.scenario.bodies.find(b => b.id === selectedObject)!, t); const r = relative(y, t); camera.center = [r[0], r[1]]; render(); });
 el('encounter-body').addEventListener('change', () => updateUI());
 el('execute').addEventListener('click', () => {
   try { session.execute(); acceptedReference = new Runner({ scenario: session.scenario, program: session.accepted }); previewTime = undefined; planning = false; selectedBurn = undefined; setPlaying(true); message(); refreshInspector(); updateUI(); render(); }
@@ -478,7 +502,7 @@ el('step').addEventListener('click', () => { setPlaying(false); previewTime = un
 el('reset').addEventListener('click', () => { setPlaying(false); previewTime = undefined; session.execution.reset(); render(); });
 slider.addEventListener('input', () => { if (handle) finishHandle(false); previewTime = Number(slider.value); pinnedTime = previewTime; setPlaying(false); render(); });
 el('live').addEventListener('click', () => { previewTime = undefined; render(); });
-el('scene').addEventListener('change', () => install(new EditorSession(validateBundle(el<HTMLSelectElement>('scene').value === 'moon' ? binary : el<HTMLSelectElement>('scene').value === 'rendezvous' ? rendezvous : orbit))));
+el('scene').addEventListener('change', () => install(new EditorSession(validateBundle(el<HTMLSelectElement>('scene').value === 'moon' ? binary : el<HTMLSelectElement>('scene').value === 'rendezvous' ? rendezvous : el<HTMLSelectElement>('scene').value === 'delivery' ? delivery : orbit))));
 el('files').addEventListener('click', () => { const panel = el<HTMLDetailsElement>('file-panel'); panel.open = !panel.open; if (panel.open) panel.scrollIntoView({ behavior: 'smooth' }); });
 el('save').addEventListener('click', () => { el<HTMLTextAreaElement>('json').value = session.serialize(previewTime ?? session.execution.current.t); el('import-status').textContent = 'Saved'; });
 el('download').addEventListener('click', () => { const url = URL.createObjectURL(new Blob([session.serialize(previewTime ?? session.execution.current.t)], { type: 'application/json' })); const a = document.createElement('a'); a.href = url; a.download = 'orbital-logistics-plan.json'; a.click(); URL.revokeObjectURL(url); });

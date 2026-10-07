@@ -1,0 +1,186 @@
+{
+  "scenario": {
+    "schemaVersion": 1,
+    "modelVersion": "rk4-canonical-v1",
+    "id": "m3-delivery-v1",
+    "units": {
+      "length": "reference orbital radius",
+      "time": "inverse circular angular rate",
+      "mass": "reference dry mass"
+    },
+    "epoch": 0,
+    "duration": 24,
+    "policy": {
+      "step": 0.001953125,
+      "maxNodes": 65536,
+      "maxSubdivision": 16
+    },
+    "bodies": [
+      {
+        "id": "primary",
+        "mu": 1,
+        "radius": 0.08,
+        "rail": {
+          "kind": "fixed",
+          "position": [
+            0,
+            0
+          ]
+        }
+      }
+    ],
+    "ship": {
+      "id": "ship",
+      "state": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "dryMass": 1,
+      "cargoMass": 0,
+      "propellant": 0.2,
+      "tankCapacity": 0.6,
+      "exhaustVelocity": 3
+    },
+    "logistics": {
+      "modelVersion": "kinematic-ports-v1",
+      "ports": [
+        {
+          "id": "Home",
+          "rail": {
+            "kind": "circular",
+            "center": [
+              0,
+              0
+            ],
+            "radius": 1,
+            "rate": 1,
+            "phase": 0
+          },
+          "cargo": 1,
+          "cargoCapacity": 1,
+          "propellant": 0.4,
+          "tankCapacity": 0.4,
+          "serviceDuration": 0.25
+        },
+        {
+          "id": "Depot",
+          "rail": {
+            "kind": "circular",
+            "center": [
+              0,
+              0
+            ],
+            "radius": 1.4,
+            "rate": 0.6036816105203691,
+            "phase": 0.8467093134799941
+          },
+          "cargo": 0,
+          "cargoCapacity": 1,
+          "propellant": 0.25,
+          "tankCapacity": 0.25,
+          "serviceDuration": 0.25
+        }
+      ],
+      "cargoCapacity": 0.2,
+      "capture": {
+        "position": 0.00001,
+        "velocity": 0.00001
+      },
+      "objective": {
+        "destinationId": "Depot",
+        "quota": 0.2,
+        "returnPortId": "Home",
+        "minPropellant": 0.15,
+        "hardwareCost": 1
+      }
+    }
+  },
+  "program": {
+    "schemaVersion": 1,
+    "id": "m3-round-trip-v1",
+    "burns": [
+      {
+        "id": "outbound",
+        "t": 0.5,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.08012344973464347
+      },
+      {
+        "id": "arrival",
+        "t": 4.629730790872742,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.07363750491805698
+      },
+      {
+        "id": "return",
+        "t": 15.497026245592098,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": -0.07363750491805698
+      },
+      {
+        "id": "home-arrival",
+        "t": 19.626757036464838,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": -0.08012344973464347
+      }
+    ],
+    "operations": [
+      {
+        "id": "dock-home",
+        "t": 0,
+        "portId": "Home",
+        "kind": "dock"
+      },
+      {
+        "id": "load",
+        "t": 0,
+        "portId": "Home",
+        "kind": "transfer",
+        "cargo": 0.2,
+        "propellant": 0
+      },
+      {
+        "id": "leave-home",
+        "t": 0.5,
+        "portId": "Home",
+        "kind": "undock"
+      },
+      {
+        "id": "dock-depot",
+        "t": 4.629730790872742,
+        "portId": "Depot",
+        "kind": "dock"
+      },
+      {
+        "id": "unload-refuel",
+        "t": 4.629730790872742,
+        "portId": "Depot",
+        "kind": "transfer",
+        "cargo": -0.2,
+        "propellant": 0.1
+      },
+      {
+        "id": "leave-depot",
+        "t": 15.497026245592098,
+        "portId": "Depot",
+        "kind": "undock"
+      },
+      {
+        "id": "return-home",
+        "t": 19.626757036464838,
+        "portId": "Home",
+        "kind": "dock"
+      }
+    ]
+  }
+}

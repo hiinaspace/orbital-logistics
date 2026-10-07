@@ -1,13 +1,16 @@
 import { bodyState, certifiedCoast, rk4 } from './dynamics';
+import { portState, logisticsResult, copyLogistics, type LogisticsState } from './logistics';
 import { MODEL, parseBundle, validateBundle, type Bundle, type State } from './schema';
 
-export type Status = 'running' | 'horizon' | 'collision' | 'unsupported-approach' | 'burn-rejected' | 'work-limit';
+export type Status = 'running' | 'horizon' | 'collision' | 'unsupported-approach' | 'burn-rejected' | 'work-limit' | 'operation-rejected';
 export interface LedgerEntry {
-  t: number; kind: 'burn' | 'burn-rejected' | 'collision' | 'unsupported-approach' | 'work-limit';
+  t: number; kind: 'burn' | 'burn-rejected' | 'collision' | 'unsupported-approach' | 'work-limit' | 'dock' | 'undock' | 'transfer-start' | 'transfer' | 'operation-rejected';
   id: string; deltaV: number; fuelUsed: number; propellantBefore: number; propellantAfter: number;
+  portId?: string; cargoBefore?: number; cargoAfter?: number; portCargoBefore?: number; portCargoAfter?: number;
+  portPropellantBefore?: number; portPropellantAfter?: number; detail?: string;
 }
 export interface Sample {
-  t: number; y: State; propellant: number; burnCursor: number; status: Status; detail: string;
+  t: number; y: State; propellant: number; burnCursor: number; status: Status; detail: string; logistics?: LogisticsState;
 }
 export interface CoastSegment { t0: number; y0: State; t1: number; y1: State }
 interface Node extends Sample { nextGridIndex: number }
@@ -32,14 +35,15 @@ export class Runner {
     const s = this.#bundle.scenario;
     this.#requestedEpoch = s.epoch;
     this.#nodes.push({ t: s.epoch, y: [...s.ship.state], propellant: s.ship.propellant,
-      burnCursor: 0, nextGridIndex: 1, status: 'running', detail: '' });
+      burnCursor: 0, nextGridIndex: 1, status: 'running', detail: '',
+      ...(s.logistics ? {logistics: {operationCursor: 0, cargoMass: s.ship.cargoMass, fuelUsed: 0, ports: s.logistics.ports.map(p => ({id: p.id, cargo: p.cargo, propellant: p.propellant}))}} : {}) });
     for (const body of s.bodies) {
       const b = bodyState(body, s.epoch), y = s.ship.state;
       if (Math.hypot(y[0] - b[0], y[1] - b[1]) <= body.radius) {
         this.#stop('collision', body.id); break;
       }
     }
-    this.#applyBurn();
+    this.#applyEvents();
   }
   get bundle(): Bundle { return clone(this.#bundle); }
   get retainedNodes(): number { return this.#nodes.length; }
@@ -54,10 +58,11 @@ export class Runner {
   #applyBurn(): void {
     const n = this.#last(), s = this.#bundle.scenario, b = this.#bundle.program.burns[n.burnCursor];
     if (n.status !== 'running' || !b || b.t !== n.t) return;
+    if (n.logistics?.dockedPortId) { this.#rejectOperation(b.id, 'Undock before a burn'); return; }
     const ref = bodyState(s.bodies.find(body => body.id === b.referenceBodyId)!, n.t);
     const dx = n.y[0] - ref[0], dy = n.y[1] - ref[1], r = Math.hypot(dx, dy);
     const deltaV = Math.hypot(b.radial, b.transverse);
-    const mass = s.ship.dryMass + s.ship.cargoMass + n.propellant;
+    const mass = s.ship.dryMass + (n.logistics?.cargoMass ?? s.ship.cargoMass) + n.propellant;
     const used = mass * -Math.expm1(-deltaV / s.ship.exhaustVelocity);
     const before = n.propellant;
     const vx = n.y[2] + (b.radial * dx - b.transverse * dy) / r;
@@ -69,12 +74,72 @@ export class Runner {
       return;
     }
     n.y = [n.y[0], n.y[1], vx, vy]; n.propellant -= used; n.burnCursor++;
+    if (n.logistics) n.logistics.fuelUsed += used;
     this.#ledger.push({ t: n.t, kind: 'burn', id: b.id, deltaV, fuelUsed: used,
       propellantBefore: before, propellantAfter: n.propellant });
+  }
+  #rejectOperation(id: string, detail: string): void {
+    const n = this.#last(); n.status = 'operation-rejected'; n.detail = `${id}: ${detail}`;
+    this.#ledger.push({t: n.t, kind: 'operation-rejected', id, deltaV: 0, fuelUsed: 0, propellantBefore: n.propellant, propellantAfter: n.propellant, detail});
+  }
+  #applyEvents(): void {
+    const n = this.#last(), s = this.#bundle.scenario, l = n.logistics, spec = s.logistics;
+    if (n.status !== 'running') return;
+    if (!l || !spec) { this.#applyBurn(); return; }
+    // Fixed simultaneous order: completion, undock, burn, dock, transfer start.
+    if (l.service?.end === n.t) {
+      const service = l.service, port = l.ports.find(p => p.id === service.portId)!;
+      this.#ledger.push({t: n.t, kind: 'transfer', id: service.id, portId: port.id, deltaV: 0, fuelUsed: 0,
+        propellantBefore: n.propellant, propellantAfter: n.propellant + service.propellant,
+        cargoBefore: l.cargoMass, cargoAfter: l.cargoMass + service.cargo, portCargoBefore: port.cargo, portCargoAfter: port.cargo - service.cargo,
+        portPropellantBefore: port.propellant, portPropellantAfter: port.propellant - service.propellant});
+      l.cargoMass += service.cargo; port.cargo -= service.cargo;
+      n.propellant += service.propellant; port.propellant -= service.propellant; delete l.service;
+    }
+    const operations = this.#bundle.program.operations ?? [];
+    const operate = () => {
+      const op = operations[l.operationCursor], port = spec.ports.find(p => p.id === op.portId)!;
+      if (l.service) { this.#rejectOperation(op.id, `Service ${l.service.id} finishes at t ${l.service.end.toFixed(3)}`); return; }
+      if (op.kind === 'dock') {
+        if (l.dockedPortId) { this.#rejectOperation(op.id, `Already docked at ${l.dockedPortId}`); return; }
+        const y = portState(port, n.t), distance = Math.hypot(n.y[0] - y[0], n.y[1] - y[1]), speed = Math.hypot(n.y[2] - y[2], n.y[3] - y[3]);
+        if (distance > spec.capture.position || speed > spec.capture.velocity) {
+          this.#rejectOperation(op.id, `Capture ${port.id}: miss ${distance.toExponential(2)}, speed ${speed.toExponential(2)}`); return;
+        }
+        const used = (s.ship.dryMass + l.cargoMass + n.propellant) * -Math.expm1(-speed / s.ship.exhaustVelocity);
+        if (used > n.propellant || !Number.isFinite(used)) { this.#rejectOperation(op.id, 'Not enough fuel for capture residual'); return; }
+        const before = n.propellant; n.propellant -= used; l.fuelUsed += used;
+        // Explicit constrained-port interface: bounded position attachment and a
+        // fully charged residual velocity impulse. There is no free capture burn.
+        n.y = y; l.dockedPortId = port.id;
+        this.#ledger.push({t: n.t, kind: 'dock', id: op.id, portId: port.id, deltaV: speed, fuelUsed: used, propellantBefore: before, propellantAfter: n.propellant});
+      } else if (l.dockedPortId !== port.id) { this.#rejectOperation(op.id, `Dock at ${port.id} first`); return; }
+      else if (op.kind === 'undock') {
+        delete l.dockedPortId;
+        this.#ledger.push({t: n.t, kind: 'undock', id: op.id, portId: port.id, deltaV: 0, fuelUsed: 0, propellantBefore: n.propellant, propellantAfter: n.propellant});
+      } else {
+        const stock = l.ports.find(p => p.id === port.id)!, cargo = l.cargoMass + op.cargo, portCargo = stock.cargo - op.cargo;
+        const fuel = n.propellant + op.propellant, portFuel = stock.propellant - op.propellant;
+        if (cargo < 0 || cargo > spec.cargoCapacity || portCargo < 0 || portCargo > port.cargoCapacity || fuel > s.ship.tankCapacity || portFuel < 0 || !Number.isFinite(s.ship.dryMass + cargo + fuel)) {
+          this.#rejectOperation(op.id, 'Transfer exceeds cargo, fuel stock or capacity'); return;
+        }
+        l.service = {id: op.id, portId: port.id, end: n.t + port.serviceDuration, cargo: op.cargo, propellant: op.propellant};
+        this.#ledger.push({t: n.t, kind: 'transfer-start', id: op.id, portId: port.id, deltaV: 0, fuelUsed: 0, propellantBefore: n.propellant, propellantAfter: n.propellant});
+      }
+      l.operationCursor++;
+    };
+    while (operations[l.operationCursor]?.t === n.t && operations[l.operationCursor].kind === 'undock' && n.status === 'running') operate();
+    this.#applyBurn();
+    while (operations[l.operationCursor]?.t === n.t && n.status === 'running') operate();
+    if (logisticsResult(spec, l, n.propellant).complete) l.completedAt ??= n.t; else delete l.completedAt;
   }
   #coast(end: number, depth = 0): boolean {
     const n = this.#last(), s = this.#bundle.scenario, dt = end - n.t;
     if (this.#nodes.length >= s.policy.maxNodes) { this.#stop('work-limit', 'retained-node budget'); return false; }
+    if (n.logistics?.dockedPortId) {
+      const port = s.logistics!.ports.find(p => p.id === n.logistics!.dockedPortId)!;
+      this.#nodes.push({...n, logistics: copyLogistics(n.logistics), t: end, y: portState(port, end)}); return true;
+    }
     if (!certifiedCoast(s, n.t, n.y, dt)) {
       if (depth >= s.policy.maxSubdivision || n.t + dt / 2 === n.t) {
         this.#stop('unsupported-approach', 'clearance certificate exhausted'); return false;
@@ -84,7 +149,7 @@ export class Runner {
     }
     const y = rk4(s, n.t, n.y, dt);
     if (y.some(v => !Number.isFinite(v))) { this.#stop('unsupported-approach', 'nonfinite propagation'); return false; }
-    this.#nodes.push({ ...n, t: end, y });
+    this.#nodes.push({ ...n, ...(n.logistics ? {logistics: copyLogistics(n.logistics)} : {}), t: end, y });
     return true;
   }
   #ensure(t: number): void {
@@ -92,10 +157,11 @@ export class Runner {
     while (this.#last().t <= t && this.#last().status === 'running') {
       const n = this.#last(), grid = s.epoch + n.nextGridIndex * s.policy.step;
       const burn = this.#bundle.program.burns[n.burnCursor];
-      const end = Math.min(grid, burn?.t ?? Infinity, s.epoch + s.duration);
+      const operation = this.#bundle.program.operations?.[n.logistics?.operationCursor ?? 0];
+      const end = Math.min(grid, burn?.t ?? Infinity, operation?.t ?? Infinity, n.logistics?.service?.end ?? Infinity, s.epoch + s.duration);
       if (!this.#coast(end)) break;
       if (end === grid) this.#last().nextGridIndex++;
-      this.#applyBurn();
+      this.#applyEvents();
       if (this.#last().status === 'running' && end === s.epoch + s.duration) this.#last().status = 'horizon';
     }
   }
@@ -116,8 +182,8 @@ export class Runner {
     const last = this.#last();
     if (t > last.t) t = last.t; // Terminated forecasts have no continuation.
     const n = this.#nodes[this.#index(t)];
-    const y = t === n.t ? [...n.y] as State : rk4(s, n.t, n.y, t - n.t);
-    return { t, y, propellant: n.propellant, burnCursor: n.burnCursor, status: n.status, detail: n.detail };
+    const y = n.logistics?.dockedPortId ? portState(s.logistics!.ports.find(p => p.id === n.logistics!.dockedPortId)!, t) : t === n.t ? [...n.y] as State : rk4(s, n.t, n.y, t - n.t);
+    return { t, y, propellant: n.propellant, burnCursor: n.burnCursor, status: n.status, detail: n.detail, ...(n.logistics ? {logistics: copyLogistics(n.logistics)} : {}) };
   }
   advanceTo(t: number): Sample { const result = this.sample(t); this.#requestedEpoch = t; return result; }
   advance(dt: number): Sample {
@@ -133,9 +199,10 @@ export class Runner {
     for (let i = 1; i < this.#nodes.length; i++) {
       const a = this.#nodes[i - 1], b = this.#nodes[i];
       if (a.t >= horizon || a.status !== 'running') break;
+      if (a.logistics?.dockedPortId) continue;
       const end = Math.min(b.t, horizon);
       segments.push({ t0: a.t, y0: [...a.y], t1: end,
-        y1: end === b.t && a.burnCursor === b.burnCursor ? [...b.y] : rk4(this.#bundle.scenario, a.t, a.y, end - a.t) });
+        y1: end === b.t && a.burnCursor === b.burnCursor && a.logistics?.operationCursor === b.logistics?.operationCursor ? [...b.y] : rk4(this.#bundle.scenario, a.t, a.y, end - a.t) });
     }
     return segments;
   }

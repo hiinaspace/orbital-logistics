@@ -1,12 +1,14 @@
 # Tactical plan — 2026-10-06
 
-Status: **M1 accepted; M2 helper reviewed; encounter follow-up validated; M3 authorized**.
+Status: **M1 accepted; M2 reviewed; encounter follow-up validated; initial M3a implemented**.
 On 2026-10-06 the user accepted the manual editor and initial rendezvous helper,
 requested encounter markers, selected-node hover and overlap selection, then
 explicitly authorized continuing with M3 tasks. Those M2 follow-ups are implemented
 and validated; see [encounter evidence](evidence/m2-encounters.md),
 [initial M2 evidence](evidence/m2.md), [M1](evidence/m1.md) and [M0](evidence/m0.md).
-Next is M3a's bounded one-tug reusable delivery, before M3b's joint handoff.
+M3a now implements one-tug reusable delivery, finite service inventories, return
+constraints and a validated authored round trip; see [M3a evidence](evidence/m3.md).
+M3b's joint handoff and the M3 synchronization/product gate remain open.
 The remainder records the reviewed plan and intended sequence.
 Source: /home/s/org/projects/orbital-logistics/charter.md.
 
@@ -249,6 +251,16 @@ a curved path is insufficient. Human voluntary optimization is the product gate.
 **M5/M6:** only after product evidence, choose sustained service or one station/
 processing/finite-thrust extension. Keep each a separate experiment. Exact cosmic
 repetition, full N-body planets, 3D and engine ports are not prerequisites.
+
+## Reusable route intent
+
+The user clarified that matching an orbit before phasing is useful, and cyclic
+routes will require dynamically calculated corrections. Preserve authored intent
+separately from resolved burns; prediction and execution must use the same pure,
+bounded resolver from the actual preceding state. M2 assistance provenance and
+M3a absolute-epoch operations remain static. See [route intent](route-intent.md)
+for the architectural direction, open transfer-to-orbit semantics and required
+evidence. Do not build a general route language in the current M3a slice.
 
 ## Work allocation
 

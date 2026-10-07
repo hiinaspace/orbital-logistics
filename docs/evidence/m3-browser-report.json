@@ -1,0 +1,36 @@
+{
+  "host": "natto",
+  "chrome": "154.0.8037.97",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "observations": [
+    {
+      "epoch": 4.5,
+      "dispatchToReadyMs": 249.20241699999997,
+      "latestInputToFreshPaintMs": 77.30000001192093,
+      "status": "operation-rejected"
+    },
+    {
+      "epoch": 4.629730790872742,
+      "dispatchToReadyMs": 327.94520699999975,
+      "latestInputToFreshPaintMs": 168.30000001192093,
+      "status": "horizon"
+    }
+  ],
+  "errors": [],
+  "final": {
+    "delivered": 0.2,
+    "quota": 0.2,
+    "home": true,
+    "empty": true,
+    "fueled": true,
+    "complete": true,
+    "reason": "Delivery complete",
+    "completedAt": 19.626757036464838,
+    "propellantUsed": 0.13140358472499172,
+    "hardwareCost": 1
+  },
+  "method": "Two separate headless edit observations, recorded alongside the regression suite. Dispatch includes a final 100ms settling wait; input-to-fresh-paint is application instrumentation. Not a latency distribution."
+}

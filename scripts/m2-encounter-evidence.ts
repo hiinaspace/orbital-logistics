@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync, writeFileSync, copyFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { hostname } from 'node:os';
 import { discoverEncounters, proposeEncounter } from '../src/planning/encounters';
 import { solveRendezvous } from '../src/planning/rendezvous';
@@ -26,4 +26,3 @@ for (const label of ['manual-intercept', 'phase-offset-match', 'moved-departure'
   cases.push({label, seed, events, result, bundle, steps});
 }
 writeFileSync('docs/evidence/m2-encounter-oracle-input.json', JSON.stringify({environment: {host: hostname(), node: process.version}, cases})+'\n');
-for (const name of ['m2-encounter-menu', 'm2-orbit-matched']) copyFileSync(`test-results/${name}.png`, `docs/evidence/${name}.png`);

@@ -5,7 +5,9 @@ Published hobby identity: Hiina <hiina@hiina.space>.
 Read docs/charter.md and docs/plan.md. The charter is design intent; evidence in
  docs/evidence/ describes what was actually tested. M0 and the M1 manual editor
 are implemented and M1 is user-accepted. M2 and its encounter follow-up are implemented; the user reviewed the helper
-and authorized M3 on 2026-10-06. Start with bounded M3a before joint M3b.
+and authorized M3 on 2026-10-06. Initial M3a is implemented; see docs/evidence/m3.md.
+Review its one-tug service/return flow before joint M3b. docs/route-intent.md records
+the user-requested dynamic command direction; current burns/operations remain static.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

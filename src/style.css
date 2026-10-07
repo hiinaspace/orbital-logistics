@@ -516,3 +516,10 @@ pre {
 #hit-menu button:hover, #hit-menu button:focus-visible {
   background: #29414e;
 }
+
+#inventories { font-size: 11px; margin-top: 12px; }
+#inventories div { display: flex; justify-content: space-between; gap: 8px; margin: 10px 0; }
+#op-editor .buttons { gap: 5px; flex-wrap: wrap; }
+#op-editor .buttons button { padding: 6px 8px; }
+#logistics { border-top: 1px solid #283d4a; margin-top: 18px; }
+@media(min-width:851px) { .scene { position: sticky; top: 16px; } }

@@ -5,6 +5,20 @@ export type Rail =
   | { kind: 'fixed'; position: [number, number] }
   | { kind: 'circular'; center: [number, number]; radius: number; rate: number; phase: number };
 export interface Body { id: string; mu: number; radius: number; rail: Rail }
+export interface Port {
+  id: string; rail: Extract<Rail, {kind: 'circular'}>;
+  cargo: number; cargoCapacity: number; propellant: number; tankCapacity: number;
+  serviceDuration: number;
+}
+export interface Logistics {
+  modelVersion: 'kinematic-ports-v1'; ports: Port[]; cargoCapacity: number;
+  capture: {position: number; velocity: number};
+  objective: {destinationId: string; quota: number; returnPortId: string; minPropellant: number; hardwareCost: number};
+}
+export type Operation = {id: string; t: number; portId: string} & (
+  {kind: 'dock'} | {kind: 'undock'} | {kind: 'transfer'; cargo: number; propellant: number});
+export const operationOrder = (o: Operation) => ({undock: 0, dock: 1, transfer: 2})[o.kind];
+export const compareOperations = (a: Operation, b: Operation) => a.t - b.t || operationOrder(a) - operationOrder(b);
 export interface Rendezvous {
   target: { id: string; state: State };
   referenceBodyId: string; departureEpoch: number; arrivalEpoch: number;
@@ -19,6 +33,7 @@ export interface Scenario {
   policy: { step: number; maxNodes: number; maxSubdivision: number };
   bodies: Body[];
   rendezvous?: Rendezvous;
+  logistics?: Logistics;
   ship: { id: string; state: State; dryMass: number; cargoMass: number;
     propellant: number; tankCapacity: number; exhaustVelocity: number };
 }
@@ -28,7 +43,7 @@ export interface Burn {
   snap?: { bodyId: string; kind: 'periapsis' | 'apoapsis'; window: [number, number]; resolvedEpoch: number };
   assist?: { kind: 'match-orbit' | 'intercept'; targetId: string; targetEpoch: number };
 }
-export interface Program { schemaVersion: 1; id: string; burns: Burn[] }
+export interface Program { schemaVersion: 1; id: string; burns: Burn[]; operations?: Operation[] }
 export interface Bundle { scenario: Scenario; program: Program }
 
 function object(value: unknown): Record<string, unknown> {
@@ -99,6 +114,38 @@ export function validateBundle(value: unknown): Bundle {
       bounds: { radial, transverse }, branch: { direction: 'ccw', revolutions: 0, minClearance: finite(branch.minClearance, 'clearance', 0) },
       tolerance: { position: finite(tolerance.position, 'position tolerance', Number.MIN_VALUE), velocity: finite(tolerance.velocity, 'velocity tolerance', Number.MIN_VALUE) } };
   }
+  if (s.logistics !== undefined) {
+    const l = object(s.logistics), capture = object(l.capture), goal = object(l.objective);
+    if (l.modelVersion !== 'kinematic-ports-v1' || scenario.rendezvous || bodies.length !== 1 || bodies[0].rail.kind !== 'fixed' ||
+        !Array.isArray(l.ports) || l.ports.length !== 2) throw new Error('Unsupported logistics domain');
+    const primary = bodies[0], center = (primary.rail as Extract<Rail, {kind: 'fixed'}>).position;
+    const ports: Port[] = l.ports.map(value => {
+      const port = object(value), r = object(port.rail), radius = finite(r.radius, 'port radius', primary.radius);
+      const rail: Port['rail'] = {kind: 'circular', center: vector(r.center, 2) as [number, number], radius,
+        rate: finite(r.rate, 'port rate'), phase: finite(r.phase, 'port phase')};
+      const expectedRate = Math.sqrt(primary.mu / radius ** 3);
+      if (r.kind !== 'circular' || radius <= primary.radius || rail.center.some((v, i) => v !== center[i]) ||
+          !Number.isFinite(expectedRate) || expectedRate <= 0 || !Number.isFinite(radius * rail.rate) ||
+          !rail.center.every(v => Number.isFinite(v + radius) && Number.isFinite(v - radius)) ||
+          Math.abs(rail.rate / expectedRate - 1) > 1e-12) throw new Error('Unsupported port rail');
+      const result: Port = {id: name(port.id), rail, cargo: finite(port.cargo, 'port cargo', 0), cargoCapacity: finite(port.cargoCapacity, 'port cargo capacity', 0),
+        propellant: finite(port.propellant, 'port propellant', 0), tankCapacity: finite(port.tankCapacity, 'port tank capacity', 0),
+        serviceDuration: finite(port.serviceDuration, 'service duration', Number.MIN_VALUE)};
+      if (result.cargo > result.cargoCapacity || result.propellant > result.tankCapacity || result.serviceDuration > duration) throw new Error('Invalid port capacity/duration');
+      return result;
+    });
+    const ids = [...bodies.map(b => b.id), scenario.ship.id, ...ports.map(p => p.id)];
+    if (new Set(ids).size !== ids.length) throw new Error('Duplicate port ID');
+    const cargoCapacity = finite(l.cargoCapacity, 'cargo capacity', 0);
+    const position = finite(capture.position, 'capture position', Number.MIN_VALUE), velocity = finite(capture.velocity, 'capture velocity', Number.MIN_VALUE);
+    const destinationId = name(goal.destinationId), returnPortId = name(goal.returnPortId);
+    const quota = finite(goal.quota, 'delivery quota', Number.MIN_VALUE), minPropellant = finite(goal.minPropellant, 'return propellant', 0);
+    if (scenario.ship.cargoMass > cargoCapacity || position > 0.001 || velocity > 0.001 || destinationId === returnPortId ||
+        ports.some(p => p.rail.radius - primary.radius <= position) ||
+        !ports.some(p => p.id === destinationId) || !ports.some(p => p.id === returnPortId) || minPropellant > scenario.ship.tankCapacity) throw new Error('Invalid logistics objective/capture');
+    scenario.logistics = {modelVersion: 'kinematic-ports-v1', ports, cargoCapacity, capture: {position, velocity},
+      objective: {destinationId, quota, returnPortId, minPropellant, hardwareCost: finite(goal.hardwareCost, 'hardware cost', 0)}};
+  }
   if (!Array.isArray(p.burns) || p.burns.length > 128) throw new Error('Invalid burns');
   let previous = -Infinity;
   const burns: Burn[] = p.burns.map(value => {
@@ -124,7 +171,24 @@ export function validateBundle(value: unknown): Bundle {
     return burn;
   });
   if (new Set(burns.map(b => b.id)).size !== burns.length) throw new Error('Duplicate burn ID');
-  return { scenario, program: { schemaVersion: 1, id: name(p.id), burns } };
+  const program: Program = { schemaVersion: 1, id: name(p.id), burns };
+  if (p.operations !== undefined) {
+    if (!scenario.logistics || !Array.isArray(p.operations) || p.operations.length > 128) throw new Error('Invalid operations');
+    const operations: Operation[] = p.operations.map(value => {
+      const op = object(value), id = name(op.id), portId = name(op.portId), t = finite(op.t, 'operation epoch', epoch);
+      const port = scenario.logistics!.ports.find(p => p.id === portId);
+      if (!port || t > epoch + duration) throw new Error('Invalid operation port/epoch');
+      if (op.kind === 'dock' || op.kind === 'undock') return {id, t, portId, kind: op.kind};
+      if (op.kind !== 'transfer' || t + port.serviceDuration === t || t + port.serviceDuration > epoch + duration) throw new Error('Invalid transfer/duration');
+      const cargo = finite(op.cargo, 'transfer cargo'), propellant = finite(op.propellant, 'transfer propellant', 0);
+      if (!Number.isFinite(cargo + propellant) || (cargo === 0 && propellant === 0)) throw new Error('Empty transfer');
+      return {id, t, portId, kind: 'transfer', cargo, propellant};
+    });
+    if (new Set([...burns.map(b => b.id), ...operations.map(o => o.id)]).size !== burns.length + operations.length ||
+        operations.some((o, i) => i > 0 && compareOperations(operations[i - 1], o) >= 0)) throw new Error('Invalid operation order/ID');
+    program.operations = operations;
+  }
+  return { scenario, program };
 }
 
 export function parseBundle(json: string): Bundle {

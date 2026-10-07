@@ -1,0 +1,397 @@
+[
+  {
+    "case": "round-trip",
+    "terminal": {
+      "t": 24,
+      "status": "horizon",
+      "fuel": 0.16859641527548666,
+      "fuelUsed": 0.13140358472451336,
+      "cargo": 0.0,
+      "stocks": {
+        "Home": [
+          0.8,
+          0.4
+        ],
+        "Depot": [
+          0.2,
+          0.15
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "dock-home"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.25,
+          "transfer",
+          "load"
+        ],
+        [
+          0.5,
+          "undock",
+          "leave-home"
+        ],
+        [
+          0.5,
+          "burn",
+          "outbound"
+        ],
+        [
+          4.629730790872742,
+          "burn",
+          "arrival"
+        ],
+        [
+          4.629730790872742,
+          "dock",
+          "dock-depot"
+        ],
+        [
+          4.629730790872742,
+          "transfer-start",
+          "unload-refuel"
+        ],
+        [
+          4.879730790872742,
+          "transfer",
+          "unload-refuel"
+        ],
+        [
+          15.497026245592098,
+          "undock",
+          "leave-depot"
+        ],
+        [
+          15.497026245592098,
+          "burn",
+          "return"
+        ],
+        [
+          19.626757036464838,
+          "burn",
+          "home-arrival"
+        ],
+        [
+          19.626757036464838,
+          "dock",
+          "return-home"
+        ]
+      ]
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 1.4559654380696042e-12,
+        "velocity": 7.766253445434517e-13,
+        "oracleRefinement": 9.211778765985544e-12
+      },
+      {
+        "step": 0.0009765625,
+        "position": 9.870282311162551e-14,
+        "velocity": 7.127770162299144e-14,
+        "oracleRefinement": 9.211778765985544e-12
+      },
+      {
+        "step": 0.00048828125,
+        "position": 5.164052952962073e-14,
+        "velocity": 5.1133575002146206e-14,
+        "oracleRefinement": 9.211778765985544e-12
+      }
+    ]
+  },
+  {
+    "case": "missed-capture",
+    "terminal": {
+      "t": 4.529730790872742,
+      "status": "operation-rejected",
+      "fuel": 0.16310395633307126,
+      "fuelUsed": 0.03689604366692875,
+      "cargo": 0.2,
+      "stocks": {
+        "Home": [
+          0.8,
+          0.4
+        ],
+        "Depot": [
+          0,
+          0.25
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "dock-home"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.25,
+          "transfer",
+          "load"
+        ],
+        [
+          0.5,
+          "undock",
+          "leave-home"
+        ],
+        [
+          0.5,
+          "burn",
+          "outbound"
+        ],
+        [
+          4.529730790872742,
+          "operation-rejected",
+          "dock-depot"
+        ]
+      ]
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 1.4237508552027568e-12,
+        "velocity": 7.661844799221388e-13,
+        "oracleRefinement": 4.812153001145043e-12
+      },
+      {
+        "step": 0.0009765625,
+        "position": 9.56889238974841e-14,
+        "velocity": 6.081448668537536e-14,
+        "oracleRefinement": 4.812153001145043e-12
+      },
+      {
+        "step": 0.00048828125,
+        "position": 4.9839122195984804e-14,
+        "velocity": 3.4016380142916534e-14,
+        "oracleRefinement": 4.812153001145043e-12
+      }
+    ]
+  },
+  {
+    "case": "early-undock",
+    "terminal": {
+      "t": 0.1,
+      "status": "operation-rejected",
+      "fuel": 0.2,
+      "fuelUsed": 0.0,
+      "cargo": 0,
+      "stocks": {
+        "Home": [
+          1,
+          0.4
+        ],
+        "Depot": [
+          0,
+          0.25
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "dock-home"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.1,
+          "operation-rejected",
+          "leave-home"
+        ]
+      ]
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 1.1102230246251565e-16,
+        "velocity": 1.1102230246251565e-16,
+        "oracleRefinement": 0.0
+      },
+      {
+        "step": 0.0009765625,
+        "position": 1.1102230246251565e-16,
+        "velocity": 1.1102230246251565e-16,
+        "oracleRefinement": 0.0
+      },
+      {
+        "step": 0.00048828125,
+        "position": 1.1102230246251565e-16,
+        "velocity": 1.1102230246251565e-16,
+        "oracleRefinement": 0.0
+      }
+    ]
+  },
+  {
+    "case": "empty-source",
+    "terminal": {
+      "t": 0,
+      "status": "operation-rejected",
+      "fuel": 0.2,
+      "fuelUsed": 0.0,
+      "cargo": 0,
+      "stocks": {
+        "Home": [
+          0.1,
+          0.4
+        ],
+        "Depot": [
+          0,
+          0.25
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "dock-home"
+        ],
+        [
+          0,
+          "operation-rejected",
+          "load"
+        ]
+      ]
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 0.0,
+        "velocity": 0.0,
+        "oracleRefinement": 0.0
+      },
+      {
+        "step": 0.0009765625,
+        "position": 0.0,
+        "velocity": 0.0,
+        "oracleRefinement": 0.0
+      },
+      {
+        "step": 0.00048828125,
+        "position": 0.0,
+        "velocity": 0.0,
+        "oracleRefinement": 0.0
+      }
+    ]
+  },
+  {
+    "case": "tight-capture",
+    "terminal": {
+      "t": 24,
+      "status": "horizon",
+      "fuel": 0.16859641527548666,
+      "fuelUsed": 0.13140358472451336,
+      "cargo": 0.0,
+      "stocks": {
+        "Home": [
+          0.8,
+          0.4
+        ],
+        "Depot": [
+          0.2,
+          0.15
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "dock-home"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.25,
+          "transfer",
+          "load"
+        ],
+        [
+          0.5,
+          "undock",
+          "leave-home"
+        ],
+        [
+          0.5,
+          "burn",
+          "outbound"
+        ],
+        [
+          4.629730790872742,
+          "burn",
+          "arrival"
+        ],
+        [
+          4.629730790872742,
+          "dock",
+          "dock-depot"
+        ],
+        [
+          4.629730790872742,
+          "transfer-start",
+          "unload-refuel"
+        ],
+        [
+          4.879730790872742,
+          "transfer",
+          "unload-refuel"
+        ],
+        [
+          15.497026245592098,
+          "undock",
+          "leave-depot"
+        ],
+        [
+          15.497026245592098,
+          "burn",
+          "return"
+        ],
+        [
+          19.626757036464838,
+          "burn",
+          "home-arrival"
+        ],
+        [
+          19.626757036464838,
+          "dock",
+          "return-home"
+        ]
+      ]
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 1.4559654380696042e-12,
+        "velocity": 7.766253445434517e-13,
+        "oracleRefinement": 9.211778765985544e-12
+      },
+      {
+        "step": 0.0009765625,
+        "position": 9.870282311162551e-14,
+        "velocity": 7.127770162299144e-14,
+        "oracleRefinement": 9.211778765985544e-12
+      },
+      {
+        "step": 0.00048828125,
+        "position": 5.164052952962073e-14,
+        "velocity": 5.1133575002146206e-14,
+        "oracleRefinement": 9.211778765985544e-12
+      }
+    ]
+  }
+]
