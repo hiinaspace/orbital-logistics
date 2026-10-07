@@ -1,0 +1,110 @@
+{
+  "environment": {
+    "host": "natto",
+    "node": "v22.22.1"
+  },
+  "cases": [
+    {
+      "seed": "close",
+      "iterations": 2,
+      "evaluations": 11,
+      "initialMiss": 0.029523872324126964,
+      "oracleArrivalMiss": 4.158713063559541e-08,
+      "oracleArrivalRelativeSpeed": 8.918211754949723e-13,
+      "totalDv": 0.15376096907069042,
+      "addedDv": 0.07576096907069042,
+      "propellantUsed": 0.08993221762421111,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.1793417807503057e-12,
+          "maxVelocityError": 1.1376102173568341e-12,
+          "maxTargetStateError": 3.0088115892133434e-13,
+          "maxOracleRefinement": 3.311012162556996e-14
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 8.778410666179655e-14,
+          "maxVelocityError": 4.0351376188173017e-14,
+          "maxTargetStateError": 7.991657349000977e-14,
+          "maxOracleRefinement": 3.311012162556996e-14
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 1.3055761348595353e-13,
+          "maxVelocityError": 7.235520297462543e-14,
+          "maxTargetStateError": 2.897538527392968e-14,
+          "maxOracleRefinement": 3.311012162556996e-14
+        }
+      ]
+    },
+    {
+      "seed": "initial",
+      "iterations": 3,
+      "evaluations": 16,
+      "initialMiss": 0.1555955677631454,
+      "oracleArrivalMiss": 9.36860801215194e-11,
+      "oracleArrivalRelativeSpeed": 8.895388599013448e-13,
+      "totalDv": 0.1537609545966233,
+      "addedDv": 0.08705263427599164,
+      "propellantUsed": 0.08993220937366575,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.179690360984416e-12,
+          "maxVelocityError": 1.1334920182410614e-12,
+          "maxTargetStateError": 3.0088115892133434e-13,
+          "maxOracleRefinement": 1.425256239959325e-14
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 1.0188387914171622e-13,
+          "maxVelocityError": 5.1541737728660036e-14,
+          "maxTargetStateError": 7.991657349000977e-14,
+          "maxOracleRefinement": 1.425256239959325e-14
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 6.983302824892235e-14,
+          "maxVelocityError": 3.9906495208856324e-14,
+          "maxTargetStateError": 2.897538527392968e-14,
+          "maxOracleRefinement": 1.425256239959325e-14
+        }
+      ]
+    },
+    {
+      "seed": "worse",
+      "iterations": 5,
+      "evaluations": 26,
+      "initialMiss": 0.6910825856610235,
+      "oracleArrivalMiss": 2.902655338773276e-11,
+      "oracleArrivalRelativeSpeed": 8.826382042464374e-13,
+      "totalDv": 0.1537609546611823,
+      "addedDv": 0.09990930658983727,
+      "propellantUsed": 0.08993220941046587,
+      "checks": [
+        {
+          "step": 0.001953125,
+          "maxPositionError": 2.152612292804505e-12,
+          "maxVelocityError": 1.1173857501674844e-12,
+          "maxTargetStateError": 3.0088115892133434e-13,
+          "maxOracleRefinement": 2.7208053344844005e-14
+        },
+        {
+          "step": 0.0009765625,
+          "maxPositionError": 6.934762644426695e-14,
+          "maxVelocityError": 2.965126986859857e-14,
+          "maxTargetStateError": 7.991657349000977e-14,
+          "maxOracleRefinement": 2.7208053344844005e-14
+        },
+        {
+          "step": 0.00048828125,
+          "maxPositionError": 6.495744045609758e-14,
+          "maxVelocityError": 3.406037762968751e-14,
+          "maxTargetStateError": 2.897538527392968e-14,
+          "maxOracleRefinement": 2.7208053344844005e-14
+        }
+      ]
+    }
+  ]
+}

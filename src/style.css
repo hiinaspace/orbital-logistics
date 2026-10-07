@@ -476,3 +476,19 @@ pre {
     max-width:150px
   }
 }
+
+#proposal-values {
+  white-space: pre-line;
+  font-size: 12px;
+  line-height: 1.9;
+  color: #c4afe1;
+  font-variant-numeric: tabular-nums;
+}
+#solve-status {
+  font-size: 12px;
+  color: #c4afe1;
+}
+
+.proposal-key:before {
+  background: #bf9de8;
+}

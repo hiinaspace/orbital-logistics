@@ -4,7 +4,8 @@ Published hobby identity: Hiina <hiina@hiina.space>.
 
 Read docs/charter.md and docs/plan.md. The charter is design intent; evidence in
  docs/evidence/ describes what was actually tested. M0 and the M1 manual editor
-are implemented; the user accepted M1 and authorized proceeding to bounded M2.
+are implemented and M1 is user-accepted. Initial bounded M2 is implemented;
+review its proposal interaction before proceeding to M3.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

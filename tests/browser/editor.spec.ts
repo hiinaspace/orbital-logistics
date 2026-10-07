@@ -67,7 +67,7 @@ test('path hover, click-to-pin and latched handle achieve, undo and reverse the 
   await handleMove(page, 0.1); await expect(page.locator('#goal-value')).toContainText('In band');
   expect((await state(page)).draft.burns[0].transverse).toBeCloseTo(0.1, 2);
   expect((await state(page)).accepted.burns).toHaveLength(0);
-  await page.screenshot({ path: 'docs/evidence/m1-orbit.png', fullPage: true });
+  await page.screenshot({ path: 'test-results/m1-orbit.png', fullPage: true });
   await page.locator('#undo').click(); await ready(page); expect((await state(page)).draft.burns[0].transverse).toBe(0);
   await handleMove(page, -0.05); expect((await state(page)).draft.burns[0].transverse).toBeLessThan(0);
   await expect(page.locator('#goal-value')).not.toContainText('In band');
@@ -129,7 +129,7 @@ test('moon preview and body-centered frames use synchronized sample-time origins
   expect(actual[0]).toBeCloseTo(expected[0], 5); expect(actual[1]).toBeCloseTo(expected[1], 5);
   expect(inertial.draft).toEqual(program);
   await page.locator('#frame').selectOption('ship'); expect((await state(page)).draft).toEqual(program);
-  await page.locator('#frame').selectOption('moon'); await page.screenshot({ path: 'docs/evidence/m1-moon.png', fullPage: true });
+  await page.locator('#frame').selectOption('moon'); await page.screenshot({ path: 'test-results/m1-moon.png', fullPage: true });
 });
 
 test('visible apsides place snapped nodes and node clicks edit time as one reversible gesture', async ({ page }) => {
@@ -168,7 +168,7 @@ test('visible apsides place snapped nodes and node clicks edit time as one rever
   await page.mouse.move(...far); await page.mouse.click(...far); await ready(page);
   expect((await state(page)).draft.burns[1].t).toBeCloseTo(5.999999, 6);
   await page.locator('#undo').click(); await ready(page);
-  await page.screenshot({ path: 'docs/evidence/m1-apsis-editor.png', fullPage: true });
+  await page.screenshot({ path: 'test-results/m1-apsis-editor.png', fullPage: true });
 });
 
 test('rejected burn and unsupported approach block execution and truncate the path', async ({ page }) => {

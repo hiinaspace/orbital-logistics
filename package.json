@@ -18,7 +18,8 @@
     "evidence:m0": "tsx scripts/m0-evidence.ts && uv run --project spikes/numerics python spikes/numerics/m0_oracle.py",
     "evidence:m1": "tsx scripts/m1-evidence.ts && uv run --project spikes/numerics python spikes/numerics/m1_oracle.py",
     "spike:numerics": "tsx spikes/numerics/run.ts",
-    "spike:oracle": "uv run --project spikes/numerics python spikes/numerics/oracle.py"
+    "spike:oracle": "uv run --project spikes/numerics python spikes/numerics/oracle.py",
+    "evidence:m2": "tsx scripts/m2-evidence.ts && uv run --project spikes/numerics python spikes/numerics/m2_oracle.py"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

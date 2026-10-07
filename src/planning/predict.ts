@@ -1,11 +1,13 @@
 import { Runner, type Sample } from '../sim/runner';
 import type { Bundle } from '../sim/schema';
 import { inspectEvents, type Diagnostics } from './events';
+import { targetBundle } from './target';
 
 export interface Prediction {
   revision: number; scenarioId: string; modelVersion: string; horizon: number;
   samples: Sample[]; terminal: Sample; diagnostics: Record<string, Diagnostics>;
   burnStates: Record<string, Sample>;
+  rendezvous?: { t: number; positionError: number; relativeSpeed: number };
   accuracy?: { status: 'converged' | 'unresolved'; position: number; velocity: number; eventTime: number; classificationStable: boolean };
 }
 export function predict(bundle: Bundle, revision: number, horizon = bundle.scenario.epoch + bundle.scenario.duration, verify = false): Prediction {
@@ -21,6 +23,10 @@ export function predict(bundle: Bundle, revision: number, horizon = bundle.scena
   const burnStates = Object.fromEntries(bundle.program.burns.map(b => [b.id, runner.sample(b.t)]));
   const result: Prediction = { revision, scenarioId: bundle.scenario.id, modelVersion: bundle.scenario.modelVersion,
     horizon, samples, terminal, diagnostics, burnStates };
+  if (bundle.scenario.rendezvous) {
+    const t = bundle.scenario.rendezvous.arrivalEpoch, ship = runner.sample(t), target = new Runner(targetBundle(bundle)).sample(t);
+    if (ship.t === t && target.t === t) result.rendezvous = { t, positionError: Math.hypot(ship.y[0] - target.y[0], ship.y[1] - target.y[1]), relativeSpeed: Math.hypot(ship.y[2] - target.y[2], ship.y[3] - target.y[3]) };
+  }
   if (verify) {
     const refined = structuredClone(bundle); refined.scenario.policy.step /= 2;
     refined.scenario.policy.maxNodes = Math.min(65536, Math.max(refined.scenario.policy.maxNodes, Math.ceil(refined.scenario.duration / refined.scenario.policy.step) + 1024));

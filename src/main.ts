@@ -1,6 +1,9 @@
 import './style.css';
 import orbit from '../fixtures/m1-orbit.json';
 import binary from '../fixtures/m0-binary.json';
+import rendezvous from '../fixtures/m2-rendezvous.json';
+import { targetBundle } from './planning/target';
+import type { RendezvousProposal } from './planning/rendezvous';
 import { EditorSession } from './editor/session';
 import { predict, type Prediction } from './planning/predict';
 import type { Encounter } from './planning/events';
@@ -11,12 +14,12 @@ import { frameState, hitPath, project, unproject, type Camera } from './view/coo
 
 document.body.innerHTML = `
 <main>
-  <header><h1>Orbital Logistics</h1><select id="scene" aria-label="Scenario"><option value="orbit">Orbit shaping</option><option value="moon">Moon encounter</option></select>
+  <header><h1>Orbital Logistics</h1><select id="scene" aria-label="Scenario"><option value="orbit">Orbit shaping</option><option value="moon">Moon encounter</option><option value="rendezvous">Rendezvous</option></select>
     <div class="header-actions"><button id="undo" title="Undo (Ctrl+Z)" aria-label="Undo">↶</button><button id="redo" title="Redo (Ctrl+Shift+Z)" aria-label="Redo">↷</button><button id="files">Save / load</button></div></header>
   <div class="workspace">
     <section class="scene"><div class="view-tools"><label>Frame <select id="frame" aria-label="View frame"></select></label><button id="fit">Fit</button><button id="focus">Focus</button><span id="prediction-status" role="status"></span></div>
       <canvas width="1000" height="650" aria-label="Trajectory editor" tabindex="0"></canvas>
-      <div class="scene-bottom"><div class="legend"><span class="baseline-key">Reference</span><span class="draft-key">Plan</span><span class="live-key">Execution</span></div><span id="hint"></span></div>
+      <div class="scene-bottom"><div class="legend"><span class="baseline-key">Reference</span><span class="draft-key">Plan</span><span class="live-key">Execution</span><span id="proposal-key" class="proposal-key" hidden>Proposal</span></div><span id="hint"></span></div>
     </section>
     <aside><nav id="objects" aria-label="Objects"></nav><div class="section-title"><h2 id="selected-object">Ship</h2><button id="plan">Plan trajectory</button></div>
       <div id="goal"><span id="goal-label">Apoapsis in the band</span><strong id="goal-value">—</strong></div>
@@ -34,6 +37,9 @@ document.body.innerHTML = `
       </section>
       <dl><div><dt>Total Δv</dt><dd id="total-dv"></dd></div><div><dt>Fuel remaining</dt><dd id="fuel"></dd></div></dl>
       <details id="encounter"><summary>Closest approach</summary><label>Body <select id="encounter-body"></select></label><div id="encounter-readout"></div></details>
+      <section id="targeting" hidden><div class="section-title"><h2>Rendezvous</h2><button id="solve">Target</button></div>
+        <dl><div><dt>Arrival miss</dt><dd id="target-miss"></dd></div><div><dt>Relative speed</dt><dd id="target-speed"></dd></div></dl><p id="solve-status" role="status"></p><div id="proposal" hidden><div id="proposal-values"></div><div class="buttons"><button id="accept-proposal">Accept</button><button id="reject-proposal">Reject</button></div></div>
+      </section>
       <p id="message" role="status"></p><button id="execute" class="primary">Execute plan</button>
     </aside>
   </div>
@@ -54,6 +60,9 @@ let worker: Worker | undefined, generation = 0, pending = false, predictionError
 let lastEditAt = 0, latency: number[] = [], feedbackLatency: number[] = [], geometry: { t: number; p: number[] }[] = [];
 let snapEvents: ReturnType<EditorSession['snapCandidates']> = [];
 let handle: { axis: 'radial' | 'transverse' | 'time'; bounds?: [number, number]; origin: [number, number]; direction: [number, number]; start: number } | undefined;
+let targetReference: Runner | undefined, targetPath: Prediction | undefined;
+let targetWorker: Worker | undefined, targetGeneration = 0, solving = false, solveStatus = '';
+let proposal: { value: RendezvousProposal; prediction: Prediction; revision: number } | undefined;
 let pan: { point: [number, number]; center: [number, number] } | undefined;
 let handles: { axis: 'radial' | 'transverse'; p: [number, number]; direction: [number, number] }[] = [];
 let apsisPoints: { event: Encounter; p: [number, number] }[] = [];
@@ -77,6 +86,7 @@ function samplePrediction(prediction: Prediction, t: number): Sample {
   return { ...a, t, y: a.y.map((v, i) => v + u * (b.y[i] - v)) as State };
 }
 function relative(y: State, t: number): State {
+  if (frameSelect.value === session.scenario.rendezvous?.target.id && targetReference) return frameState(session.scenario, y, t, 'ship', targetReference.sample(t).y);
   return frameState(session.scenario, y, t, frameSelect.value,
     frameSelect.value === 'ship' ? acceptedReference.sample(t).y : [0, 0, 0, 0]);
 }
@@ -88,7 +98,7 @@ function selectOptions(select: HTMLSelectElement, entries: [string, string][], v
   if (value && entries.some(([id]) => id === value)) select.value = value;
 }
 function fit() {
-  const positions = [...baseline.samples, ...draft.samples].map(p => relative(p.y, p.t));
+  const positions = [...baseline.samples, ...draft.samples, ...(targetPath?.samples ?? [])].map(p => relative(p.y, p.t));
   if (session.scenario.id === 'm1-orbit-v1') positions.push([-1.7, -1.7, 0, 0], [1.7, 1.7, 0, 0]);
   for (const body of session.scenario.bodies) for (const sample of baseline.samples) positions.push(relative(bodyState(body, sample.t), sample.t));
   const xs = positions.map(p => p[0]), ys = positions.map(p => p[1]);
@@ -96,22 +106,24 @@ function fit() {
   camera = { center: [(minX + maxX) / 2, (minY + maxY) / 2], scale: Math.min(800 / Math.max(maxX - minX, 0.1), 480 / Math.max(maxY - minY, 0.1)) };
 }
 function install(next: EditorSession, preview = next.scenario.epoch) {
-  worker?.terminate(); worker = undefined; pending = false; generation++; session = next;
+  cancelTarget(); worker?.terminate(); worker = undefined; pending = false; generation++; session = next;
+  targetReference = session.scenario.rendezvous ? new Runner(targetBundle(session.bundle)) : undefined;
+  targetPath = targetReference ? predict(targetBundle(session.bundle), -1) : undefined;
   acceptedReference = new Runner({ scenario: session.scenario, program: session.accepted });
   baseline = predict({ scenario: session.scenario, program: session.baseline }, -1); draft = baseline;
   selectedObject = 'ship'; selectedBurn = undefined; planning = false; handle = undefined; previewTime = undefined;
   pinnedTime = preview; setPlaying(false); message(); latency = []; feedbackLatency = []; lastEditAt = 0;
-  selectOptions(frameSelect, [['inertial', 'Inertial'], ...session.scenario.bodies.map(b => [b.id, b.id + ' centered'] as [string, string]), ['ship', 'Execution ship']]);
+  selectOptions(frameSelect, [['inertial', 'Inertial'], ...session.scenario.bodies.map(b => [b.id, b.id + ' centered'] as [string, string]), ['ship', 'Execution ship'], ...(session.scenario.rendezvous ? [[session.scenario.rendezvous.target.id, 'Target centered'] as [string, string]] : [])]);
   const bodies = session.scenario.bodies.map(b => [b.id, b.id] as [string, string]);
   selectOptions(el('burn-reference'), bodies); selectOptions(el('encounter-body'), bodies, bodies.at(-1)?.[0]);
-  el('objects').replaceChildren(...[['ship', 'Ship'], ...bodies].map(([id, label]) => {
+  el('objects').replaceChildren(...[['ship', 'Ship'], ...bodies, ...(session.scenario.rendezvous ? [[session.scenario.rendezvous.target.id, 'Target']] : [])].map(([id, label]) => {
     const button = document.createElement('button'); button.textContent = label; button.dataset.object = id;
     button.addEventListener('click', () => { selectedObject = id; planning = false; updateUI(); render(); }); return button;
   }));
   slider.min = String(session.scenario.epoch); slider.max = String(endTime());
-  el<HTMLSelectElement>('scene').value = session.scenario.id === 'm1-orbit-v1' ? 'orbit' : session.scenario.id === binary.scenario.id ? 'moon' : '';
-  el('goal').hidden = session.scenario.id !== 'm1-orbit-v1' && session.scenario.id !== binary.scenario.id;
-  el('goal-label').textContent = session.scenario.id === binary.scenario.id ? 'Moon altitude · t 2.4–2.6' : 'Apoapsis in the band';
+  el<HTMLSelectElement>('scene').value = session.scenario.id === 'm1-orbit-v1' ? 'orbit' : session.scenario.id === binary.scenario.id ? 'moon' : session.scenario.rendezvous ? 'rendezvous' : '';
+  el('goal').hidden = !session.scenario.rendezvous && session.scenario.id !== 'm1-orbit-v1' && session.scenario.id !== binary.scenario.id;
+  el('goal-label').textContent = session.scenario.rendezvous ? `Meet target · t ${session.scenario.rendezvous.arrivalEpoch.toFixed(3)}` : session.scenario.id === binary.scenario.id ? 'Moon altitude · t 2.4–2.6' : 'Apoapsis in the band';
   el<HTMLTextAreaElement>('json').value = session.serialize(preview); fit(); refreshInspector(); schedulePrediction();
 }
 function refreshInspector() {
@@ -155,7 +167,25 @@ function updateUI() {
   const goal = moonGoal ? draft.diagnostics.moon?.closest : draft.diagnostics.primary?.apsides.find(e => e.kind === 'apoapsis' && e.t > (program.burns[0]?.t ?? 0));
   const achieved = !!goal && (moonGoal ? goal.altitude >= 0.065 && goal.altitude <= 0.075 && goal.t >= 2.4 && goal.t <= 2.6 : goal.distance >= 1.4 && goal.distance <= 1.6);
   el('goal-value').textContent = pending ? '…' : goal ? `${(moonGoal ? goal.altitude : goal.distance).toFixed(3)}${achieved ? ' · In band' : ''}` : '—';
-  el('goal').classList.toggle('achieved', !pending && draft.accuracy?.status === 'converged' && achieved);
+  let goalAchieved = achieved;
+  if (session.scenario.rendezvous) {
+    const meet = draft.rendezvous, tolerance = session.scenario.rendezvous.tolerance;
+    goalAchieved = !!meet && meet.positionError < tolerance.position && meet.relativeSpeed < tolerance.velocity;
+    el('goal-value').textContent = pending ? '…' : goalAchieved ? 'Matched' : meet ? `Miss ${meet.positionError.toFixed(3)}` : '—';
+  }
+  el('goal').classList.toggle('achieved', !pending && draft.accuracy?.status === 'converged' && goalAchieved);
+  el('targeting').hidden = !session.scenario.rendezvous;
+  el('target-miss').textContent = pending ? '…' : draft.rendezvous?.positionError.toExponential(3) ?? '—';
+  el('target-speed').textContent = pending ? '…' : draft.rendezvous?.relativeSpeed.toExponential(3) ?? '—';
+  el<HTMLButtonElement>('solve').disabled = pending || !!handle || (!solving && (!burn || session.draft.burns.length !== 1 || burn.t !== session.scenario.rendezvous?.departureEpoch));
+  el('solve').textContent = solving ? 'Cancel' : 'Target';
+  el('solve-status').textContent = solveStatus;
+  el('proposal').hidden = !proposal; el('proposal-key').hidden = !proposal;
+  el<HTMLButtonElement>('accept-proposal').disabled = !proposal || proposal.revision !== session.revision || proposal.prediction.accuracy?.status !== 'converged';
+  if (proposal) {
+    const p = proposal.value;
+    el('proposal-values').textContent = `Departure Δv ${Math.hypot(p.departure.radial, p.departure.transverse).toFixed(5)}\nArrival Δv ${Math.hypot(p.arrival.radial, p.arrival.transverse).toFixed(5)}\nTotal Δv ${p.totalDv.toFixed(5)} (${p.addedDv >= 0 ? '+' : ''}${p.addedDv.toFixed(5)})\nFuel ${p.propellantUsed.toFixed(5)}\nMiss ${p.positionError.toExponential(2)}`;
+  }
   const encounter = draft.diagnostics[el<HTMLSelectElement>('encounter-body').value]?.closest;
   el('encounter-readout').textContent = pending ? 'Updating…' : encounter ? `t ${encounter.t.toFixed(5)}\nCenter ${encounter.distance.toFixed(6)}\nAltitude ${encounter.altitude.toFixed(6)}\nRelative speed ${encounter.relativeSpeed.toFixed(6)}` : '';
 }
@@ -188,7 +218,7 @@ function selectBurn(id: string) {
 function edited(change: () => void, inspector = true) {
   const inputAt = performance.now();
   try {
-    const previous = session.revision; change(); setPlaying(false); message();
+    cancelTarget(); const previous = session.revision; change(); setPlaying(false); message();
     if (inspector) refreshInspector();
     if (session.revision === previous) { updateUI(); render(); return; }
     schedulePrediction(inputAt);
@@ -242,7 +272,9 @@ function render() {
     ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.setLineDash(dashed ? [5, 6] : []);
     prediction.samples.forEach((sample, i) => { const p = point(sample.y, sample.t); if (i === 0) ctx.moveTo(...p); else ctx.lineTo(...p); }); ctx.stroke(); ctx.setLineDash([]);
   }
+  if (targetPath) path(targetPath, '#80c8be55');
   path(baseline, '#5d798d88'); path(draft, pending ? '#c7a37488' : '#edbc74', pending);
+  if (proposal) path(proposal.prediction, '#bf9de8', true);
   apsisPoints = [];
   const apsisBody = s.bodies.find(b => b.id === frameSelect.value)?.id ?? currentBurn()?.referenceBodyId ?? s.bodies[0].id;
   for (const event of draft.diagnostics[apsisBody]?.apsides ?? []) {
@@ -265,10 +297,20 @@ function render() {
     if (selectedObject === body.id) { ctx.beginPath(); ctx.arc(...p, radius + 6, 0, 2 * Math.PI); ctx.strokeStyle = '#e8eff3'; ctx.lineWidth = 1; ctx.stroke(); }
     ctx.font = '13px system-ui'; ctx.fillStyle = '#a8bbc6'; ctx.fillText(body.id, p[0] + radius + 8, p[1] + 4);
   }
+  if (targetReference && s.rendezvous) {
+    const target = targetReference.sample(t), p = point(target.y, target.t);
+    objectPoints.push({ id: s.rendezvous.target.id, p, radius: 8 });
+    ctx.strokeStyle = '#80c8be'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(...p, 7, 0, 2 * Math.PI); ctx.stroke();
+    ctx.font = '12px system-ui'; ctx.fillStyle = '#80c8be'; ctx.fillText('Target', p[0] - 50, p[1] - 15);
+  }
   const livePoint = point(live.y, live.t); ctx.fillStyle = '#77c3d8'; ctx.beginPath(); ctx.arc(...livePoint, 5, 0, 2 * Math.PI); ctx.fill();
   objectPoints.push({ id: 'ship', p: livePoint, radius: 7 });
   if (selectedObject === 'ship') { ctx.strokeStyle = '#77c3d8'; ctx.lineWidth = 1; ctx.strokeRect(livePoint[0] - 10, livePoint[1] - 10, 20, 20); }
   if (previewTime !== undefined) { const p = point(ghost.y, ghost.t); ctx.strokeStyle = '#f3d3a2'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(...p, 6, 0, 2 * Math.PI); ctx.stroke(); ctx.fillStyle = '#f3d3a2'; ctx.font = '12px system-ui'; ctx.fillText(`t ${ghost.t.toFixed(3)}`, p[0] + 12, p[1] - 12); }
+  if (proposal && previewTime !== undefined) {
+    const sample = samplePrediction(proposal.prediction, t), p = point(sample.y, sample.t);
+    ctx.strokeStyle = '#bf9de8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(...p, 9, 0, 2 * Math.PI); ctx.stroke();
+  }
   nodePoints = []; handles = [];
   for (const [index, burn] of session.draft.burns.entries()) {
     const state = draft.burnStates[burn.id]; if (!state || state.t !== burn.t) continue;
@@ -288,7 +330,7 @@ function render() {
     accepted: session.accepted, baseline: session.baseline, revision: session.revision, readyRevision: draft.revision, pending,
     previewTime: previewTime ?? null, pinnedTime, mode: handle?.axis === 'time' ? 'time-edit' : handle ? 'handle-edit' : selectedBurn ? 'epoch-pinned' : planning ? 'hover-preview' : 'inspect',
     selectedObject, selectedBurn, frame: frameSelect.value, camera, handles, nodePoints, apsisPoints, objectPoints,
-    terminal: draft.terminal, diagnostics: draft.diagnostics, accuracy: draft.accuracy, latency, feedbackLatency }, null, 2);
+    targeting: { solving, proposal: proposal?.value ?? null, revision: proposal?.revision, status: solveStatus }, rendezvous: draft.rendezvous, terminal: draft.terminal, diagnostics: draft.diagnostics, accuracy: draft.accuracy, latency, feedbackLatency }, null, 2);
 }
 
 // Switching to another control cancels the latched edit before that control acts.
@@ -374,7 +416,7 @@ document.addEventListener('keydown', event => {
 });
 frameSelect.addEventListener('change', () => { if (handle) finishHandle(false); fit(); render(); });
 el('fit').addEventListener('click', () => { if (!handle) { fit(); render(); } });
-el('focus').addEventListener('click', () => { if (handle) return; const t = previewTime ?? session.execution.current.t, y = selectedObject === 'ship' ? samplePrediction(draft, t).y : bodyState(session.scenario.bodies.find(b => b.id === selectedObject)!, t); const r = relative(y, t); camera.center = [r[0], r[1]]; render(); });
+el('focus').addEventListener('click', () => { if (handle) return; const t = previewTime ?? session.execution.current.t, y = selectedObject === 'ship' ? samplePrediction(draft, t).y : selectedObject === session.scenario.rendezvous?.target.id && targetReference ? targetReference.sample(t).y : bodyState(session.scenario.bodies.find(b => b.id === selectedObject)!, t); const r = relative(y, t); camera.center = [r[0], r[1]]; render(); });
 el('encounter-body').addEventListener('change', () => updateUI());
 el('execute').addEventListener('click', () => {
   try { session.execute(); acceptedReference = new Runner({ scenario: session.scenario, program: session.accepted }); previewTime = undefined; planning = false; selectedBurn = undefined; setPlaying(true); message(); refreshInspector(); updateUI(); render(); }
@@ -385,11 +427,39 @@ el('step').addEventListener('click', () => { setPlaying(false); previewTime = un
 el('reset').addEventListener('click', () => { setPlaying(false); previewTime = undefined; session.execution.reset(); render(); });
 slider.addEventListener('input', () => { if (handle) finishHandle(false); previewTime = Number(slider.value); pinnedTime = previewTime; setPlaying(false); render(); });
 el('live').addEventListener('click', () => { previewTime = undefined; render(); });
-el('scene').addEventListener('change', () => install(new EditorSession(validateBundle(el<HTMLSelectElement>('scene').value === 'moon' ? binary : orbit))));
+el('scene').addEventListener('change', () => install(new EditorSession(validateBundle(el<HTMLSelectElement>('scene').value === 'moon' ? binary : el<HTMLSelectElement>('scene').value === 'rendezvous' ? rendezvous : orbit))));
 el('files').addEventListener('click', () => { const panel = el<HTMLDetailsElement>('file-panel'); panel.open = !panel.open; if (panel.open) panel.scrollIntoView({ behavior: 'smooth' }); });
 el('save').addEventListener('click', () => { el<HTMLTextAreaElement>('json').value = session.serialize(previewTime ?? session.execution.current.t); el('import-status').textContent = 'Saved'; });
 el('download').addEventListener('click', () => { const url = URL.createObjectURL(new Blob([session.serialize(previewTime ?? session.execution.current.t)], { type: 'application/json' })); const a = document.createElement('a'); a.href = url; a.download = 'orbital-logistics-plan.json'; a.click(); URL.revokeObjectURL(url); });
 el('load').addEventListener('click', () => { try { const { session: next, previewEpoch } = EditorSession.deserialize(el<HTMLTextAreaElement>('json').value); install(next, previewEpoch); previewTime = previewEpoch; el('import-status').textContent = 'Loaded'; } catch (error) { el('import-status').textContent = `Import rejected: ${(error as Error).message}`; } });
+function cancelTarget() {
+  targetWorker?.terminate(); targetWorker = undefined; targetGeneration++;
+  solving = false; proposal = undefined; solveStatus = '';
+}
+el('solve').addEventListener('click', () => {
+  if (solving) { cancelTarget(); updateUI(); render(); return; }
+  if (!currentBurn()) return;
+  cancelTarget(); solving = true; solveStatus = 'Solving…';
+  const generation = targetGeneration, revision = session.revision, horizon = endTime(), bundle = session.bundle;
+  targetWorker = new Worker(new URL('./planning/rendezvous.worker.ts', import.meta.url), { type: 'module' });
+  targetWorker.onmessage = ({ data }) => {
+    if (generation !== targetGeneration || revision !== session.revision || data.generation !== generation || data.revision !== revision) return;
+    targetWorker?.terminate(); targetWorker = undefined; solving = false;
+    if (data.error) solveStatus = data.error;
+    else if (data.scenarioId !== session.scenario.id || data.modelVersion !== session.scenario.modelVersion || data.horizon !== endTime()) return;
+    else if (data.result.status === 'failed') solveStatus = data.result.reason;
+    else if (data.prediction.accuracy?.status !== 'converged') solveStatus = 'Proposal accuracy unresolved';
+    else { proposal = { value: data.result.proposal, prediction: data.prediction, revision }; solveStatus = 'Correction proposal'; previewTime = session.scenario.rendezvous!.arrivalEpoch; }
+    updateUI(); render();
+  };
+  targetWorker.onerror = event => { if (generation !== targetGeneration) return; cancelTarget(); solveStatus = event.message; updateUI(); render(); };
+  targetWorker.postMessage({ bundle, burnId: currentBurn()!.id, revision, horizon, generation }); updateUI(); render();
+});
+el('reject-proposal').addEventListener('click', () => { cancelTarget(); updateUI(); render(); });
+el('accept-proposal').addEventListener('click', () => {
+  if (!proposal || proposal.revision !== session.revision || proposal.prediction.accuracy?.status !== 'converged') return;
+  const program = structuredClone(proposal.value.program); edited(() => session.change(program));
+});
 install(new EditorSession(validateBundle(orbit)));
 let lastFrame = 0;
 function tick(now: number) {

@@ -1,0 +1,181 @@
+{
+  "scenario": {
+    "schemaVersion": 1,
+    "modelVersion": "rk4-canonical-v1",
+    "id": "m2-rendezvous-v1",
+    "units": {
+      "length": "reference orbital radius",
+      "time": "inverse circular angular rate",
+      "mass": "reference dry mass"
+    },
+    "epoch": 0,
+    "duration": 6,
+    "policy": {
+      "step": 0.001953125,
+      "maxNodes": 16384,
+      "maxSubdivision": 16
+    },
+    "bodies": [
+      {
+        "id": "primary",
+        "mu": 1,
+        "radius": 0.08,
+        "rail": {
+          "kind": "fixed",
+          "position": [
+            0,
+            0
+          ]
+        }
+      }
+    ],
+    "ship": {
+      "id": "ship",
+      "state": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "dryMass": 1,
+      "cargoMass": 0.2,
+      "propellant": 0.6,
+      "tankCapacity": 0.6,
+      "exhaustVelocity": 3
+    },
+    "rendezvous": {
+      "target": {
+        "id": "target",
+        "state": [
+          0.9274325149260284,
+          1.0487463612609018,
+          -0.633108892393358,
+          0.559873954259501
+        ]
+      },
+      "referenceBodyId": "primary",
+      "departureEpoch": 0.5,
+      "arrivalEpoch": 4.629730790872742,
+      "bounds": {
+        "radial": [
+          -0.12,
+          0.12
+        ],
+        "transverse": [
+          -0.05,
+          0.2
+        ]
+      },
+      "branch": {
+        "direction": "ccw",
+        "revolutions": 0,
+        "minClearance": 0.5
+      },
+      "tolerance": {
+        "position": 0.0001,
+        "velocity": 0.0001
+      }
+    }
+  },
+  "program": {
+    "schemaVersion": 1,
+    "id": "m2-rendezvous-program-v1",
+    "burns": [
+      {
+        "id": "departure",
+        "t": 0.5,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 4.164521639106099e-11,
+        "transverse": 0.08012344971958693
+      },
+      {
+        "id": "rendezvous-arrival",
+        "t": 4.629730790872742,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 4.357326008238e-11,
+        "transverse": 0.07363750487703637
+      }
+    ]
+  },
+  "editor": {
+    "schemaVersion": 1,
+    "baseline": {
+      "schemaVersion": 1,
+      "id": "m2-rendezvous-program-v1",
+      "burns": [
+        {
+          "id": "departure",
+          "t": 0.5,
+          "referenceBodyId": "primary",
+          "basis": "radial-transverse-ccw-v1",
+          "radial": 0.015,
+          "transverse": 0.065
+        }
+      ]
+    },
+    "accepted": {
+      "schemaVersion": 1,
+      "id": "m2-rendezvous-program-v1",
+      "burns": [
+        {
+          "id": "departure",
+          "t": 0.5,
+          "referenceBodyId": "primary",
+          "basis": "radial-transverse-ccw-v1",
+          "radial": 4.164521639106099e-11,
+          "transverse": 0.08012344971958693
+        },
+        {
+          "id": "rendezvous-arrival",
+          "t": 4.629730790872742,
+          "referenceBodyId": "primary",
+          "basis": "radial-transverse-ccw-v1",
+          "radial": 4.357326008238e-11,
+          "transverse": 0.07363750487703637
+        }
+      ]
+    },
+    "previewEpoch": 4.629730790872742,
+    "snapshot": {
+      "schemaVersion": 1,
+      "modelVersion": "rk4-canonical-v1",
+      "requestedEpoch": 6,
+      "anchor": {
+        "t": 6,
+        "y": [
+          -0.3376634717170863,
+          -1.3586697095048788,
+          0.820203918496933,
+          -0.20384122840267138
+        ],
+        "propellant": 0.5100677906263342,
+        "burnCursor": 2,
+        "nextGridIndex": 3073,
+        "status": "horizon",
+        "detail": ""
+      },
+      "ledger": [
+        {
+          "t": 0.5,
+          "kind": "burn",
+          "id": "departure",
+          "deltaV": 0.08012344971958693,
+          "fuelUsed": 0.04743777042011256,
+          "propellantBefore": 0.6,
+          "propellantAfter": 0.5525622295798874
+        },
+        {
+          "t": 4.629730790872742,
+          "kind": "burn",
+          "id": "rendezvous-arrival",
+          "deltaV": 0.07363750487703637,
+          "fuelUsed": 0.042494438953553176,
+          "propellantBefore": 0.5525622295798874,
+          "propellantAfter": 0.5100677906263342
+        }
+      ]
+    }
+  }
+}

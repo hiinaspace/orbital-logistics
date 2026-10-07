@@ -3,12 +3,18 @@
 A trajectory-programming logistics puzzle experiment by Hiina. Browser-first,
 2D, visual maneuver editing; later cargo and synchronized reusable services.
 
-**Current checkpoint: M1 manual editor accepted; M2 is next.** Choose
-Orbit shaping or Moon encounter. Plan a trajectory, click its path to place a
+**Current checkpoint: M1 accepted; initial M2 rendezvous implemented.** Choose
+Orbit shaping, Moon encounter or Rendezvous. Plan a trajectory, click its path to place a
 maneuver, click R or T, move the pointer, then click to commit (Escape cancels).
 Precision controls, ordered maneuvers, apsis snaps, undo/redo, synchronized frames,
-execution and JSON replay use the shared headless simulation. The user accepted the manual editor and frame switching and authorized M2.
+execution and JSON replay use the shared headless simulation.
 Apsis dots place snapped maneuvers; clicking a node engages horizontal time editing.
+
+In Rendezvous, select the departure maneuver and click **Target**. The purple
+proposal previews the meeting time and lists departure/arrival cost. **Accept**
+puts both burns into the draft; **Reject** leaves it unchanged. **Execute plan**
+runs the accepted draft. The helper adjusts components at the fixture's fixed
+departure and arrival epochs inside its selected CCW, zero-revolution branch.
 
 ## Run
 
@@ -28,6 +34,7 @@ npm run test:sim
 npm run test:browser
 npm run evidence:m0
 npm run evidence:m1
+npm run evidence:m2
 ```
 
 `evidence:m0` regenerates the production-core analytic/convergence and independent
@@ -35,6 +42,8 @@ SciPy DOP853 comparisons under `docs/evidence/m0-*`. The moving-body fixture is 
 headless regression. `evidence:m1` checks the bounded edit fixtures at three step
 sizes against SciPy, retaining authored before/after plans. See
 [M0 evidence](docs/evidence/m0.md) and [M1 evidence](docs/evidence/m1.md).
+`evidence:m2` compares three rendezvous seeds, both charged burns and the target
+coast against analytic Hohmann values and independent SciPy propagation.
 
 Browser tests run a temporary server on loopback 4179, separate from the retained
 review preview on 4178. To check production assets and record interaction metrics:
@@ -45,6 +54,7 @@ PLAYWRIGHT_PREVIEW=1 npm run test:browser
 npm run preview -- --port 4178 --strictPort
 # In another terminal, with the preview running:
 node scripts/m1-browser-evidence.mjs
+node scripts/m2-browser-evidence.mjs
 ```
 
 Retained planning spikes can still be reproduced separately:
@@ -73,13 +83,14 @@ uv run --project spikes/numerics pre-commit run --config spikes/numerics/.pre-co
 
 ## Next
 
-Build the bounded M2 rendezvous experiment: fixed departure/arrival epochs, one
-editable departure impulse and a charged arrival burn, with explicit proposal
-accept/reject and constrained branch/fuel/accuracy checks.
+Review the M2 proposal interaction and its paid arrival burn before starting M3's
+delivery/docking puzzle. This first helper uses the fixed two-body fixture;
+multi-body targeting, departure-time search and orbit matching remain later work.
 
 - [Tactical plan](docs/plan.md): build slices, temporal/interaction contract, M2–M6 gates.
 - [M0 evidence](docs/evidence/m0.md): simulation contract, measured accuracy, and supported limits.
 - [M1 evidence](docs/evidence/m1.md): manual editor, calibration, replay and interaction measurements.
+- [M2 evidence](docs/evidence/m2.md): bounded local rendezvous, costs, independent oracle and browser replay.
 - [Captured charter](docs/charter.md): product baseline copied from the org vault.
 - [CoaDE reference](docs/evidence/coade-reference.md): installed tutorial observations and remaining UI unknowns.
 - [KSP/mod references](docs/evidence/ksp-reference.md): precision controls and encounter feedback.

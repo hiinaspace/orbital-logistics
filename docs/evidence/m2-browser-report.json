@@ -1,0 +1,31 @@
+{
+  "host": "natto",
+  "chrome": "154.0.8037.97",
+  "url": "http://127.0.0.1:4178/",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "runs": [
+    {
+      "label": "initial",
+      "elapsedMs": 858.6177740000003,
+      "iterations": 3,
+      "evaluations": 16
+    },
+    {
+      "label": "worse",
+      "elapsedMs": 366.1949070000005,
+      "iterations": 5,
+      "evaluations": 26
+    },
+    {
+      "label": "closer",
+      "elapsedMs": 229.10209399999985,
+      "iterations": 2,
+      "evaluations": 11
+    }
+  ],
+  "errors": [],
+  "method": "External Playwright click dispatch through visible proposal, including protocol scheduling, worker startup/solve/verification/transfer and DOM rendering; three individual runs, not a latency distribution."
+}

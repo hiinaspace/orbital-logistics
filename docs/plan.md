@@ -1,11 +1,13 @@
 # Tactical plan — 2026-10-06
 
-Status: **M1 accepted by the user; proceeding to bounded M2 rendezvous**.
+Status: **M1 accepted; initial bounded M2 rendezvous implemented and validated**.
 On 2026-10-06 the user approved the important CoaDE UI behaviors and inertial
 frame switching, requested visible/clickable apsides and coarse node-time edits,
 and said "Otherwise I think good to proceed." This is approval to pass the manual
 editor gate, not a claim that a scripted moon exercise was observed. Both UI
-refinements are implemented. See [M1 evidence](evidence/m1.md) and
+refinements are implemented. The fixed-time, two-body M2 helper now offers an
+explicit proposal with a charged arrival burn; review its interaction before M3.
+See [M2 evidence](evidence/m2.md), [M1 evidence](evidence/m1.md) and
 [M0 evidence](evidence/m0.md). The remainder records the reviewed plan and intended
 sequence. The charter remains the product baseline.
 Source: /home/s/org/projects/orbital-logistics/charter.md.

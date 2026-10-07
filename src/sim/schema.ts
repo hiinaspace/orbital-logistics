@@ -5,12 +5,20 @@ export type Rail =
   | { kind: 'fixed'; position: [number, number] }
   | { kind: 'circular'; center: [number, number]; radius: number; rate: number; phase: number };
 export interface Body { id: string; mu: number; radius: number; rail: Rail }
+export interface Rendezvous {
+  target: { id: string; state: State };
+  referenceBodyId: string; departureEpoch: number; arrivalEpoch: number;
+  bounds: { radial: [number, number]; transverse: [number, number] };
+  branch: { direction: 'ccw'; revolutions: 0; minClearance: number };
+  tolerance: { position: number; velocity: number };
+}
 export interface Scenario {
   schemaVersion: 1; modelVersion: typeof MODEL; id: string;
   units: { length: string; time: string; mass: string };
   epoch: number; duration: number;
   policy: { step: number; maxNodes: number; maxSubdivision: number };
   bodies: Body[];
+  rendezvous?: Rendezvous;
   ship: { id: string; state: State; dryMass: number; cargoMass: number;
     propellant: number; tankCapacity: number; exhaustVelocity: number };
 }
@@ -78,6 +86,18 @@ export function validateBundle(value: unknown): Bundle {
       exhaustVelocity: finite(ship.exhaustVelocity, 'exhaust velocity', Number.MIN_VALUE) } };
   if (scenario.ship.propellant > scenario.ship.tankCapacity || bodies.some(b => b.id === scenario.ship.id)) throw new Error('Invalid ship capacity/ID');
   if (!Number.isFinite(scenario.ship.dryMass + scenario.ship.cargoMass + scenario.ship.propellant)) throw new Error('Invalid total mass');
+  if (s.rendezvous !== undefined) {
+    const r = object(s.rendezvous), target = object(r.target), bounds = object(r.bounds), branch = object(r.branch), tolerance = object(r.tolerance);
+    const departureEpoch = finite(r.departureEpoch, 'departure', epoch), arrivalEpoch = finite(r.arrivalEpoch, 'arrival', departureEpoch);
+    const radial = vector(bounds.radial, 2) as [number, number], transverse = vector(bounds.transverse, 2) as [number, number];
+    const targetId = name(target.id), referenceBodyId = name(r.referenceBodyId);
+    if (bodies.length !== 1 || bodies[0].rail.kind !== 'fixed' || referenceBodyId !== bodies[0].id ||
+        branch.direction !== 'ccw' || branch.revolutions !== 0 || arrivalEpoch <= departureEpoch || arrivalEpoch >= epoch + duration ||
+        radial[0] >= radial[1] || transverse[0] >= transverse[1] || targetId === scenario.ship.id || bodies.some(b => b.id === targetId)) throw new Error('Unsupported rendezvous domain');
+    scenario.rendezvous = { target: { id: targetId, state: vector(target.state, 4) as State }, referenceBodyId, departureEpoch, arrivalEpoch,
+      bounds: { radial, transverse }, branch: { direction: 'ccw', revolutions: 0, minClearance: finite(branch.minClearance, 'clearance', 0) },
+      tolerance: { position: finite(tolerance.position, 'position tolerance', Number.MIN_VALUE), velocity: finite(tolerance.velocity, 'velocity tolerance', Number.MIN_VALUE) } };
+  }
   if (!Array.isArray(p.burns) || p.burns.length > 128) throw new Error('Invalid burns');
   let previous = -Infinity;
   const burns: Burn[] = p.burns.map(value => {
