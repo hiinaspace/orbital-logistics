@@ -3,7 +3,7 @@
 A trajectory-programming logistics puzzle experiment by Hiina. Browser-first,
 2D, visual maneuver editing; later cargo and synchronized reusable services.
 
-**Current checkpoint: M1 accepted; initial M2 rendezvous implemented.** Choose
+**Current checkpoint: M1 accepted; M2 rendezvous and manual encounter actions implemented.** Choose
 Orbit shaping, Moon encounter or Rendezvous. Plan a trajectory, click its path to place a
 maneuver, click R or T, move the pointer, then click to commit (Escape cancels).
 Precision controls, ordered maneuvers, apsis snaps, undo/redo, synchronized frames,
@@ -13,8 +13,11 @@ Apsis dots place snapped maneuvers; clicking a node engages horizontal time edit
 In Rendezvous, select the departure maneuver and click **Target**. The purple
 proposal previews the meeting time and lists departure/arrival cost. **Accept**
 puts both burns into the draft; **Reject** leaves it unchanged. **Execute plan**
-runs the accepted draft. The helper adjusts components at the fixture's fixed
-departure and arrival epochs inside its selected CCW, zero-revolution branch.
+runs the accepted draft. The helper adjusts the selected last departure before the fixed arrival, preserving
+its authored epoch and earlier maneuvers inside the CCW, zero-revolution branch.
+Hover the path while a node is selected to scrub other bodies. Click M/I encounter
+markers for a paid orbit-match/intercept correction or a manual maneuver.
+Overlapping icons open a selection menu at the pointer.
 
 ## Run
 
@@ -83,13 +86,13 @@ uv run --project spikes/numerics pre-commit run --config spikes/numerics/.pre-co
 
 ## Next
 
-Review the M2 proposal interaction and its paid arrival burn before starting M3's
-delivery/docking puzzle. This first helper uses the fixed two-body fixture;
-multi-body targeting, departure-time search and orbit matching remain later work.
+M2 was reviewed and M3 authorized. The next slice is one tug, finite inventories,
+docked service durations and a required return state, before a second ship.
 
 - [Tactical plan](docs/plan.md): build slices, temporal/interaction contract, M2–M6 gates.
 - [M0 evidence](docs/evidence/m0.md): simulation contract, measured accuracy, and supported limits.
 - [M1 evidence](docs/evidence/m1.md): manual editor, calibration, replay and interaction measurements.
+- [M2 encounter follow-up](docs/evidence/m2-encounters.md): manual corrections, hover and overlap menu.
 - [M2 evidence](docs/evidence/m2.md): bounded local rendezvous, costs, independent oracle and browser replay.
 - [Captured charter](docs/charter.md): product baseline copied from the org vault.
 - [CoaDE reference](docs/evidence/coade-reference.md): installed tutorial observations and remaining UI unknowns.

@@ -45,6 +45,7 @@ export class EditorSession {
     if (!burn) throw new Error('Unknown maneuver');
     Object.assign(burn, edit);
     if (edit.t !== undefined || edit.referenceBodyId !== undefined) delete burn.snap;
+    if (edit.t !== undefined || edit.referenceBodyId !== undefined || edit.radial !== undefined || edit.transverse !== undefined) delete burn.assist;
     program.burns.sort((a, b) => a.t - b.t); this.change(program);
   }
   removeBurn(id: string): void { const program = this.draft; program.burns = program.burns.filter(b => b.id !== id); this.change(program); }

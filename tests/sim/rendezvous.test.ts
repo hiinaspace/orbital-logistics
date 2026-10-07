@@ -49,10 +49,18 @@ test('fuel, work, component bounds and unsupported queue failures leave the inpu
   cases[0].scenario.ship.propellant = 0.05; // departure is affordable, arrival is not
   cases[1].program.burns[0].transverse = 0.3;
   cases[2].program.burns.push({ ...cases[2].program.burns[0], id: 'extra', t: 3 });
-  cases[3].program.burns[0].t = 0.6;
+  cases[3].program.burns[0].t = cases[3].scenario.rendezvous!.arrivalEpoch;
   for (const bundle of cases) { const before = structuredClone(bundle); assert.equal(solveRendezvous(bundle, 'departure').status, 'failed'); assert.deepEqual(bundle, before); }
   const result = solveRendezvous(fixture(), 'departure', 1);
   assert.equal(result.status, 'failed'); if (result.status === 'failed') assert.match(result.reason, /Work limit/);
+});
+test('a recreated departure can move, preserve its prefix and replace an existing arrival explicitly', () => {
+  const bundle = fixture(); bundle.program.burns[0].t = 0.8;
+  bundle.program.burns.unshift({ ...bundle.program.burns[0], id: 'prefix', t: 0.2, transverse: 0.001 });
+  const p = proposed(bundle);
+  assert.equal(p.departure.t, 0.8); assert.deepEqual(p.program.burns[0], bundle.program.burns[0]);
+  const again = proposed({ scenario: bundle.scenario, program: p.program });
+  assert.equal(again.program.burns.length, 3); assert.equal(again.arrival.id, p.arrival.id);
 });
 test('clockwise, full-revolution and inadequate-clearance seeds are rejected before route correction', () => {
   const clockwise = fixture(), revolution = fixture(), clearance = fixture();

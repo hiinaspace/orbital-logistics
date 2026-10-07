@@ -26,6 +26,7 @@ export interface Burn {
   id: string; t: number; referenceBodyId: string;
   basis: 'radial-transverse-ccw-v1'; radial: number; transverse: number;
   snap?: { bodyId: string; kind: 'periapsis' | 'apoapsis'; window: [number, number]; resolvedEpoch: number };
+  assist?: { kind: 'match-orbit' | 'intercept'; targetId: string; targetEpoch: number };
 }
 export interface Program { schemaVersion: 1; id: string; burns: Burn[] }
 export interface Bundle { scenario: Scenario; program: Program }
@@ -112,6 +113,13 @@ export function validateBundle(value: unknown): Bundle {
           window[0] < epoch || window[1] > epoch + duration || window[0] >= window[1] ||
           t < window[0] || t > window[1] || snap.resolvedEpoch !== t) throw new Error('Invalid apsis provenance');
       burn.snap = { bodyId: referenceBodyId, kind: snap.kind, window, resolvedEpoch: t };
+    }
+    if (b.assist !== undefined) {
+      const assist = object(b.assist), targetEpoch = finite(assist.targetEpoch, 'target epoch', epoch);
+      if (!scenario.rendezvous || assist.targetId !== scenario.rendezvous.target.id ||
+          (assist.kind !== 'match-orbit' && assist.kind !== 'intercept') || targetEpoch > epoch + duration ||
+          (assist.kind === 'intercept' && targetEpoch !== t)) throw new Error('Invalid correction provenance');
+      burn.assist = { kind: assist.kind, targetId: assist.targetId as string, targetEpoch };
     }
     return burn;
   });

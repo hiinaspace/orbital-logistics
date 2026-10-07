@@ -3,7 +3,8 @@ import orbit from '../fixtures/m1-orbit.json';
 import binary from '../fixtures/m0-binary.json';
 import rendezvous from '../fixtures/m2-rendezvous.json';
 import { targetBundle } from './planning/target';
-import type { RendezvousProposal } from './planning/rendezvous';
+import { departureUnavailable, type RendezvousProposal } from './planning/rendezvous';
+import type { EncounterProposal, Opportunity } from './planning/encounters';
 import { EditorSession } from './editor/session';
 import { predict, type Prediction } from './planning/predict';
 import type { Encounter } from './planning/events';
@@ -47,6 +48,7 @@ document.body.innerHTML = `
     <label class="scrub">Preview <input id="epoch" type="range" min="0" max="8" step="0.001" value="0"><output id="preview-time"></output><button id="live">Live</button></label>
   </section>
   <details id="file-panel"><summary>Scenario / program JSON</summary><div class="buttons"><button id="save">Save to JSON</button><button id="download">Download</button><button id="load">Load JSON</button></div><textarea id="json" aria-label="Scenario and program JSON" spellcheck="false"></textarea><p id="import-status" role="status"></p></details>
+  <div id="hit-menu" role="menu" aria-label="Choose action" hidden></div>
   <details><summary>Debug</summary><pre id="state-json"></pre></details>
 </main>`;
 
@@ -62,11 +64,13 @@ let snapEvents: ReturnType<EditorSession['snapCandidates']> = [];
 let handle: { axis: 'radial' | 'transverse' | 'time'; bounds?: [number, number]; origin: [number, number]; direction: [number, number]; start: number } | undefined;
 let targetReference: Runner | undefined, targetPath: Prediction | undefined;
 let targetWorker: Worker | undefined, targetGeneration = 0, solving = false, solveStatus = '';
-let proposal: { value: RendezvousProposal; prediction: Prediction; revision: number } | undefined;
+let proposal: { value: RendezvousProposal | EncounterProposal; prediction: Prediction; revision: number } | undefined;
 let pan: { point: [number, number]; center: [number, number] } | undefined;
 let handles: { axis: 'radial' | 'transverse'; p: [number, number]; direction: [number, number] }[] = [];
 let apsisPoints: { event: Encounter; p: [number, number] }[] = [];
 let nodePoints: { id: string; p: [number, number] }[] = [];
+let encounterPoints: { event: Opportunity; p: [number, number] }[] = [];
+let menuLabels: string[] = [];
 let objectPoints: { id: string; p: [number, number]; radius: number }[] = [];
 const endTime = () => session.scenario.epoch + session.scenario.duration;
 const currentBurn = () => session.draft.burns.find(b => b.id === selectedBurn);
@@ -106,7 +110,7 @@ function fit() {
   camera = { center: [(minX + maxX) / 2, (minY + maxY) / 2], scale: Math.min(800 / Math.max(maxX - minX, 0.1), 480 / Math.max(maxY - minY, 0.1)) };
 }
 function install(next: EditorSession, preview = next.scenario.epoch) {
-  cancelTarget(); worker?.terminate(); worker = undefined; pending = false; generation++; session = next;
+  closeMenu(); cancelTarget(); worker?.terminate(); worker = undefined; pending = false; generation++; session = next;
   targetReference = session.scenario.rendezvous ? new Runner(targetBundle(session.bundle)) : undefined;
   targetPath = targetReference ? predict(targetBundle(session.bundle), -1) : undefined;
   acceptedReference = new Runner({ scenario: session.scenario, program: session.accepted });
@@ -171,20 +175,23 @@ function updateUI() {
   if (session.scenario.rendezvous) {
     const meet = draft.rendezvous, tolerance = session.scenario.rendezvous.tolerance;
     goalAchieved = !!meet && meet.positionError < tolerance.position && meet.relativeSpeed < tolerance.velocity;
-    el('goal-value').textContent = pending ? '…' : goalAchieved ? 'Matched' : meet ? `Miss ${meet.positionError.toFixed(3)}` : '—';
+    el('goal-label').textContent = meet?.kind === 'match-orbit' ? `Match orbit · t ${meet.t.toFixed(3)}` : `Meet target · t ${(meet?.t ?? session.scenario.rendezvous.arrivalEpoch).toFixed(3)}`;
+    el('goal-value').textContent = pending ? '…' : goalAchieved ? (meet?.kind === 'match-orbit' ? 'Orbit matched' : 'Matched') : meet ? `Miss ${meet.positionError.toFixed(3)}` : '—';
   }
   el('goal').classList.toggle('achieved', !pending && draft.accuracy?.status === 'converged' && goalAchieved);
   el('targeting').hidden = !session.scenario.rendezvous;
   el('target-miss').textContent = pending ? '…' : draft.rendezvous?.positionError.toExponential(3) ?? '—';
   el('target-speed').textContent = pending ? '…' : draft.rendezvous?.relativeSpeed.toExponential(3) ?? '—';
-  el<HTMLButtonElement>('solve').disabled = pending || !!handle || (!solving && (!burn || session.draft.burns.length !== 1 || burn.t !== session.scenario.rendezvous?.departureEpoch));
+  const unavailable = departureUnavailable(session.bundle, selectedBurn);
+  el<HTMLButtonElement>('solve').disabled = pending || !!handle || (!solving && !!unavailable);
+  el('solve').title = unavailable ?? 'Refine this departure for the selected arrival';
   el('solve').textContent = solving ? 'Cancel' : 'Target';
-  el('solve-status').textContent = solveStatus;
+  el('solve-status').textContent = solveStatus || (session.scenario.rendezvous ? unavailable ?? '' : '');
   el('proposal').hidden = !proposal; el('proposal-key').hidden = !proposal;
   el<HTMLButtonElement>('accept-proposal').disabled = !proposal || proposal.revision !== session.revision || proposal.prediction.accuracy?.status !== 'converged';
   if (proposal) {
     const p = proposal.value;
-    el('proposal-values').textContent = `Departure Δv ${Math.hypot(p.departure.radial, p.departure.transverse).toFixed(5)}\nArrival Δv ${Math.hypot(p.arrival.radial, p.arrival.transverse).toFixed(5)}\nTotal Δv ${p.totalDv.toFixed(5)} (${p.addedDv >= 0 ? '+' : ''}${p.addedDv.toFixed(5)})\nFuel ${p.propellantUsed.toFixed(5)}\nMiss ${p.positionError.toExponential(2)}`;
+    el('proposal-values').textContent = `${'departure' in p ? `Departure Δv ${Math.hypot(p.departure.radial, p.departure.transverse).toFixed(5)}\n` : ''}Arrival Δv ${Math.hypot(p.arrival.radial, p.arrival.transverse).toFixed(5)}\nTotal Δv ${p.totalDv.toFixed(5)} (${p.addedDv >= 0 ? '+' : ''}${p.addedDv.toFixed(5)})\nFuel ${p.propellantUsed.toFixed(5)}\nMiss ${p.positionError.toExponential(2)}`;
   }
   const encounter = draft.diagnostics[el<HTMLSelectElement>('encounter-body').value]?.closest;
   el('encounter-readout').textContent = pending ? 'Updating…' : encounter ? `t ${encounter.t.toFixed(5)}\nCenter ${encounter.distance.toFixed(6)}\nAltitude ${encounter.altitude.toFixed(6)}\nRelative speed ${encounter.relativeSpeed.toFixed(6)}` : '';
@@ -218,7 +225,7 @@ function selectBurn(id: string) {
 function edited(change: () => void, inspector = true) {
   const inputAt = performance.now();
   try {
-    cancelTarget(); const previous = session.revision; change(); setPlaying(false); message();
+    closeMenu(); cancelTarget(); const previous = session.revision; change(); setPlaying(false); message();
     if (inspector) refreshInspector();
     if (session.revision === previous) { updateUI(); render(); return; }
     schedulePrediction(inputAt);
@@ -311,6 +318,14 @@ function render() {
     const sample = samplePrediction(proposal.prediction, t), p = point(sample.y, sample.t);
     ctx.strokeStyle = '#bf9de8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(...p, 9, 0, 2 * Math.PI); ctx.stroke();
   }
+  encounterPoints = [];
+  for (const event of draft.opportunities) {
+    const p = point(event.y, event.t); encounterPoints.push({ event, p });
+    ctx.beginPath(); ctx.arc(...p, event.kind === 'intercept' ? 10 : 7, 0, 2 * Math.PI);
+    ctx.strokeStyle = pending ? '#7d8b90' : event.kind === 'intercept' ? '#bf9de8' : '#80c8be'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = ctx.strokeStyle; ctx.font = 'bold 11px system-ui';
+    ctx.fillText(event.kind === 'intercept' ? 'I' : 'M', p[0] + (event.kind === 'intercept' ? 11 : -18), p[1] - 12);
+  }
   nodePoints = []; handles = [];
   for (const [index, burn] of session.draft.burns.entries()) {
     const state = draft.burnStates[burn.id]; if (!state || state.t !== burn.t) continue;
@@ -329,18 +344,55 @@ function render() {
   el('state-json').textContent = JSON.stringify({ ...live, ledger: session.execution.ledger, draft: session.draft,
     accepted: session.accepted, baseline: session.baseline, revision: session.revision, readyRevision: draft.revision, pending,
     previewTime: previewTime ?? null, pinnedTime, mode: handle?.axis === 'time' ? 'time-edit' : handle ? 'handle-edit' : selectedBurn ? 'epoch-pinned' : planning ? 'hover-preview' : 'inspect',
-    selectedObject, selectedBurn, frame: frameSelect.value, camera, handles, nodePoints, apsisPoints, objectPoints,
+    selectedObject, selectedBurn, frame: frameSelect.value, camera, handles, nodePoints, apsisPoints, encounterPoints, objectPoints, menuLabels, geometry,
     targeting: { solving, proposal: proposal?.value ?? null, revision: proposal?.revision, status: solveStatus }, rendezvous: draft.rendezvous, terminal: draft.terminal, diagnostics: draft.diagnostics, accuracy: draft.accuracy, latency, feedbackLatency }, null, 2);
 }
+
+type Pick = { kind: 'handle' | 'node' | 'apsis' | 'encounter' | 'object' | 'manual'; label: string; t?: number; run: () => void };
+function startNodeTime(id: string, p: [number, number]) {
+  selectBurn(id); const burns = session.draft.burns, at = burns.findIndex(b => b.id === id);
+  session.beginGesture(); handle = { axis: 'time', origin: p, direction: [1, 0], start: currentBurn()!.t,
+    bounds: [at > 0 ? burns[at - 1].t + 1e-6 : session.scenario.epoch, at < burns.length - 1 ? burns[at + 1].t - 1e-6 : endTime()] };
+  updateUI(); render();
+}
+function collectPicks(p: [number, number]): Pick[] {
+  const picks: Pick[] = [], near = (q: number[], radius = 12) => Math.hypot(p[0] - q[0], p[1] - q[1]) < radius;
+  if (!pending) {
+    for (const h of handles) if (near(h.p, 14) && selectedBurn) picks.push({ kind: 'handle', label: h.axis === 'radial' ? 'Adjust radial burn' : 'Adjust transverse burn', run: () => { session.beginGesture(); handle = { axis: h.axis, origin: p, direction: h.direction, start: currentBurn()![h.axis] }; updateUI(); render(); } });
+    for (const n of nodePoints) if (near(n.p)) { const burns = session.draft.burns, index = burns.findIndex(b => b.id === n.id), burn = burns[index]; picks.push({ kind: 'node', label: `Maneuver ${index + 1} · t ${burn.t.toFixed(3)}`, t: burn.t, run: () => startNodeTime(n.id, p) }); }
+    for (const e of encounterPoints) if (near(e.p)) picks.push({ kind: 'encounter', label: `${e.event.kind === 'intercept' ? 'Intercept' : 'Match orbit'} · t ${e.event.t.toFixed(3)} · Δv ${e.event.relativeSpeed.toFixed(4)}`, t: e.event.t, run: () => requestCorrection(e.event) });
+    if (planning) for (const a of apsisPoints) if (near(a.p)) picks.push({ kind: 'apsis', label: `Snap to ${a.event.kind} · ${a.event.bodyId} · t ${a.event.t.toFixed(3)}`, t: a.event.t, run: () => addBurn(a.event.t, a.event) });
+  }
+  for (const o of objectPoints) if (near(o.p, Math.max(12, o.radius))) picks.push({ kind: 'object', label: `Select ${o.id}`, run: () => { selectedObject = o.id; selectedBurn = undefined; planning = false; refreshInspector(); updateUI(); render(); } });
+  return picks;
+}
+function closeMenu() { menuLabels = []; el('hit-menu').hidden = true; }
+function openMenu(picks: Pick[], x: number, y: number) {
+  const menu = el('hit-menu'); menu.replaceChildren(); setPlaying(false);
+  menuLabels = picks.map(p => p.label);
+  for (const pick of picks) {
+    const button = document.createElement('button'); button.type = 'button'; button.setAttribute('role', 'menuitem'); button.textContent = pick.label;
+    button.addEventListener('click', () => { closeMenu(); canvas.focus(); pick.run(); render(); }); menu.append(button);
+  }
+  menu.hidden = false; menu.style.left = `${Math.max(8, Math.min(x, innerWidth - menu.offsetWidth - 8))}px`;
+  menu.style.top = `${Math.max(8, Math.min(y, innerHeight - menu.offsetHeight - 8))}px`;
+  (menu.firstElementChild as HTMLButtonElement)?.focus(); render();
+}
+el('hit-menu').addEventListener('keydown', event => {
+  const buttons = [...el('hit-menu').querySelectorAll<HTMLButtonElement>('button')], at = buttons.indexOf(document.activeElement as HTMLButtonElement);
+  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); buttons[(at + (event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length]?.focus(); }
+  if (event.key === 'Escape' || event.key === 'Tab') { closeMenu(); canvas.focus(); }
+});
 
 // Switching to another control cancels the latched edit before that control acts.
 document.addEventListener('pointerdown', event => {
   if (handle && event.target !== canvas) finishHandle(false);
+  if (event.target !== canvas && !el('hit-menu').contains(event.target as Node)) closeMenu();
 }, true);
 canvas.addEventListener('pointerdown', event => {
   if (handle) return;
   if (event.button === 1 || event.button === 2 || (event.button === 0 && event.shiftKey)) {
-    event.preventDefault(); pan = { point: pointer(event), center: [...camera.center] }; canvas.setPointerCapture(event.pointerId);
+    event.preventDefault(); closeMenu(); pan = { point: pointer(event), center: [...camera.center] }; canvas.setPointerCapture(event.pointerId);
   }
 });
 canvas.addEventListener('contextmenu', event => event.preventDefault());
@@ -361,29 +413,28 @@ canvas.addEventListener('pointermove', event => {
     const value = Math.max(-limit(), Math.min(limit(), handle.start + ((p[0] - handle.origin[0]) * handle.direction[0] + (p[1] - handle.origin[1]) * handle.direction[1]) / gain()));
     edited(() => session.updateBurn(selectedBurn!, { [handle!.axis]: Math.round(value * 1e6) / 1e6 }), false); return;
   }
-  if (planning && !selectedBurn && !pending) { const apsis = hitApsis(p); const hit = hitPath(geometry, p, pinnedTime); if (apsis || hit) { previewTime = apsis?.event.t ?? hit!.t; render(); } }
+  if (planning && !pending && el('hit-menu').hidden) { const apsis = hitApsis(p); const hit = hitPath(geometry, p, pinnedTime); const encounter = encounterPoints.find(e => Math.hypot(p[0] - e.p[0], p[1] - e.p[1]) < 12); if (encounter || apsis || hit) { previewTime = encounter?.event.t ?? apsis?.event.t ?? hit!.t; render(); } }
   canvas.style.cursor = handles.some(h => Math.hypot(p[0] - h.p[0], p[1] - h.p[1]) < 14) ? 'crosshair' : planning ? 'crosshair' : 'default';
 });
 canvas.addEventListener('click', event => {
   if (event.shiftKey || event.button !== 0) return;
   const p = pointer(event); canvas.focus();
   if (handle) { finishHandle(true); return; }
-  const hitHandle = handles.find(h => Math.hypot(p[0] - h.p[0], p[1] - h.p[1]) < 14);
-  if (hitHandle && selectedBurn && !pending) { session.beginGesture(); handle = { axis: hitHandle.axis, origin: p, direction: hitHandle.direction, start: currentBurn()![hitHandle.axis] }; updateUI(); render(); return; }
-  const node = nodePoints.find(n => Math.hypot(p[0] - n.p[0], p[1] - n.p[1]) < 12);
-  if (node) {
-    if (pending) return;
-    selectBurn(node.id); const burns = session.draft.burns, at = burns.findIndex(b => b.id === node.id);
-    session.beginGesture(); handle = { axis: 'time', origin: p, direction: [1, 0], start: currentBurn()!.t,
-      bounds: [at > 0 ? burns[at - 1].t + 1e-6 : session.scenario.epoch, at < burns.length - 1 ? burns[at + 1].t - 1e-6 : endTime()] };
-    updateUI(); render(); return;
+  const picks = collectPicks(p);
+  if (picks.length > 1 || picks.some(p => p.kind === 'encounter')) {
+    const manualTimes = picks.filter(p => p.kind === 'encounter').map(p => p.t!);
+    const hit = hitPath(geometry, p, previewTime ?? pinnedTime);
+    if (!manualTimes.length && planning && hit) manualTimes.push(hit.t);
+    for (const t of [...new Set(manualTimes.map(t => Number(t.toFixed(8))))]) picks.push({ kind: 'manual', label: `Add new manual maneuver · t ${t.toFixed(3)}`, t, run: () => addBurn(t) });
+    openMenu(picks, event.clientX, event.clientY); return;
   }
-  if (planning && !pending) { const apsis = hitApsis(p); if (apsis) { addBurn(apsis.event.t, apsis.event); return; } const hit = hitPath(geometry, p, previewTime ?? pinnedTime); if (hit) { addBurn(hit.t); return; } }
-  const object = objectPoints.find(o => Math.hypot(p[0] - o.p[0], p[1] - o.p[1]) < Math.max(12, o.radius));
-  if (object) { selectedObject = object.id; selectedBurn = undefined; planning = false; refreshInspector(); updateUI(); render(); }
+  closeMenu();
+  if (picks.length) { picks[0].run(); return; }
+  if (planning && !pending) { const hit = hitPath(geometry, p, previewTime ?? pinnedTime); if (hit) addBurn(hit.t); }
+
 });
 canvas.addEventListener('wheel', event => {
-  event.preventDefault(); if (handle) return;
+  event.preventDefault(); if (handle) return; closeMenu();
   const p = pointer(event), before = unproject(p, camera);
   camera.scale = Math.max(20, Math.min(10000, camera.scale * Math.exp(-event.deltaY * 0.001)));
   const after = unproject(p, camera); camera.center[0] += before[0] - after[0]; camera.center[1] += before[1] - after[1]; render();
@@ -411,11 +462,11 @@ for (const [id, direction] of [['previous', -1], ['next', 1]] as const) el(id).a
 function history(redo = false) { if (handle) finishHandle(false); edited(() => { if (redo) session.redo(); else session.undo(); if (!currentBurn()) selectedBurn = undefined; }); }
 el('undo').addEventListener('click', () => history()); el('redo').addEventListener('click', () => history(true));
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape') { finishHandle(false); return; }
+  if (event.key === 'Escape') { closeMenu(); finishHandle(false); return; }
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z' && !(event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement)) { event.preventDefault(); history(event.shiftKey); }
 });
-frameSelect.addEventListener('change', () => { if (handle) finishHandle(false); fit(); render(); });
-el('fit').addEventListener('click', () => { if (!handle) { fit(); render(); } });
+frameSelect.addEventListener('change', () => { closeMenu(); if (handle) finishHandle(false); fit(); render(); });
+el('fit').addEventListener('click', () => { closeMenu(); if (!handle) { fit(); render(); } });
 el('focus').addEventListener('click', () => { if (handle) return; const t = previewTime ?? session.execution.current.t, y = selectedObject === 'ship' ? samplePrediction(draft, t).y : selectedObject === session.scenario.rendezvous?.target.id && targetReference ? targetReference.sample(t).y : bodyState(session.scenario.bodies.find(b => b.id === selectedObject)!, t); const r = relative(y, t); camera.center = [r[0], r[1]]; render(); });
 el('encounter-body').addEventListener('change', () => updateUI());
 el('execute').addEventListener('click', () => {
@@ -436,9 +487,9 @@ function cancelTarget() {
   targetWorker?.terminate(); targetWorker = undefined; targetGeneration++;
   solving = false; proposal = undefined; solveStatus = '';
 }
-el('solve').addEventListener('click', () => {
+function requestCorrection(opportunity?: Opportunity) {
   if (solving) { cancelTarget(); updateUI(); render(); return; }
-  if (!currentBurn()) return;
+  if (!opportunity && !currentBurn()) return;
   cancelTarget(); solving = true; solveStatus = 'Solving…';
   const generation = targetGeneration, revision = session.revision, horizon = endTime(), bundle = session.bundle;
   targetWorker = new Worker(new URL('./planning/rendezvous.worker.ts', import.meta.url), { type: 'module' });
@@ -449,12 +500,17 @@ el('solve').addEventListener('click', () => {
     else if (data.scenarioId !== session.scenario.id || data.modelVersion !== session.scenario.modelVersion || data.horizon !== endTime()) return;
     else if (data.result.status === 'failed') solveStatus = data.result.reason;
     else if (data.prediction.accuracy?.status !== 'converged') solveStatus = 'Proposal accuracy unresolved';
-    else { proposal = { value: data.result.proposal, prediction: data.prediction, revision }; solveStatus = 'Correction proposal'; previewTime = session.scenario.rendezvous!.arrivalEpoch; }
+    else if (opportunity) {
+      const value = data.result.proposal as EncounterProposal;
+      edited(() => session.change(value.program)); selectedBurn = value.arrival.id; selectedObject = 'ship'; planning = true;
+      previewTime = value.arrival.t; pinnedTime = value.arrival.t; refreshInspector();
+    } else { proposal = { value: data.result.proposal, prediction: data.prediction, revision }; solveStatus = 'Correction proposal'; previewTime = data.result.proposal.arrival.t; }
     updateUI(); render();
   };
   targetWorker.onerror = event => { if (generation !== targetGeneration) return; cancelTarget(); solveStatus = event.message; updateUI(); render(); };
-  targetWorker.postMessage({ bundle, burnId: currentBurn()!.id, revision, horizon, generation }); updateUI(); render();
-});
+  targetWorker.postMessage({ bundle, burnId: currentBurn()?.id, opportunityId: opportunity?.id, revision, horizon, generation }); updateUI(); render();
+}
+el('solve').addEventListener('click', () => requestCorrection());
 el('reject-proposal').addEventListener('click', () => { cancelTarget(); updateUI(); render(); });
 el('accept-proposal').addEventListener('click', () => {
   if (!proposal || proposal.revision !== session.revision || proposal.prediction.accuracy?.status !== 'converged') return;

@@ -1,15 +1,13 @@
 # Tactical plan — 2026-10-06
 
-Status: **M1 accepted; initial bounded M2 rendezvous implemented and validated**.
-On 2026-10-06 the user approved the important CoaDE UI behaviors and inertial
-frame switching, requested visible/clickable apsides and coarse node-time edits,
-and said "Otherwise I think good to proceed." This is approval to pass the manual
-editor gate, not a claim that a scripted moon exercise was observed. Both UI
-refinements are implemented. The fixed-time, two-body M2 helper now offers an
-explicit proposal with a charged arrival burn; review its interaction before M3.
-See [M2 evidence](evidence/m2.md), [M1 evidence](evidence/m1.md) and
-[M0 evidence](evidence/m0.md). The remainder records the reviewed plan and intended
-sequence. The charter remains the product baseline.
+Status: **M1 accepted; M2 helper reviewed; encounter follow-up validated; M3 authorized**.
+On 2026-10-06 the user accepted the manual editor and initial rendezvous helper,
+requested encounter markers, selected-node hover and overlap selection, then
+explicitly authorized continuing with M3 tasks. Those M2 follow-ups are implemented
+and validated; see [encounter evidence](evidence/m2-encounters.md),
+[initial M2 evidence](evidence/m2.md), [M1](evidence/m1.md) and [M0](evidence/m0.md).
+Next is M3a's bounded one-tug reusable delivery, before M3b's joint handoff.
+The remainder records the reviewed plan and intended sequence.
 Source: /home/s/org/projects/orbital-logistics/charter.md.
 
 ## Recommendation
@@ -230,8 +228,8 @@ finite-difference trial and accepted update must obey those bounds.
 Reject branch-switching, collisions, insufficient fuel, nonconvergence, stale/cancelled
 jobs. Show a correction proposal and accept/reject; never mutate plan on failure.
 If branch identity cannot be defined reliably, narrow the fixture and solver range.
-Compare manually better/worse seeds and correction cost. Do not add a separate
-orbit-match action until it solves a distinct player need.
+Compare manually better/worse seeds and correction cost. The user identified manual crossing corrections as a distinct need: geometric
+orbit matching and simultaneous interception are now explicit paid actions.
 
 **M3a:** one tug, two explicitly kinematic ports, finite cargo/propellant, docked
 load/unload duration, delivery quota, and required reusable return state. Include

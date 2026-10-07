@@ -492,3 +492,27 @@ pre {
 .proposal-key:before {
   background: #bf9de8;
 }
+
+#hit-menu {
+  position: fixed;
+  z-index: 10;
+  max-height: min(65vh, 420px);
+  max-width: calc(100vw - 16px);
+  overflow: auto;
+  padding: 5px;
+  border: 1px solid #587284;
+  border-radius: 6px;
+  background: #13232e;
+  box-shadow: 0 6px 25px #0008;
+}
+#hit-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border-color: transparent;
+  background: transparent;
+  padding: 9px 12px;
+}
+#hit-menu button:hover, #hit-menu button:focus-visible {
+  background: #29414e;
+}

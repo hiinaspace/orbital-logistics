@@ -149,7 +149,7 @@ test('visible apsides place snapped nodes and node clicks edit time as one rever
   await page.locator('#undo').click(); await ready(page); expect((await state(page)).draft.burns).toHaveLength(1);
   await page.locator('#redo').click(); await ready(page);
   const node = (await state(page)).nodePoints.find((n: any) => n.id === snapped.id);
-  await page.mouse.click(...await canvasPoint(page, node.p)); expect((await state(page)).mode).toBe('time-edit');
+  await page.mouse.click(...await canvasPoint(page, node.p)); await page.getByRole('menuitem', { name: /^Maneuver 2/ }).click(); expect((await state(page)).mode).toBe('time-edit');
   const moved = await canvasPoint(page, [node.p[0] + 40, node.p[1]]);
   await page.mouse.move(...moved); await page.mouse.click(...moved); await ready(page);
   const shifted = (await state(page)).draft.burns[1];
@@ -158,12 +158,12 @@ test('visible apsides place snapped nodes and node clicks edit time as one rever
   expect((await state(page)).accepted.burns).toHaveLength(0);
   await page.locator('#undo').click(); await ready(page); expect((await state(page)).draft.burns[1]).toEqual(snapped);
   const restored = (await state(page)).nodePoints.find((n: any) => n.id === snapped.id);
-  await page.mouse.click(...await canvasPoint(page, restored.p));
+  await page.mouse.click(...await canvasPoint(page, restored.p)); await page.getByRole('menuitem', { name: /^Maneuver 2/ }).click();
   await page.mouse.move(...await canvasPoint(page, [restored.p[0] - 60, restored.p[1]]));
   await page.keyboard.press('Escape'); await ready(page); expect((await state(page)).draft.burns[1]).toEqual(snapped);
   // Time gestures cannot cross adjacent burns or create duplicate epochs.
   await add(page, 6); const middle = (await state(page)).nodePoints.find((n: any) => n.id === snapped.id);
-  await page.mouse.click(...await canvasPoint(page, middle.p));
+  await page.mouse.click(...await canvasPoint(page, middle.p)); await page.getByRole('menuitem', { name: /^Maneuver 2/ }).click();
   const far = await canvasPoint(page, [middle.p[0] + 500, middle.p[1]]);
   await page.mouse.move(...far); await page.mouse.click(...far); await ready(page);
   expect((await state(page)).draft.burns[1].t).toBeCloseTo(5.999999, 6);

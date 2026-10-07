@@ -30,7 +30,7 @@ export function inspectEvents(bundle: Bundle, runner: Runner, bodyId: string, ho
   }
   const initial = runner.sample(scenario.epoch), candidates: { event: Encounter; group: number }[] = [];
   const groupMaximum = [0]; let group = 0;
-  let closest = inspect(initial.t, initial.y, 'endpoint');
+  let closest = segments.length ? inspect(segments[0].t0, segments[0].y0, 'endpoint') : inspect(initial.t, initial.y, 'endpoint');
   for (const segment of segments) {
     if (segment.t0 !== scenario.epoch && impulses.some(b => b.t === segment.t0)) { group++; groupMaximum[group] = 0; }
     const g0 = radialSpeed(segment.t0, segment.y0), g1 = radialSpeed(segment.t1, segment.y1);
