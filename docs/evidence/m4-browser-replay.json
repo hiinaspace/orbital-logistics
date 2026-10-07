@@ -1,0 +1,522 @@
+{
+  "scenario": {
+    "schemaVersion": 1,
+    "modelVersion": "rk4-canonical-v1",
+    "id": "m4-return-ticket-v1",
+    "units": {
+      "length": "reference orbital radius",
+      "time": "inverse circular angular rate",
+      "mass": "reference dry mass"
+    },
+    "epoch": 0,
+    "duration": 24,
+    "policy": {
+      "step": 0.001953125,
+      "maxNodes": 65536,
+      "maxSubdivision": 16
+    },
+    "bodies": [
+      {
+        "id": "primary",
+        "mu": 1,
+        "radius": 0.08,
+        "rail": {
+          "kind": "fixed",
+          "position": [
+            0,
+            0
+          ]
+        }
+      }
+    ],
+    "ship": {
+      "id": "ship",
+      "state": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "dryMass": 1,
+      "cargoMass": 0,
+      "propellant": 0.2,
+      "tankCapacity": 0.6,
+      "exhaustVelocity": 3
+    },
+    "logistics": {
+      "modelVersion": "kinematic-ports-v1",
+      "ports": [
+        {
+          "id": "Home",
+          "rail": {
+            "kind": "circular",
+            "center": [
+              0,
+              0
+            ],
+            "radius": 1,
+            "rate": 1,
+            "phase": 0
+          },
+          "cargo": 1,
+          "cargoCapacity": 1,
+          "propellant": 0.4,
+          "tankCapacity": 0.4,
+          "serviceDuration": 0.25
+        },
+        {
+          "id": "Depot",
+          "rail": {
+            "kind": "circular",
+            "center": [
+              0,
+              0
+            ],
+            "radius": 1.4,
+            "rate": 0.6036816105203691,
+            "phase": 0.8467093134799941
+          },
+          "cargo": 0,
+          "cargoCapacity": 1,
+          "propellant": 0.25,
+          "tankCapacity": 0.25,
+          "serviceDuration": 0.25
+        }
+      ],
+      "cargoCapacity": 0.2,
+      "capture": {
+        "position": 0.00001,
+        "velocity": 0.00001
+      },
+      "objective": {
+        "destinationId": "Depot",
+        "quota": 0.2,
+        "returnPortId": "Home",
+        "minPropellant": 0.05,
+        "hardwareCost": 1
+      }
+    }
+  },
+  "program": {
+    "schemaVersion": 1,
+    "id": "m4-return-ticket-starter-v1",
+    "burns": [
+      {
+        "id": "outbound",
+        "t": 0.5,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.08012344973464347
+      },
+      {
+        "id": "arrival",
+        "t": 4.629730790872742,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0,
+        "transverse": 0.07363750491805698
+      },
+      {
+        "id": "burn-1",
+        "t": 14,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.12511073823643187,
+        "transverse": -0.10167937152553491
+      },
+      {
+        "id": "rendezvous-arrival",
+        "t": 18,
+        "referenceBodyId": "primary",
+        "basis": "radial-transverse-ccw-v1",
+        "radial": 0.23756380695047294,
+        "transverse": -0.04086483647947863,
+        "assist": {
+          "kind": "intercept",
+          "targetId": "Home",
+          "targetEpoch": 18
+        }
+      }
+    ],
+    "operations": [
+      {
+        "id": "dock-home",
+        "t": 0,
+        "portId": "Home",
+        "kind": "dock"
+      },
+      {
+        "id": "load",
+        "t": 0,
+        "portId": "Home",
+        "kind": "transfer",
+        "cargo": 0.2,
+        "propellant": 0
+      },
+      {
+        "id": "leave-home",
+        "t": 0.5,
+        "portId": "Home",
+        "kind": "undock"
+      },
+      {
+        "id": "dock-depot",
+        "t": 4.629730790872742,
+        "portId": "Depot",
+        "kind": "dock"
+      },
+      {
+        "id": "unload-refuel",
+        "t": 4.629730790872742,
+        "portId": "Depot",
+        "kind": "transfer",
+        "cargo": -0.2,
+        "propellant": 0.1
+      },
+      {
+        "id": "target-undock",
+        "t": 14,
+        "portId": "Depot",
+        "kind": "undock"
+      },
+      {
+        "id": "target-dock",
+        "t": 18,
+        "portId": "Home",
+        "kind": "dock"
+      }
+    ]
+  },
+  "editor": {
+    "schemaVersion": 1,
+    "baseline": {
+      "schemaVersion": 1,
+      "id": "m4-return-ticket-starter-v1",
+      "burns": [
+        {
+          "id": "outbound",
+          "t": 0.5,
+          "referenceBodyId": "primary",
+          "basis": "radial-transverse-ccw-v1",
+          "radial": 0,
+          "transverse": 0.08012344973464347
+        },
+        {
+          "id": "arrival",
+          "t": 4.629730790872742,
+          "referenceBodyId": "primary",
+          "basis": "radial-transverse-ccw-v1",
+          "radial": 0,
+          "transverse": 0.07363750491805698
+        }
+      ],
+      "operations": [
+        {
+          "id": "dock-home",
+          "t": 0,
+          "portId": "Home",
+          "kind": "dock"
+        },
+        {
+          "id": "load",
+          "t": 0,
+          "portId": "Home",
+          "kind": "transfer",
+          "cargo": 0.2,
+          "propellant": 0
+        },
+        {
+          "id": "leave-home",
+          "t": 0.5,
+          "portId": "Home",
+          "kind": "undock"
+        },
+        {
+          "id": "dock-depot",
+          "t": 4.629730790872742,
+          "portId": "Depot",
+          "kind": "dock"
+        },
+        {
+          "id": "unload-refuel",
+          "t": 4.629730790872742,
+          "portId": "Depot",
+          "kind": "transfer",
+          "cargo": -0.2,
+          "propellant": 0.1
+        }
+      ]
+    },
+    "accepted": {
+      "schemaVersion": 1,
+      "id": "m4-return-ticket-starter-v1",
+      "burns": [
+        {
+          "id": "outbound",
+          "t": 0.5,
+          "referenceBodyId": "primary",
+          "basis": "radial-transverse-ccw-v1",
+          "radial": 0,
+          "transverse": 0.08012344973464347
+        },
+        {
+          "id": "arrival",
+          "t": 4.629730790872742,
+          "referenceBodyId": "primary",
+          "basis": "radial-transverse-ccw-v1",
+          "radial": 0,
+          "transverse": 0.07363750491805698
+        },
+        {
+          "id": "burn-1",
+          "t": 14,
+          "referenceBodyId": "primary",
+          "basis": "radial-transverse-ccw-v1",
+          "radial": 0.12511073823643187,
+          "transverse": -0.10167937152553491
+        },
+        {
+          "id": "rendezvous-arrival",
+          "t": 18,
+          "referenceBodyId": "primary",
+          "basis": "radial-transverse-ccw-v1",
+          "radial": 0.23756380695047294,
+          "transverse": -0.04086483647947863,
+          "assist": {
+            "kind": "intercept",
+            "targetId": "Home",
+            "targetEpoch": 18
+          }
+        }
+      ],
+      "operations": [
+        {
+          "id": "dock-home",
+          "t": 0,
+          "portId": "Home",
+          "kind": "dock"
+        },
+        {
+          "id": "load",
+          "t": 0,
+          "portId": "Home",
+          "kind": "transfer",
+          "cargo": 0.2,
+          "propellant": 0
+        },
+        {
+          "id": "leave-home",
+          "t": 0.5,
+          "portId": "Home",
+          "kind": "undock"
+        },
+        {
+          "id": "dock-depot",
+          "t": 4.629730790872742,
+          "portId": "Depot",
+          "kind": "dock"
+        },
+        {
+          "id": "unload-refuel",
+          "t": 4.629730790872742,
+          "portId": "Depot",
+          "kind": "transfer",
+          "cargo": -0.2,
+          "propellant": 0.1
+        },
+        {
+          "id": "target-undock",
+          "t": 14,
+          "portId": "Depot",
+          "kind": "undock"
+        },
+        {
+          "id": "target-dock",
+          "t": 18,
+          "portId": "Home",
+          "kind": "dock"
+        }
+      ]
+    },
+    "previewEpoch": 24,
+    "snapshot": {
+      "schemaVersion": 1,
+      "modelVersion": "rk4-canonical-v1",
+      "requestedEpoch": 24,
+      "anchor": {
+        "t": 24,
+        "y": [
+          0.424179007336997,
+          -0.9055783620066239,
+          0.9055783620066239,
+          0.424179007336997
+        ],
+        "propellant": 0.07569459152872854,
+        "burnCursor": 4,
+        "nextGridIndex": 12289,
+        "status": "horizon",
+        "detail": "",
+        "logistics": {
+          "operationCursor": 7,
+          "cargoMass": 0,
+          "fuelUsed": 0.22430540847127148,
+          "ports": [
+            {
+              "id": "Home",
+              "cargo": 0.8,
+              "propellant": 0.4
+            },
+            {
+              "id": "Depot",
+              "cargo": 0.2,
+              "propellant": 0.15
+            }
+          ],
+          "dockedPortId": "Home",
+          "completedAt": 18
+        }
+      },
+      "ledger": [
+        {
+          "t": 0,
+          "kind": "dock",
+          "id": "dock-home",
+          "portId": "Home",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 0.2,
+          "propellantAfter": 0.2
+        },
+        {
+          "t": 0,
+          "kind": "transfer-start",
+          "id": "load",
+          "portId": "Home",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 0.2,
+          "propellantAfter": 0.2
+        },
+        {
+          "t": 0.25,
+          "kind": "transfer",
+          "id": "load",
+          "portId": "Home",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 0.2,
+          "propellantAfter": 0.2,
+          "cargoBefore": 0,
+          "cargoAfter": 0.2,
+          "portCargoBefore": 1,
+          "portCargoAfter": 0.8,
+          "portPropellantBefore": 0.4,
+          "portPropellantAfter": 0.4
+        },
+        {
+          "t": 0.5,
+          "kind": "undock",
+          "id": "leave-home",
+          "portId": "Home",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 0.2,
+          "propellantAfter": 0.2
+        },
+        {
+          "t": 0.5,
+          "kind": "burn",
+          "id": "outbound",
+          "deltaV": 0.08012344973464347,
+          "fuelUsed": 0.03689604366692875,
+          "propellantBefore": 0.2,
+          "propellantAfter": 0.16310395633307126
+        },
+        {
+          "t": 4.629730790872742,
+          "kind": "burn",
+          "id": "arrival",
+          "deltaV": 0.07363750491805698,
+          "fuelUsed": 0.03305123031522868,
+          "propellantBefore": 0.16310395633307126,
+          "propellantAfter": 0.13005272601784257
+        },
+        {
+          "t": 4.629730790872742,
+          "kind": "dock",
+          "id": "dock-depot",
+          "portId": "Depot",
+          "deltaV": 8.150570144102419e-13,
+          "fuelUsed": 3.6135626795871966e-13,
+          "propellantBefore": 0.13005272601784257,
+          "propellantAfter": 0.13005272601748122
+        },
+        {
+          "t": 4.629730790872742,
+          "kind": "transfer-start",
+          "id": "unload-refuel",
+          "portId": "Depot",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 0.13005272601748122,
+          "propellantAfter": 0.13005272601748122
+        },
+        {
+          "t": 4.879730790872742,
+          "kind": "transfer",
+          "id": "unload-refuel",
+          "portId": "Depot",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 0.13005272601748122,
+          "propellantAfter": 0.23005272601748122,
+          "cargoBefore": 0.2,
+          "cargoAfter": 0,
+          "portCargoBefore": 0,
+          "portCargoAfter": 0.2,
+          "portPropellantBefore": 0.25,
+          "portPropellantAfter": 0.15
+        },
+        {
+          "t": 14,
+          "kind": "undock",
+          "id": "target-undock",
+          "portId": "Depot",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 0.23005272601748122,
+          "propellantAfter": 0.23005272601748122
+        },
+        {
+          "t": 14,
+          "kind": "burn",
+          "id": "burn-1",
+          "deltaV": 0.16121845866988288,
+          "fuelUsed": 0.06435764062220481,
+          "propellantBefore": 0.23005272601748122,
+          "propellantAfter": 0.16569508539527641
+        },
+        {
+          "t": 18,
+          "kind": "burn",
+          "id": "rendezvous-arrival",
+          "deltaV": 0.24105289301996793,
+          "fuelUsed": 0.09000049386429057,
+          "propellantBefore": 0.16569508539527641,
+          "propellantAfter": 0.07569459153098584
+        },
+        {
+          "t": 18,
+          "kind": "dock",
+          "id": "target-dock",
+          "portId": "Home",
+          "deltaV": 6.295380069675307e-12,
+          "fuelUsed": 2.2573020975248616e-12,
+          "propellantBefore": 0.07569459153098584,
+          "propellantAfter": 0.07569459152872854
+        }
+      ]
+    }
+  }
+}

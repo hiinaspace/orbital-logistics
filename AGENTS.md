@@ -4,10 +4,13 @@ Published hobby identity: Hiina <hiina@hiina.space>.
 
 Read docs/charter.md and docs/plan.md. The charter is design intent; evidence in
  docs/evidence/ describes what was actually tested. M0 and the M1 manual editor
-are implemented and M1 is user-accepted. M2 and its encounter follow-up are implemented; the user reviewed the helper
-and authorized M3 on 2026-10-06. Initial M3a is implemented; see docs/evidence/m3.md.
-Review its one-tug service/return flow before joint M3b. docs/route-intent.md records
-the user-requested dynamic command direction; current burns/operations remain static.
+are implemented and M1 is user-accepted. M2/M3a were accepted on 2026-10-06;
+the user chose to proceed to an initial M4a puzzle slice with absolute maneuvers.
+See docs/evidence/m4.md for fixed-rule return puzzles, port targeting, time/fuel
+alternatives, saved solutions/replay and display layers. M3b joint handoffs,
+hardware alternatives, beneficial gravity assists and human optimization remain
+open; do not claim the full M4 gate passed. docs/route-intent.md preserves dynamic
+commands as later work; current burns/operations remain static.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

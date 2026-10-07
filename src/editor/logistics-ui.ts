@@ -58,6 +58,7 @@ export function mountLogistics(host: HTMLElement, api: {
   return {
     update(prediction: Prediction, sample: Sample, pending: boolean) {
       const session = api.session(), spec = session.scenario.logistics; host.hidden = !spec; if (!spec) return;
+      el('round-trip').hidden = session.scenario.id.startsWith('m4-');
       if (installed !== session) {
         installed = session; revision = -1; selected = undefined; el('op-editor').hidden = true;
         el('op-port').replaceChildren(...spec.ports.map(p => {const option = document.createElement('option'); option.value = p.id; option.textContent = p.id; return option;}));

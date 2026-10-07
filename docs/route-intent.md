@@ -51,6 +51,17 @@ belongs to the player? Osculating elements are local in a multi-body field. Begi
 in the fixed-primary domain and retain explicit epoch burns as an inspectable
 low-level escape hatch. No general language or hidden global route selection.
 
+## M4a absolute-program checkpoint
+
+The user accepted M3a and chose a first puzzle slice before dynamic commands.
+M4a port targeting is still an edit-time helper: it receives explicit departure/
+arrival epochs and a target port, then proposes static paid burns and visible
+Undock/Dock events. It uses the actual prefix's cargo/fuel/service state and
+preserves the chosen window. Saved puzzle solutions export these absolute programs.
+This exercises the target/resolution/paid-event seam without making `Burn.assist`
+a runtime instruction. Retiming an existing leg still requires editing its related
+absolute port events; it does not move them silently.
+
 ## Evidence required before runtime intent ships
 
 Check prediction/execution agreement for resolutions, impulses, costs and event

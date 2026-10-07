@@ -1,6 +1,7 @@
+import { portState } from '../sim/logistics';
 import { bodyState } from '../sim/dynamics';
 import { Runner, type Sample } from '../sim/runner';
-import { validateBundle, type Bundle, type Burn, type Program } from '../sim/schema';
+import { compareOperations, validateBundle, type Bundle, type Burn, type Program, type Rendezvous, type Operation } from '../sim/schema';
 import { inspectEvents } from './events';
 import { targetBundle } from './target';
 
@@ -10,6 +11,7 @@ export interface Trial {
 }
 export interface RendezvousProposal {
   program: Program; departure: Burn; arrival: Burn;
+  addedOperations?: Operation[];
   positionError: number; relativeSpeed: number; totalDv: number; addedDv: number;
   propellantUsed: number; iterations: number; evaluations: number;
   refinement: { position: number; velocity: number };
@@ -17,30 +19,57 @@ export interface RendezvousProposal {
 export type SolveResult = { status: 'proposed'; proposal: RendezvousProposal; trials: Trial[] } |
   { status: 'failed'; reason: string; trials: Trial[] };
 
-export function departureUnavailable(bundle: Bundle, burnId?: string): string | undefined {
-  const spec = bundle.scenario.rendezvous, seed = bundle.program.burns.find(b => b.id === burnId);
-  if (!spec) return 'No rendezvous target';
+export interface PortTarget { portId: string; arrivalEpoch: number }
+function targetSpec(bundle: Bundle, request?: PortTarget): Rendezvous | undefined {
+  if (!request) return bundle.scenario.rendezvous;
+  const s = bundle.scenario, port = s.logistics?.ports.find(p => p.id === request.portId);
+  if (!port || !Number.isFinite(request.arrivalEpoch) || request.arrivalEpoch <= s.epoch || request.arrivalEpoch >= s.epoch + s.duration) return undefined;
+  return { target: {id: port.id, state: portState(port, s.epoch)}, referenceBodyId: s.bodies[0].id,
+    departureEpoch: s.epoch, arrivalEpoch: request.arrivalEpoch, bounds: {radial: [-0.25,0.25], transverse: [-0.25,0.25]},
+    branch: {direction: 'ccw', revolutions: 0, minClearance: 0.2}, tolerance: s.logistics!.capture };
+}
+export function departureUnavailable(bundle: Bundle, burnId?: string, request?: PortTarget): string | undefined {
+  const spec = targetSpec(bundle, request), seed = bundle.program.burns.find(b => b.id === burnId);
+  if (!spec) return request ? 'Choose a port and an arrival inside the horizon' : 'No rendezvous target';
   if (!seed) return 'Select a departure maneuver';
   if (seed.t >= spec.arrivalEpoch) return `Departure must precede t ${spec.arrivalEpoch.toFixed(3)}`;
   if (seed.referenceBodyId !== spec.referenceBodyId) return 'Use the primary burn reference';
   if (bundle.program.burns.some(b => b.t > seed.t && b.t < spec.arrivalEpoch)) return 'Select the last maneuver before arrival';
+  if (request && bundle.program.operations?.some(o => o.t > seed.t && o.t < spec.arrivalEpoch)) return 'Choose an uninterrupted coast before arrival';
 }
 
 // Deliberately narrow: one fixed-time departure, one coast, CCW and less than
 // one full revolution about a fixed primary. Every trial obeys that same domain.
-export function solveRendezvous(input: Bundle, burnId: string, maxEvaluations = 96): SolveResult {
+export function solveRendezvous(input: Bundle, burnId: string, maxEvaluations = 96, request?: PortTarget): SolveResult {
   const trials: Trial[] = [];
   const fail = (reason: string): SolveResult => ({ status: 'failed', reason, trials });
   try {
-    const bundle = validateBundle(input), s = bundle.scenario, spec = s.rendezvous;
+    const bundle = validateBundle(input), s = bundle.scenario, spec = targetSpec(bundle, request);
     if (!spec) return fail('No rendezvous target');
     if (!Number.isInteger(maxEvaluations) || maxEvaluations < 1 || maxEvaluations > 96) return fail('Invalid work budget');
     const seed = bundle.program.burns.find(b => b.id === burnId);
-    const unavailable = departureUnavailable(bundle, burnId);
+    const unavailable = departureUnavailable(bundle, burnId, request);
     if (unavailable || !seed) return fail(unavailable ?? 'Select a departure maneuver');
     const arrivalBefore = bundle.program.burns.find(b => b.t === spec.arrivalEpoch);
-    const coastProgram = { ...bundle.program, burns: bundle.program.burns.filter(b => b !== arrivalBefore) };
-    const target = new Runner(targetBundle(bundle));
+    const operations = structuredClone(bundle.program.operations ?? []);
+    const uniqueId = (name: string) => { while ([...bundle.program.burns, ...operations].some(e => e.id === name)) name += '-new'; return name; };
+    if (request) {
+      // Resolve only the chosen coast. The player chooses both epochs and the
+      // port; proposed undock/dock actions stay visible and require acceptance.
+      const prefix = new Runner({scenario: s, program: {...bundle.program,
+        burns: bundle.program.burns.filter(b => b.t < seed.t), operations: operations.filter(o => o.t < seed.t)}}).sample(seed.t);
+      if (prefix.status !== 'running') return fail(`Departure prefix stopped: ${prefix.detail || prefix.status}`);
+      if (prefix.logistics?.service) return fail(`Service finishes at t ${prefix.logistics.service.end.toFixed(3)}`);
+      if (prefix.logistics?.dockedPortId && !operations.some(o => o.t === seed.t && o.kind === 'undock'))
+        operations.push({id: uniqueId('target-undock'), kind: 'undock', t: seed.t, portId: prefix.logistics.dockedPortId});
+      const dock = operations.find(o => o.t === spec.arrivalEpoch && o.kind === 'dock');
+      if (dock && dock.portId !== request.portId) return fail('Another port is scheduled at arrival');
+      if (!dock) operations.push({id: uniqueId('target-dock'), kind: 'dock', t: spec.arrivalEpoch, portId: request.portId});
+      operations.sort(compareOperations);
+    }
+    const coastProgram: Program = { ...bundle.program, burns: bundle.program.burns.filter(b => b !== arrivalBefore),
+      ...(s.logistics ? {operations: operations.filter(o => o.t !== spec.arrivalEpoch)} : {}) };
+    const target = new Runner(targetBundle(bundle, spec.target));
     if (target.sample(s.epoch + s.duration).status !== 'horizon') return fail('Target trajectory is unresolved');
     const targetArrival = target.sample(spec.arrivalEpoch), body = s.bodies[0];
     let evaluations = 0;
@@ -101,11 +130,11 @@ export function solveRendezvous(input: Bundle, burnId: string, maxEvaluations = 
     const pre = current.arrival, ref = bodyState(body, spec.arrivalEpoch), dx = pre.y[0] - ref[0], dy = pre.y[1] - ref[1], r = Math.hypot(dx, dy);
     const dvx = targetArrival.y[2] - pre.y[2], dvy = targetArrival.y[3] - pre.y[3];
     let arrivalId = arrivalBefore?.id ?? 'rendezvous-arrival';
-    while (!arrivalBefore && bundle.program.burns.some(b => b.id === arrivalId)) arrivalId += '-new';
+    while (!arrivalBefore && [...bundle.program.burns, ...operations].some(b => b.id === arrivalId)) arrivalId += '-new';
     const arrival: Burn = { id: arrivalId, t: spec.arrivalEpoch, referenceBodyId: body.id, basis: 'radial-transverse-ccw-v1',
       radial: (dvx * dx + dvy * dy) / r, transverse: (-dvx * dy + dvy * dx) / r,
       assist: { kind: 'intercept', targetId: spec.target.id, targetEpoch: spec.arrivalEpoch } };
-    const program: Program = { ...bundle.program, burns: [...coastProgram.burns.filter(b => b.id !== seed.id), current.departure, arrival].sort((a, b) => a.t - b.t) };
+    const program: Program = { ...bundle.program, ...(s.logistics ? {operations} : {}), burns: [...coastProgram.burns.filter(b => b.id !== seed.id), current.departure, arrival].sort((a, b) => a.t - b.t) };
     const proposed = validateBundle({ scenario: s, program }), execution = new Runner(proposed);
     const terminal = execution.sample(s.epoch + s.duration);
     if (terminal.status !== 'horizon') return fail(terminal.status === 'burn-rejected' ? 'Not enough fuel for arrival burn' : `Proposal stopped: ${terminal.status}`);
@@ -114,7 +143,7 @@ export function solveRendezvous(input: Bundle, burnId: string, maxEvaluations = 
     // Independent step refinement is tied to capture tolerances, not screen zoom.
     const refined = structuredClone(proposed); refined.scenario.policy.step /= 2;
     refined.scenario.policy.maxNodes = Math.min(65536, Math.max(s.policy.maxNodes, Math.ceil(s.duration / refined.scenario.policy.step) + 1024));
-    const fine = new Runner(refined), fineTarget = new Runner(targetBundle(refined));
+    const fine = new Runner(refined), fineTarget = new Runner(targetBundle(refined, spec.target));
     if (fine.sample(s.epoch + s.duration).status !== 'horizon' || fineTarget.sample(s.epoch + s.duration).status !== 'horizon') return fail('Refined proposal stopped');
     let position = 0, velocity = 0;
     for (const t of [seed.t, spec.arrivalEpoch, ...Array.from({ length: 81 }, (_, i) => s.epoch + s.duration * i / 80)]) {
@@ -126,7 +155,8 @@ export function solveRendezvous(input: Bundle, burnId: string, maxEvaluations = 
     if (position >= spec.tolerance.position / 100 || velocity >= spec.tolerance.velocity / 100) return fail('Proposal accuracy unresolved');
     const totalDv = program.burns.reduce((sum, b) => sum + Math.hypot(b.radial, b.transverse), 0);
     return { status: 'proposed', trials, proposal: { program, departure: current.departure, arrival, positionError: current.error, relativeSpeed,
-      totalDv, addedDv: totalDv - bundle.program.burns.reduce((sum, b) => sum + Math.hypot(b.radial, b.transverse), 0), propellantUsed: s.ship.propellant - terminal.propellant,
+      ...(request ? {addedOperations: operations.filter(o => !bundle.program.operations?.some(before => before.id === o.id))} : {}),
+      totalDv, addedDv: totalDv - bundle.program.burns.reduce((sum, b) => sum + Math.hypot(b.radial, b.transverse), 0), propellantUsed: terminal.logistics?.fuelUsed ?? s.ship.propellant - terminal.propellant,
       iterations, evaluations, refinement: { position, velocity } } };
   } catch (error) { return fail((error as Error).message); }
 }

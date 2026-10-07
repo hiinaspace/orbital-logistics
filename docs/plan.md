@@ -1,6 +1,6 @@
 # Tactical plan — 2026-10-06
 
-Status: **M1 accepted; M2 reviewed; encounter follow-up validated; initial M3a implemented**.
+Status: **M1/M2/M3a accepted; initial M4a fixed-program puzzles implemented**.
 On 2026-10-06 the user accepted the manual editor and initial rendezvous helper,
 requested encounter markers, selected-node hover and overlap selection, then
 explicitly authorized continuing with M3 tasks. Those M2 follow-ups are implemented
@@ -9,6 +9,13 @@ and validated; see [encounter evidence](evidence/m2-encounters.md),
 M3a now implements one-tug reusable delivery, finite service inventories, return
 constraints and a validated authored round trip; see [M3a evidence](evidence/m3.md).
 M3b's joint handoff and the M3 synchronization/product gate remain open.
+On 2026-10-06 the user accepted M2 refinements/M3a and explicitly chose to move
+into M4 puzzles using absolute maneuvers before dynamic instructions. Initial M4a
+adds Return ticket / Express return, player-selected fixed-time port targeting,
+separate saved time/fuel/hardware scores, replay/export and cleaner execution
+layers. [M4a evidence](evidence/m4.md) retains two validated time/fuel alternatives.
+M3b is deferred by this sequencing decision, not completed. Human voluntary
+optimization, hardware variation and a beneficial gravity assist remain open M4 gates.
 The remainder records the reviewed plan and intended sequence.
 Source: /home/s/org/projects/orbital-logistics/charter.md.
 

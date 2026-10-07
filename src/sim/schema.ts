@@ -13,7 +13,7 @@ export interface Port {
 export interface Logistics {
   modelVersion: 'kinematic-ports-v1'; ports: Port[]; cargoCapacity: number;
   capture: {position: number; velocity: number};
-  objective: {destinationId: string; quota: number; returnPortId: string; minPropellant: number; hardwareCost: number};
+  objective: {destinationId: string; quota: number; returnPortId: string; minPropellant: number; hardwareCost: number; deadline?: number};
 }
 export type Operation = {id: string; t: number; portId: string} & (
   {kind: 'dock'} | {kind: 'undock'} | {kind: 'transfer'; cargo: number; propellant: number});
@@ -144,7 +144,9 @@ export function validateBundle(value: unknown): Bundle {
         ports.some(p => p.rail.radius - primary.radius <= position) ||
         !ports.some(p => p.id === destinationId) || !ports.some(p => p.id === returnPortId) || minPropellant > scenario.ship.tankCapacity) throw new Error('Invalid logistics objective/capture');
     scenario.logistics = {modelVersion: 'kinematic-ports-v1', ports, cargoCapacity, capture: {position, velocity},
-      objective: {destinationId, quota, returnPortId, minPropellant, hardwareCost: finite(goal.hardwareCost, 'hardware cost', 0)}};
+      objective: {destinationId, quota, returnPortId, minPropellant, hardwareCost: finite(goal.hardwareCost, 'hardware cost', 0),
+        ...(goal.deadline !== undefined ? {deadline: finite(goal.deadline, 'deadline', epoch)} : {})}};
+    if ((scenario.logistics.objective.deadline ?? epoch) > epoch + duration) throw new Error('Deadline beyond horizon');
   }
   if (!Array.isArray(p.burns) || p.burns.length > 128) throw new Error('Invalid burns');
   let previous = -Infinity;
@@ -163,7 +165,7 @@ export function validateBundle(value: unknown): Bundle {
     }
     if (b.assist !== undefined) {
       const assist = object(b.assist), targetEpoch = finite(assist.targetEpoch, 'target epoch', epoch);
-      if (!scenario.rendezvous || assist.targetId !== scenario.rendezvous.target.id ||
+      if (!((scenario.rendezvous && assist.targetId === scenario.rendezvous.target.id) || scenario.logistics?.ports.some(p => p.id === assist.targetId)) ||
           (assist.kind !== 'match-orbit' && assist.kind !== 'intercept') || targetEpoch > epoch + duration ||
           (assist.kind === 'intercept' && targetEpoch !== t)) throw new Error('Invalid correction provenance');
       burn.assist = { kind: assist.kind, targetId: assist.targetId as string, targetEpoch };

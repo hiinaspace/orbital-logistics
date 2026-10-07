@@ -1,0 +1,33 @@
+{
+  "host": "natto",
+  "chrome": "154.0.8037.97",
+  "observations": [
+    {
+      "departure": 15.5,
+      "arrival": 19.5,
+      "dispatchToProposalMs": 607.953559,
+      "evaluations": 26
+    },
+    {
+      "departure": 14,
+      "arrival": 18,
+      "dispatchToProposalMs": 597.6281719999997,
+      "evaluations": 31
+    }
+  ],
+  "errors": [],
+  "final": {
+    "delivered": 0.2,
+    "onTime": true,
+    "quota": 0.2,
+    "home": true,
+    "empty": true,
+    "fueled": true,
+    "complete": true,
+    "reason": "Delivery complete",
+    "completedAt": 18,
+    "propellantUsed": 0.22430540847127148,
+    "hardwareCost": 1
+  },
+  "method": "Two actual fixed-window local solves and executed returns in a separate headless production browser. Timing is two individual observations, not a latency distribution."
+}

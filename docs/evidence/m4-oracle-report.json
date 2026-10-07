@@ -1,0 +1,547 @@
+[
+  {
+    "case": "patient",
+    "terminal": {
+      "t": 24,
+      "status": "horizon",
+      "fuel": 0.16859641527308378,
+      "fuelUsed": 0.13140358472691624,
+      "cargo": 0.0,
+      "stocks": {
+        "Home": [
+          0.8,
+          0.4
+        ],
+        "Depot": [
+          0.2,
+          0.15
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "dock-home"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.25,
+          "transfer",
+          "load"
+        ],
+        [
+          0.5,
+          "undock",
+          "leave-home"
+        ],
+        [
+          0.5,
+          "burn",
+          "outbound"
+        ],
+        [
+          4.629730790872742,
+          "burn",
+          "arrival"
+        ],
+        [
+          4.629730790872742,
+          "dock",
+          "dock-depot"
+        ],
+        [
+          4.629730790872742,
+          "transfer-start",
+          "unload-refuel"
+        ],
+        [
+          4.879730790872742,
+          "transfer",
+          "unload-refuel"
+        ],
+        [
+          15.497026245592098,
+          "undock",
+          "target-undock"
+        ],
+        [
+          15.497026245592098,
+          "burn",
+          "return"
+        ],
+        [
+          19.626757036464838,
+          "burn",
+          "rendezvous-arrival"
+        ],
+        [
+          19.626757036464838,
+          "dock",
+          "target-dock"
+        ]
+      ],
+      "complete": true,
+      "completedAt": 19.626757036464838
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 1.4559654380696042e-12,
+        "velocity": 7.766253445434517e-13,
+        "oracleRefinement": 9.210480902996523e-12
+      },
+      {
+        "step": 0.0009765625,
+        "position": 9.870282311162551e-14,
+        "velocity": 6.210715510259202e-14,
+        "oracleRefinement": 9.210480902996523e-12
+      },
+      {
+        "step": 0.00048828125,
+        "position": 5.164052952962073e-14,
+        "velocity": 5.5690153343332244e-14,
+        "oracleRefinement": 9.210480902996523e-12
+      }
+    ]
+  },
+  {
+    "case": "express",
+    "terminal": {
+      "t": 24,
+      "status": "horizon",
+      "fuel": 0.07569459152558809,
+      "fuelUsed": 0.22430540847441194,
+      "cargo": 0.0,
+      "stocks": {
+        "Home": [
+          0.8,
+          0.4
+        ],
+        "Depot": [
+          0.2,
+          0.15
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "dock-home"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.25,
+          "transfer",
+          "load"
+        ],
+        [
+          0.5,
+          "undock",
+          "leave-home"
+        ],
+        [
+          0.5,
+          "burn",
+          "outbound"
+        ],
+        [
+          4.629730790872742,
+          "burn",
+          "arrival"
+        ],
+        [
+          4.629730790872742,
+          "dock",
+          "dock-depot"
+        ],
+        [
+          4.629730790872742,
+          "transfer-start",
+          "unload-refuel"
+        ],
+        [
+          4.879730790872742,
+          "transfer",
+          "unload-refuel"
+        ],
+        [
+          14,
+          "undock",
+          "target-undock"
+        ],
+        [
+          14,
+          "burn",
+          "return"
+        ],
+        [
+          18,
+          "burn",
+          "rendezvous-arrival"
+        ],
+        [
+          18,
+          "dock",
+          "target-dock"
+        ]
+      ],
+      "complete": true,
+      "completedAt": 18
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 1.4559654380696042e-12,
+        "velocity": 7.766253445434517e-13,
+        "oracleRefinement": 5.837420711886267e-12
+      },
+      {
+        "step": 0.0009765625,
+        "position": 9.870282311162551e-14,
+        "velocity": 6.210715510259202e-14,
+        "oracleRefinement": 5.837420711886267e-12
+      },
+      {
+        "step": 0.00048828125,
+        "position": 5.164052952962073e-14,
+        "velocity": 3.4370683110344973e-14,
+        "oracleRefinement": 5.837420711886267e-12
+      }
+    ]
+  },
+  {
+    "case": "express-deadline",
+    "terminal": {
+      "t": 24,
+      "status": "horizon",
+      "fuel": 0.07569459152558809,
+      "fuelUsed": 0.22430540847441194,
+      "cargo": 0.0,
+      "stocks": {
+        "Home": [
+          0.8,
+          0.4
+        ],
+        "Depot": [
+          0.2,
+          0.15
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "dock-home"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.25,
+          "transfer",
+          "load"
+        ],
+        [
+          0.5,
+          "undock",
+          "leave-home"
+        ],
+        [
+          0.5,
+          "burn",
+          "outbound"
+        ],
+        [
+          4.629730790872742,
+          "burn",
+          "arrival"
+        ],
+        [
+          4.629730790872742,
+          "dock",
+          "dock-depot"
+        ],
+        [
+          4.629730790872742,
+          "transfer-start",
+          "unload-refuel"
+        ],
+        [
+          4.879730790872742,
+          "transfer",
+          "unload-refuel"
+        ],
+        [
+          14,
+          "undock",
+          "target-undock"
+        ],
+        [
+          14,
+          "burn",
+          "return"
+        ],
+        [
+          18,
+          "burn",
+          "rendezvous-arrival"
+        ],
+        [
+          18,
+          "dock",
+          "target-dock"
+        ]
+      ],
+      "complete": true,
+      "completedAt": 18
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 1.4559654380696042e-12,
+        "velocity": 7.766253445434517e-13,
+        "oracleRefinement": 5.837420711886267e-12
+      },
+      {
+        "step": 0.0009765625,
+        "position": 9.870282311162551e-14,
+        "velocity": 6.210715510259202e-14,
+        "oracleRefinement": 5.837420711886267e-12
+      },
+      {
+        "step": 0.00048828125,
+        "position": 5.164052952962073e-14,
+        "velocity": 3.4370683110344973e-14,
+        "oracleRefinement": 5.837420711886267e-12
+      }
+    ]
+  },
+  {
+    "case": "patient-too-late",
+    "terminal": {
+      "t": 24,
+      "status": "horizon",
+      "fuel": 0.16859641527308378,
+      "fuelUsed": 0.13140358472691624,
+      "cargo": 0.0,
+      "stocks": {
+        "Home": [
+          0.8,
+          0.4
+        ],
+        "Depot": [
+          0.2,
+          0.15
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "dock-home"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.25,
+          "transfer",
+          "load"
+        ],
+        [
+          0.5,
+          "undock",
+          "leave-home"
+        ],
+        [
+          0.5,
+          "burn",
+          "outbound"
+        ],
+        [
+          4.629730790872742,
+          "burn",
+          "arrival"
+        ],
+        [
+          4.629730790872742,
+          "dock",
+          "dock-depot"
+        ],
+        [
+          4.629730790872742,
+          "transfer-start",
+          "unload-refuel"
+        ],
+        [
+          4.879730790872742,
+          "transfer",
+          "unload-refuel"
+        ],
+        [
+          15.497026245592098,
+          "undock",
+          "target-undock"
+        ],
+        [
+          15.497026245592098,
+          "burn",
+          "return"
+        ],
+        [
+          19.626757036464838,
+          "burn",
+          "rendezvous-arrival"
+        ],
+        [
+          19.626757036464838,
+          "dock",
+          "target-dock"
+        ]
+      ],
+      "complete": false,
+      "completedAt": null
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 1.4559654380696042e-12,
+        "velocity": 7.766253445434517e-13,
+        "oracleRefinement": 9.210480902996523e-12
+      },
+      {
+        "step": 0.0009765625,
+        "position": 9.870282311162551e-14,
+        "velocity": 6.210715510259202e-14,
+        "oracleRefinement": 9.210480902996523e-12
+      },
+      {
+        "step": 0.00048828125,
+        "position": 5.164052952962073e-14,
+        "velocity": 5.5690153343332244e-14,
+        "oracleRefinement": 9.210480902996523e-12
+      }
+    ]
+  },
+  {
+    "case": "express-tight",
+    "terminal": {
+      "t": 24,
+      "status": "horizon",
+      "fuel": 0.07569459152558809,
+      "fuelUsed": 0.22430540847441194,
+      "cargo": 0.0,
+      "stocks": {
+        "Home": [
+          0.8,
+          0.4
+        ],
+        "Depot": [
+          0.2,
+          0.15
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "dock-home"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.25,
+          "transfer",
+          "load"
+        ],
+        [
+          0.5,
+          "undock",
+          "leave-home"
+        ],
+        [
+          0.5,
+          "burn",
+          "outbound"
+        ],
+        [
+          4.629730790872742,
+          "burn",
+          "arrival"
+        ],
+        [
+          4.629730790872742,
+          "dock",
+          "dock-depot"
+        ],
+        [
+          4.629730790872742,
+          "transfer-start",
+          "unload-refuel"
+        ],
+        [
+          4.879730790872742,
+          "transfer",
+          "unload-refuel"
+        ],
+        [
+          14,
+          "undock",
+          "target-undock"
+        ],
+        [
+          14,
+          "burn",
+          "return"
+        ],
+        [
+          18,
+          "burn",
+          "rendezvous-arrival"
+        ],
+        [
+          18,
+          "dock",
+          "target-dock"
+        ]
+      ],
+      "complete": true,
+      "completedAt": 18
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 1.4559654380696042e-12,
+        "velocity": 7.766253445434517e-13,
+        "oracleRefinement": 5.837420711886267e-12
+      },
+      {
+        "step": 0.0009765625,
+        "position": 9.870282311162551e-14,
+        "velocity": 6.210715510259202e-14,
+        "oracleRefinement": 5.837420711886267e-12
+      },
+      {
+        "step": 0.00048828125,
+        "position": 5.164052952962073e-14,
+        "velocity": 3.4370683110344973e-14,
+        "oracleRefinement": 5.837420711886267e-12
+      }
+    ]
+  }
+]

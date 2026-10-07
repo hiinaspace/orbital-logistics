@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 from math import cos, expm1, hypot, sin
 from pathlib import Path
@@ -34,6 +35,22 @@ def replay(bundle, tight):
     )
     t, pieces, used_total, trace = s["epoch"], [], 0.0, []
     failed = False
+    completed_at = None
+
+    def completion(epoch):
+        nonlocal completed_at
+        goal = spec["objective"]
+        delivered = stocks[goal["destinationId"]][0] - ports[goal["destinationId"]]["cargo"]
+        valid = (
+            delivered >= goal["quota"] * (1 - 1e-12)
+            and docked == goal["returnPortId"]
+            and cargo <= 1e-12
+            and fuel >= goal["minPropellant"]
+            and service is None
+            and (completed_at if completed_at is not None else epoch)
+            <= goal.get("deadline", float("inf"))
+        )
+        completed_at = (completed_at if completed_at is not None else epoch) if valid else None
 
     def port_state(port_id, epoch):
         rail = ports[port_id]["rail"]
@@ -86,6 +103,7 @@ def replay(bundle, tight):
             stocks[op["portId"]][1] -= op["propellant"]
             service = None
             trace.append([epoch, "transfer", op["id"]])
+            completion(epoch)
             continue
         if kind == "burn":
             assert docked is None
@@ -135,6 +153,7 @@ def replay(bundle, tight):
                 op["id"],
             ]
         )
+        completion(epoch)
         if failed:
             break
     pieces.append(
@@ -148,6 +167,8 @@ def replay(bundle, tight):
         "cargo": cargo,
         "stocks": stocks,
         "trace": trace,
+        "complete": not failed and completed_at is not None,
+        "completedAt": completed_at if not failed else None,
     }
 
 
@@ -160,7 +181,10 @@ def evaluate(pieces, t):
 
 
 def main():
-    request = json.loads((ROOT / "docs/evidence/m3-oracle-input.json").read_text())
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--milestone", choices=["m3", "m4"], default="m3")
+    milestone = parser.parse_args().milestone
+    request = json.loads((ROOT / f"docs/evidence/{milestone}-oracle-input.json").read_text())
     rows = []
     for case in request["cases"]:
         pieces, result = replay(case["bundle"], True)
@@ -187,6 +211,8 @@ def main():
             )
             assert [[e["t"], e["kind"], e["id"]] for e in step["ledger"]] == result["trace"]
             assert abs(step["result"]["propellantUsed"] - result["fuelUsed"]) < 1e-11
+            assert step["result"]["complete"] == result["complete"]
+            assert step["result"].get("completedAt") == result["completedAt"]
             checks.append(
                 {
                     "step": step["step"],
@@ -196,7 +222,9 @@ def main():
                 }
             )
         rows.append({"case": case["label"], "terminal": result, "checks": checks})
-    (ROOT / "docs/evidence/m3-oracle-report.json").write_text(json.dumps(rows, indent=2) + "\n")
+    (ROOT / f"docs/evidence/{milestone}-oracle-report.json").write_text(
+        json.dumps(rows, indent=2) + "\n"
+    )
     print(json.dumps(rows, indent=2))
 
 

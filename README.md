@@ -3,7 +3,7 @@
 A trajectory-programming logistics puzzle experiment by Hiina. Browser-first,
 2D, visual maneuver editing; later cargo and synchronized reusable services.
 
-**Current checkpoint: M1 accepted; M2 reviewed; initial M3a delivery implemented.** Choose
+**Current checkpoint: M3a accepted; initial M4a puzzles implemented.** Choose
 Orbit shaping, Moon encounter or Rendezvous. Plan a trajectory, click its path to place a
 maneuver, click R or T, move the pointer, then click to commit (Escape cancels).
 Precision controls, ordered maneuvers, apsis snaps, undo/redo, synchronized frames,
@@ -24,6 +24,17 @@ still needs a return; **Example round trip** adds a complete authored return to 
 draft. Edit Dock / Transfer / Undock in **Port operations**, then execute. Cargo,
 finite refueling stocks, service durations and the empty/fueled return requirement
 are part of prediction and replay. Home/Depot frames and inventories follow preview.
+
+Choose **1 · Return ticket** or **2 · Express return** for the first puzzles.
+The outbound delivery is provided; choose a return window and bring the tug home.
+In Rendezvous, choose a port and departure/arrival epochs, **Place departure**,
+then **Target → Accept → Execute plan**. Saved successful solutions compare time,
+fuel and hardware separately, with Replay and JSON download. **New attempt**
+restores the starter while retaining solutions. Express return adds a deadline.
+
+**Layers** toggles plan, orbits, markers and execution trail; **Bodies only** restores
+your previous combination on its second click. Followed plan segments turn grey,
+while the cyan execution trail fades further into the past.
 
 ## Run
 
@@ -46,6 +57,7 @@ npm run evidence:m1
 npm run evidence:m2
 npm run evidence:m2-encounters
 npm run evidence:m3
+npm run evidence:m4
 ```
 
 `evidence:m0` regenerates the production-core analytic/convergence and independent
@@ -67,6 +79,7 @@ npm run preview -- --port 4178 --strictPort
 node scripts/m1-browser-evidence.mjs
 node scripts/m2-browser-evidence.mjs
 node scripts/m3-browser-evidence.mjs
+node scripts/m4-browser-evidence.mjs
 ```
 
 Retained planning spikes can still be reproduced separately:
@@ -95,11 +108,13 @@ uv run --project spikes/numerics pre-commit run --config spikes/numerics/.pre-co
 
 ## Next
 
-The initial M3a one-tug slice is implemented and ready to try. Review delivery,
-service timing and return authoring before the second ship/joint handoff.
-[Reusable route intent](docs/route-intent.md) records the direction for dynamically
-resolved corrections; current burns and port operations still use explicit epochs.
+Try improving a valid return's time or fuel voluntarily. The first puzzle slice
+has two independently validated tradeoffs; this still needs human optimization
+feedback. M3b joint handoffs, hardware alternatives and beneficial gravity assists
+remain later gates. [Reusable route intent](docs/route-intent.md) preserves the
+dynamic direction; current burns and port operations remain absolute.
 
+- [M4a evidence](docs/evidence/m4.md): return puzzles, port targeting, time/fuel alternatives, saved solutions and replay.
 - [Tactical plan](docs/plan.md): build slices, temporal/interaction contract, M2–M6 gates.
 - [M0 evidence](docs/evidence/m0.md): simulation contract, measured accuracy, and supported limits.
 - [M1 evidence](docs/evidence/m1.md): manual editor, calibration, replay and interaction measurements.

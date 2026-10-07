@@ -523,3 +523,25 @@ pre {
 #op-editor .buttons button { padding: 6px 8px; }
 #logistics { border-top: 1px solid #283d4a; margin-top: 18px; }
 @media(min-width:851px) { .scene { position: sticky; top: 16px; } }
+
+#layers { position: relative; border: 0; padding: 0; }
+#layers summary { padding: 7px 9px; border: 1px solid #314757; border-radius: 5px; }
+.layer-options { position: absolute; top: 36px; right: 0; z-index: 4; padding: 12px; background: #14222e; border: 1px solid #314757; border-radius: 5px; min-width: 140px; box-shadow: 0 8px 24px #0006; }
+.layer-options label { margin: 0 0 12px; justify-content: flex-start; }
+.layer-options input { accent-color: #edbc74; }
+#bodies-only[aria-pressed=true] { border-color: #edbc74; }
+
+#puzzle { padding: 15px; margin-bottom: 20px; border: 1px solid #42645d; border-radius: 6px; background: #172b2733; }
+#puzzle-brief { color: #afc3bd; font-size: 12px; line-height: 1.6; margin-bottom: 12px; }
+#puzzle-run { color: #8dd3b5; font-size: 12px; line-height: 1.8; }
+#solutions { margin-top: 14px; padding-bottom: 0; }
+#solution-list { overflow-x: auto; font-size: 11px; color: #a6bac8; margin-top: 10px; }
+#solution-list table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+#solution-list td, #solution-list th { text-align: left; padding: 8px 3px; font-weight: 400; }
+#solution-list button { padding: 4px; font-size: 10px; margin: 2px; }
+#port-target label { display: flex; align-items: center; justify-content: space-between; margin: 10px 0; font-size: 12px; color: #9eb3c2; }
+
+@media(min-width:851px) {
+  aside { max-height: calc(100dvh - 150px); overflow-y: auto; scrollbar-width: thin; padding-right: 4px; }
+}
+#puzzle .section-title { margin-top: 0; }

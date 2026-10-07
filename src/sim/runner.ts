@@ -131,7 +131,7 @@ export class Runner {
     while (operations[l.operationCursor]?.t === n.t && operations[l.operationCursor].kind === 'undock' && n.status === 'running') operate();
     this.#applyBurn();
     while (operations[l.operationCursor]?.t === n.t && n.status === 'running') operate();
-    if (logisticsResult(spec, l, n.propellant).complete) l.completedAt ??= n.t; else delete l.completedAt;
+    if (logisticsResult(spec, l, n.propellant, n.t).complete) l.completedAt ??= n.t; else delete l.completedAt;
   }
   #coast(end: number, depth = 0): boolean {
     const n = this.#last(), s = this.#bundle.scenario, dt = end - n.t;

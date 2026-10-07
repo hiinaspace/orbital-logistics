@@ -30,7 +30,7 @@ export function predict(bundle: Bundle, revision: number, horizon = bundle.scena
   const result: Prediction = { revision, scenarioId: bundle.scenario.id, modelVersion: bundle.scenario.modelVersion,
     horizon, samples, terminal, diagnostics, burnStates, opportunities: discoverEncounters(bundle, runner, horizon) };
   if (bundle.scenario.logistics && terminal.logistics) {
-    result.logistics = logisticsResult(bundle.scenario.logistics, terminal.logistics, terminal.propellant);
+    result.logistics = logisticsResult(bundle.scenario.logistics, terminal.logistics, terminal.propellant, terminal.t);
     if (terminal.status !== 'horizon') {result.logistics.complete = false; result.logistics.completedAt = undefined; result.logistics.reason = terminal.detail;}
   }
   if (bundle.scenario.rendezvous) {
