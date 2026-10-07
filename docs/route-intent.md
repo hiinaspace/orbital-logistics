@@ -1,4 +1,4 @@
-# Reusable route intent — architectural direction, 2026-10-06
+# Reusable route intent — architectural direction, updated 2026-10-07
 
 The user identified a limit of compiled maneuvers: matching an orbit before
 phasing is useful, and reusable/cyclic services must adapt their corrections to
@@ -36,8 +36,18 @@ will need an explicit versioned command variant and snapshot/resolution cursor,
 not a reinterpretation of `assist` metadata or silent replacement of saved burns.
 Do not discard new command fields on JSON import and then execute their old cache.
 
-A first dynamic experiment should resolve one terminal velocity match at a
-player-selected encounter window, before attempting a complete adaptive transfer.
+The initial terminal-velocity-match-first suggestion is superseded by the
+[2026-10-07 reviewed periodic study](design/periodic-transfer/proposal.md).
+First compile a bounded two-voyage recipe of complete dock-to-dock transfers
+sequentially from their own simulated prefixes. Preserve authored recipe/version
+separately from generated v1 events. Resolve before playback for this deterministic
+finite experiment; this is state-dependent compilation, not runtime feedback.
+Keep accepted execution immutable, regenerate drafts on recipe edits/load, and
+use the current full-plan validation. A runtime resolver/scheduler follows only
+when conditional joint actions or rolling prediction need it. A terminal velocity
+match remains a useful explicit component but cannot repair an arrival-position miss.
+
+For eventual semantic-event commands:
 Choose semantic event occurrence/window identity and an ambiguity policy; never
 follow whichever mutable numerical bracket happens to be nearest. A complete
 rendezvous may need a departure correction, a terminal correction, or both, and

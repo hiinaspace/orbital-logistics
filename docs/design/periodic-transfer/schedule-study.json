@@ -1,0 +1,471 @@
+{
+  "model": "rk4-canonical-v1",
+  "node": "v22.22.1",
+  "synodic": 15.85388282241825,
+  "earliestSameGeometryReuse": 31.7077656448365,
+  "firstHomeArrival": 19.626757036464838,
+  "missedOutboundOpportunity": 16.35388282241825,
+  "secondDeparture": 32.2077656448365,
+  "secondHomeArrival": 51.33452268130134,
+  "naive": {
+    "terminal": {
+      "t": 24.25648782733758,
+      "y": [
+        -0.40515364315156244,
+        -1.3400934763813424,
+        0.8089897880701811,
+        -0.2445838038061052
+      ],
+      "propellant": 0.10021813782257204,
+      "burnCursor": 6,
+      "status": "operation-rejected",
+      "detail": "second-dock-depot: Capture Depot: miss 1.90e+0, speed 1.15e+0",
+      "logistics": {
+        "operationCursor": 9,
+        "cargoMass": 0.2,
+        "fuelUsed": 0.19978186217742794,
+        "ports": [
+          {
+            "id": "Home",
+            "cargo": 0.6000000000000001,
+            "propellant": 0.4
+          },
+          {
+            "id": "Depot",
+            "cargo": 0.2,
+            "propellant": 0.15
+          }
+        ]
+      }
+    },
+    "result": {
+      "delivered": 0.2,
+      "onTime": true,
+      "quota": 0.4,
+      "home": false,
+      "empty": false,
+      "fueled": true,
+      "complete": false,
+      "reason": "Deliver 0.200 more cargo",
+      "propellantUsed": 0.19978186217742794,
+      "hardwareCost": 1
+    },
+    "events": [
+      {
+        "t": 0,
+        "kind": "dock",
+        "id": "dock-home",
+        "portId": "Home",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2,
+        "propellantAfter": 0.2
+      },
+      {
+        "t": 0.25,
+        "kind": "transfer",
+        "id": "load",
+        "portId": "Home",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2,
+        "propellantAfter": 0.2,
+        "cargoBefore": 0,
+        "cargoAfter": 0.2,
+        "portCargoBefore": 1,
+        "portCargoAfter": 0.8,
+        "portPropellantBefore": 0.4,
+        "portPropellantAfter": 0.4
+      },
+      {
+        "t": 0.5,
+        "kind": "burn",
+        "id": "outbound",
+        "deltaV": 0.08012344973464347,
+        "fuelUsed": 0.03689604366692875,
+        "propellantBefore": 0.2,
+        "propellantAfter": 0.16310395633307126
+      },
+      {
+        "t": 4.629730790872742,
+        "kind": "burn",
+        "id": "arrival",
+        "deltaV": 0.07363750491805698,
+        "fuelUsed": 0.03305123031522868,
+        "propellantBefore": 0.16310395633307126,
+        "propellantAfter": 0.13005272601784257
+      },
+      {
+        "t": 4.629730790872742,
+        "kind": "dock",
+        "id": "dock-depot",
+        "portId": "Depot",
+        "deltaV": 8.150570144102419e-13,
+        "fuelUsed": 3.6135626795871966e-13,
+        "propellantBefore": 0.13005272601784257,
+        "propellantAfter": 0.13005272601748122
+      },
+      {
+        "t": 4.879730790872742,
+        "kind": "transfer",
+        "id": "unload-refuel",
+        "portId": "Depot",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.13005272601748122,
+        "propellantAfter": 0.23005272601748122,
+        "cargoBefore": 0.2,
+        "cargoAfter": 0,
+        "portCargoBefore": 0,
+        "portCargoAfter": 0.2,
+        "portPropellantBefore": 0.25,
+        "portPropellantAfter": 0.15
+      },
+      {
+        "t": 15.497026245592098,
+        "kind": "burn",
+        "id": "return",
+        "deltaV": 0.07363750491801724,
+        "fuelUsed": 0.029825132381556294,
+        "propellantBefore": 0.23005272601748122,
+        "propellantAfter": 0.20022759363592493
+      },
+      {
+        "t": 19.626757036464838,
+        "kind": "burn",
+        "id": "rendezvous-arrival",
+        "deltaV": 0.08012344973467041,
+        "fuelUsed": 0.03163117836075614,
+        "propellantBefore": 0.20022759363592493,
+        "propellantAfter": 0.16859641527516878
+      },
+      {
+        "t": 19.626757036464838,
+        "kind": "dock",
+        "id": "target-dock",
+        "portId": "Home",
+        "deltaV": 6.5329179930656505e-12,
+        "fuelUsed": 2.544781515991619e-12,
+        "propellantBefore": 0.16859641527516878,
+        "propellantAfter": 0.168596415272624
+      },
+      {
+        "t": 19.876757036464838,
+        "kind": "transfer",
+        "id": "second-load",
+        "portId": "Home",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.168596415272624,
+        "propellantAfter": 0.168596415272624,
+        "cargoBefore": 0,
+        "cargoAfter": 0.2,
+        "portCargoBefore": 0.8,
+        "portCargoAfter": 0.6000000000000001,
+        "portPropellantBefore": 0.4,
+        "portPropellantAfter": 0.4
+      },
+      {
+        "t": 20.126757036464838,
+        "kind": "burn",
+        "id": "second-outbound",
+        "deltaV": 0.08012344973464347,
+        "fuelUsed": 0.03606842364307207,
+        "propellantBefore": 0.168596415272624,
+        "propellantAfter": 0.13252799162955192
+      },
+      {
+        "t": 24.25648782733758,
+        "kind": "burn",
+        "id": "second-arrival",
+        "deltaV": 0.07363750491805698,
+        "fuelUsed": 0.032309853806979885,
+        "propellantBefore": 0.13252799162955192,
+        "propellantAfter": 0.10021813782257204
+      },
+      {
+        "t": 24.25648782733758,
+        "kind": "operation-rejected",
+        "id": "second-dock-depot",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.10021813782257204,
+        "propellantAfter": 0.10021813782257204,
+        "detail": "Capture Depot: miss 1.90e+0, speed 1.15e+0"
+      }
+    ]
+  },
+  "aligned": {
+    "terminal": {
+      "t": 56,
+      "y": [
+        0.853220107722584,
+        -0.5215510020869119,
+        0.5215510020869119,
+        0.853220107722584
+      ],
+      "propellant": 0.14025243287361183,
+      "burnCursor": 8,
+      "status": "horizon",
+      "detail": "",
+      "logistics": {
+        "operationCursor": 13,
+        "cargoMass": 0,
+        "fuelUsed": 0.25974756712638813,
+        "ports": [
+          {
+            "id": "Home",
+            "cargo": 0.6000000000000001,
+            "propellant": 0.4
+          },
+          {
+            "id": "Depot",
+            "cargo": 0.4,
+            "propellant": 0.04999999999999999
+          }
+        ],
+        "dockedPortId": "Home",
+        "completedAt": 51.33452268130134
+      }
+    },
+    "result": {
+      "delivered": 0.4,
+      "onTime": true,
+      "quota": 0.4,
+      "home": true,
+      "empty": true,
+      "fueled": true,
+      "complete": true,
+      "reason": "Delivery complete",
+      "completedAt": 51.33452268130134,
+      "propellantUsed": 0.25974756712638813,
+      "hardwareCost": 1
+    },
+    "events": [
+      {
+        "t": 0,
+        "kind": "dock",
+        "id": "dock-home",
+        "portId": "Home",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2,
+        "propellantAfter": 0.2
+      },
+      {
+        "t": 0.25,
+        "kind": "transfer",
+        "id": "load",
+        "portId": "Home",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2,
+        "propellantAfter": 0.2,
+        "cargoBefore": 0,
+        "cargoAfter": 0.2,
+        "portCargoBefore": 1,
+        "portCargoAfter": 0.8,
+        "portPropellantBefore": 0.4,
+        "portPropellantAfter": 0.4
+      },
+      {
+        "t": 0.5,
+        "kind": "burn",
+        "id": "outbound",
+        "deltaV": 0.08012344973464347,
+        "fuelUsed": 0.03689604366692875,
+        "propellantBefore": 0.2,
+        "propellantAfter": 0.16310395633307126
+      },
+      {
+        "t": 4.629730790872742,
+        "kind": "burn",
+        "id": "arrival",
+        "deltaV": 0.07363750491805698,
+        "fuelUsed": 0.03305123031522868,
+        "propellantBefore": 0.16310395633307126,
+        "propellantAfter": 0.13005272601784257
+      },
+      {
+        "t": 4.629730790872742,
+        "kind": "dock",
+        "id": "dock-depot",
+        "portId": "Depot",
+        "deltaV": 8.150570144102419e-13,
+        "fuelUsed": 3.6135626795871966e-13,
+        "propellantBefore": 0.13005272601784257,
+        "propellantAfter": 0.13005272601748122
+      },
+      {
+        "t": 4.879730790872742,
+        "kind": "transfer",
+        "id": "unload-refuel",
+        "portId": "Depot",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.13005272601748122,
+        "propellantAfter": 0.23005272601748122,
+        "cargoBefore": 0.2,
+        "cargoAfter": 0,
+        "portCargoBefore": 0,
+        "portCargoAfter": 0.2,
+        "portPropellantBefore": 0.25,
+        "portPropellantAfter": 0.15
+      },
+      {
+        "t": 15.497026245592098,
+        "kind": "burn",
+        "id": "return",
+        "deltaV": 0.07363750491801724,
+        "fuelUsed": 0.029825132381556294,
+        "propellantBefore": 0.23005272601748122,
+        "propellantAfter": 0.20022759363592493
+      },
+      {
+        "t": 19.626757036464838,
+        "kind": "burn",
+        "id": "rendezvous-arrival",
+        "deltaV": 0.08012344973467041,
+        "fuelUsed": 0.03163117836075614,
+        "propellantBefore": 0.20022759363592493,
+        "propellantAfter": 0.16859641527516878
+      },
+      {
+        "t": 19.626757036464838,
+        "kind": "dock",
+        "id": "target-dock",
+        "portId": "Home",
+        "deltaV": 6.5329179930656505e-12,
+        "fuelUsed": 2.544781515991619e-12,
+        "propellantBefore": 0.16859641527516878,
+        "propellantAfter": 0.168596415272624
+      },
+      {
+        "t": 19.876757036464838,
+        "kind": "transfer",
+        "id": "second-load",
+        "portId": "Home",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.168596415272624,
+        "propellantAfter": 0.168596415272624,
+        "cargoBefore": 0,
+        "cargoAfter": 0.2,
+        "portCargoBefore": 0.8,
+        "portCargoAfter": 0.6000000000000001,
+        "portPropellantBefore": 0.4,
+        "portPropellantAfter": 0.4
+      },
+      {
+        "t": 32.2077656448365,
+        "kind": "burn",
+        "id": "second-outbound",
+        "deltaV": 0.08012344973464347,
+        "fuelUsed": 0.03606842364307207,
+        "propellantBefore": 0.168596415272624,
+        "propellantAfter": 0.13252799162955192
+      },
+      {
+        "t": 36.33749643570924,
+        "kind": "burn",
+        "id": "second-arrival",
+        "deltaV": 0.07363750491805698,
+        "fuelUsed": 0.032309853806979885,
+        "propellantBefore": 0.13252799162955192,
+        "propellantAfter": 0.10021813782257204
+      },
+      {
+        "t": 36.33749643570924,
+        "kind": "dock",
+        "id": "second-dock-depot",
+        "portId": "Depot",
+        "deltaV": 8.02483033787576e-13,
+        "fuelUsed": 3.4780099860845013e-13,
+        "propellantBefore": 0.10021813782257204,
+        "propellantAfter": 0.10021813782222423
+      },
+      {
+        "t": 36.58749643570924,
+        "kind": "transfer",
+        "id": "second-unload-refuel",
+        "portId": "Depot",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.10021813782222423,
+        "propellantAfter": 0.20021813782222425,
+        "cargoBefore": 0.2,
+        "cargoAfter": 0,
+        "portCargoBefore": 0.2,
+        "portCargoAfter": 0.4,
+        "portPropellantBefore": 0.15,
+        "portPropellantAfter": 0.04999999999999999
+      },
+      {
+        "t": 47.204791890428595,
+        "kind": "burn",
+        "id": "second-return",
+        "deltaV": 0.07363750491801724,
+        "fuelUsed": 0.029101732055983497,
+        "propellantBefore": 0.20021813782222425,
+        "propellantAfter": 0.17111640576624076
+      },
+      {
+        "t": 51.33452268130134,
+        "kind": "burn",
+        "id": "second-rendezvous-arrival",
+        "deltaV": 0.08012344973467041,
+        "fuelUsed": 0.030863972890158718,
+        "propellantBefore": 0.17111640576624076,
+        "propellantAfter": 0.14025243287608205
+      },
+      {
+        "t": 51.33452268130134,
+        "kind": "dock",
+        "id": "second-target-dock",
+        "portId": "Home",
+        "deltaV": 6.499100457344084e-12,
+        "fuelUsed": 2.4702050359948744e-12,
+        "propellantBefore": 0.14025243287608205,
+        "propellantAfter": 0.14025243287361183
+      }
+    ]
+  },
+  "refinement": {
+    "step": 0.0009765625,
+    "terminal": {
+      "t": 56,
+      "y": [
+        0.853220107722584,
+        -0.5215510020869119,
+        0.5215510020869119,
+        0.853220107722584
+      ],
+      "propellant": 0.14025243287444134,
+      "burnCursor": 8,
+      "status": "horizon",
+      "detail": "",
+      "logistics": {
+        "operationCursor": 13,
+        "cargoMass": 0,
+        "fuelUsed": 0.25974756712555863,
+        "ports": [
+          {
+            "id": "Home",
+            "cargo": 0.6000000000000001,
+            "propellant": 0.4
+          },
+          {
+            "id": "Depot",
+            "cargo": 0.4,
+            "propellant": 0.04999999999999999
+          }
+        ],
+        "dockedPortId": "Home",
+        "completedAt": 51.33452268130134
+      }
+    },
+    "fuelDifference": 8.295031328486857e-13
+  },
+  "partitionedIdentical": true,
+  "interpretation": "Two explicitly compiled voyages in the unchanged runner. No runtime resolver, infinite sustainability proof, or finite-thrust validation."
+}

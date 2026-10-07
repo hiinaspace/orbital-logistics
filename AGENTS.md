@@ -11,6 +11,9 @@ alternatives, saved solutions/replay and display layers. M3b joint handoffs,
 hardware alternatives, beneficial gravity assists and human optimization remain
 open; do not claim the full M4 gate passed. docs/route-intent.md preserves dynamic
 commands as later work; current burns/operations remain static.
+The 2026-10-07 reviewed periodic-service proposal is in
+docs/design/periodic-transfer/proposal.md. Next proposed slice is bounded recipe
+compilation/timeline before runtime scheduling; await the user's design review.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

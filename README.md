@@ -115,6 +115,7 @@ remain later gates. [Reusable route intent](docs/route-intent.md) preserves the
 dynamic direction; current burns and port operations remain absolute.
 
 - [M4a evidence](docs/evidence/m4.md): return puzzles, port targeting, time/fuel alternatives, saved solutions and replay.
+- [Periodic-service design](docs/design/periodic-transfer/proposal.md): reviewed recipe/timeline proposal, budget traces, assistance and propulsion experiments; not implemented UI.
 - [Tactical plan](docs/plan.md): build slices, temporal/interaction contract, M2–M6 gates.
 - [M0 evidence](docs/evidence/m0.md): simulation contract, measured accuracy, and supported limits.
 - [M1 evidence](docs/evidence/m1.md): manual editor, calibration, replay and interaction measurements.

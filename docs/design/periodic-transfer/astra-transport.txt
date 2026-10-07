@@ -1,0 +1,19 @@
+OpenAI Codex v0.153.4
+--------
+workdir: /home/s/code/orbital-logistics
+model: gpt-6-astra
+provider: openai
+approval: on-request
+sandbox: read-only
+reasoning effort: xhigh
+reasoning summaries: none
+session id: 01a11508-ad33-7910-8e3a-6285fc88339f
+--------
+
+Caller verified completion: exit code 0 (exec session 89009).
+Nonempty final review: 13337 bytes.
+Original review output SHA256: 1ec27fcd0b9c45059c2d57d991684d93ab22f909a8ea3b504a16e2d19b90a927
+Verbose log SHA256: 969e364788ac0b824f80ffa56027f1b41452bb07233b098ba7f1cae8662d353c
+Verbose read/tool transcript discarded after preserving transport and final review.
+No per-call dollar cost reported.
+Retained review SHA256 (trailing whitespace normalized): a83d6828b9b42e54e9effbaf8315dccb9397adf9ae2794d07052280e7c8b1e4f

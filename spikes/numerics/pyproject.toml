@@ -6,6 +6,7 @@ dependencies = ["numpy>=2.0", "scipy>=1.14"]
 
 [dependency-groups]
 dev = ["ruff>=0.9", "ty>=0.0.1", "pre-commit>=4"]
+plots = ["matplotlib>=3.10"]
 
 [tool.ruff]
 line-length = 100

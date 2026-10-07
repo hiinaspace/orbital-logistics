@@ -1,4 +1,4 @@
-# Tactical plan — 2026-10-06
+# Tactical plan — updated 2026-10-07
 
 Status: **M1/M2/M3a accepted; initial M4a fixed-program puzzles implemented**.
 On 2026-10-06 the user accepted the manual editor and initial rendezvous helper,
@@ -18,6 +18,35 @@ M3b is deferred by this sequencing decision, not completed. Human voluntary
 optimization, hardware variation and a beneficial gravity assist remain open M4 gates.
 The remainder records the reviewed plan and intended sequence.
 Source: /home/s/org/projects/orbital-logistics/charter.md.
+
+## Periodic programming study — 2026-10-07
+
+The user reviewed M4a as largely working, identified departure/docking bookkeeping,
+and requested detailed periodic-service design and an Astra review before further
+implementation. [Reviewed proposal](design/periodic-transfer/proposal.md),
+[Astra review](design/periodic-transfer/astra-review.md) and
+[disposition](design/periodic-transfer/review-disposition.md) now define the proposed
+next slice. This is planning/evidence work; no reusable recipe or timeline is
+implemented yet, and the full M4 product gate remains open.
+
+Recommended sequence supersedes the tentative dynamic-terminal-match-first idea:
+
+1. One recipe, two actual voyages, horizontal ship timeline and fuel/cargo/Δv traces.
+   Commit departures/durations, derive service/waiting, and compile each complete
+   dock-to-dock transfer from its own simulated prefix. Retain immutable accepted
+   execution and inspectable paid v1 events; defer runtime scheduler insertion.
+2. Compare economical impulse, a validated generous-impulse domain and bounded
+   finite thrust on the same objective, before second-ship machinery. No permanent
+   chemical-only or torch-only choice yet.
+3. One shared berth/handoff with two ships, then bounded cadence/runtime work from
+   concrete need. Three deliveries/gap constraints precede a sustained-cadence claim.
+
+The retained two-voyage schedule completes 0.4 cargo at 51.334523 using identical
+service quantities, carrying real finite inventories, consuming 0.259748 fuel.
+The cheap geometry recurs every 15.853883 but the tug misses every other opportunity.
+Current patient/express witnesses establish completion-time/fuel differences,
+not different cadence. See the proposal for exact authoring semantics, primary
+research, raw measurements, diagram, acceptance cases and propulsion uncertainties.
 
 ## Recommendation
 
