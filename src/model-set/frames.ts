@@ -1,7 +1,6 @@
 import { bodyState } from '../sim/dynamics';
-import { portState } from '../sim/logistics';
 import type { State } from '../sim/schema';
-import { portsOf, stateAt, type SetRun } from './model';
+import { displayPortState, portsOf, stateAt, type SetRun } from './model';
 
 export function transform(run: SetRun, y: State, t: number, frame: string): State {
   let origin: State = [0, 0, 0, 0, 0, 0], angle = 0, rate = 0;
@@ -11,7 +10,7 @@ export function transform(run: SetRun, y: State, t: number, frame: string): Stat
     const port = portsOf(run).find(p => p.id === frame);
     const vessel = run.vessels.find(v => v.bundle.scenario.ship.id === frame);
     if (body) origin = bodyState(body, t);
-    else if (port) origin = portState(port, t);
+    else if (port) origin = displayPortState(port,run.portSamples,t);
     else if (vessel) origin = stateAt(vessel, t);
     else throw new Error('Unknown frame');
   }

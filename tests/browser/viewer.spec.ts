@@ -113,3 +113,20 @@ test('labels retain anchors through scrub, reversal, frames, pause and selection
   const before=(await state(page)).labels.map((l:{id:string;anchor:number;left:number;top:number})=>[l.id,l.anchor,l.left,l.top]);
   await expect.poll(async()=> (await state(page)).labels.map((l:{id:string;anchor:number;left:number;top:number})=>[l.id,l.anchor,l.left,l.top])).toEqual(before);
 });
+
+test('lunar freight exposes three finite round trips, depot stocks and shared rotating frames',async({page})=>{
+  await page.getByLabel('Model set').selectOption('selene-freight');await ready(page);await pause(page);
+  await expect(page.locator('#fleet .object-row')).toHaveCount(3);await expect(page.locator('#stations .object-row')).toHaveCount(3);
+  await seek(page,12);const end=await state(page);
+  expect(end.stocks.find((p:{id:string})=>p.id==='Selene Hub').cargo).toBeCloseTo(.48,12);
+  expect(end.ships.every((s:{propellant:number;logistics:{dockedPortId:string;cargoMass:number}})=>s.propellant>.05 && s.logistics.cargoMass===0 && ['Nightfall','Meridian'].includes(s.logistics.dockedPortId))).toBe(true);
+  await seek(page,8);const before=await state(page);
+  for(const frame of ['rotating','Selene Hub','moon','inertial']) {
+    await page.getByLabel('Reference frame').selectOption(frame);await expect.poll(async()=> (await state(page)).frame).toBe(frame);
+    expect((await state(page)).ships.map((s:{y:number[]})=>s.y)).toEqual(before.ships.map((s:{y:number[]})=>s.y));
+  }
+  await page.getByLabel('Reference frame').selectOption('rotating');
+  await page.locator('#stations [data-object="Selene Hub"]').click();await expect(page.locator('#readouts')).toContainText('Freight stock');
+  await page.screenshot({path:'test-results/selene-freight.png',fullPage:true});
+  await seek(page,0);expect((await state(page)).stocks.find((p:{id:string})=>p.id==='Selene Hub').cargo).toBe(0);
+});

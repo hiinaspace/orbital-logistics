@@ -10,8 +10,9 @@ npm ci
 npm run dev
 ```
 
-The initial sets are **Orison · orbital freight** (four stations, four freighters)
-and **Selene · lunar loop** (a planar distant retrograde orbit). Playback starts
+The sets are **Orison · orbital freight** (four stations, four freighters),
+**Selene · lunar loop** (a distant retrograde orbit), and **Selene · lunar freight**
+(three freighters supplying a lunar depot and returning). Playback starts
 immediately. Click a ship or station to inspect it; overlapping objects open a chooser.
 Use the shared time slider or a ship's activity lane to scrub. Drag the view to pan,
 scroll to zoom, and use Frame or View from here to change reference frames. Space
@@ -28,13 +29,17 @@ npm run build
 npm run test:sim
 PLAYWRIGHT_PREVIEW=1 npm run test:browser
 npm run evidence:model-set
-npx tsx scripts/model-set-fixtures.ts
+npm run evidence:spatial
+npm run evidence:lunar
+npx tsx scripts/model-set-fixtures.ts --check
 uv run --project spikes/numerics --group dev --group plots pre-commit run --config spikes/numerics/.pre-commit-config.yaml --all-files
 ```
 
-[Current direction and architecture](docs/model-set.md) records the viewer contract,
-accepted scope, and future 3D/logistics work. [Prototype evidence](docs/evidence/model-set.md)
-records checks and supported limits. [Tactical plan](docs/plan.md) preserves the earlier
+[Current direction and architecture](docs/model-set.md) records the viewer contract
+and accepted scope. [Spatial evidence](docs/evidence/spatial-foundation.md) covers
+the 3D engine with 2D presentation; [lunar freight evidence](docs/evidence/lunar-freight.md)
+covers the new set. [Prototype evidence](docs/evidence/model-set.md) records the original
+viewer checks. [Tactical plan](docs/plan.md) preserves the earlier
 editor/puzzle milestones as history. The main application now opens the viewer;
 the previous CoaDE-style editor is recoverable at `c61325a` in Git history. Its pure
 simulation/planning helpers and regression checks remain available for fixture authoring.

@@ -1,0 +1,218 @@
+[
+  {
+    "case": "visitor-0",
+    "checks": [
+      {
+        "step": 0.0009765625,
+        "position": 1.736818113408674e-10,
+        "velocity": 2.1979637755894414e-10,
+        "oracleTightening": 2.2295336485994298e-10,
+        "fuel": 0.0,
+        "eventLeftState": 1.3674510581911081e-11
+      },
+      {
+        "step": 0.00048828125,
+        "position": 1.2807617935949066e-11,
+        "velocity": 1.8438357095847836e-11,
+        "oracleTightening": 2.2295336485994298e-10,
+        "fuel": 0.0,
+        "eventLeftState": 7.337959933975128e-13
+      },
+      {
+        "step": 0.000244140625,
+        "position": 2.3781483404649738e-11,
+        "velocity": 3.088122670096877e-11,
+        "oracleTightening": 2.2295336485994298e-10,
+        "fuel": 0.0,
+        "eventLeftState": 5.618346235431942e-13
+      }
+    ]
+  },
+  {
+    "case": "visitor-1",
+    "checks": [
+      {
+        "step": 0.0009765625,
+        "position": 1.4031944436928747e-10,
+        "velocity": 2.418397649837147e-10,
+        "oracleTightening": 2.617122670098737e-10,
+        "fuel": 1.1102230246251565e-16,
+        "eventLeftState": 5.532473870157276e-12
+      },
+      {
+        "step": 0.00048828125,
+        "position": 7.233484194894595e-12,
+        "velocity": 1.0285283391533144e-11,
+        "oracleTightening": 2.617122670098737e-10,
+        "fuel": 1.1102230246251565e-16,
+        "eventLeftState": 7.109642894604933e-13
+      },
+      {
+        "step": 0.000244140625,
+        "position": 5.3785145290593295e-12,
+        "velocity": 6.841618680749163e-12,
+        "oracleTightening": 2.617122670098737e-10,
+        "fuel": 1.1102230246251565e-16,
+        "eventLeftState": 8.506488967112449e-13
+      }
+    ]
+  },
+  {
+    "case": "visitor-2",
+    "checks": [
+      {
+        "step": 0.0009765625,
+        "position": 5.054580766655127e-10,
+        "velocity": 6.402152363490744e-10,
+        "oracleTightening": 8.17048341021224e-10,
+        "fuel": 5.551115123125783e-17,
+        "eventLeftState": 2.377951305988751e-11
+      },
+      {
+        "step": 0.00048828125,
+        "position": 9.44142476624066e-12,
+        "velocity": 1.0850154299219155e-11,
+        "oracleTightening": 8.17048341021224e-10,
+        "fuel": 5.551115123125783e-17,
+        "eventLeftState": 9.34936640200858e-13
+      },
+      {
+        "step": 0.000244140625,
+        "position": 3.1508815352060855e-11,
+        "velocity": 4.10342330489383e-11,
+        "oracleTightening": 8.17048341021224e-10,
+        "fuel": 5.551115123125783e-17,
+        "eventLeftState": 8.879467570663891e-13
+      }
+    ]
+  },
+  {
+    "case": "visitor-3",
+    "checks": [
+      {
+        "step": 0.0009765625,
+        "position": 4.547722604335485e-11,
+        "velocity": 5.081439743614643e-11,
+        "oracleTightening": 3.975890537066266e-11,
+        "fuel": 0.0,
+        "eventLeftState": 3.2688203032689204e-11
+      },
+      {
+        "step": 0.00048828125,
+        "position": 3.1000231246627023e-12,
+        "velocity": 3.3155866922782647e-12,
+        "oracleTightening": 3.975890537066266e-11,
+        "fuel": 0.0,
+        "eventLeftState": 2.3931913960902842e-12
+      },
+      {
+        "step": 0.000244140625,
+        "position": 5.123744572541087e-13,
+        "velocity": 5.447496821585516e-13,
+        "oracleTightening": 3.975890537066266e-11,
+        "fuel": 0.0,
+        "eventLeftState": 4.709837672396806e-13
+      }
+    ]
+  },
+  {
+    "case": "visitor-4",
+    "checks": [
+      {
+        "step": 0.0009765625,
+        "position": 2.6191420253871204e-10,
+        "velocity": 3.9037538074846693e-10,
+        "oracleTightening": 2.3172050155737115e-10,
+        "fuel": 0.0,
+        "eventLeftState": 2.1803938652760478e-11
+      },
+      {
+        "step": 0.00048828125,
+        "position": 1.8212904512132976e-11,
+        "velocity": 2.6973638379463385e-11,
+        "oracleTightening": 2.3172050155737115e-10,
+        "fuel": 0.0,
+        "eventLeftState": 1.5232943464718777e-12
+      },
+      {
+        "step": 0.000244140625,
+        "position": 4.410409009369254e-12,
+        "velocity": 6.434813822734068e-12,
+        "oracleTightening": 2.3172050155737115e-10,
+        "fuel": 0.0,
+        "eventLeftState": 3.4586507323242767e-13
+      }
+    ]
+  },
+  {
+    "case": "visitor-5",
+    "checks": [
+      {
+        "step": 0.0009765625,
+        "position": 2.2925137439231363e-10,
+        "velocity": 3.1168455911341014e-10,
+        "oracleTightening": 3.3494992782348734e-10,
+        "fuel": 5.551115123125783e-17,
+        "eventLeftState": 3.092433184364776e-11
+      },
+      {
+        "step": 0.00048828125,
+        "position": 1.9476587166164294e-11,
+        "velocity": 2.6925022660082868e-11,
+        "oracleTightening": 3.3494992782348734e-10,
+        "fuel": 5.551115123125783e-17,
+        "eventLeftState": 2.423133624878848e-12
+      },
+      {
+        "step": 0.000244140625,
+        "position": 3.2489734321652578e-12,
+        "velocity": 4.391670213392497e-12,
+        "oracleTightening": 3.3494992782348734e-10,
+        "fuel": 5.551115123125783e-17,
+        "eventLeftState": 3.551908334982257e-13
+      }
+    ]
+  },
+  {
+    "case": "visitor-6",
+    "checks": [
+      {
+        "step": 0.0009765625,
+        "position": 4.726526101504715e-10,
+        "velocity": 6.96986458103992e-10,
+        "oracleTightening": 5.40512964247525e-10,
+        "fuel": 0.0,
+        "eventLeftState": 1.3147645418666672e-11
+      },
+      {
+        "step": 0.00048828125,
+        "position": 3.403374833000928e-11,
+        "velocity": 5.0339150074530664e-11,
+        "oracleTightening": 5.40512964247525e-10,
+        "fuel": 0.0,
+        "eventLeftState": 9.30859387067365e-13
+      },
+      {
+        "step": 0.000244140625,
+        "position": 4.757569344781999e-12,
+        "velocity": 7.03471857572807e-12,
+        "oracleTightening": 5.40512964247525e-10,
+        "fuel": 0.0,
+        "eventLeftState": 1.0109508808514931e-13
+      }
+    ]
+  },
+  {
+    "case": "DRO-target",
+    "checks": [
+      {
+        "step": 0.0009765625,
+        "position": 4.4710821493345506e-12,
+        "velocity": 6.569820946741056e-12,
+        "oracleTightening": 3.5748975487685555e-11,
+        "fuel": 0.0,
+        "eventLeftState": 0.0
+      }
+    ]
+  }
+]

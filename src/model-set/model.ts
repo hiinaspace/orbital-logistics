@@ -9,8 +9,9 @@ export interface ModelSet {
   description: string; provenance: string; stations: Station[]; vessels: Vessel[];
   rotating: { name: string; rate: number; phase: number };
 }
-export interface VesselRun extends Vessel { samples: Sample[]; ledger: LedgerEntry[]; boundaries: EventBoundary[] }
-export interface SetRun extends Omit<ModelSet, 'vessels'> { vessels: VesselRun[] }
+export type PortSamples=Record<string,{t:number;y:State}[]>;
+export interface VesselRun extends Vessel {portSamples:PortSamples; samples: Sample[]; ledger: LedgerEntry[]; boundaries: EventBoundary[] }
+export interface SetRun extends Omit<ModelSet, 'vessels'> { vessels: VesselRun[]; portSamples:PortSamples }
 export interface Stock { id: string; cargo: number; propellant: number; occupied: number }
 export interface SetEvent extends LedgerEntry { vessel: string; color: string }
 
@@ -63,17 +64,23 @@ export function stockAt(run: SetRun, t: number): Stock[] {
 
 export function prepareSet(value: ModelSet): SetRun {
   const set = validateSet(value);
+  const runners:Runner[]=[];
   const vessels = set.vessels.map(v => {
     const runner = new Runner(v.bundle), s = v.bundle.scenario, end = s.epoch + s.duration;
     const terminal = runner.advanceTo(end);
     if (terminal.status !== 'horizon') throw new Error(`${v.name}: ${terminal.status} ${terminal.detail}`);
+    runners.push(runner);
     const ledger = runner.ledger;
     // Dense disposable drawing samples plus exact events. The canonical Runner
     // owns physics; interpolation below is only for display, never a restart state.
     const epochs = [...new Set([...Array.from({length: 2049}, (_, i) => s.epoch + s.duration * i / 2048), ...ledger.map(e => e.t)])].sort((a, b) => a - b);
-    return {...v, samples: epochs.map(t => runner.sample(t)), ledger, boundaries:runner.eventBoundaries};
+    return {...v, portSamples:{} as PortSamples, samples: epochs.map(t => runner.sample(t)), ledger, boundaries:runner.eventBoundaries};
   });
-  const run: SetRun = {...set, vessels};
+  const epochs=[...new Set(vessels.flatMap(v=>v.samples.map(s=>s.t)))].sort((a,b)=>a-b);
+  const portSamples:PortSamples=Object.fromEntries((set.vessels[0].bundle.scenario.logistics?.ports??[])
+    .filter(p=>p.rail.kind==='ballistic').map(p=>[p.id,epochs.map(t=>({t,y:runners[0].portState(p.id,t)}))]));
+  vessels.forEach(v=>v.portSamples=portSamples);
+  const run: SetRun = {...set, vessels,portSamples};
   const ports = vessels[0].bundle.scenario.logistics?.ports ?? [];
   // Check every discrete change, including simultaneous transfers as one epoch.
   // Each independent run has already proved its own tanks, cargo, and captures.
@@ -108,7 +115,7 @@ export function stateAt(v: VesselRun, t: number): State {
   if (a.t === t || a === b) return [...a.y];
   if (a.logistics?.dockedPortId) {
     const port = v.bundle.scenario.logistics!.ports.find(p => p.id === a.logistics!.dockedPortId)!;
-    return bodyState({id: port.id, mu: 0, radius: 0, rail: port.rail}, t);
+    return displayPortState(port,v.portSamples,t);
   }
   const u = (t - a.t) / (b.t - a.t);
   // Every instantaneous event supplies its physical left state. No inverse burn
@@ -118,3 +125,13 @@ export function stateAt(v: VesselRun, t: number): State {
 }
 
 export function portsOf(run: SetRun): Port[] { return run.vessels[0].bundle.scenario.logistics?.ports ?? []; }
+
+// Finite, disposable station drawing data. Physical docking uses Runner.portState.
+export function displayPortState(port:Port,samples:PortSamples,t:number):State {
+  if(port.rail.kind==='circular')return bodyState({id:port.id,mu:0,radius:0,rail:port.rail},t);
+  const points=samples[port.id];
+  if(!points || !Number.isFinite(t) || t<points[0].t || t>points.at(-1)!.t)throw new Error('Display target epoch outside validity');
+  let lo=0,hi=points.length-1;while(lo<hi){const mid=Math.ceil((lo+hi)/2);if(points[mid].t<=t)lo=mid;else hi=mid-1;}
+  const a=points[lo],b=points[Math.min(lo+1,points.length-1)];if(a.t===t || a===b)return [...a.y];
+  const u=(t-a.t)/(b.t-a.t);return a.y.map((x,i)=>x+u*(b.y[i]-x)) as State;
+}

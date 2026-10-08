@@ -6,13 +6,14 @@ export type Rail =
   | { kind: 'fixed'; position: Vec3 }
   | { kind: 'circular'; center: Vec3; u: Vec3; v: Vec3; radius: number; rate: number; phase: number };
 export interface Body { id: string; mu: number; radius: number; rail: Rail }
+export interface BallisticRail {kind:'ballistic'; epoch:number; validUntil:number; state:State; policy:Scenario['policy']; minClearance:number; provenance:string}
 export interface Port {
-  id: string; rail: Extract<Rail, {kind: 'circular'}>;
+  id: string; rail: Extract<Rail, {kind: 'circular'}> | BallisticRail;
   cargo: number; cargoCapacity: number; propellant: number; tankCapacity: number;
   serviceDuration: number;
 }
 export interface Logistics {
-  modelVersion: 'kinematic-ports-v1'; ports: Port[]; cargoCapacity: number;
+  modelVersion: 'kinematic-ports-v1' | 'ballistic-ports-v2'; ports: Port[]; cargoCapacity: number;
   capture: {position: number; velocity: number};
   objective: {destinationId: string; quota: number; returnPortId: string; minPropellant: number; hardwareCost: number; deadline?: number};
 }
@@ -152,17 +153,32 @@ export function validateBundle(value: unknown): Bundle {
   }
   if (s.logistics !== undefined) {
     const l = object(s.logistics), capture = object(l.capture), goal = object(l.objective);
-    if (l.modelVersion !== 'kinematic-ports-v1' || scenario.rendezvous || bodies.length !== 1 || bodies[0].rail.kind !== 'fixed' ||
+    if ((l.modelVersion !== 'kinematic-ports-v1' && l.modelVersion !== 'ballistic-ports-v2') || scenario.rendezvous ||
+        (l.modelVersion === 'kinematic-ports-v1' && (bodies.length !== 1 || bodies[0].rail.kind !== 'fixed')) ||
         !Array.isArray(l.ports) || l.ports.length < 2 || l.ports.length > 8) throw new Error('Unsupported logistics domain');
-    const primary = bodies[0], center = (primary.rail as Extract<Rail, {kind: 'fixed'}>).position;
+    const primary = bodies[0];
+    const center = primary.rail.kind==='fixed' ? primary.rail.position : undefined;
     const ports: Port[] = l.ports.map(value => {
-      const port = object(value), r = object(port.rail), radius = finite(r.radius, 'port radius', primary.radius);
-      const rail: Port['rail'] = circularRail(r, primary.radius);
-      const expectedRate = Math.sqrt(primary.mu / radius ** 3);
-      if (r.kind !== 'circular' || radius <= primary.radius || rail.center.some((v, i) => v !== center[i]) ||
-          !Number.isFinite(expectedRate) || expectedRate <= 0 || !Number.isFinite(radius * rail.rate) ||
-          !rail.center.every(v => Number.isFinite(v + radius) && Number.isFinite(v - radius)) ||
-          Math.abs(rail.rate / expectedRate - 1) > 1e-12) throw new Error('Unsupported port rail');
+      const port = object(value), r = object(port.rail);
+      let rail: Port['rail'];
+      if(l.modelVersion==='ballistic-ports-v2') {
+        const p=object(r.policy), targetEpoch=finite(r.epoch,'target epoch'),validUntil=finite(r.validUntil,'target validity');
+        if(r.kind!=='ballistic' || targetEpoch!==epoch || validUntil!==epoch+duration)throw new Error('Ballistic port must cover the complete scenario');
+        const targetStep=finite(p.step,'target step',1/65536), targetNodes=integer(p.maxNodes,'target nodes',2,65536);
+        if(duration/targetStep!==Math.floor(duration/targetStep) || duration/targetStep+2>targetNodes)throw new Error('Invalid target work budget');
+        const minClearance=finite(r.minClearance,'target clearance',0);
+        rail={kind:'ballistic',epoch:targetEpoch,validUntil,state:vector(r.state,6) as State,
+          policy:{step:targetStep,maxNodes:targetNodes,maxSubdivision:integer(p.maxSubdivision,'target subdivisions',0,20)},
+          minClearance,provenance:name(r.provenance)};
+        if(!bodies.every(b=>Number.isFinite(b.radius+minClearance)))throw new Error('Invalid target clearance');
+      } else {
+        const circular=circularRail(r,primary.radius), expectedRate=Math.sqrt(primary.mu/circular.radius**3);
+        if(r.kind!=='circular' || circular.radius<=primary.radius || !center || circular.center.some((v,i)=>v!==center[i]) ||
+          !Number.isFinite(expectedRate) || expectedRate<=0 || !Number.isFinite(circular.radius*circular.rate) ||
+          !circular.center.every(v=>Number.isFinite(v+circular.radius)&&Number.isFinite(v-circular.radius)) ||
+          Math.abs(circular.rate/expectedRate-1)>1e-12)throw new Error('Unsupported port rail');
+        rail=circular;
+      }
       const result: Port = {id: name(port.id), rail, cargo: finite(port.cargo, 'port cargo', 0), cargoCapacity: finite(port.cargoCapacity, 'port cargo capacity', 0),
         propellant: finite(port.propellant, 'port propellant', 0), tankCapacity: finite(port.tankCapacity, 'port tank capacity', 0),
         serviceDuration: finite(port.serviceDuration, 'service duration', Number.MIN_VALUE)};
@@ -176,9 +192,9 @@ export function validateBundle(value: unknown): Bundle {
     const destinationId = name(goal.destinationId), returnPortId = name(goal.returnPortId);
     const quota = finite(goal.quota, 'delivery quota', Number.MIN_VALUE), minPropellant = finite(goal.minPropellant, 'return propellant', 0);
     if (scenario.ship.cargoMass > cargoCapacity || position > 0.001 || velocity > 0.001 || destinationId === returnPortId ||
-        ports.some(p => p.rail.radius - primary.radius <= position) ||
+        ports.some(p => p.rail.kind==='circular' && p.rail.radius - primary.radius <= position) ||
         !ports.some(p => p.id === destinationId) || !ports.some(p => p.id === returnPortId) || minPropellant > scenario.ship.tankCapacity) throw new Error('Invalid logistics objective/capture');
-    scenario.logistics = {modelVersion: 'kinematic-ports-v1', ports, cargoCapacity, capture: {position, velocity},
+    scenario.logistics = {modelVersion: l.modelVersion, ports, cargoCapacity, capture: {position, velocity},
       objective: {destinationId, quota, returnPortId, minPropellant, hardwareCost: finite(goal.hardwareCost, 'hardware cost', 0),
         ...(goal.deadline !== undefined ? {deadline: finite(goal.deadline, 'deadline', epoch)} : {})}};
     if ((scenario.logistics.objective.deadline ?? epoch) > epoch + duration) throw new Error('Deadline beyond horizon');

@@ -25,7 +25,7 @@ export interface PortTarget { portId: string; arrivalEpoch: number }
 function targetSpec(bundle: Bundle, request?: PortTarget): Rendezvous | undefined {
   if (!request) return bundle.scenario.rendezvous;
   const s = bundle.scenario, port = s.logistics?.ports.find(p => p.id === request.portId);
-  if (!port || !Number.isFinite(request.arrivalEpoch) || request.arrivalEpoch <= s.epoch || request.arrivalEpoch >= s.epoch + s.duration) return undefined;
+  if (!port || port.rail.kind!=='circular' || !Number.isFinite(request.arrivalEpoch) || request.arrivalEpoch <= s.epoch || request.arrivalEpoch >= s.epoch + s.duration) return undefined;
   return { target: {id: port.id, state: portState(port, s.epoch)}, referenceBodyId: s.bodies[0].id,
     departureEpoch: s.epoch, arrivalEpoch: request.arrivalEpoch, bounds: {radial: [-0.25,0.25], transverse: [-0.25,0.25]},
     branch: {direction: 'ccw', revolutions: 0, minClearance: 0.2}, tolerance: s.logistics!.capture };

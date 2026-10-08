@@ -5,6 +5,7 @@
   "sessionId": "01a11a6c-4078-7612-b11a-934ca727d05a",
   "exitCode": 0,
   "originalLogSha256": "15ddfbcb2a000a2da373ae7fd83a2c23b28990690dc051e29344d41715db88be",
-  "reviewSha256": "ca04903a38b9599ef5780dab0bec290400485e4239ca0cb16f55c921b17c834b",
-  "rawLogLifetime": "Removed after transport verification and synthesis; original Codex CLI session journal retained by CLI."
+  "rawLogLifetime": "Removed after transport verification and synthesis; original Codex CLI session journal retained by CLI.",
+  "originalReviewSha256": "ca04903a38b9599ef5780dab0bec290400485e4239ca0cb16f55c921b17c834b",
+  "retainedReviewSha256": "99892872569a78790301ffb31f09e6ff82f17f74f4825bb2d715421f41d90b8d"
 }

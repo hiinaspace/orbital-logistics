@@ -1,0 +1,840 @@
+{
+  "seeds": [
+    {
+      "outbound": 0,
+      "wait": 0.5,
+      "duration": 2,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 0,
+      "wait": 0.5,
+      "duration": 2.5,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 0,
+      "wait": 0.5,
+      "duration": 3,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 0,
+      "wait": 0.5,
+      "duration": 4,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 0,
+      "wait": 1,
+      "duration": 2,
+      "evaluations": 38,
+      "totalDv": 0.841799983032223,
+      "fuel": 0.397361261269106,
+      "positionError": 3.2195846033480906e-11,
+      "status": "feasible"
+    },
+    {
+      "outbound": 0,
+      "wait": 1,
+      "duration": 2.5,
+      "evaluations": 37,
+      "totalDv": 0.975919680361941,
+      "fuel": 0.33626589560670483,
+      "positionError": 7.183272501540695e-11,
+      "status": "feasible"
+    },
+    {
+      "outbound": 0,
+      "wait": 1,
+      "duration": 3,
+      "evaluations": 33,
+      "totalDv": 1.9813409531269723,
+      "fuel": -0.044252330956535024,
+      "positionError": 3.4585749349637124e-10,
+      "status": "budget-or-tightening"
+    },
+    {
+      "outbound": 0,
+      "wait": 1,
+      "duration": 4,
+      "evaluations": 19,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 0,
+      "wait": 1.5,
+      "duration": 2,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 0,
+      "wait": 1.5,
+      "duration": 2.5,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 0,
+      "wait": 1.5,
+      "duration": 3,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 0,
+      "wait": 1.5,
+      "duration": 4,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 0,
+      "wait": 2,
+      "duration": 2,
+      "evaluations": 36,
+      "totalDv": 3.0840018981433905,
+      "fuel": -0.3382152941070473,
+      "positionError": 4.501892031081808e-12,
+      "status": "budget-or-tightening"
+    },
+    {
+      "outbound": 0,
+      "wait": 2,
+      "duration": 2.5,
+      "evaluations": 43,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 0,
+      "wait": 2,
+      "duration": 3,
+      "evaluations": 31,
+      "totalDv": 0.7732257602397247,
+      "fuel": 0.4296701009355559,
+      "positionError": 4.531587860049306e-11,
+      "status": "feasible"
+    },
+    {
+      "outbound": 0,
+      "wait": 2,
+      "duration": 4,
+      "evaluations": 21,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 0.5,
+      "duration": 2,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 0.5,
+      "duration": 2.5,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 0.5,
+      "duration": 3,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 0.5,
+      "duration": 4,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 1,
+      "duration": 2,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 1,
+      "duration": 2.5,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 1,
+      "duration": 3,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 1,
+      "duration": 4,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 1.5,
+      "duration": 2,
+      "evaluations": 56,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 1.5,
+      "duration": 2.5,
+      "evaluations": 63,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 1.5,
+      "duration": 3,
+      "evaluations": 64,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 1.5,
+      "duration": 4,
+      "evaluations": 64,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 2,
+      "duration": 2,
+      "evaluations": 13,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 2,
+      "duration": 2.5,
+      "evaluations": 64,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 2,
+      "duration": 3,
+      "evaluations": 50,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 1,
+      "wait": 2,
+      "duration": 4,
+      "evaluations": 22,
+      "totalDv": 1.5978597959732674,
+      "fuel": 0.08607003360597187,
+      "positionError": 1.3604964166781285e-10,
+      "status": "feasible"
+    },
+    {
+      "outbound": 2,
+      "wait": 0.5,
+      "duration": 2,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 2,
+      "wait": 0.5,
+      "duration": 2.5,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 2,
+      "wait": 0.5,
+      "duration": 3,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 2,
+      "wait": 0.5,
+      "duration": 4,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 2,
+      "wait": 1,
+      "duration": 2,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 2,
+      "wait": 1,
+      "duration": 2.5,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 2,
+      "wait": 1,
+      "duration": 3,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 2,
+      "wait": 1,
+      "duration": 4,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 2,
+      "wait": 1.5,
+      "duration": 2,
+      "evaluations": 38,
+      "totalDv": 0.841799983032223,
+      "fuel": 0.397361261269106,
+      "positionError": 3.2195846033480906e-11,
+      "status": "feasible"
+    },
+    {
+      "outbound": 2,
+      "wait": 1.5,
+      "duration": 2.5,
+      "evaluations": 37,
+      "totalDv": 0.975919680361941,
+      "fuel": 0.33626589560670483,
+      "positionError": 7.183272501540695e-11,
+      "status": "feasible"
+    },
+    {
+      "outbound": 2,
+      "wait": 1.5,
+      "duration": 3,
+      "evaluations": 33,
+      "totalDv": 1.9813409531269723,
+      "fuel": -0.044252330956535024,
+      "positionError": 3.4585749349637124e-10,
+      "status": "budget-or-tightening"
+    },
+    {
+      "outbound": 2,
+      "wait": 1.5,
+      "duration": 4,
+      "evaluations": 19,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 2,
+      "wait": 2,
+      "duration": 2,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 2,
+      "wait": 2,
+      "duration": 2.5,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 2,
+      "wait": 2,
+      "duration": 3,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    },
+    {
+      "outbound": 2,
+      "wait": 2,
+      "duration": 4,
+      "evaluations": 1,
+      "status": "no-convergence-or-clearance"
+    }
+  ],
+  "trips": [
+    {
+      "outbound": {
+        "summary": {
+          "phase": 3.141592653589793,
+          "departure": 0.5,
+          "duration": 3,
+          "status": "feasible",
+          "evaluations": 31,
+          "positionError": 1.7053178996407435e-10,
+          "totalDv": 0.8708885468700193,
+          "remainingFuel": 0.38096647463605793,
+          "tightening": 8.62141605433892e-11,
+          "postArrivalSeparation": 3.461455883694476e-10
+        },
+        "bundle": {
+          "scenario": {
+            "schemaVersion": 2,
+            "modelVersion": "rk4-canonical-v2",
+            "id": "selene-visitor-v2",
+            "units": {
+              "length": "reference orbital radius",
+              "time": "inverse circular angular rate",
+              "mass": "reference dry mass"
+            },
+            "epoch": 0,
+            "duration": 12,
+            "policy": {
+              "step": 0.0009765625,
+              "maxNodes": 65536,
+              "maxSubdivision": 16
+            },
+            "bodies": [
+              {
+                "id": "primary",
+                "mu": 0.98,
+                "radius": 0.08,
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 0.02,
+                  "rate": 1,
+                  "phase": 3.141592653589793
+                }
+              },
+              {
+                "id": "moon",
+                "mu": 0.02,
+                "radius": 0.025,
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 0.98,
+                  "rate": 1,
+                  "phase": 0
+                }
+              }
+            ],
+            "ship": {
+              "id": "Visitor",
+              "state": [
+                -0.52,
+                6.123233995736766e-17,
+                0.0,
+                -1.7145055188062944e-16,
+                -1.42,
+                0.0
+              ],
+              "dryMass": 1,
+              "cargoMass": 0.16,
+              "propellant": 0.9,
+              "tankCapacity": 1,
+              "exhaustVelocity": 3
+            }
+          },
+          "program": {
+            "schemaVersion": 2,
+            "id": "lunar-rendezvous-v2",
+            "burns": [
+              {
+                "id": "departure",
+                "t": 0.5,
+                "referenceBodyId": "primary",
+                "basis": "inertial-cartesian-v2",
+                "deltaVelocity": [
+                  0.19130996216491414,
+                  0.20093910642020105,
+                  0.0
+                ]
+              },
+              {
+                "id": "match-velocity",
+                "t": 3.5,
+                "referenceBodyId": "moon",
+                "basis": "inertial-cartesian-v2",
+                "deltaVelocity": [
+                  0.5384038302253572,
+                  0.2495915089185693,
+                  0.0
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "return": {
+        "summary": {
+          "outbound": 0,
+          "wait": 2,
+          "duration": 3,
+          "evaluations": 31,
+          "totalDv": 0.7732257602397247,
+          "fuel": 0.4296701009355559,
+          "positionError": 4.531587860049306e-11,
+          "status": "feasible"
+        },
+        "departure": 5.5,
+        "arrival": 8.5,
+        "departureDv": [
+          0.21873980105584345,
+          -0.22952091504289135,
+          0.0
+        ],
+        "arrivalDv": [
+          0.11939643868817007,
+          0.44026335807001976,
+          0.0
+        ]
+      }
+    },
+    {
+      "outbound": {
+        "summary": {
+          "phase": 0,
+          "departure": 0.5,
+          "duration": 5,
+          "status": "feasible",
+          "evaluations": 37,
+          "positionError": 2.488847645487691e-10,
+          "totalDv": 0.9003521041502758,
+          "remainingFuel": 0.3659064314315694,
+          "tightening": 3.359038153081867e-10,
+          "postArrivalSeparation": 4.867609623715361e-10
+        },
+        "bundle": {
+          "scenario": {
+            "schemaVersion": 2,
+            "modelVersion": "rk4-canonical-v2",
+            "id": "selene-visitor-v2",
+            "units": {
+              "length": "reference orbital radius",
+              "time": "inverse circular angular rate",
+              "mass": "reference dry mass"
+            },
+            "epoch": 0,
+            "duration": 12,
+            "policy": {
+              "step": 0.0009765625,
+              "maxNodes": 65536,
+              "maxSubdivision": 16
+            },
+            "bodies": [
+              {
+                "id": "primary",
+                "mu": 0.98,
+                "radius": 0.08,
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 0.02,
+                  "rate": 1,
+                  "phase": 3.141592653589793
+                }
+              },
+              {
+                "id": "moon",
+                "mu": 0.02,
+                "radius": 0.025,
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 0.98,
+                  "rate": 1,
+                  "phase": 0
+                }
+              }
+            ],
+            "ship": {
+              "id": "Visitor",
+              "state": [
+                0.48,
+                0.0,
+                0.0,
+                -0.0,
+                1.38,
+                0.0
+              ],
+              "dryMass": 1,
+              "cargoMass": 0.16,
+              "propellant": 0.9,
+              "tankCapacity": 1,
+              "exhaustVelocity": 3
+            }
+          },
+          "program": {
+            "schemaVersion": 2,
+            "id": "lunar-rendezvous-v2",
+            "burns": [
+              {
+                "id": "departure",
+                "t": 0.5,
+                "referenceBodyId": "primary",
+                "basis": "inertial-cartesian-v2",
+                "deltaVelocity": [
+                  -0.33331162404915093,
+                  -0.03627415774838602,
+                  0.0
+                ]
+              },
+              {
+                "id": "match-velocity",
+                "t": 5.5,
+                "referenceBodyId": "moon",
+                "basis": "inertial-cartesian-v2",
+                "deltaVelocity": [
+                  0.36713565443001556,
+                  -0.4295559027681144,
+                  0.0
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "return": {
+        "summary": {
+          "outbound": 1,
+          "wait": 2,
+          "duration": 4,
+          "evaluations": 22,
+          "totalDv": 1.5978597959732674,
+          "fuel": 0.08607003360597187,
+          "positionError": 1.3604964166781285e-10,
+          "status": "feasible"
+        },
+        "departure": 7.5,
+        "arrival": 11.5,
+        "departureDv": [
+          0.13145445866568128,
+          -0.44373911032451346,
+          0.0
+        ],
+        "arrivalDv": [
+          -0.7146429869264118,
+          -0.8818413118672566,
+          0.0
+        ]
+      }
+    },
+    {
+      "outbound": {
+        "summary": {
+          "phase": 3.141592653589793,
+          "departure": 0.5,
+          "duration": 2.5,
+          "status": "feasible",
+          "evaluations": 36,
+          "positionError": 1.3937172915856697e-10,
+          "totalDv": 1.1011040840037214,
+          "remainingFuel": 0.2671383538412555,
+          "tightening": 2.1588216428297605e-10,
+          "postArrivalSeparation": 9.930904946273882e-11
+        },
+        "bundle": {
+          "scenario": {
+            "schemaVersion": 2,
+            "modelVersion": "rk4-canonical-v2",
+            "id": "selene-visitor-v2",
+            "units": {
+              "length": "reference orbital radius",
+              "time": "inverse circular angular rate",
+              "mass": "reference dry mass"
+            },
+            "epoch": 0,
+            "duration": 12,
+            "policy": {
+              "step": 0.0009765625,
+              "maxNodes": 65536,
+              "maxSubdivision": 16
+            },
+            "bodies": [
+              {
+                "id": "primary",
+                "mu": 0.98,
+                "radius": 0.08,
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 0.02,
+                  "rate": 1,
+                  "phase": 3.141592653589793
+                }
+              },
+              {
+                "id": "moon",
+                "mu": 0.02,
+                "radius": 0.025,
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 0.98,
+                  "rate": 1,
+                  "phase": 0
+                }
+              }
+            ],
+            "ship": {
+              "id": "Visitor",
+              "state": [
+                -0.52,
+                6.123233995736766e-17,
+                0.0,
+                -1.7145055188062944e-16,
+                -1.42,
+                0.0
+              ],
+              "dryMass": 1,
+              "cargoMass": 0.16,
+              "propellant": 0.9,
+              "tankCapacity": 1,
+              "exhaustVelocity": 3
+            }
+          },
+          "program": {
+            "schemaVersion": 2,
+            "id": "lunar-rendezvous-v2",
+            "burns": [
+              {
+                "id": "departure",
+                "t": 0.5,
+                "referenceBodyId": "primary",
+                "basis": "inertial-cartesian-v2",
+                "deltaVelocity": [
+                  0.18513146115822887,
+                  0.26558235051251067,
+                  0.0
+                ]
+              },
+              {
+                "id": "match-velocity",
+                "t": 3.0,
+                "referenceBodyId": "moon",
+                "basis": "inertial-cartesian-v2",
+                "deltaVelocity": [
+                  0.6607440982372905,
+                  0.40952658419567456,
+                  0.0
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "return": {
+        "summary": {
+          "outbound": 2,
+          "wait": 1.5,
+          "duration": 2,
+          "evaluations": 38,
+          "totalDv": 0.841799983032223,
+          "fuel": 0.397361261269106,
+          "positionError": 3.2195846033480906e-11,
+          "status": "feasible"
+        },
+        "departure": 4.5,
+        "arrival": 6.5,
+        "departureDv": [
+          -0.18022165374113475,
+          0.5283986063715224,
+          0.0
+        ],
+        "arrivalDv": [
+          0.2817392204864855,
+          -0.031659756223823,
+          0.0
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,911 @@
+{
+  "schemaVersion": 1,
+  "id": "selene-freight",
+  "name": "Selene · lunar freight",
+  "extent": 1.75,
+  "description": "Three freighters connect two planet-orbit depots with a distant retrograde lunar depot.",
+  "provenance": "Fictional circular binary, moon mass fraction0.02. Burn-free ballistic depots; independently solved paid round trips, finite supplies and refueling stocks. Finite12-unit scene; no ground launches or maintained station orbits.",
+  "rotating": {
+    "name": "Planet–moon rotating",
+    "rate": 1,
+    "phase": 0
+  },
+  "stations": [
+    {
+      "id": "Meridian",
+      "role": "Planet-orbit supply depot",
+      "berths": 3
+    },
+    {
+      "id": "Nightfall",
+      "role": "Planet-orbit supply depot",
+      "berths": 3
+    },
+    {
+      "id": "Selene Hub",
+      "role": "Distant retrograde freight depot",
+      "berths": 3
+    }
+  ],
+  "vessels": [
+    {
+      "name": "Wren",
+      "color": "#efb878",
+      "cargo": "Supplies",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 2,
+          "modelVersion": "rk4-canonical-v2",
+          "id": "selene-freight-v2",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 12,
+          "policy": {
+            "step": 0.000244140625,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "primary",
+              "mu": 0.98,
+              "radius": 0.08,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.02,
+                "rate": 1,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "moon",
+              "mu": 0.02,
+              "radius": 0.025,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.98,
+                "rate": 1,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "Wren",
+            "state": [
+              -0.52,
+              6.123233995736766e-17,
+              0,
+              -1.7145055188062944e-16,
+              -1.42,
+              0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          },
+          "logistics": {
+            "modelVersion": "ballistic-ports-v2",
+            "ports": [
+              {
+                "id": "Meridian",
+                "rail": {
+                  "kind": "ballistic",
+                  "epoch": 0,
+                  "validUntil": 12,
+                  "state": [
+                    0.48,
+                    0,
+                    0,
+                    0,
+                    1.38,
+                    0
+                  ],
+                  "policy": {
+                    "step": 0.000244140625,
+                    "maxNodes": 65536,
+                    "maxSubdivision": 16
+                  },
+                  "minClearance": 0.03,
+                  "provenance": "Ballistic planet-orbit depot, osculating radius0.5 at epoch0"
+                },
+                "cargo": 2,
+                "cargoCapacity": 6,
+                "propellant": 4,
+                "tankCapacity": 6,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Nightfall",
+                "rail": {
+                  "kind": "ballistic",
+                  "epoch": 0,
+                  "validUntil": 12,
+                  "state": [
+                    -0.52,
+                    6.123233995736766e-17,
+                    0,
+                    -1.7145055188062944e-16,
+                    -1.42,
+                    0
+                  ],
+                  "policy": {
+                    "step": 0.000244140625,
+                    "maxNodes": 65536,
+                    "maxSubdivision": 16
+                  },
+                  "minClearance": 0.03,
+                  "provenance": "Opposite-phase ballistic planet-orbit depot, epoch0"
+                },
+                "cargo": 2,
+                "cargoCapacity": 6,
+                "propellant": 4,
+                "tankCapacity": 6,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Selene Hub",
+                "rail": {
+                  "kind": "ballistic",
+                  "epoch": 0,
+                  "validUntil": 12,
+                  "state": [
+                    1.18,
+                    0,
+                    0,
+                    0,
+                    0.6158221495873256,
+                    0
+                  ],
+                  "policy": {
+                    "step": 0.000244140625,
+                    "maxNodes": 65536,
+                    "maxSubdivision": 16
+                  },
+                  "minClearance": 0.03,
+                  "provenance": "Independently witnessed burn-free distant retrograde orbit"
+                },
+                "cargo": 0,
+                "cargoCapacity": 6,
+                "propellant": 4,
+                "tankCapacity": 6,
+                "serviceDuration": 0.25
+              }
+            ],
+            "cargoCapacity": 0.2,
+            "capture": {
+              "position": 0.00001,
+              "velocity": 0.00001
+            },
+            "objective": {
+              "destinationId": "Selene Hub",
+              "quota": 0.16,
+              "returnPortId": "Nightfall",
+              "minPropellant": 0.05,
+              "hardwareCost": 1
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 2,
+          "id": "Wren-lunar-service-v2",
+          "burns": [
+            {
+              "id": "departure",
+              "t": 0.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.19130996216491414,
+                0.20093910642020105,
+                0
+              ]
+            },
+            {
+              "id": "match-velocity",
+              "t": 3.5,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.5384038302253572,
+                0.2495915089185693,
+                0
+              ]
+            },
+            {
+              "id": "return-departure",
+              "t": 5.5,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.21873980105584345,
+                -0.22952091504289135,
+                0
+              ]
+            },
+            {
+              "id": "return-capture",
+              "t": 8.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.11939643868817007,
+                0.44026335807001976,
+                0
+              ]
+            }
+          ],
+          "operations": [
+            {
+              "id": "initial-dock",
+              "t": 0,
+              "portId": "Nightfall",
+              "kind": "dock"
+            },
+            {
+              "id": "load",
+              "t": 0,
+              "portId": "Nightfall",
+              "kind": "transfer",
+              "cargo": 0.16,
+              "propellant": 0
+            },
+            {
+              "id": "leave-home",
+              "t": 0.5,
+              "portId": "Nightfall",
+              "kind": "undock"
+            },
+            {
+              "id": "dock-selene",
+              "t": 3.5,
+              "portId": "Selene Hub",
+              "kind": "dock"
+            },
+            {
+              "id": "unload-refuel",
+              "t": 3.5,
+              "portId": "Selene Hub",
+              "kind": "transfer",
+              "cargo": -0.16,
+              "propellant": 0.4690335253640926
+            },
+            {
+              "id": "leave-selene",
+              "t": 5.5,
+              "portId": "Selene Hub",
+              "kind": "undock"
+            },
+            {
+              "id": "return-home",
+              "t": 8.5,
+              "portId": "Nightfall",
+              "kind": "dock"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Ibis",
+      "color": "#78c9c0",
+      "cargo": "Supplies",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 2,
+          "modelVersion": "rk4-canonical-v2",
+          "id": "selene-freight-v2",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 12,
+          "policy": {
+            "step": 0.000244140625,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "primary",
+              "mu": 0.98,
+              "radius": 0.08,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.02,
+                "rate": 1,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "moon",
+              "mu": 0.02,
+              "radius": 0.025,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.98,
+                "rate": 1,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "Ibis",
+            "state": [
+              0.48,
+              0,
+              0,
+              0,
+              1.38,
+              0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          },
+          "logistics": {
+            "modelVersion": "ballistic-ports-v2",
+            "ports": [
+              {
+                "id": "Meridian",
+                "rail": {
+                  "kind": "ballistic",
+                  "epoch": 0,
+                  "validUntil": 12,
+                  "state": [
+                    0.48,
+                    0,
+                    0,
+                    0,
+                    1.38,
+                    0
+                  ],
+                  "policy": {
+                    "step": 0.000244140625,
+                    "maxNodes": 65536,
+                    "maxSubdivision": 16
+                  },
+                  "minClearance": 0.03,
+                  "provenance": "Ballistic planet-orbit depot, osculating radius0.5 at epoch0"
+                },
+                "cargo": 2,
+                "cargoCapacity": 6,
+                "propellant": 4,
+                "tankCapacity": 6,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Nightfall",
+                "rail": {
+                  "kind": "ballistic",
+                  "epoch": 0,
+                  "validUntil": 12,
+                  "state": [
+                    -0.52,
+                    6.123233995736766e-17,
+                    0,
+                    -1.7145055188062944e-16,
+                    -1.42,
+                    0
+                  ],
+                  "policy": {
+                    "step": 0.000244140625,
+                    "maxNodes": 65536,
+                    "maxSubdivision": 16
+                  },
+                  "minClearance": 0.03,
+                  "provenance": "Opposite-phase ballistic planet-orbit depot, epoch0"
+                },
+                "cargo": 2,
+                "cargoCapacity": 6,
+                "propellant": 4,
+                "tankCapacity": 6,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Selene Hub",
+                "rail": {
+                  "kind": "ballistic",
+                  "epoch": 0,
+                  "validUntil": 12,
+                  "state": [
+                    1.18,
+                    0,
+                    0,
+                    0,
+                    0.6158221495873256,
+                    0
+                  ],
+                  "policy": {
+                    "step": 0.000244140625,
+                    "maxNodes": 65536,
+                    "maxSubdivision": 16
+                  },
+                  "minClearance": 0.03,
+                  "provenance": "Independently witnessed burn-free distant retrograde orbit"
+                },
+                "cargo": 0,
+                "cargoCapacity": 6,
+                "propellant": 4,
+                "tankCapacity": 6,
+                "serviceDuration": 0.25
+              }
+            ],
+            "cargoCapacity": 0.2,
+            "capture": {
+              "position": 0.00001,
+              "velocity": 0.00001
+            },
+            "objective": {
+              "destinationId": "Selene Hub",
+              "quota": 0.16,
+              "returnPortId": "Meridian",
+              "minPropellant": 0.05,
+              "hardwareCost": 1
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 2,
+          "id": "Ibis-lunar-service-v2",
+          "burns": [
+            {
+              "id": "departure",
+              "t": 0.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                -0.33331162404915093,
+                -0.03627415774838602,
+                0
+              ]
+            },
+            {
+              "id": "match-velocity",
+              "t": 5.5,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.36713565443001556,
+                -0.4295559027681144,
+                0
+              ]
+            },
+            {
+              "id": "return-departure",
+              "t": 7.5,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.13145445866568128,
+                -0.44373911032451346,
+                0
+              ]
+            },
+            {
+              "id": "return-capture",
+              "t": 11.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                -0.7146429869264118,
+                -0.8818413118672566,
+                0
+              ]
+            }
+          ],
+          "operations": [
+            {
+              "id": "initial-dock",
+              "t": 0,
+              "portId": "Meridian",
+              "kind": "dock"
+            },
+            {
+              "id": "load",
+              "t": 0,
+              "portId": "Meridian",
+              "kind": "transfer",
+              "cargo": 0.16,
+              "propellant": 0
+            },
+            {
+              "id": "leave-home",
+              "t": 0.5,
+              "portId": "Meridian",
+              "kind": "undock"
+            },
+            {
+              "id": "dock-selene",
+              "t": 5.5,
+              "portId": "Selene Hub",
+              "kind": "dock"
+            },
+            {
+              "id": "unload-refuel",
+              "t": 5.5,
+              "portId": "Selene Hub",
+              "kind": "transfer",
+              "cargo": -0.16,
+              "propellant": 0.4840935685687512
+            },
+            {
+              "id": "leave-selene",
+              "t": 7.5,
+              "portId": "Selene Hub",
+              "kind": "undock"
+            },
+            {
+              "id": "return-home",
+              "t": 11.5,
+              "portId": "Meridian",
+              "kind": "dock"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Plover",
+      "color": "#a6a4e8",
+      "cargo": "Supplies",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 2,
+          "modelVersion": "rk4-canonical-v2",
+          "id": "selene-freight-v2",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 12,
+          "policy": {
+            "step": 0.000244140625,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "primary",
+              "mu": 0.98,
+              "radius": 0.08,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.02,
+                "rate": 1,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "moon",
+              "mu": 0.02,
+              "radius": 0.025,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.98,
+                "rate": 1,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "Plover",
+            "state": [
+              -0.52,
+              6.123233995736766e-17,
+              0,
+              -1.7145055188062944e-16,
+              -1.42,
+              0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          },
+          "logistics": {
+            "modelVersion": "ballistic-ports-v2",
+            "ports": [
+              {
+                "id": "Meridian",
+                "rail": {
+                  "kind": "ballistic",
+                  "epoch": 0,
+                  "validUntil": 12,
+                  "state": [
+                    0.48,
+                    0,
+                    0,
+                    0,
+                    1.38,
+                    0
+                  ],
+                  "policy": {
+                    "step": 0.000244140625,
+                    "maxNodes": 65536,
+                    "maxSubdivision": 16
+                  },
+                  "minClearance": 0.03,
+                  "provenance": "Ballistic planet-orbit depot, osculating radius0.5 at epoch0"
+                },
+                "cargo": 2,
+                "cargoCapacity": 6,
+                "propellant": 4,
+                "tankCapacity": 6,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Nightfall",
+                "rail": {
+                  "kind": "ballistic",
+                  "epoch": 0,
+                  "validUntil": 12,
+                  "state": [
+                    -0.52,
+                    6.123233995736766e-17,
+                    0,
+                    -1.7145055188062944e-16,
+                    -1.42,
+                    0
+                  ],
+                  "policy": {
+                    "step": 0.000244140625,
+                    "maxNodes": 65536,
+                    "maxSubdivision": 16
+                  },
+                  "minClearance": 0.03,
+                  "provenance": "Opposite-phase ballistic planet-orbit depot, epoch0"
+                },
+                "cargo": 2,
+                "cargoCapacity": 6,
+                "propellant": 4,
+                "tankCapacity": 6,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Selene Hub",
+                "rail": {
+                  "kind": "ballistic",
+                  "epoch": 0,
+                  "validUntil": 12,
+                  "state": [
+                    1.18,
+                    0,
+                    0,
+                    0,
+                    0.6158221495873256,
+                    0
+                  ],
+                  "policy": {
+                    "step": 0.000244140625,
+                    "maxNodes": 65536,
+                    "maxSubdivision": 16
+                  },
+                  "minClearance": 0.03,
+                  "provenance": "Independently witnessed burn-free distant retrograde orbit"
+                },
+                "cargo": 0,
+                "cargoCapacity": 6,
+                "propellant": 4,
+                "tankCapacity": 6,
+                "serviceDuration": 0.25
+              }
+            ],
+            "cargoCapacity": 0.2,
+            "capture": {
+              "position": 0.00001,
+              "velocity": 0.00001
+            },
+            "objective": {
+              "destinationId": "Selene Hub",
+              "quota": 0.16,
+              "returnPortId": "Nightfall",
+              "minPropellant": 0.05,
+              "hardwareCost": 1
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 2,
+          "id": "Plover-lunar-service-v2",
+          "burns": [
+            {
+              "id": "departure",
+              "t": 0.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.18513146115822887,
+                0.26558235051251067,
+                0
+              ]
+            },
+            {
+              "id": "match-velocity",
+              "t": 3,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.6607440982372905,
+                0.40952658419567456,
+                0
+              ]
+            },
+            {
+              "id": "return-departure",
+              "t": 4.5,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                -0.18022165374113475,
+                0.5283986063715224,
+                0
+              ]
+            },
+            {
+              "id": "return-capture",
+              "t": 6.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.2817392204864855,
+                -0.031659756223823,
+                0
+              ]
+            }
+          ],
+          "operations": [
+            {
+              "id": "initial-dock",
+              "t": 0,
+              "portId": "Nightfall",
+              "kind": "dock"
+            },
+            {
+              "id": "load",
+              "t": 0,
+              "portId": "Nightfall",
+              "kind": "transfer",
+              "cargo": 0.16,
+              "propellant": 0
+            },
+            {
+              "id": "leave-home",
+              "t": 0.5,
+              "portId": "Nightfall",
+              "kind": "undock"
+            },
+            {
+              "id": "dock-selene",
+              "t": 3,
+              "portId": "Selene Hub",
+              "kind": "dock"
+            },
+            {
+              "id": "unload-refuel",
+              "t": 3,
+              "portId": "Selene Hub",
+              "kind": "transfer",
+              "cargo": -0.16,
+              "propellant": 0.5828616461590781
+            },
+            {
+              "id": "leave-selene",
+              "t": 4.5,
+              "portId": "Selene Hub",
+              "kind": "undock"
+            },
+            {
+              "id": "return-home",
+              "t": 6.5,
+              "portId": "Nightfall",
+              "kind": "dock"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

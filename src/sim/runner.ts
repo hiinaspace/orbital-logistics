@@ -33,6 +33,7 @@ export class Runner {
   #nodes: Node[] = [];
   #ledger: LedgerEntry[] = [];
   #boundaries: EventBoundary[] = [];
+  #portRunners=new Map<string,Runner>();
   #requestedEpoch: number;
   constructor(value: unknown) {
     this.#bundle = validateBundle(value);
@@ -41,6 +42,17 @@ export class Runner {
     this.#nodes.push({ t: s.epoch, y: [...s.ship.state], propellant: s.ship.propellant,
       burnCursor: 0, nextGridIndex: 1, status: 'running', detail: '',
       ...(s.logistics ? {logistics: {operationCursor: 0, cargoMass: s.ship.cargoMass, fuelUsed: 0, ports: s.logistics.ports.map(p => ({id: p.id, cargo: p.cargo, propellant: p.propellant}))}} : {}) });
+    for(const port of s.logistics?.ports??[]) {
+      if(port.rail.kind!=='ballistic')continue;
+      const rail=port.rail, scenario=clone(s);delete scenario.logistics;delete scenario.rendezvous;
+      scenario.epoch=rail.epoch;scenario.duration=rail.validUntil-rail.epoch;scenario.policy=clone(rail.policy);
+      scenario.bodies.forEach(b=>b.radius+=rail.minClearance);
+      scenario.ship={id:port.id,state:[...rail.state],dryMass:1,cargoMass:0,propellant:0,tankCapacity:0,exhaustVelocity:1};
+      const target=new Runner({scenario,program:{schemaVersion:2,id:'ballistic-station-coast-v2',burns:[]}});
+      const terminal=target.advanceTo(rail.validUntil);
+      if(terminal.status!=='horizon')throw new Error(`Unsafe ballistic station ${port.id}: ${terminal.status} ${terminal.detail}`);
+      this.#portRunners.set(port.id,target);
+    }
     for (const body of s.bodies) {
       const b = bodyState(body, s.epoch), y = s.ship.state;
       if (distance(y,b) <= body.radius) {
@@ -48,6 +60,15 @@ export class Runner {
       }
     }
     this.#applyEvents();
+  }
+  // Dedicated canonical, burn-free targets. Drawing interpolation is never used
+  // for capture/dwell/undock, and the full validity interval was safety certified.
+  portState(id:string,t:number):State {
+    const scenario=this.#bundle.scenario;
+    if(!Number.isFinite(t)||t<scenario.epoch||t>scenario.epoch+scenario.duration)throw new Error('Epoch outside scenario');
+    const port=this.#bundle.scenario.logistics?.ports.find(p=>p.id===id);
+    if(!port)throw new Error('Unknown port');
+    return port.rail.kind==='ballistic' ? this.#portRunners.get(id)!.sample(t).y : portState(port,t);
   }
   get bundle(): Bundle { return clone(this.#bundle); }
   get eventBoundaries(): EventBoundary[] { return clone(this.#boundaries.filter(e=>e.t<=this.current.t)); }
@@ -121,7 +142,7 @@ export class Runner {
       if (l.service) { this.#rejectOperation(op.id, `Service ${l.service.id} finishes at t ${l.service.end.toFixed(3)}`); return; }
       if (op.kind === 'dock') {
         if (l.dockedPortId) { this.#rejectOperation(op.id, `Already docked at ${l.dockedPortId}`); return; }
-        const y = portState(port, n.t), miss = distance(n.y,y), speed = relativeSpeed(n.y,y);
+        const y = this.portState(port.id, n.t), miss = distance(n.y,y), speed = relativeSpeed(n.y,y);
         if (miss > spec.capture.position || speed > spec.capture.velocity) {
           this.#rejectOperation(op.id, `Capture ${port.id}: miss ${miss.toExponential(2)}, speed ${speed.toExponential(2)}`); return;
         }
@@ -157,7 +178,7 @@ export class Runner {
     if (this.#nodes.length >= s.policy.maxNodes) { this.#stop('work-limit', 'retained-node budget'); return false; }
     if (n.logistics?.dockedPortId) {
       const port = s.logistics!.ports.find(p => p.id === n.logistics!.dockedPortId)!;
-      this.#nodes.push({...n, logistics: copyLogistics(n.logistics), t: end, y: portState(port, end)}); return true;
+      this.#nodes.push({...n, logistics: copyLogistics(n.logistics), t: end, y: this.portState(port.id, end)}); return true;
     }
     if (!certifiedCoast(s, n.t, n.y, dt)) {
       if (depth >= s.policy.maxSubdivision || n.t + dt / 2 === n.t) {
@@ -201,7 +222,7 @@ export class Runner {
     const last = this.#last();
     if (t > last.t) t = last.t; // Terminated forecasts have no continuation.
     const n = this.#nodes[this.#index(t)];
-    const y = n.logistics?.dockedPortId ? portState(s.logistics!.ports.find(p => p.id === n.logistics!.dockedPortId)!, t) : t === n.t ? [...n.y] as State : rk4(s, n.t, n.y, t - n.t);
+    const y = n.logistics?.dockedPortId ? this.portState(n.logistics.dockedPortId,t) : t === n.t ? [...n.y] as State : rk4(s, n.t, n.y, t - n.t);
     return { t, y, propellant: n.propellant, burnCursor: n.burnCursor, status: n.status, detail: n.detail, ...(n.logistics ? {logistics: copyLogistics(n.logistics)} : {}) };
   }
   advanceTo(t: number): Sample { const result = this.sample(t); this.#requestedEpoch = t; return result; }

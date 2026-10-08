@@ -59,8 +59,36 @@ def replay(bundle, tight):
         )
         completed_at = (completed_at if completed_at is not None else epoch) if valid else None
 
+    target_solutions = {}
+
+    def body_state(body, epoch):
+        rail = body["rail"]
+        if rail["kind"] == "fixed":
+            return np.array(
+                rail["position"] if len(rail["position"]) == 3 else [*rail["position"], 0]
+            )
+        theta = rail["phase"] + rail["rate"] * epoch
+        u, v = np.array(rail.get("u", [1, 0, 0])), np.array(rail.get("v", [0, 1, 0]))
+        center = np.array(rail["center"] if len(rail["center"]) == 3 else [*rail["center"], 0])
+        return center + rail["radius"] * (u * cos(theta) + v * sin(theta))
+
     def port_state(port_id, epoch):
         rail = ports[port_id]["rail"]
+        if rail["kind"] == "ballistic":
+            assert rail["epoch"] <= epoch <= rail["validUntil"]
+            if port_id not in target_solutions:
+                solution = solve_ivp(
+                    rhs,
+                    (rail["epoch"], rail["validUntil"]),
+                    rail["state"],
+                    method="DOP853",
+                    dense_output=True,
+                    rtol=2.3e-14 if tight else 2e-13,
+                    atol=2e-15 if tight else 2e-15,
+                )
+                assert solution.success
+                target_solutions[port_id] = solution.sol
+            return target_solutions[port_id](epoch)
         theta = rail["phase"] + rail["rate"] * epoch
         u = np.array(rail.get("u", [1, 0, 0]))
         v = np.array(rail.get("v", [0, 1, 0]))
@@ -72,10 +100,13 @@ def replay(bundle, tight):
             )
         )
 
-    def rhs(_t, state):
-        center = s["bodies"][0]["rail"]["position"]
-        displacement = state[:3] - np.array(center if len(center) == 3 else [*center, 0])
-        acceleration = -s["bodies"][0]["mu"] * displacement / np.linalg.norm(displacement) ** 3
+    def rhs(epoch, state):
+        acceleration = np.zeros(3)
+        for body in s["bodies"]:
+            displacement = state[:3] - body_state(body, epoch)
+            radius = np.linalg.norm(displacement)
+            assert radius > body["radius"]
+            acceleration -= body["mu"] * displacement / radius**3
         return np.concatenate((state[3:], acceleration))
 
     def impulse(dv):
@@ -97,8 +128,8 @@ def replay(bundle, tight):
                     (t, epoch),
                     y,
                     method="DOP853",
-                    rtol=2.3e-14 if tight else 2e-12,
-                    atol=2e-15 if tight else 2e-14,
+                    rtol=2.3e-14 if tight else 2e-13,
+                    atol=2e-15 if tight else 2e-15,
                     dense_output=True,
                 )
                 assert solution.success
@@ -120,8 +151,8 @@ def replay(bundle, tight):
             continue
         if kind == "burn":
             assert docked is None
-            center = s["bodies"][0]["rail"]["position"]
-            displacement = y[:3] - np.array(center if len(center) == 3 else [*center, 0])
+            reference = next(body for body in s["bodies"] if body["id"] == op["referenceBodyId"])
+            displacement = y[:3] - body_state(reference, epoch)
             radial = displacement / np.linalg.norm(displacement)
             if op["basis"] == "inertial-cartesian-v2":
                 dv = np.array(op["deltaVelocity"])
@@ -215,7 +246,9 @@ def evaluate(pieces, t):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--milestone", choices=["m3", "m4", "model-set", "spatial-logistics"], default="m3"
+        "--milestone",
+        choices=["m3", "m4", "model-set", "spatial-logistics", "lunar-freight"],
+        default="m3",
     )
     milestone = parser.parse_args().milestone
     request = json.loads((ROOT / f"docs/evidence/{milestone}-oracle-input.json").read_text())
@@ -225,39 +258,61 @@ def main():
         regular, _ = replay(case["bundle"], False)
         checks = []
         for step in case["steps"]:
-            position, velocity, refinement = [], [], []
+            lunar = milestone == "lunar-freight"
+            budget = (
+                (1e-6 if step["step"] >= 1 / 1024 else 1e-7 if step["step"] >= 1 / 2048 else 1e-8)
+                if lunar
+                else 1e-9
+            )
+            fuel_budget = budget if lunar else 1e-11
+            position, velocity, refinement, fuel_errors = [], [], [], []
+            capture_position_error = capture_velocity_error = 0.0
             for sample in step["samples"]:
                 oracle, fuel, cargo, stocks = evaluate(pieces, sample["t"])
                 delta = lift_state(sample["y"]) - oracle
                 position.append(float(np.linalg.norm(delta[:3])))
                 velocity.append(float(np.linalg.norm(delta[3:])))
                 refinement.append(float(np.linalg.norm(evaluate(regular, sample["t"])[0] - oracle)))
-                assert abs(sample["propellant"] - fuel) < 1e-11
+                fuel_errors.append(abs(sample["propellant"] - fuel))
+                assert fuel_errors[-1] < fuel_budget
                 assert sample["logistics"]["cargoMass"] == cargo
                 assert all(
                     [p["cargo"], p["propellant"]] == stocks[p["id"]]
                     for p in sample["logistics"]["ports"]
                 )
-            if milestone == "spatial-logistics":
+            if milestone in ["spatial-logistics", "lunar-freight"]:
                 docks = [entry for entry in step["ledger"] if entry["kind"] == "dock"]
                 for dock, capture in zip(docks, result["captures"], strict=True):
-                    assert abs(dock["positionError"] - capture["position"]) < 1e-8
-                    assert abs(dock["deltaV"] - capture["velocity"]) < 1e-8
+                    capture_position_error = max(
+                        capture_position_error, abs(dock["positionError"] - capture["position"])
+                    )
+                    capture_velocity_error = max(
+                        capture_velocity_error, abs(dock["deltaV"] - capture["velocity"])
+                    )
+                    assert abs(dock["positionError"] - capture["position"]) < budget
+                    assert abs(dock["deltaV"] - capture["velocity"]) < budget
                     assert (
-                        capture["position"] + 2e-8
+                        capture["position"] + (2 * budget if lunar else 2e-8)
                         < case["bundle"]["scenario"]["logistics"]["capture"]["position"]
                     )
                     assert (
-                        capture["velocity"] + 2e-8
+                        capture["velocity"] + (2 * budget if lunar else 2e-8)
                         < case["bundle"]["scenario"]["logistics"]["capture"]["velocity"]
                     )
-            assert max(position) < 1e-9 and max(velocity) < 1e-9 and max(refinement) < 1e-9
+            assert max(position) < budget and max(velocity) < budget and max(refinement) < 1e-9, (
+                case["label"],
+                step["step"],
+                max(position),
+                max(velocity),
+                max(refinement),
+                budget,
+            )
             assert (
                 step["terminal"]["t"] == result["t"]
                 and step["terminal"]["status"] == result["status"]
             )
             assert [[e["t"], e["kind"], e["id"]] for e in step["ledger"]] == result["trace"]
-            assert abs(step["result"]["propellantUsed"] - result["fuelUsed"]) < 1e-11
+            assert abs(step["result"]["propellantUsed"] - result["fuelUsed"]) < fuel_budget
             assert step["result"]["complete"] == result["complete"]
             assert step["result"].get("completedAt") == result["completedAt"]
             checks.append(
@@ -266,6 +321,26 @@ def main():
                     "position": max(position),
                     "velocity": max(velocity),
                     "oracleRefinement": max(refinement),
+                    **(
+                        {
+                            "stateBudget": budget,
+                            "fuelError": max(fuel_errors),
+                            "capturePositionError": capture_position_error,
+                            "captureVelocityError": capture_velocity_error,
+                            "capturePositionMargin": case["bundle"]["scenario"]["logistics"][
+                                "capture"
+                            ]["position"]
+                            - max(c["position"] for c in result["captures"])
+                            - 2 * budget,
+                            "captureVelocityMargin": case["bundle"]["scenario"]["logistics"][
+                                "capture"
+                            ]["velocity"]
+                            - max(c["velocity"] for c in result["captures"])
+                            - 2 * budget,
+                        }
+                        if lunar
+                        else {}
+                    ),
                 }
             )
         rows.append({"case": case["label"], "terminal": result, "checks": checks})

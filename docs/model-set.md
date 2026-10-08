@@ -27,6 +27,11 @@ content/model directions, not implemented capabilities or current prototype task
   offline. Station role labels are descriptive, not a manufacturing economy.
 - Selene: the independently witnessed planar DRO in the existing circular binary
   fixture, through t=24. Rotating and inertial views show the same integrated ship.
+- Selene lunar freight: three freighters carry 0.48 supplies from two planet-orbit
+  depots to the DRO depot and return, through t=12. Finite ballistic station targets,
+  paid departure/arrival/capture, unloading and finite-stock refueling. See
+  [experiment and provenance](design/lunar-freight/README.md) and
+  [validation](evidence/lunar-freight.md).
 - Shared play/pause/speed/scrub/replay, pan/zoom/fit, inertial/rotating/object-centered
   frames, selection and overlap chooser, ship activity lanes, selected fuel/freight
   traces, finite station stocks, event jumps, and reversible display layers.
@@ -38,7 +43,8 @@ content/model directions, not implemented capabilities or current prototype task
 
 Each vessel retains a versioned scenario/program JSON. A worker runs every complete
 program through the canonical Runner and rejects truncated/failed runs.
-The logistics schema now admits two to eight circular ports around a fixed primary.
+The logistics schema admits two to eight ports: legacy circular rails around a fixed
+primary, or finite burn-free ballistic targets in the prescribed multi-body field.
 The viewer set contains ship identity/color/cargo label, station roles/berth counts,
 and a chosen rotating frame. All vessels must have identical world/port data and
 unique identities.
@@ -53,7 +59,9 @@ which prepared sets are admitted. They are not a general scheduler.
 The worker returns dense disposable drawing samples plus exact event epochs and each
 ledger. Physics checkpoints stay inside the Runner. Playback performs view-only
 interpolation; cargo/fuel/service state changes at exact ledger epochs. Docked positions
-are evaluated on their analytical rails. Free-coast display velocities use pre-burn
+are evaluated on analytical rails or disposable ballistic target drawing samples.
+Physics uses the target's dedicated canonical Runner, including capture, constrained
+dwell and undock; view interpolation is never a physical target. Free-coast display velocities use pre-burn
 endpoints so an impulse is not smeared into the preceding interval. At extreme zoom,
 linear display interpolation can become visible; it never becomes a propagation origin.
 
@@ -70,9 +78,9 @@ First assess the experience directly: readability, motion, frames, time controls
 what kind of activity the user wants next. No required engagement diary or puzzle gate.
 Then choose one content extension or simulation change from that feedback.
 
-Real multi-body station traffic needs more than adding a moon icon. Current logistics
-ports are circular rails in a fixed-primary system; future lunar/binary stations need
-an explicit trajectory/maintained-orbit target and validated transfers in that field.
+The new lunar set uses safety-certified finite burn-free station trajectories and
+bounded offline transfer witnesses. Maintained or maneuvering stations need a new
+explicit propulsion/event model; the current target type cannot imply free stationkeeping.
 Ground stations also require a real launch/landing model through the surface boundary;
 a circular orbital port must not be relabeled as a ground facility.
 

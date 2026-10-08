@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 from math import cos, expm1, sin
 from pathlib import Path
@@ -90,7 +91,10 @@ def replay(bundle, tight):
 
 
 def main():
-    request = json.loads((ROOT / "docs/evidence/spatial-oracle-input.json").read_text())
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--milestone", choices=["spatial", "lunar-rendezvous"], default="spatial")
+    milestone = parser.parse_args().milestone
+    request = json.loads((ROOT / f"docs/evidence/{milestone}-oracle-input.json").read_text())
     rows = []
     for case in request["cases"]:
         oracle, burns = replay(case["bundle"], True)
@@ -130,7 +134,7 @@ def main():
             )
         assert checks[-1]["position"] < 1e-8 and checks[-1]["velocity"] < 1e-8
         rows.append({"case": case["label"], "checks": checks})
-    (ROOT / "docs/evidence/spatial-oracle-report.json").write_text(
+    (ROOT / f"docs/evidence/{milestone}-oracle-report.json").write_text(
         json.dumps(rows, indent=2) + "\n"
     )
     print(json.dumps(rows, indent=2))

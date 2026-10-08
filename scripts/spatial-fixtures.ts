@@ -9,6 +9,7 @@ export function rotated(input:Bundle, translation:Vec3=[.2,-.1,.3]):Bundle {
   b.scenario.ship.state=state(b.scenario.ship.state);
   if(b.scenario.rendezvous)b.scenario.rendezvous.target.state=state(b.scenario.rendezvous.target.state);
   for(const r of [...b.scenario.bodies.map(b=>b.rail),...(b.scenario.logistics?.ports.map(p=>p.rail)??[])]) {
+    if(r.kind==='ballistic'){r.state=state(r.state);continue;}
     if(r.kind==='fixed')r.position=point(r.position);else {r.center=point(r.center);r.u=rotate(r.u);r.v=rotate(r.v);}
   }
   for(const burn of b.program.burns)if(burn.basis==='inertial-cartesian-v2')burn.deltaVelocity=rotate(burn.deltaVelocity);else burn.orientationAxis=rotate(burn.orientationAxis);

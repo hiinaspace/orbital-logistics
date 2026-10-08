@@ -1,0 +1,1096 @@
+{
+  "bounds": {
+    "departureEpoch": 0.5,
+    "phases": [
+      0,
+      1.5707963267948966,
+      3.141592653589793,
+      4.71238898038469
+    ],
+    "durations": [
+      2.5,
+      3,
+      4,
+      5
+    ],
+    "maxEvaluations": 64,
+    "minClearance": 0.03,
+    "departureDv": 1.2,
+    "totalDv": 1.6,
+    "minFuel": 0.05
+  },
+  "seeds": [
+    {
+      "phase": 0,
+      "departure": 0.5,
+      "duration": 2.5,
+      "status": "feasible",
+      "evaluations": 31,
+      "positionError": 3.0655154447162877e-10,
+      "totalDv": 1.3830580194424207,
+      "remainingFuel": 0.13911939046947852,
+      "tightening": 2.551225470312057e-11,
+      "postArrivalSeparation": 6.133578756220404e-10
+    },
+    {
+      "phase": 0,
+      "departure": 0.5,
+      "duration": 3,
+      "status": "feasible",
+      "evaluations": 31,
+      "positionError": 1.344955970190227e-10,
+      "totalDv": 1.2901055729883,
+      "remainingFuel": 0.1800015783099731,
+      "tightening": 5.83155405975042e-11,
+      "postArrivalSeparation": 1.3919710952259632e-10
+    },
+    {
+      "phase": 0,
+      "departure": 0.5,
+      "duration": 4,
+      "status": "feasible",
+      "evaluations": 33,
+      "positionError": 1.2533126655902928e-11,
+      "totalDv": 1.5738375731414933,
+      "remainingFuel": 0.05907632144588293,
+      "tightening": 2.0284596342066313e-11,
+      "postArrivalSeparation": 1.8898482159165425e-11
+    },
+    {
+      "phase": 0,
+      "departure": 0.5,
+      "duration": 5,
+      "status": "feasible",
+      "evaluations": 37,
+      "positionError": 2.488847645487691e-10,
+      "totalDv": 0.9003521041502758,
+      "remainingFuel": 0.3659064314315694,
+      "tightening": 3.359038153081867e-10,
+      "postArrivalSeparation": 4.867609623715361e-10
+    },
+    {
+      "phase": 1.5707963267948966,
+      "departure": 0.5,
+      "duration": 2.5,
+      "status": "no-convergence",
+      "evaluations": 44,
+      "positionError": 1.4419804303425132
+    },
+    {
+      "phase": 1.5707963267948966,
+      "departure": 0.5,
+      "duration": 3,
+      "status": "no-convergence",
+      "evaluations": 57,
+      "positionError": 1.2123889847648637
+    },
+    {
+      "phase": 1.5707963267948966,
+      "departure": 0.5,
+      "duration": 4,
+      "status": "no-convergence",
+      "evaluations": 64,
+      "positionError": 0.2907650235172617
+    },
+    {
+      "phase": 1.5707963267948966,
+      "departure": 0.5,
+      "duration": 5,
+      "status": "feasible",
+      "evaluations": 31,
+      "positionError": 1.417263629793997e-10,
+      "totalDv": 1.4869835954541093,
+      "remainingFuel": 0.09488606589698279,
+      "tightening": 4.8496999785729746e-11,
+      "postArrivalSeparation": 1.5060052649334224e-10
+    },
+    {
+      "phase": 3.141592653589793,
+      "departure": 0.5,
+      "duration": 2.5,
+      "status": "feasible",
+      "evaluations": 36,
+      "positionError": 1.3937172915856697e-10,
+      "totalDv": 1.1011040840037214,
+      "remainingFuel": 0.2671383538412555,
+      "tightening": 2.1588216428297605e-10,
+      "postArrivalSeparation": 9.930904946273882e-11
+    },
+    {
+      "phase": 3.141592653589793,
+      "departure": 0.5,
+      "duration": 3,
+      "status": "feasible",
+      "evaluations": 31,
+      "positionError": 1.7053178996407435e-10,
+      "totalDv": 0.8708885468700193,
+      "remainingFuel": 0.38096647463605793,
+      "tightening": 8.62141605433892e-11,
+      "postArrivalSeparation": 3.461455883694476e-10
+    },
+    {
+      "phase": 3.141592653589793,
+      "departure": 0.5,
+      "duration": 4,
+      "status": "no-convergence",
+      "evaluations": 64,
+      "positionError": 0.8692182053096251
+    },
+    {
+      "phase": 3.141592653589793,
+      "departure": 0.5,
+      "duration": 5,
+      "status": "no-convergence",
+      "evaluations": 64,
+      "positionError": 0.5223896285820523
+    },
+    {
+      "phase": 4.71238898038469,
+      "departure": 0.5,
+      "duration": 2.5,
+      "status": "seed-clearance-or-budget",
+      "evaluations": 1
+    },
+    {
+      "phase": 4.71238898038469,
+      "departure": 0.5,
+      "duration": 3,
+      "status": "seed-clearance-or-budget",
+      "evaluations": 1
+    },
+    {
+      "phase": 4.71238898038469,
+      "departure": 0.5,
+      "duration": 4,
+      "status": "seed-clearance-or-budget",
+      "evaluations": 1
+    },
+    {
+      "phase": 4.71238898038469,
+      "departure": 0.5,
+      "duration": 5,
+      "status": "seed-clearance-or-budget",
+      "evaluations": 1
+    }
+  ],
+  "feasible": 7,
+  "solutions": [
+    {
+      "summary": {
+        "phase": 3.141592653589793,
+        "departure": 0.5,
+        "duration": 3,
+        "status": "feasible",
+        "evaluations": 31,
+        "positionError": 1.7053178996407435e-10,
+        "totalDv": 0.8708885468700193,
+        "remainingFuel": 0.38096647463605793,
+        "tightening": 8.62141605433892e-11,
+        "postArrivalSeparation": 3.461455883694476e-10
+      },
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 2,
+          "modelVersion": "rk4-canonical-v2",
+          "id": "selene-visitor-v2",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 12,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "primary",
+              "mu": 0.98,
+              "radius": 0.08,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.02,
+                "rate": 1,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "moon",
+              "mu": 0.02,
+              "radius": 0.025,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.98,
+                "rate": 1,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "Visitor",
+            "state": [
+              -0.52,
+              6.123233995736766e-17,
+              0.0,
+              -1.7145055188062944e-16,
+              -1.42,
+              0.0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0.16,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          }
+        },
+        "program": {
+          "schemaVersion": 2,
+          "id": "lunar-rendezvous-v2",
+          "burns": [
+            {
+              "id": "departure",
+              "t": 0.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.19130996216491414,
+                0.20093910642020105,
+                0.0
+              ]
+            },
+            {
+              "id": "match-velocity",
+              "t": 3.5,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.5384038302253572,
+                0.2495915089185693,
+                0.0
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "summary": {
+        "phase": 0,
+        "departure": 0.5,
+        "duration": 5,
+        "status": "feasible",
+        "evaluations": 37,
+        "positionError": 2.488847645487691e-10,
+        "totalDv": 0.9003521041502758,
+        "remainingFuel": 0.3659064314315694,
+        "tightening": 3.359038153081867e-10,
+        "postArrivalSeparation": 4.867609623715361e-10
+      },
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 2,
+          "modelVersion": "rk4-canonical-v2",
+          "id": "selene-visitor-v2",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 12,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "primary",
+              "mu": 0.98,
+              "radius": 0.08,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.02,
+                "rate": 1,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "moon",
+              "mu": 0.02,
+              "radius": 0.025,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.98,
+                "rate": 1,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "Visitor",
+            "state": [
+              0.48,
+              0.0,
+              0.0,
+              -0.0,
+              1.38,
+              0.0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0.16,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          }
+        },
+        "program": {
+          "schemaVersion": 2,
+          "id": "lunar-rendezvous-v2",
+          "burns": [
+            {
+              "id": "departure",
+              "t": 0.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                -0.33331162404915093,
+                -0.03627415774838602,
+                0.0
+              ]
+            },
+            {
+              "id": "match-velocity",
+              "t": 5.5,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.36713565443001556,
+                -0.4295559027681144,
+                0.0
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "summary": {
+        "phase": 3.141592653589793,
+        "departure": 0.5,
+        "duration": 2.5,
+        "status": "feasible",
+        "evaluations": 36,
+        "positionError": 1.3937172915856697e-10,
+        "totalDv": 1.1011040840037214,
+        "remainingFuel": 0.2671383538412555,
+        "tightening": 2.1588216428297605e-10,
+        "postArrivalSeparation": 9.930904946273882e-11
+      },
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 2,
+          "modelVersion": "rk4-canonical-v2",
+          "id": "selene-visitor-v2",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 12,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "primary",
+              "mu": 0.98,
+              "radius": 0.08,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.02,
+                "rate": 1,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "moon",
+              "mu": 0.02,
+              "radius": 0.025,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.98,
+                "rate": 1,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "Visitor",
+            "state": [
+              -0.52,
+              6.123233995736766e-17,
+              0.0,
+              -1.7145055188062944e-16,
+              -1.42,
+              0.0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0.16,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          }
+        },
+        "program": {
+          "schemaVersion": 2,
+          "id": "lunar-rendezvous-v2",
+          "burns": [
+            {
+              "id": "departure",
+              "t": 0.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.18513146115822887,
+                0.26558235051251067,
+                0.0
+              ]
+            },
+            {
+              "id": "match-velocity",
+              "t": 3.0,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.6607440982372905,
+                0.40952658419567456,
+                0.0
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "summary": {
+        "phase": 0,
+        "departure": 0.5,
+        "duration": 3,
+        "status": "feasible",
+        "evaluations": 31,
+        "positionError": 1.344955970190227e-10,
+        "totalDv": 1.2901055729883,
+        "remainingFuel": 0.1800015783099731,
+        "tightening": 5.83155405975042e-11,
+        "postArrivalSeparation": 1.3919710952259632e-10
+      },
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 2,
+          "modelVersion": "rk4-canonical-v2",
+          "id": "selene-visitor-v2",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 12,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "primary",
+              "mu": 0.98,
+              "radius": 0.08,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.02,
+                "rate": 1,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "moon",
+              "mu": 0.02,
+              "radius": 0.025,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.98,
+                "rate": 1,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "Visitor",
+            "state": [
+              0.48,
+              0.0,
+              0.0,
+              -0.0,
+              1.38,
+              0.0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0.16,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          }
+        },
+        "program": {
+          "schemaVersion": 2,
+          "id": "lunar-rendezvous-v2",
+          "burns": [
+            {
+              "id": "departure",
+              "t": 0.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.20571840055427737,
+                0.944054031397491,
+                0.0
+              ]
+            },
+            {
+              "id": "match-velocity",
+              "t": 3.5,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                -0.22433470476215678,
+                -0.23363116075390866,
+                0.0
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "summary": {
+        "phase": 0,
+        "departure": 0.5,
+        "duration": 2.5,
+        "status": "feasible",
+        "evaluations": 31,
+        "positionError": 3.0655154447162877e-10,
+        "totalDv": 1.3830580194424207,
+        "remainingFuel": 0.13911939046947852,
+        "tightening": 2.551225470312057e-11,
+        "postArrivalSeparation": 6.133578756220404e-10
+      },
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 2,
+          "modelVersion": "rk4-canonical-v2",
+          "id": "selene-visitor-v2",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 12,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "primary",
+              "mu": 0.98,
+              "radius": 0.08,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.02,
+                "rate": 1,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "moon",
+              "mu": 0.02,
+              "radius": 0.025,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.98,
+                "rate": 1,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "Visitor",
+            "state": [
+              0.48,
+              0.0,
+              0.0,
+              -0.0,
+              1.38,
+              0.0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0.16,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          }
+        },
+        "program": {
+          "schemaVersion": 2,
+          "id": "lunar-rendezvous-v2",
+          "burns": [
+            {
+              "id": "departure",
+              "t": 0.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.2965214018294995,
+                1.007512333452375,
+                0.0
+              ]
+            },
+            {
+              "id": "match-velocity",
+              "t": 3.0,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                -0.31897700061028106,
+                -0.09497830134764174,
+                0.0
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "summary": {
+        "phase": 1.5707963267948966,
+        "departure": 0.5,
+        "duration": 5,
+        "status": "feasible",
+        "evaluations": 31,
+        "positionError": 1.417263629793997e-10,
+        "totalDv": 1.4869835954541093,
+        "remainingFuel": 0.09488606589698279,
+        "tightening": 4.8496999785729746e-11,
+        "postArrivalSeparation": 1.5060052649334224e-10
+      },
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 2,
+          "modelVersion": "rk4-canonical-v2",
+          "id": "selene-visitor-v2",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 12,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "primary",
+              "mu": 0.98,
+              "radius": 0.08,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.02,
+                "rate": 1,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "moon",
+              "mu": 0.02,
+              "radius": 0.025,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.98,
+                "rate": 1,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "Visitor",
+            "state": [
+              -0.01999999999999997,
+              0.5,
+              0.0,
+              -1.4,
+              -0.019999999999999914,
+              0.0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0.16,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          }
+        },
+        "program": {
+          "schemaVersion": 2,
+          "id": "lunar-rendezvous-v2",
+          "burns": [
+            {
+              "id": "departure",
+              "t": 0.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                -0.812530172544168,
+                0.0400871741270199,
+                0.0
+              ]
+            },
+            {
+              "id": "match-velocity",
+              "t": 5.5,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.49321198700559954,
+                -0.4585817731945758,
+                0.0
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "summary": {
+        "phase": 0,
+        "departure": 0.5,
+        "duration": 4,
+        "status": "feasible",
+        "evaluations": 33,
+        "positionError": 1.2533126655902928e-11,
+        "totalDv": 1.5738375731414933,
+        "remainingFuel": 0.05907632144588293,
+        "tightening": 2.0284596342066313e-11,
+        "postArrivalSeparation": 1.8898482159165425e-11
+      },
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 2,
+          "modelVersion": "rk4-canonical-v2",
+          "id": "selene-visitor-v2",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 12,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "primary",
+              "mu": 0.98,
+              "radius": 0.08,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.02,
+                "rate": 1,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "moon",
+              "mu": 0.02,
+              "radius": 0.025,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.98,
+                "rate": 1,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "Visitor",
+            "state": [
+              0.48,
+              0.0,
+              0.0,
+              -0.0,
+              1.38,
+              0.0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0.16,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          }
+        },
+        "program": {
+          "schemaVersion": 2,
+          "id": "lunar-rendezvous-v2",
+          "burns": [
+            {
+              "id": "departure",
+              "t": 0.5,
+              "referenceBodyId": "primary",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                -0.1565683336460375,
+                0.4666092130812577,
+                0.0
+              ]
+            },
+            {
+              "id": "match-velocity",
+              "t": 4.5,
+              "referenceBodyId": "moon",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0.4706711372419653,
+                -0.9738886752775602,
+                0.0
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

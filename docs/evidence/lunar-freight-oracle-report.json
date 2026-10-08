@@ -1,0 +1,446 @@
+[
+  {
+    "case": "Wren",
+    "terminal": {
+      "t": 12,
+      "status": "horizon",
+      "fuel": 0.4296701009356563,
+      "fuelUsed": 0.9393634244284362,
+      "cargo": 0.0,
+      "stocks": {
+        "Meridian": [
+          2,
+          4
+        ],
+        "Nightfall": [
+          1.84,
+          4
+        ],
+        "Selene Hub": [
+          0.16,
+          3.5309664746359073
+        ]
+      },
+      "captures": [
+        {
+          "t": 0,
+          "position": 0.0,
+          "velocity": 0.0
+        },
+        {
+          "t": 3.5,
+          "position": 1.7048869206096186e-10,
+          "velocity": 4.006290203274472e-14
+        },
+        {
+          "t": 8.5,
+          "position": 4.531587860049306e-11,
+          "velocity": 0.0
+        }
+      ],
+      "trace": [
+        [
+          0,
+          "dock",
+          "initial-dock"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.25,
+          "transfer",
+          "load"
+        ],
+        [
+          0.5,
+          "undock",
+          "leave-home"
+        ],
+        [
+          0.5,
+          "burn",
+          "departure"
+        ],
+        [
+          3.5,
+          "burn",
+          "match-velocity"
+        ],
+        [
+          3.5,
+          "dock",
+          "dock-selene"
+        ],
+        [
+          3.5,
+          "transfer-start",
+          "unload-refuel"
+        ],
+        [
+          3.75,
+          "transfer",
+          "unload-refuel"
+        ],
+        [
+          5.5,
+          "undock",
+          "leave-selene"
+        ],
+        [
+          5.5,
+          "burn",
+          "return-departure"
+        ],
+        [
+          8.5,
+          "burn",
+          "return-capture"
+        ],
+        [
+          8.5,
+          "dock",
+          "return-home"
+        ]
+      ],
+      "complete": true,
+      "completedAt": 8.5
+    },
+    "checks": [
+      {
+        "step": 0.0009765625,
+        "position": 2.4465175699211336e-11,
+        "velocity": 7.179779270567824e-11,
+        "oracleRefinement": 3.631226609729375e-12,
+        "stateBudget": 1e-06,
+        "fuelError": 1.4069689857620915e-11,
+        "capturePositionError": 4.1915075553489376e-12,
+        "captureVelocityError": 2.1597817048548948e-11,
+        "capturePositionMargin": 7.99982951130794e-06,
+        "captureVelocityMargin": 7.9999999599371e-06
+      },
+      {
+        "step": 0.00048828125,
+        "position": 1.6407669336785473e-12,
+        "velocity": 4.78802102667438e-12,
+        "oracleRefinement": 3.631226609729375e-12,
+        "stateBudget": 1e-07,
+        "fuelError": 1.2458922782343507e-12,
+        "capturePositionError": 6.104270216475098e-13,
+        "captureVelocityError": 2.11202723830279e-12,
+        "capturePositionMargin": 9.79982951130794e-06,
+        "captureVelocityMargin": 9.7999999599371e-06
+      },
+      {
+        "step": 0.000244140625,
+        "position": 7.549288805027226e-13,
+        "velocity": 2.134025498983871e-12,
+        "oracleRefinement": 3.631226609729375e-12,
+        "stateBudget": 1e-08,
+        "fuelError": 1.3201106874305424e-12,
+        "capturePositionError": 1.0852073624042717e-12,
+        "captureVelocityError": 2.5591356169282717e-12,
+        "capturePositionMargin": 9.97982951130794e-06,
+        "captureVelocityMargin": 9.9799999599371e-06
+      }
+    ]
+  },
+  {
+    "case": "Ibis",
+    "terminal": {
+      "t": 12,
+      "status": "horizon",
+      "fuel": 0.08607003360607428,
+      "fuelUsed": 1.298023534962677,
+      "cargo": 0.0,
+      "stocks": {
+        "Meridian": [
+          1.84,
+          4
+        ],
+        "Nightfall": [
+          2,
+          4
+        ],
+        "Selene Hub": [
+          0.16,
+          3.5159064314312487
+        ]
+      },
+      "captures": [
+        {
+          "t": 0,
+          "position": 0.0,
+          "velocity": 0.0
+        },
+        {
+          "t": 5.5,
+          "position": 2.49126423946245e-10,
+          "velocity": 2.1614556809041978e-13
+        },
+        {
+          "t": 11.5,
+          "position": 1.360641309127224e-10,
+          "velocity": 5.891783719047321e-14
+        }
+      ],
+      "trace": [
+        [
+          0,
+          "dock",
+          "initial-dock"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.25,
+          "transfer",
+          "load"
+        ],
+        [
+          0.5,
+          "undock",
+          "leave-home"
+        ],
+        [
+          0.5,
+          "burn",
+          "departure"
+        ],
+        [
+          5.5,
+          "burn",
+          "match-velocity"
+        ],
+        [
+          5.5,
+          "dock",
+          "dock-selene"
+        ],
+        [
+          5.5,
+          "transfer-start",
+          "unload-refuel"
+        ],
+        [
+          5.75,
+          "transfer",
+          "unload-refuel"
+        ],
+        [
+          7.5,
+          "undock",
+          "leave-selene"
+        ],
+        [
+          7.5,
+          "burn",
+          "return-departure"
+        ],
+        [
+          11.5,
+          "burn",
+          "return-capture"
+        ],
+        [
+          11.5,
+          "dock",
+          "return-home"
+        ]
+      ],
+      "complete": true,
+      "completedAt": 11.5
+    },
+    "checks": [
+      {
+        "step": 0.0009765625,
+        "position": 1.4267005757445652e-08,
+        "velocity": 2.7728400719071824e-07,
+        "oracleRefinement": 4.067002321965263e-11,
+        "stateBudget": 1e-06,
+        "fuelError": 1.7256527595765903e-08,
+        "capturePositionError": 1.6171625863576126e-08,
+        "captureVelocityError": 4.766418212920219e-08,
+        "capturePositionMargin": 7.999750873576055e-06,
+        "captureVelocityMargin": 7.999999783854434e-06
+      },
+      {
+        "step": 0.00048828125,
+        "position": 7.351286439799711e-10,
+        "velocity": 1.0148015187071128e-08,
+        "oracleRefinement": 4.067002321965263e-11,
+        "stateBudget": 1e-07,
+        "fuelError": 9.159698416416617e-10,
+        "capturePositionError": 6.545449901843424e-10,
+        "captureVelocityError": 2.5300451932019684e-09,
+        "capturePositionMargin": 9.799750873576055e-06,
+        "captureVelocityMargin": 9.799999783854433e-06
+      },
+      {
+        "step": 0.000244140625,
+        "position": 4.0366780245919446e-11,
+        "velocity": 3.7364997649876084e-10,
+        "oracleRefinement": 4.067002321965263e-11,
+        "stateBudget": 1e-08,
+        "fuelError": 5.166048144822355e-11,
+        "capturePositionError": 3.7483829486169876e-11,
+        "captureVelocityError": 1.4235753432814449e-10,
+        "capturePositionMargin": 9.979750873576055e-06,
+        "captureVelocityMargin": 9.979999783854433e-06
+      }
+    ]
+  },
+  {
+    "case": "Plover",
+    "terminal": {
+      "t": 12,
+      "status": "horizon",
+      "fuel": 0.39736126126933924,
+      "fuelUsed": 1.0855003848897389,
+      "cargo": 0.0,
+      "stocks": {
+        "Meridian": [
+          2,
+          4
+        ],
+        "Nightfall": [
+          1.84,
+          4
+        ],
+        "Selene Hub": [
+          0.16,
+          3.417138353840922
+        ]
+      },
+      "captures": [
+        {
+          "t": 0,
+          "position": 0.0,
+          "velocity": 0.0
+        },
+        {
+          "t": 3,
+          "position": 1.3933909052647028e-10,
+          "velocity": 5.1533503498215104e-14
+        },
+        {
+          "t": 6.5,
+          "position": 3.2195846033480906e-11,
+          "velocity": 0.0
+        }
+      ],
+      "trace": [
+        [
+          0,
+          "dock",
+          "initial-dock"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.25,
+          "transfer",
+          "load"
+        ],
+        [
+          0.5,
+          "undock",
+          "leave-home"
+        ],
+        [
+          0.5,
+          "burn",
+          "departure"
+        ],
+        [
+          3,
+          "burn",
+          "match-velocity"
+        ],
+        [
+          3,
+          "dock",
+          "dock-selene"
+        ],
+        [
+          3,
+          "transfer-start",
+          "unload-refuel"
+        ],
+        [
+          3.25,
+          "transfer",
+          "unload-refuel"
+        ],
+        [
+          4.5,
+          "undock",
+          "leave-selene"
+        ],
+        [
+          4.5,
+          "burn",
+          "return-departure"
+        ],
+        [
+          6.5,
+          "burn",
+          "return-capture"
+        ],
+        [
+          6.5,
+          "dock",
+          "return-home"
+        ]
+      ],
+      "complete": true,
+      "completedAt": 6.5
+    },
+    "checks": [
+      {
+        "step": 0.0009765625,
+        "position": 2.4465175699211336e-11,
+        "velocity": 7.179779270567824e-11,
+        "oracleRefinement": 3.631226609729375e-12,
+        "stateBudget": 1e-06,
+        "fuelError": 1.1569745161921219e-11,
+        "capturePositionError": 2.035107086668629e-11,
+        "captureVelocityError": 1.4864923424520357e-11,
+        "capturePositionMargin": 7.999860660909475e-06,
+        "captureVelocityMargin": 7.999999948466498e-06
+      },
+      {
+        "step": 0.00048828125,
+        "position": 1.6407669336785473e-12,
+        "velocity": 4.78802102667438e-12,
+        "oracleRefinement": 3.631226609729375e-12,
+        "stateBudget": 1e-07,
+        "fuelError": 7.169820293029261e-13,
+        "capturePositionError": 8.311623057310441e-13,
+        "captureVelocityError": 1.3273172924203808e-12,
+        "capturePositionMargin": 9.799860660909475e-06,
+        "captureVelocityMargin": 9.799999948466498e-06
+      },
+      {
+        "step": 0.000244140625,
+        "position": 7.549288805027226e-13,
+        "velocity": 2.134025498983871e-12,
+        "oracleRefinement": 3.631226609729375e-12,
+        "stateBudget": 1e-08,
+        "fuelError": 1.0355605262191148e-12,
+        "capturePositionError": 5.582054010031638e-13,
+        "captureVelocityError": 1.7220730854848959e-12,
+        "capturePositionMargin": 9.979860660909474e-06,
+        "captureVelocityMargin": 9.979999948466498e-06
+      }
+    ]
+  }
+]

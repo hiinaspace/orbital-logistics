@@ -109,19 +109,19 @@
         "step": 0.001953125,
         "position": 1.4939929774978412e-12,
         "velocity": 8.053486752613626e-13,
-        "oracleRefinement": 6.726796208853863e-12
+        "oracleRefinement": 1.3004078270345124e-12
       },
       {
         "step": 0.0009765625,
         "position": 1.448474861217095e-13,
         "velocity": 9.484369354798861e-14,
-        "oracleRefinement": 6.726796208853863e-12
+        "oracleRefinement": 1.3004078270345124e-12
       },
       {
         "step": 0.00048828125,
         "position": 7.470646102560724e-14,
         "velocity": 5.927448002901353e-14,
-        "oracleRefinement": 6.726796208853863e-12
+        "oracleRefinement": 1.3004078270345124e-12
       }
     ]
   }

@@ -1,14 +1,19 @@
 # Tactical plan — updated 2026-10-08
 
-Status: **orbital model-set viewer direction accepted; initial 2D viewer implemented**.
+Status: **model-set viewer accepted; coherent 3D engine and lunar freight implemented**.
 
 On 2026-10-08 the user chose fictional orbital buildups and traffic as the next
 product direction, authorized retiring the CoaDE editing UI, and requested implementation.
-The main app now opens a prepared four-station/four-freighter set and the lunar DRO set.
+The main app offers Orison orbital freight, the lunar DRO, and Selene lunar freight.
 See [current direction and architecture](model-set.md) and [viewer evidence](evidence/model-set.md).
-Multi-system content, ground launch/landing, upkeep/production, new propulsion and 3D
-remain follow-up work. The initial slice retains the validated planar engine; a coherent
-3D migration is documented rather than adding a misleading z=0 field alone.
+The user-authorized overnight work completed Astra architecture review, a canonical
+six-state migration with planar compatibility and independent spatial calibration,
+stable label anchors/fades, and bounded lunar freight authoring. Three validated
+round trips now serve a ballistic lunar depot; burns, captures and refueling are paid.
+See [spatial evidence](evidence/spatial-foundation.md) and
+[lunar freight evidence](evidence/lunar-freight.md). The viewer retains its 2D projection.
+Synchronized analytical views are deferred for taste feedback. Multi-system content,
+ground launch/landing, upkeep/production and new propulsion remain follow-up work.
 
 The [recovered Fable consultation](design/orbital-model-set/README.md) and
 [synthesis](design/orbital-model-set/synthesis.md) informed this direction. Watching

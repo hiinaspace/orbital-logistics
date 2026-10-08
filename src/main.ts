@@ -2,13 +2,13 @@ import './style.css';
 import {StableLabels,type Label,type PlacedLabel} from './view/labels';
 import freight from '../fixtures/model-sets/orison-freight.json';
 import lunar from '../fixtures/model-sets/lunar-loop.json';
+import seleneFreight from '../fixtures/model-sets/selene-freight.json';
 import {bodyState} from './sim/dynamics';
-import {portState} from './sim/logistics';
 import type {State} from './sim/schema';
-import {portsOf, sampleVessel, setEvents, stockAt, type ModelSet, type SetEvent, type SetRun, type VesselRun} from './model-set/model';
+import {displayPortState,portsOf, sampleVessel, setEvents, stockAt, type ModelSet, type SetEvent, type SetRun, type VesselRun} from './model-set/model';
 import {transform} from './model-set/frames';
 
-const sets = [freight, lunar] as ModelSet[];
+const sets = [freight, lunar, seleneFreight] as ModelSet[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
@@ -211,8 +211,9 @@ function draw() {
       return Array.from({length: 161}, (_, i) => first + duration * i / 160);
     };
     for (const port of portsOf(run)) {
+      if(port.rail.kind==='ballistic'){path(run.portSamples[port.id].filter(s=>Math.abs(s.t-t)<3).map(s=>project(s.y,s.t)),'#647c8d',.8,.3);continue;}
       const period = 2 * Math.PI / port.rail.rate;
-      path(orbitEpochs(period).map(epoch => project(portState(port, epoch), epoch)), '#647c8d', 0.8, 0.3);
+      path(orbitEpochs(period).map(epoch => project(displayPortState(port,run!.portSamples,epoch), epoch)), '#647c8d', 0.8, 0.3);
     }
     for (const body of scenario.bodies.filter(b => b.rail.kind === 'circular')) {
       const rail = body.rail as Extract<typeof body.rail, {kind: 'circular'}>, period = 2 * Math.PI / Math.abs(rail.rate);
@@ -250,7 +251,7 @@ function draw() {
     hits.push({id: body.id, name: body.id, x: p[0], y: p[1]});
   }
   for (const port of portsOf(run)) {
-    const p = project(portState(port, t), t);
+    const p = project(displayPortState(port,run.portSamples,t), t);
     ctx.save(); ctx.translate(...p); ctx.rotate(Math.PI / 4); ctx.strokeStyle = colors.station; ctx.lineWidth = 1.2; ctx.strokeRect(-4, -4, 8, 8); ctx.restore();
     if (selected === port.id) { ctx.beginPath(); ctx.arc(...p, 10, 0, Math.PI * 2); ctx.strokeStyle = '#c7d5de'; ctx.stroke(); }
     label(port.id, port.id, ...p, '#a7bac7'); hits.push({id: port.id, name: port.id, x: p[0], y: p[1]});

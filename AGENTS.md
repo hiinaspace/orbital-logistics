@@ -5,9 +5,10 @@ Published hobby identity: Hiina <hiina@hiina.space>.
 Read docs/model-set.md and docs/plan.md first; docs/charter.md is historical design
 intent and docs/evidence/ records tested behavior. On 2026-10-08 the user accepted
 an orbital model-set viewer rather than a puzzle game and authorized retiring the
-CoaDE editor UI. The app now shows prepared fictional freight traffic and a lunar
-DRO, with shared scrubbing, reference frames, stock/ship inspection and timelines.
-See docs/evidence/model-set.md for limits and validation. Watching is sufficient;
+CoaDE editor UI. The app now shows prepared fictional orbital freight, a lunar
+DRO, and three lunar freight round trips, with shared scrubbing, reference frames,
+stock/ship inspection and timelines. See docs/evidence/model-set.md and
+docs/evidence/lunar-freight.md for limits and validation. Watching is sufficient;
 do not reintroduce a puzzle/courier-optimization gate or mandatory authoring.
 
 The viewer retains an XY projection. The simulation is now canonical six-state v2,
@@ -19,6 +20,10 @@ multi-ship overlays are admitted only after shared-stock/berth checks; they are 
 joint fleet scheduler. Current burns/operations remain static; route intent is deferred.
 Prior periodic/topology studies and the recovered Fable consultation are preserved in
 docs/design/. M1/M2/M3a acceptance and M4a evidence are history, not current UI gates.
+Ballistic ports are finite burn-free target trajectories, safety-certified through
+their complete validity interval by the canonical Runner. Capture, dwell and undock
+use that provider; display interpolation never becomes a physical target. The lunar
+routes are bounded offline witnesses, not a general multi-body targeting service.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.
