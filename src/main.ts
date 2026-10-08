@@ -8,7 +8,7 @@ import orisonPowered from '../fixtures/model-sets/orison-powered.json';
 import {bodyState} from './sim/dynamics';
 import type {State} from './sim/schema';
 import {displayPortState,portsOf, sampleVessel, setEvents, stockAt, type ModelSet, type SetEvent, type SetRun, type VesselRun} from './model-set/model';
-import {transform} from './model-set/frames';
+import {transform,transformDirection} from './model-set/frames';
 
 const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered] as ModelSet[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
@@ -35,6 +35,7 @@ let ready = false, width = 900, height = 600, scale = 100, center: [number, numb
 let lastFrame = performance.now(), lastPanel = 0, playbackRate = 1;
 let layers = {orbits: true, trails: true, plan: true, labels: true};
 let savedLayers = {...layers}, cleared = false;
+let thrustWhiskers:{vessel:string;t:number;from:[number,number];to:[number,number]}[]=[];
 let hits: {id: string; name: string; x: number; y: number}[] = [];
 const labelLayout=new StableLabels();let placedLabels:PlacedLabel[]=[],hovered='';
 const colors = {body: '#7893a4', station: '#c7d5de'};
@@ -169,7 +170,7 @@ function publishState() {
   $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, frame, selected, layers,
     ships: run?.vessels.map(v => ({id: v.bundle.scenario.ship.id, ...sampleVessel(v, t), screen: project(sampleVessel(v, t).y, t)})),
     labels:placedLabels.map(({id,anchor,alpha,left,top})=>({id,anchor,alpha,left,top})),
-    stocks: run ? stockAt(run, t) : [], events, camera: {center, scale}, hits});
+    stocks: run ? stockAt(run, t) : [], events, thrustWhiskers, camera: {center, scale}, hits});
 }
 function loadSet(id: string) {
   const set = sets.find(s => s.id === id)!;
@@ -210,7 +211,7 @@ function draw() {
   for (let i = 0; i < 65; i++) { ctx.globalAlpha = 0.12 + (i % 4) * 0.035; ctx.fillRect((i * 313.47) % width, (i * 137.33) % height, 1, 1); }
   ctx.globalAlpha = 1;
   if (!run || !ready) return;
-  hits = [];
+  hits = [];thrustWhiskers=[];
   const scenario = run.vessels[0].bundle.scenario;
   const labelRequests:Label[]=[];
   if (layers.orbits) {
@@ -246,11 +247,23 @@ function draw() {
       const stop = nextDock(v)?.t ?? Math.min(end(), t + (run.id === 'lunar-loop' ? 5.58 : 8));
       path([project(sampleVessel(v, t).y, t), ...v.samples.filter(s => s.t > t && s.t <= stop).map(s => project(s.y, s.t))], '#b5bdc7', 1, 0.28, [3, 5]);
     }
-    if(layers.plan || layers.trails)for(const arc of v.bundle.program.thrustArcs??[]) {
-      if(arc.throttle===0)continue;
-      const first=layers.trails?Math.max(arc.start,t-12):Math.max(arc.start,t),last=layers.plan && isSelected?arc.end:Math.min(arc.end,t);
-      if(last<=first)continue;
-      path([project(sampleVessel(v,first).y,first),...v.samples.filter(s=>s.t>first && s.t<last).map(s=>project(s.y,s.t)),project(sampleVessel(v,last).y,last)],v.color,2.4,.7);
+    if(layers.plan && isSelected)for(const arc of v.bundle.program.thrustArcs??[]) {
+      const stop=nextDock(v)?.t??end();
+      if(arc.throttle===0 || arc.end<=t || arc.start>=stop)continue;
+      const curve=[project(sampleVessel(v,arc.start).y,arc.start),...v.samples.filter(s=>s.t>arc.start && s.t<arc.end).map(s=>project(s.y,s.t)),project(sampleVessel(v,arc.end).y,arc.end)];
+      const length=curve.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p[0]-curve[i][0],p[1]-curve[i][1]),0);
+      const count=Math.max(2,Math.min(40,Math.ceil(length/14)));
+      // Samples stay anchored to the whole arc, so whiskers disappear as flown
+      // rather than crawling along the remaining portion during playback.
+      for(let i=0;i<count;i++) {
+        const epoch=arc.start+(i+.5)/count*(arc.end-arc.start);
+        if(epoch<t || epoch>stop)continue;
+        const point=project(sampleVessel(v,epoch).y,epoch),d=transformDirection(run,arc.direction,epoch,frame),n=Math.hypot(d[0],d[1]);
+        if(n<1e-10)continue;
+        const tip:[number,number]=[point[0]+d[0]/n*12,point[1]-d[1]/n*12];
+        path([point,tip],'#f0cf8f',1,.75);
+        thrustWhiskers.push({vessel:id,t:epoch,from:point,to:tip});
+      }
     }
   }
   function label(id: string, text: string, x: number, y: number, color: string) {
@@ -274,8 +287,7 @@ function draw() {
   for (const v of run.vessels) {
     const state = sampleVessel(v, t), p = project(state.y, t), transformed = transform(run, state.y, t, frame);
     if(state.thrust && state.thrust.force>0) {
-      const other=[...state.y] as State;for(let i=0;i<3;i++)other[i+3]+=state.thrust.direction[i];
-      const direction=transform(run,other,t,frame),dx=direction[3]-transformed[3],dy=-(direction[4]-transformed[4]),length=Math.hypot(dx,dy);
+      const direction=transformDirection(run,state.thrust.direction,t,frame),dx=direction[0],dy=-direction[1],length=Math.hypot(dx,dy);
       if(length>1e-10)path([[p[0]-dx/length*5,p[1]-dy/length*5],[p[0]-dx/length*15,p[1]-dy/length*15]],'#ffe0a0',2,.9);
     }
     const angle = Math.hypot(transformed[3],transformed[4]) > 1e-10 ? Math.atan2(-transformed[4], transformed[3]) : 0;

@@ -162,3 +162,22 @@ test('powered freight shows finite acceleration, continuous resources and both c
  await page.getByLabel('Model set').selectOption('orison-powered');await ready(page);await pause(page);await seek(page,16);
  expect((await state(page)).ships[0].logistics.dockedPortId).toBe('Anchor');
 });
+
+test('future thrust whiskers follow the plan layer and never mark flown history',async({page})=>{
+ await page.getByLabel('Model set').selectOption('selene-powered');await ready(page);await pause(page);
+ await seek(page,3.1);const future=await state(page);
+ expect(future.thrustWhiskers.length).toBeGreaterThan(1);
+ expect(future.thrustWhiskers.every((w:{t:number})=>w.t>=future.t && w.t<=3.5)).toBe(true);
+ await page.getByLabel('Reference frame').selectOption('rotating');
+ await expect.poll(async()=> (await state(page)).frame).toBe('rotating');
+ const rotated=await state(page);expect(rotated.thrustWhiskers.map((w:{t:number})=>w.t).length).toBeGreaterThan(0);
+ const box=(await page.locator('#space').boundingBox())!,ship=rotated.ships[0].screen;
+ await page.mouse.move(box.x+ship[0],box.y+ship[1]);await page.mouse.wheel(0,-800);
+ await expect.poll(async()=> (await state(page)).camera.scale).toBeGreaterThan(rotated.camera.scale);
+ await page.screenshot({path:'test-results/future-thrust-whiskers.png',fullPage:true});
+ await page.locator('#layers summary').click();await page.locator('#layer-plan').uncheck();
+ await expect.poll(async()=> (await state(page)).thrustWhiskers.length).toBe(0);
+ expect((await state(page)).layers.trails).toBe(true);
+ await page.locator('#layer-plan').check();await seek(page,12);
+ expect((await state(page)).thrustWhiskers).toEqual([]);
+});
