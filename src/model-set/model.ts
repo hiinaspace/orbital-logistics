@@ -58,7 +58,7 @@ export function setEvents(run: SceneView): SetEvent[] {
 }
 function eventOrder(e: ViewerEvent): number {
   // A berth can be handed over at the same epoch: departure precedes arrival.
-  return (e.kind === 'undock' || e.kind==='launch') ? 0 : e.kind === 'dock' ? 1 : 2;
+  return (e.kind === 'undock' || e.kind==='launch') ? 0 : (e.kind === 'dock' || e.kind==='land') ? 1 : 2;
 }
 export function stockAt(run: SceneView, t: number): Stock[] {
   const ports=portsOf(run);
@@ -72,7 +72,7 @@ export function stockAt(run: SceneView, t: number): Stock[] {
     if (e.t > t) break;
     const p = stocks.find(p => p.id === e.portId);
     if (!p) continue;
-    if (e.kind === 'dock') p.occupied++;
+    if (e.kind === 'dock' || e.kind==='land') p.occupied++;
     if (e.kind === 'undock' || e.kind==='launch') p.occupied--;
     if (e.kind === 'transfer') {
       p.cargo -= e.cargoAfter! - e.cargoBefore!;
@@ -97,7 +97,18 @@ export function prepareSet(value: ModelSet): SetRun {
     // extra drawing queries cannot create canonical checkpoints.
     const launchTimes=(v.bundle.program.operations??[]).filter(o=>o.kind==='launch').flatMap(o=>
       Array.from({length:4097},(_,i)=>o.t+Math.min(2,end-o.t)*i/4096));
-    const epochs = [...new Set([...launchTimes,...Array.from({length: 2049}, (_, i) => s.epoch + s.duration * i / 2048), ...ledger.map(e => e.t)])].sort((a, b) => a - b);
+    // Sample every free-flight interval densely, not just a fixed landing window.
+    // This also covers the return's initial coast at extreme ship-follow zoom.
+    const flightTimes=(v.bundle.program.operations??[]).some(o=>o.kind==='land') ? ledger
+      .filter(e=>e.kind==='dock'||e.kind==='land').flatMap(e=>{
+        const departure=[...ledger].reverse().find(d=>d.t<e.t&&(d.kind==='launch'||d.kind==='undock'));
+        if(!departure)return [];
+        const count=Math.ceil((e.t-departure.t)*2048);
+        if(count>16384)throw new Error('Surface display flight exceeds sample budget');
+        return Array.from({length:count+1},(_,i)=>departure.t+(e.t-departure.t)*i/count);
+      }) : [];
+    const epochs = [...new Set([...flightTimes,...launchTimes,...Array.from({length: 2049}, (_, i) => s.epoch + s.duration * i / 2048), ...ledger.map(e => e.t)])].sort((a, b) => a - b);
+    if(epochs.length>32768)throw new Error('Surface display sample budget exceeded');
     return {...v,id:s.ship.id,ship:s.ship,ports:s.logistics?.ports??[],cargoCapacity:s.logistics?.cargoCapacity??s.ship.cargoMass,arcs:v.bundle.program.thrustArcs??[],continuousFuel:v.bundle.program.thrustArcs!==undefined, portSamples:{} as PortSamples, samples: epochs.map(t => runner.sample(t)), ledger, boundaries:runner.eventBoundaries};
   });
   const epochs=[...new Set(vessels.flatMap(v=>v.samples.map(s=>s.t)))].sort((a,b)=>a-b);

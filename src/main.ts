@@ -8,6 +8,7 @@ import seleneFreight from '../fixtures/model-sets/selene-freight.json';
 import selenePowered from '../fixtures/model-sets/selene-powered.json';
 import orisonPowered from '../fixtures/model-sets/orison-powered.json';
 import surfaceAscent from '../fixtures/model-sets/selene-ascent.json';
+import surfaceReturn from '../fixtures/model-sets/selene-return.json';
 import trafficDefinition from '../fixtures/traffic/orison-service.json';
 import {TrafficViewStore} from './traffic/view';
 import type {TrafficDefinition} from './traffic/planner';
@@ -17,7 +18,7 @@ import type {State} from './sim/schema';
 import {displayPortState,portsOf, sampleVessel, setEvents, stockAt, type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
-const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent] as ModelSet[];
+const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn] as ModelSet[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
@@ -26,7 +27,7 @@ document.body.innerHTML = `
   <header><h1>Orbital Logistics</h1><select id="set" aria-label="Model set">${[...sets,trafficDefinition].map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><span id="load-status" role="status">Preparing scene…</span></header>
   <div class="workspace">
     <section class="scene" aria-label="Orbital viewer">
-      <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><button id="fit" title="Fit the scene (F)">Fit</button><button id="launch-view" hidden>Launch view</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
+      <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><button id="fit" title="Fit the scene (F)">Fit</button><button id="launch-view" hidden>Surface view</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
       <div class="viewport"><canvas id="space" tabindex="0" aria-label="Orbital traffic. Drag to pan, scroll to zoom, click a ship or station to inspect."></canvas></div>
       <div id="timelines" aria-label="Ship activity timelines"></div>
       <div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><label class="speed-control"><input id="speed" type="range" min="-12" max="4" step="0.01" value="0" aria-label="Playback speed" aria-valuetext="1×"><output id="speed-value">1×</output></label><input id="time" type="range" min="0" max="64" value="0" step="0.001" aria-label="Simulation time"><output id="clock">0.00</output><button id="live" hidden>Live</button><label class="replay"><input type="checkbox" id="replay" title="Rewind the prepared scene at the end">Replay</label></div>
@@ -78,6 +79,7 @@ function seek(time: number, pause = true) {
 }
 function eventLabel(e: SetEvent): string {
   const port = e.portId ?? '';
+  if(e.kind==='land')return `Touchdown · ${port}`;
   if (e.kind === 'dock') return `Dock ${port}`;
   if(e.kind==='launch')return `Lift off · ${port}`;
   if (e.kind === 'undock') return `Depart ${port}`;
@@ -91,7 +93,7 @@ function eventLabel(e: SetEvent): string {
   if(e.kind==='fault')return 'Flight fault';
   return e.id.endsWith('capture') ? 'Arrival burn' : 'Departure burn';
 }
-function nextDock(v: VesselView) { return events.find(e => e.vessel === v.id && e.t > t + 1e-9 && e.kind === 'dock'); }
+function nextArrival(v: VesselView) { return events.find(e => e.vessel === v.id && e.t > t + 1e-9 && (e.kind === 'dock'||e.kind==='land')); }
 function status(v: VesselView): string {
   const s = sampleVessel(v, t), l = s.logistics;
   if(s.activity?.kind==='fault')return `Fault · last seen ${number(s.activity.knownEpoch!)}`;
@@ -99,8 +101,8 @@ function status(v: VesselView): string {
   if(s.activity?.kind==='waiting' && s.activity.reason)return 'Waiting for transfer window';
   if (l?.service) return `${l.service.cargo < 0 ? 'Unloading' : 'Loading'} · ${l.service.portId}`;
   if (l?.dockedPortId) return `${v.ports.find(p=>p.id===l.dockedPortId)?.rail.kind==='surface'?'On pad':'Docked'} · ${l.dockedPortId}`;
-  if((s.thrust?.force??0)>0)return `Powered flight · ${nextDock(v)?.portId??''}`;
-  const dock = nextDock(v);
+  if((s.thrust?.force??0)>0)return `Powered flight · ${nextArrival(v)?.portId??''}`;
+  const dock = nextArrival(v);
   return dock ? `En route · ${dock.portId}` : 'Free flight';
 }
 function select(id: string) { selected = id; $('hit-menu').hidden = true; draw();updatePanels(); }
@@ -169,7 +171,7 @@ function updatePanels() {
     if(v.ship.engine)$('readouts').innerHTML+=`<div><dt>Thrust</dt><dd>${number(s.thrust?.force??0)} / ${number(v.ship.engine.maxThrust)}</dd></div><div><dt>Thrust acceleration</dt><dd>${number(s.thrust?.acceleration??0)}</dd></div>`;
     if(v.ports.some(p=>p.rail.kind==='surface')) {
       const body=run.world.bodies[0],b=bodyState(body,t),dx=s.y[0]-b[0],dy=s.y[1]-b[1],r=Math.hypot(dx,dy),vx=s.y[3]-b[3],vy=s.y[4]-b[4];
-      const small=(x:number)=>Math.abs(x)<.001 && x!==0?x.toExponential(2):x.toFixed(4);
+      const small=(x:number)=>Math.abs(x)<1e-12?'0.0000':Math.abs(x)<.001?x.toExponential(2):x.toFixed(4);
       const mass=v.ship.dryMass+cargo+s.propellant;
       $('readouts').innerHTML+=`<div><dt>Altitude · R</dt><dd>${small(r-body.radius)}</dd></div><div><dt>Radial speed</dt><dd>${small((dx*vx+dy*vy)/r)}</dd></div><div><dt>Tangential speed</dt><dd>${small((dx*vy-dy*vx)/r)}</dd></div><div><dt>Thrust / weight</dt><dd>${number((s.thrust?.force??0)/mass/(body.mu/r**2))}</dd></div>`;
     }
@@ -186,7 +188,7 @@ function updatePanels() {
     const body = run.world.bodies.find(b => b.id === selected);
     $('object-status').textContent = station?.role ?? 'Gravity source';
     $('readouts').innerHTML = stock ? `<div><dt>Freight stock</dt><dd>${number(stock.cargo)}</dd></div><div><dt>Propellant stock</dt><dd>${number(stock.propellant)}</dd></div><div><dt>Berths</dt><dd>${stock.occupied} / ${station!.berths}</dd></div>` : `<div><dt>Gravitational μ</dt><dd>${number(body!.mu)}</dd></div>`;
-    upcoming = events.find(e => e.portId === selected && e.t > t + 1e-9 && e.kind === 'dock');
+    upcoming = events.find(e => e.portId === selected && e.t > t + 1e-9 && (e.kind === 'dock'||e.kind==='land'));
   }
   $('next-event').hidden = !upcoming;
   if (upcoming) {
@@ -313,11 +315,11 @@ function draw() {
       if (prev && sampleVessel(v,t).activity?.kind!=='fault') path([prev, project(sampleVessel(v, t).y, t)], v.color, 1.5, 0.75);
     }
     if (layers.plan && isSelected && sampleVessel(v,t).activity?.kind!=='fault') {
-      const stop = nextDock(v)?.t ?? Math.min(end(), t + (run.id === 'lunar-loop' ? 5.58 : 8));
+      const stop = nextArrival(v)?.t ?? Math.min(end(), t + (run.id === 'lunar-loop' ? 5.58 : 8));
       path([project(sampleVessel(v, t).y, t), ...v.samples.filter(s => s.t > t && s.t <= stop).map(s => project(s.y, s.t))], '#b5bdc7', 1, 0.28, [3, 5]);
     }
     if(layers.plan && isSelected)for(const arc of v.arcs) {
-      const stop=nextDock(v)?.t??end();
+      const stop=nextArrival(v)?.t??end();
       if(arc.throttle===0 || arc.end<=t || arc.start>=stop || arc.end>end() || sampleVessel(v,t).activity?.kind==='fault')continue;
       const curve=[project(sampleVessel(v,Math.max(start(),arc.start)).y,Math.max(start(),arc.start)),...v.samples.filter(s=>s.t>arc.start && s.t<arc.end).map(s=>project(s.y,s.t)),project(sampleVessel(v,arc.end).y,arc.end)];
       const length=curve.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p[0]-curve[i][0],p[1]-curve[i][1]),0);

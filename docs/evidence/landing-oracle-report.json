@@ -1,0 +1,384 @@
+{
+  "checks": [
+    {
+      "step": 0.001953125,
+      "stateError": 2.3105977432056574e-12,
+      "fuelError": 5.953293413796246e-13,
+      "oracleRefinement": 3.3107980995767905e-13,
+      "nodes": 5699,
+      "certifiedIntervals": 1894,
+      "clearanceLowerBound": 4.999999999588667e-07,
+      "captures": [
+        {
+          "id": "on-pad",
+          "productionPosition": 0,
+          "productionVelocity": 0,
+          "oraclePosition": 0.0,
+          "oracleVelocity": 0.0,
+          "productionCaptureFuel": 0
+        },
+        {
+          "id": "arrival",
+          "productionPosition": 1.6720910633108735e-12,
+          "productionVelocity": 1.7276228466652653e-12,
+          "oraclePosition": 3.0839817463844885e-13,
+          "oracleVelocity": 2.8976033992338834e-13,
+          "productionCaptureFuel": 7.294567925279386e-13
+        },
+        {
+          "id": "touchdown",
+          "productionPosition": 3.3845374464397017e-12,
+          "productionVelocity": 8.172419746525095e-12,
+          "oraclePosition": 3.376113647518623e-12,
+          "oracleVelocity": 8.3329112651401e-12,
+          "productionCaptureFuel": 3.0782781045191294e-12
+        }
+      ]
+    },
+    {
+      "step": 0.0009765625,
+      "stateError": 1.5824393990015847e-13,
+      "fuelError": 4.75175454539567e-14,
+      "oracleRefinement": 3.3107980995767905e-13,
+      "nodes": 11321,
+      "certifiedIntervals": 3715,
+      "clearanceLowerBound": 4.999999999588667e-07,
+      "captures": [
+        {
+          "id": "on-pad",
+          "productionPosition": 0,
+          "productionVelocity": 0,
+          "oraclePosition": 0.0,
+          "oracleVelocity": 0.0,
+          "productionCaptureFuel": 0
+        },
+        {
+          "id": "arrival",
+          "productionPosition": 3.1519356808475093e-13,
+          "productionVelocity": 2.7924492746635673e-13,
+          "oraclePosition": 3.0839817463844885e-13,
+          "oracleVelocity": 2.8976033992338834e-13,
+          "productionCaptureFuel": 1.1790600564963577e-13
+        },
+        {
+          "id": "touchdown",
+          "productionPosition": 3.4061653354067964e-12,
+          "productionVelocity": 8.381424696026353e-12,
+          "oraclePosition": 3.376113647518623e-12,
+          "oracleVelocity": 8.3329112651401e-12,
+          "productionCaptureFuel": 3.1570033021655155e-12
+        }
+      ]
+    },
+    {
+      "step": 0.00048828125,
+      "stateError": 7.537095558962338e-14,
+      "fuelError": 5.440092820663267e-14,
+      "oracleRefinement": 3.3107980995767905e-13,
+      "nodes": 22573,
+      "certifiedIntervals": 7367,
+      "clearanceLowerBound": 4.999999999588667e-07,
+      "captures": [
+        {
+          "id": "on-pad",
+          "productionPosition": 0,
+          "productionVelocity": 0,
+          "oraclePosition": 0.0,
+          "oracleVelocity": 0.0,
+          "productionCaptureFuel": 0
+        },
+        {
+          "id": "arrival",
+          "productionPosition": 2.85587172625034e-13,
+          "productionVelocity": 2.6320131026959404e-13,
+          "oraclePosition": 3.0839817463844885e-13,
+          "oracleVelocity": 2.8976033992338834e-13,
+          "productionCaptureFuel": 1.1113188503442812e-13
+        },
+        {
+          "id": "touchdown",
+          "productionPosition": 3.409379109588209e-12,
+          "productionVelocity": 8.392474779211038e-12,
+          "oraclePosition": 3.376113647518623e-12,
+          "oracleVelocity": 8.3329112651401e-12,
+          "productionCaptureFuel": 3.1611655001650825e-12
+        }
+      ]
+    }
+  ],
+  "terminal": {
+    "t": 11,
+    "status": "horizon",
+    "fuel": 0.07999999999682876,
+    "fuelUsed": 2.302598131186036,
+    "cargo": 0.0,
+    "stocks": {
+      "Cairn": [
+        0.15000000000000002,
+        0.8
+      ],
+      "Lantern": [
+        0.05,
+        0.01740186881713557
+      ]
+    },
+    "captures": [
+      {
+        "t": 0,
+        "position": 0.0,
+        "velocity": 0.0
+      },
+      {
+        "t": 1.7207514043249135,
+        "position": 3.0839817463844885e-13,
+        "velocity": 2.8976033992338834e-13
+      },
+      {
+        "t": 9.986868695074584,
+        "position": 3.376113647518623e-12,
+        "velocity": 8.3329112651401e-12,
+        "before": [
+          -0.029956153949829284,
+          0.9995522141654114,
+          0.0,
+          -0.0029986566506358487,
+          -8.986846006366761e-05,
+          0.0
+        ],
+        "fuelBefore": 0.07999999999996749,
+        "fuelAfter": 0.07999999999682876
+      }
+    ],
+    "trace": [
+      [
+        0,
+        "dock",
+        "on-pad"
+      ],
+      [
+        0,
+        "transfer-start",
+        "load"
+      ],
+      [
+        0.3,
+        "transfer",
+        "load"
+      ],
+      [
+        0.3,
+        "launch",
+        "lift-off"
+      ],
+      [
+        0.3,
+        "thrust-start",
+        "pitch-1"
+      ],
+      [
+        0.39680185791057665,
+        "thrust-end",
+        "pitch-1"
+      ],
+      [
+        0.39680185791057665,
+        "thrust-start",
+        "pitch-2"
+      ],
+      [
+        0.4936037158211533,
+        "thrust-end",
+        "pitch-2"
+      ],
+      [
+        0.4936037158211533,
+        "thrust-start",
+        "pitch-3"
+      ],
+      [
+        0.59040557373173,
+        "thrust-end",
+        "pitch-3"
+      ],
+      [
+        0.59040557373173,
+        "thrust-start",
+        "pitch-4"
+      ],
+      [
+        0.6872074316423067,
+        "thrust-end",
+        "pitch-4"
+      ],
+      [
+        0.6872074316423067,
+        "thrust-start",
+        "pitch-5"
+      ],
+      [
+        0.7840092895528833,
+        "thrust-end",
+        "pitch-5"
+      ],
+      [
+        0.7840092895528833,
+        "thrust-start",
+        "pitch-6"
+      ],
+      [
+        0.8808111474634599,
+        "thrust-end",
+        "pitch-6"
+      ],
+      [
+        0.8808111474634599,
+        "thrust-start",
+        "pitch-7"
+      ],
+      [
+        0.9776130053740366,
+        "thrust-end",
+        "pitch-7"
+      ],
+      [
+        0.9776130053740366,
+        "thrust-start",
+        "pitch-8"
+      ],
+      [
+        1.0744148632846133,
+        "thrust-end",
+        "pitch-8"
+      ],
+      [
+        1.7207514043249135,
+        "dock",
+        "arrival"
+      ],
+      [
+        1.7207514043249135,
+        "transfer-start",
+        "unload"
+      ],
+      [
+        2.0207514043249133,
+        "transfer",
+        "unload"
+      ],
+      [
+        2.0207514043249133,
+        "transfer-start",
+        "return-load"
+      ],
+      [
+        2.320751404324913,
+        "transfer",
+        "return-load"
+      ],
+      [
+        7.829865668956577,
+        "undock",
+        "depart-lantern"
+      ],
+      [
+        9.278685118502535,
+        "thrust-start",
+        "descent-1"
+      ],
+      [
+        9.367208065574042,
+        "thrust-end",
+        "descent-1"
+      ],
+      [
+        9.367208065574042,
+        "thrust-start",
+        "descent-2"
+      ],
+      [
+        9.455731012645547,
+        "thrust-end",
+        "descent-2"
+      ],
+      [
+        9.455731012645547,
+        "thrust-start",
+        "descent-3"
+      ],
+      [
+        9.544253959717054,
+        "thrust-end",
+        "descent-3"
+      ],
+      [
+        9.544253959717054,
+        "thrust-start",
+        "descent-4"
+      ],
+      [
+        9.63277690678856,
+        "thrust-end",
+        "descent-4"
+      ],
+      [
+        9.63277690678856,
+        "thrust-start",
+        "descent-5"
+      ],
+      [
+        9.721299853860065,
+        "thrust-end",
+        "descent-5"
+      ],
+      [
+        9.721299853860065,
+        "thrust-start",
+        "descent-6"
+      ],
+      [
+        9.809822800931572,
+        "thrust-end",
+        "descent-6"
+      ],
+      [
+        9.809822800931572,
+        "thrust-start",
+        "descent-7"
+      ],
+      [
+        9.898345748003077,
+        "thrust-end",
+        "descent-7"
+      ],
+      [
+        9.898345748003077,
+        "thrust-start",
+        "descent-8"
+      ],
+      [
+        9.986868695074584,
+        "thrust-end",
+        "descent-8"
+      ],
+      [
+        9.986868695074584,
+        "land",
+        "touchdown"
+      ],
+      [
+        9.986868695074584,
+        "transfer-start",
+        "return-unload"
+      ],
+      [
+        10.286868695074585,
+        "transfer",
+        "return-unload"
+      ]
+    ],
+    "complete": true,
+    "completedAt": 10.286868695074585
+  },
+  "oracleFuelRefinement": 3.2834845953289005e-14,
+  "note": "Clearance bound comes from unchanged production interval certificates. DOP853 checks numerical agreement, not an interval proof."
+}

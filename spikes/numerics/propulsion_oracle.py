@@ -26,7 +26,7 @@ def replay(bundle, tight):
     events = [(b["t"], 3, "burn", b) for b in program["burns"]]
     for arc in program["thrustArcs"]:
         events.extend([(arc["start"], 6, "thrust-start", arc), (arc["end"], 0, "thrust-end", arc)])
-    order = {"launch": 2, "undock": 2, "dock": 4, "transfer": 5}
+    order = {"launch": 2, "undock": 2, "dock": 4, "land": 4, "transfer": 5}
     for op in program["operations"]:
         events.append((op["t"], order[op["kind"]], op["kind"], op))
         if op["kind"] == "transfer":
@@ -198,12 +198,20 @@ def replay(bundle, tight):
             port = ports[op["portId"]]
             if service is not None:
                 failed = True
-            elif kind == "dock":
+            elif kind in ("dock", "land"):
                 other = port_state(op["portId"], epoch)
                 delta = other - y
+                position_tolerance = spec["capture"]["position"]
+                if kind == "land":
+                    rail = port["rail"]
+                    assert rail["kind"] == "surface" and active is None
+                    body = next(b for b in s["bodies"] if b["id"] == rail["bodyId"])
+                    clearance = np.linalg.norm(other[:3] - body_state(body, epoch)) - body["radius"]
+                    assert clearance > 0
+                    position_tolerance = min(position_tolerance, clearance / 4)
                 failed = (
                     docked is not None
-                    or np.linalg.norm(delta[:3]) > spec["capture"]["position"]
+                    or np.linalg.norm(delta[:3]) > position_tolerance
                     or np.linalg.norm(delta[3:]) > spec["capture"]["velocity"]
                 )
                 captures.append(
@@ -213,10 +221,15 @@ def replay(bundle, tight):
                         "velocity": float(np.linalg.norm(delta[3:])),
                     }
                 )
-                if port["rail"]["kind"] == "surface":
+                if kind == "dock" and port["rail"]["kind"] == "surface":
                     assert epoch == s["epoch"] and np.linalg.norm(delta) < 1e-14
                 if not failed:
+                    if kind == "land":
+                        captures[-1]["before"] = y.tolist()
+                        captures[-1]["fuelBefore"] = fuel
                     impulse(float(np.linalg.norm(delta[3:])))
+                    if kind == "land":
+                        captures[-1]["fuelAfter"] = fuel
                     y, docked = other, op["portId"]
             elif docked != op["portId"]:
                 failed = True

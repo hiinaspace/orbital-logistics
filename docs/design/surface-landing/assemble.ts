@@ -1,0 +1,25 @@
+// Freeze a paid complete round trip. Existing pad/depot phases and outbound arcs stay fixed.
+import fs from 'node:fs';
+import {Runner} from '../../../src/sim/runner';
+import {validateBundle} from '../../../src/sim/schema';
+import {prepareSet,type ModelSet} from '../../../src/model-set/model';
+const set=JSON.parse(fs.readFileSync('fixtures/model-sets/selene-ascent.json','utf8')) as ModelSet;
+const c=JSON.parse(fs.readFileSync('docs/design/surface-landing/landing-study.json','utf8')).at(-1);
+const bundle=validateBundle(set.vessels[0].bundle),s=bundle.scenario,p=bundle.program;
+const pad=s.logistics!.ports[0].rail,depot=s.logistics!.ports[1].rail;if(pad.kind!=='surface'||depot.kind!=='circular')throw new Error('Unexpected rails');
+const serviceEnd=p.operations!.find(o=>o.id==='unload')!.t+s.logistics!.ports[1].serviceDuration;
+const outbound=new Runner(bundle).advanceTo(serviceEnd),refuel=c.initialFuel-outbound.propellant;
+const ready=serviceEnd+s.logistics!.ports[1].serviceDuration;
+let departure=(pad.phase+pad.rate*c.duration+Math.atan2(c.reverseState[1],c.reverseState[0])-depot.phase)/(depot.rate-pad.rate);
+const period=2*Math.PI/(depot.rate-pad.rate);while(departure<ready)departure+=period;
+const arrival=departure+c.duration,rotation=pad.phase+pad.rate*arrival;
+set.id=s.id='selene-return';set.name='Selene · Surface round trip';s.duration=Math.ceil(arrival+.8);
+s.logistics!.objective.quota=.05;s.logistics!.objective.minPropellant=.05;
+set.description='Swift delivers freight to Lantern, refuels, and brings a return consignment home to Cairn.';
+set.provenance='Fictional airless world. Fixed finite burns; offline ascent and bounded descent witnesses. Small position/velocity capture at the supported point COM; residual velocity matching paid.';
+set.stations[0].role='Surface freight terminal';p.id='swift-round-trip-v1';
+p.operations!.push({id:'return-load',kind:'transfer',t:serviceEnd,portId:'Lantern',cargo:.05,propellant:refuel},{id:'depart-lantern',kind:'undock',t:departure,portId:'Lantern'},{id:'touchdown',kind:'land',t:arrival,portId:'Cairn'},{id:'return-unload',kind:'transfer',t:arrival,portId:'Cairn',cargo:-.05,propellant:0});
+p.thrustArcs!.push(...[...c.reverseArcs].reverse().map(([a,b,h]:number[],i:number)=>({id:`descent-${i+1}`,start:departure+c.duration-b,end:departure+c.duration-a,throttle:1,direction:[Math.cos(h+rotation),Math.sin(h+rotation),0] as [number,number,number]})));
+set.vessels[0].bundle=validateBundle(bundle);const run=prepareSet(set);
+console.log({departure,arrival,refuel,terminal:run.vessels[0].samples.at(-1),samples:run.vessels[0].samples.length,landing:run.vessels[0].ledger.find(e=>e.kind==='land')});
+fs.writeFileSync('fixtures/model-sets/selene-return.json',JSON.stringify(set,null,2)+'\n');

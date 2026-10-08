@@ -22,8 +22,8 @@ export interface Logistics {
   objective: {destinationId: string; quota: number; returnPortId: string; minPropellant: number; hardwareCost: number; deadline?: number};
 }
 export type Operation = {id: string; t: number; portId: string} & (
-  {kind: 'dock'} | {kind: 'undock'} | {kind:'launch';thrustArcId:string} | {kind: 'transfer'; cargo: number; propellant: number});
-export const operationOrder = (o: Operation) => ({undock: 0, launch:0, dock: 1, transfer: 2})[o.kind];
+  {kind: 'dock'} | {kind:'land'} | {kind: 'undock'} | {kind:'launch';thrustArcId:string} | {kind: 'transfer'; cargo: number; propellant: number});
+export const operationOrder = (o: Operation) => ({undock: 0, launch:0, land:1, dock: 1, transfer: 2})[o.kind];
 export const compareOperations = (a: Operation, b: Operation) => a.t - b.t || operationOrder(a) - operationOrder(b);
 export interface Rendezvous {
   target: { id: string; state: State };
@@ -84,7 +84,7 @@ function upgradeWire(value: unknown): unknown {
   if ((rawScenario.schemaVersion!==3 || rawProgram.schemaVersion!==3) &&
       (object(rawScenario.logistics??{}).modelVersion==='surface-ports-v3' ||
        (Array.isArray(object(rawScenario.logistics??{}).ports) && (object(rawScenario.logistics??{}).ports as unknown[]).some(p=>object(object(p).rail).kind==='surface')) ||
-       (Array.isArray(rawProgram.operations) && rawProgram.operations.some(o=>object(o).kind==='launch'))))throw new Error('Surface features require schema3');
+       (Array.isArray(rawProgram.operations) && rawProgram.operations.some(o=>object(o).kind==='launch'||object(o).kind==='land'))))throw new Error('Surface features require schema3');
   if ((rawScenario.schemaVersion !== 3 && (object(rawScenario.ship).engine !== undefined || rawScenario.engine !== undefined)) ||
       (rawProgram.schemaVersion !== 3 && rawProgram.thrustArcs !== undefined)) throw new Error('Propulsion fields require schema3');
   if (rawScenario.schemaVersion === 2) {
@@ -285,6 +285,10 @@ export function validateBundle(value: unknown): Bundle {
           burns.some(b=>b.t===t))throw new Error('Invalid launch/first thrust arc');
         return {id,t,portId,kind:'launch',thrustArcId};
       }
+      if(op.kind==='land') {
+        if(scenario.logistics!.modelVersion!=='surface-ports-v3' || port.rail.kind!=='surface' || t<=epoch)throw new Error('Invalid surface landing');
+        return {id,t,portId,kind:'land'};
+      }
       if (op.kind === 'dock' || op.kind === 'undock') return {id, t, portId, kind: op.kind};
       if (op.kind !== 'transfer' || t + port.serviceDuration === t || t + port.serviceDuration > epoch + duration) throw new Error('Invalid transfer/duration');
       const cargo = finite(op.cargo, 'transfer cargo'), propellant = finite(op.propellant, 'transfer propellant', 0);
@@ -297,6 +301,11 @@ export function validateBundle(value: unknown): Bundle {
   }
   for(const launch of program.operations?.filter(o=>o.kind==='launch')??[]) {
     if(program.operations!.some(o=>o!==launch && o.t===launch.t))throw new Error('Conflicting launch operations');
+  }
+  for(const land of program.operations?.filter(o=>o.kind==='land')??[]) {
+    const others=program.operations!.filter(o=>o!==land && o.t===land.t);
+    if(burns.some(b=>b.t===land.t) || program.thrustArcs?.some(a=>a.start===land.t) ||
+      others.length>1 || others.some(o=>o.kind!=='transfer' || o.portId!==land.portId))throw new Error('Conflicting landing events');
   }
   const ids=[...burns.map(b=>b.id),...(program.operations??[]).map(o=>o.id),...(program.thrustArcs??[]).map(a=>a.id)];
   if(new Set(ids).size!==ids.length)throw new Error('Duplicate program ID');

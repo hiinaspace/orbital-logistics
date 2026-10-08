@@ -1,6 +1,6 @@
 # Tactical plan — updated 2026-10-08
 
-Status: **model-set viewer accepted; coherent 3D engine, lunar freight and bounded propulsion and continuous analytical traffic implemented; airless ascent added**.
+Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic and finite airless surface round trip implemented**.
 
 On 2026-10-08 the user chose fictional orbital buildups and traffic as the next
 product direction, authorized retiring the CoaDE editing UI, and requested implementation.
@@ -13,7 +13,7 @@ round trips now serve a ballistic lunar depot; burns, captures and refueling are
 See [spatial evidence](evidence/spatial-foundation.md) and
 [lunar freight evidence](evidence/lunar-freight.md). The viewer retains its 2D projection.
 Synchronized analytical views are deferred for taste feedback. Multi-system content,
-surface landing, upkeep/production, general demand scheduling and 3D presentation remain follow-up work.
+upkeep/production, general demand scheduling and 3D presentation remain follow-up work.
 
 The user accepted stable labels and lunar freight, then authorized bounded propulsion
 and an Astra senior review. [Reviewed contract](design/bounded-propulsion/README.md)
@@ -29,11 +29,20 @@ The user accepted continuous service and thrust whiskers, then authorized an air
 in-plane surface ascent after Astra senior review. [Reviewed contract](design/surface-ascent/README.md)
 and [evidence](evidence/surface-ascent.md) cover a supported pad, atomic powered release,
 eight finite burns, circular insertion, cargo unloading and attached dwell.
-**Selene · Surface freight** provides an explicit close Launch view, finer zoom/speed,
+**Selene · Surface freight** provides an explicit close Surface view, finer zoom/speed,
 and denser disposable drawing samples. [Worker lifecycle follow-up](evidence/worker-lifecycle.md)
 reproduces and fixes a rebuild-related set-switch failure; the exact original error
-was not captured. Current gate: watch the ascent at close and orbital scales.
-Lunar continuation, demand routing/rescue, persistence, landing, staging/recovery,
+was not captured. The user accepted the ascent/close zoom and confirmed switching works. They approved
+landing + finite round trip, then continuous surface operations; 3D presentation remains
+deferred. Bounded position/velocity capture and overall ship statistics are preferred
+over detailed hull/contact, vehicle construction or aerodynamic simulation. The finite
+return slice is implemented after [Astra review](design/surface-landing/README.md).
+**Selene · Surface round trip** retains the original outbound flight, refuels at
+Lantern, carries .05 freight home, brakes with eight finite arcs and lands at Cairn.
+[Evidence](evidence/surface-landing.md) covers paid residual capture, atomic failure,
+resources, independent replay and close-view accuracy. Continuous surface dispatch is
+the next separate slice; the finite scene does not imply sustained resource supply.
+Lunar continuation, demand routing/rescue, persistence, staging/recovery,
 recurring launches and a 3D camera remain separate extensions. No general steering
 optimizer is claimed.
 

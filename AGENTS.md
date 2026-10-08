@@ -14,7 +14,7 @@ do not reintroduce a puzzle/courier-optimization gate or mandatory authoring.
 The viewer retains an XY projection. The simulation is now canonical six-state v3,
 with explicit propulsion-free v1/v2 fixture/program conversion, spatial rails/burns/capture/safety, and
 planar guards on historical aiming tools. See docs/evidence/spatial-foundation.md and
-docs/design/spatial-foundation/disposition.md. Multi-system content, ground launches,
+docs/design/spatial-foundation/disposition.md. Multi-system content,
 production/upkeep and general demand dispatch remain future work. Prepared
 multi-ship overlays are admitted only after shared-stock/berth checks; they are not a
 joint fleet scheduler. Current burns/operations remain static; route intent is deferred.
@@ -38,7 +38,20 @@ plans become actual only at frontier epochs. Preserve exact local event timestam
 128-unit rolling history/resource anchors, one outstanding bounded worker request,
 held-head Pause/Play/Live semantics, and last-known fault validity. Current fixed-route
 dispatch is not a general optimizer, persistence, rescue or lunar continuation.
-No new editor, launch or3D camera is part of this slice.
+Airless ascent is implemented and user accepted, including close zoom; see
+ docs/design/surface-ascent/README.md and docs/evidence/surface-ascent.md. Supported
+surface COM height/spin and atomic launch retain unchanged free-flight guards.
+The user selected finite airless landing/round trip, then continuous surface service;
+3D remains deferred. Schematic position/velocity capture and overall ship statistics
+are intended; do not add hull contact, detailed vehicle construction or atmosphere
+while implementing landing. Preserve the original one-way ascent set. Use an Astra
+senior review for consequential touchdown/operations architecture forks.
+Finite airless return is implemented as Selene · Surface round trip; read
+docs/design/surface-landing/README.md and docs/evidence/surface-landing.md. Explicit
+`land` preserves old initial-only surface `dock`; geometry bounds position capture
+and all residual velocity matching is paid. Landing conflicts reject statically.
+The full unchanged outbound prefix and fixed port phases are retained. Continuous
+surface service is next; this finite scene's Replay still rewinds resources.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

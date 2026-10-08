@@ -160,6 +160,29 @@ The first finite set is Cairn → Lantern, with real loading, paid ascent/insert
 paid capture residual, unloading and dwell. Offline authoring fixes depot phase once;
 no runtime steering or target relocation occurs. Dense launch samples belong only to
 presentation. Explicit close view, ship follow, orbit fit, slower rates and the scale
-indicator expose launch versus orbital motion. Landing, stages, reusable recovery and
+indicator expose launch versus orbital motion. Stages, reusable recovery and
 continuous launch dispatch remain later work; future separation requires explicit
 child mass/fuel ownership and conserved momentum, not duplicated scalar cargo.
+
+## Airless finite return — 2026-10-08
+
+**Selene · Surface round trip** preserves the original outbound program and fixed
+port phases, then refuels from Lantern's finite stock, loads .05 return freight,
+waits for the departure window, coasts and brakes through eight finite arcs.
+An explicit `land` attaches Swift to Cairn's rotating supported COM. Old surface
+`dock` remains exact initial-only attachment. Full 3D capture uses a local geometry
+bound and paid rocket residual matching; forbidden simultaneous impulses/starts
+reject before execution. No atmosphere, hull contact or attitude model is introduced.
+
+Landing is one berth arrival; unloading completes after a finite dwell. Invalid
+subsequent service does not roll back a successful landing. All free flight retains
+existing interval guards. Dense disposable samples cover both complete flights at
+close scale; exact event-left states prevent display interpolation from smearing
+attachment backwards. **Surface view**, ship follow, Fit, frames and speed remain
+explicit controls. No camera/rate change is automatic at touchdown.
+
+See [review and authoring provenance](design/surface-landing/README.md) and
+[implementation evidence](evidence/surface-landing.md). Next is continuous surface
+service using finite committed episodes and shared resources; 3D presentation is
+deferred at the user's request. Stationkeeping, staging and atmosphere are later
+model changes with their own architecture and content gates.

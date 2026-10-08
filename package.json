@@ -28,7 +28,8 @@
     "evidence:lunar": "tsx scripts/lunar-freight-evidence.ts && uv run --project spikes/numerics python spikes/numerics/m3_oracle.py --milestone lunar-freight",
     "evidence:propulsion": "tsx scripts/propulsion-evidence.ts && uv run --project spikes/numerics python spikes/numerics/propulsion_oracle.py",
     "evidence:traffic": "tsx scripts/traffic-evidence.ts && uv run --project spikes/numerics python spikes/numerics/traffic_oracle.py",
-    "evidence:surface": "tsx scripts/surface-evidence.ts && uv run --project spikes/numerics python spikes/numerics/surface_oracle.py"
+    "evidence:surface": "tsx scripts/surface-evidence.ts && uv run --project spikes/numerics python spikes/numerics/surface_oracle.py",
+    "evidence:landing": "tsx scripts/landing-evidence.ts && uv run --project spikes/numerics python spikes/numerics/landing_oracle.py"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

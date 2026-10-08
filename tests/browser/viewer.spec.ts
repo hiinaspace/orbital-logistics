@@ -184,9 +184,9 @@ test('future thrust whiskers follow the plan layer and never mark flown history'
 
 test('surface freight is readable at launch and orbital scales; frames and replay preserve the flight',async({page})=>{
  await page.getByLabel('Model set').selectOption('selene-ascent');await ready(page);await pause(page);await seek(page,0);
- await expect(page.getByRole('button',{name:'Launch view',exact:true})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Surface view',exact:true})).toBeVisible();
  await expect(page.locator('#object-status')).toContainText('Loading');
- await page.getByRole('button',{name:'Launch view',exact:true}).click();
+ await page.getByRole('button',{name:'Surface view',exact:true}).click();
  expect((await state(page)).frame).toBe('Cairn');expect((await state(page)).camera.scale).toBeGreaterThan(1000);
  await seek(page,.31);await expect(page.locator('#object-status')).toContainText('Powered flight');await expect(page.locator('#readouts')).toContainText('Altitude');
  const launched=await state(page);expect(launched.stocks.find((s:{id:string})=>s.id==='Cairn').occupied).toBe(0);expect(launched.thrustWhiskers.length).toBeGreaterThan(0);
@@ -198,4 +198,28 @@ test('surface freight is readable at launch and orbital scales; frames and repla
  await seek(page,.31);expect((await state(page)).ships.map(({screen,...s}:{screen:unknown})=>s)).toEqual(launched.ships.map(({screen,...s}:{screen:unknown})=>s));
  await page.getByLabel('Replay',{exact:true}).check();await seek(page,5.99);await page.getByLabel('Playback speed').fill('4');await page.getByRole('button',{name:'Play',exact:true}).click();await expect.poll(async()=>(await state(page)).t).toBeLessThan(5);await pause(page);
  for(const set of ['orison-service','selene-freight','selene-ascent','orison-service','selene-ascent']){await page.getByLabel('Model set').selectOption(set);await ready(page);await pause(page);expect((await state(page)).set).toBe(set);await expect(page.locator('#load-status')).not.toContainText('failed');}
+});
+
+test('surface round trip brakes, lands and unloads; frame changes, rewind and live-set switches preserve it',async({page})=>{
+ await page.getByLabel('Model set').selectOption('selene-return');await ready(page);await pause(page);await seek(page,9.9);
+ await page.getByRole('button',{name:'Surface view',exact:true}).click();
+ const approach=await state(page);expect(approach.frame).toBe('Cairn');expect(approach.ships[0].logistics.dockedPortId).toBeUndefined();
+ expect(approach.ships[0].thrust.acceleration).toBeLessThanOrEqual(3);expect(approach.thrustWhiskers.length).toBeGreaterThan(0);
+ await expect(page.locator('#object-status')).toContainText('Powered flight');await expect(page.locator('#next-event')).toContainText('Cairn');
+ await page.getByLabel('Playback speed').fill('-5');
+ await page.screenshot({path:'docs/evidence/surface-return.png',fullPage:true});
+ for(const frame of ['rotating','swift','inertial','Selene','Cairn']) {
+  await page.getByLabel('Reference frame').selectOption(frame);const s=await state(page);
+  expect(s.ships.map((v:{y:number[]})=>v.y)).toEqual(approach.ships.map((v:{y:number[]})=>v.y));expect(s.stocks).toEqual(approach.stocks);
+ }
+ await seek(page,9.986);const before=await state(page);expect(before.ships[0].logistics.dockedPortId).toBeUndefined();
+ await page.locator('#next-event').click();const landed=await state(page);expect(landed.ships[0].logistics.dockedPortId).toBe('Cairn');expect(landed.ships[0].thrust).toBeUndefined();
+ expect(landed.stocks.find((s:{id:string})=>s.id==='Cairn').occupied).toBe(1);
+ expect(landed.events.filter((e:{kind:string})=>e.kind==='land')).toHaveLength(1);
+ await expect(page.locator('#object-status')).toContainText('Unloading');
+ await page.screenshot({path:'docs/evidence/surface-touchdown.png',fullPage:true});
+ await seek(page,10.3);const end=await state(page);expect(end.ships[0].logistics.cargoMass).toBe(0);expect(end.ships[0].propellant).toBeGreaterThan(.05);
+ expect(end.stocks.find((s:{id:string})=>s.id==='Lantern').cargo).toBeCloseTo(.05,12);
+ await seek(page,9.9);expect((await state(page)).ships.map(({screen,...s}:{screen:unknown})=>s)).toEqual(approach.ships.map(({screen,...s}:{screen:unknown})=>s));
+ for(const set of ['orison-service','selene-return','selene-ascent','selene-return']){await page.getByLabel('Model set').selectOption(set);await ready(page);await pause(page);expect((await state(page)).set).toBe(set);await expect(page.locator('#load-status')).not.toContainText('failed');}
 });

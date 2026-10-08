@@ -1,0 +1,45 @@
+{
+  "positionError": 9.826897923132488e-8,
+  "pathError": 9.826897918804337e-8,
+  "maxZoom": 1000000,
+  "maxPixelError": 0.09826897923132488,
+  "checked": 32760,
+  "frames": [
+    "inertial",
+    "Selene",
+    "Cairn",
+    "Lantern",
+    "rotating",
+    "swift"
+  ],
+  "domain": "Every free-flight sample interval, quarter/mid/three-quarter interior points; exact event-left endpoints.",
+  "samples": 13494,
+  "initialStocks": [
+    {
+      "id": "Cairn",
+      "cargo": 0.2,
+      "propellant": 1,
+      "occupied": 1
+    },
+    {
+      "id": "Lantern",
+      "cargo": 0,
+      "propellant": 1,
+      "occupied": 0
+    }
+  ],
+  "finalStocks": [
+    {
+      "id": "Cairn",
+      "cargo": 0.15000000000000002,
+      "propellant": 0.8,
+      "occupied": 1
+    },
+    {
+      "id": "Lantern",
+      "cargo": 0.05,
+      "propellant": 0.01740186881713557,
+      "occupied": 0
+    }
+  ]
+}
