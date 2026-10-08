@@ -1,6 +1,7 @@
 import { Runner, type LedgerEntry, type Sample, type EventBoundary } from '../sim/runner';
+import {resourcesAt,type ResourceAnchor,type Depot} from '../traffic/resources';
 import { bodyState } from '../sim/dynamics';
-import { validateBundle, type Bundle, type Port, type Scenario, type State } from '../sim/schema';
+import { validateBundle, type Bundle, type Port, type Scenario, type State, type ThrustArc } from '../sim/schema';
 
 export interface Station { id: string; role: string; berths: number }
 export interface Vessel { name: string; color: string; cargo: string; bundle: Bundle }
@@ -10,10 +11,24 @@ export interface ModelSet {
   rotating: { name: string; rate: number; phase: number };
 }
 export type PortSamples=Record<string,{t:number;y:State}[]>;
-export interface VesselRun extends Vessel {portSamples:PortSamples; samples: Sample[]; ledger: LedgerEntry[]; boundaries: EventBoundary[] }
-export interface SetRun extends Omit<ModelSet, 'vessels'> { vessels: VesselRun[]; portSamples:PortSamples }
+export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
+export interface ViewSample extends Sample {activity?:Activity}
+export interface VesselView {
+ id:string;name:string;color:string;cargo:string;ship:Scenario['ship'];ports:Port[];cargoCapacity:number;
+ arcs:ThrustArc[];continuousFuel:boolean;portSamples:PortSamples;samples:ViewSample[];
+ ledger:ViewerEvent[];boundaries:EventBoundary[];
+}
+export interface VesselRun extends Vessel,VesselView {}
+export interface SceneView {
+ schemaVersion:1;id:string;name:string;extent:number;description:string;provenance:string;
+ stations:Station[];rotating:ModelSet['rotating'];vessels:VesselView[];portSamples:PortSamples;
+ world:{bodies:Scenario['bodies'];ports:Port[];units:Scenario['units']};window:{start:number;end:number};
+ traffic?:{frontier:number;oldest:number;resources:ResourceAnchor[];depots:Depot[];stats:Record<string,number>;halt?:string};
+}
+export interface SetRun extends SceneView {vessels:VesselRun[]}
 export interface Stock { id: string; cargo: number; propellant: number; occupied: number }
-export interface SetEvent extends LedgerEntry { vessel: string; color: string }
+export type ViewerEvent=Omit<LedgerEntry,'kind'> & {kind:LedgerEntry['kind']|'planning-failed'|'unavailable'|'fault'};
+export interface SetEvent extends ViewerEvent { vessel: string; color: string }
 
 // A curated set overlays independent test ships. Admission checks shared finite
 // inventories and berths; no ship's program may depend on another's future arrival.
@@ -37,16 +52,21 @@ export function validateSet(value: ModelSet): ModelSet {
   return set;
 }
 
-export function setEvents(run: SetRun): SetEvent[] {
-  return run.vessels.flatMap(v => v.ledger.map(e => ({...e, vessel: v.bundle.scenario.ship.id, color: v.color})))
+export function setEvents(run: SceneView): SetEvent[] {
+  return run.vessels.flatMap(v => v.ledger.map(e => ({...e, vessel: v.id, color: v.color})))
     .sort((a, b) => a.t - b.t || eventOrder(a) - eventOrder(b) || a.vessel.localeCompare(b.vessel));
 }
-function eventOrder(e: LedgerEntry): number {
+function eventOrder(e: ViewerEvent): number {
   // A berth can be handed over at the same epoch: departure precedes arrival.
   return e.kind === 'undock' ? 0 : e.kind === 'dock' ? 1 : 2;
 }
-export function stockAt(run: SetRun, t: number): Stock[] {
-  const ports = run.vessels[0].bundle.scenario.logistics?.ports ?? [];
+export function stockAt(run: SceneView, t: number): Stock[] {
+  const ports=portsOf(run);
+  if(run.traffic) {
+    const anchor=[...run.traffic.resources].reverse().find(a=>a.t<=t);
+    if(!anchor)throw new Error('No retained resource anchor');
+    return resourcesAt(anchor,run.traffic.depots,t).stocks.map(p=>({...p,occupied:run.vessels.filter(v=>sampleVessel(v,t).logistics?.dockedPortId===p.id).length}));
+  }
   const stocks = ports.map(p => ({id: p.id, cargo: p.cargo, propellant: p.propellant, occupied: 0}));
   for (const e of setEvents(run)) {
     if (e.t > t) break;
@@ -74,13 +94,14 @@ export function prepareSet(value: ModelSet): SetRun {
     // Dense disposable drawing samples plus exact events. The canonical Runner
     // owns physics; interpolation below is only for display, never a restart state.
     const epochs = [...new Set([...Array.from({length: 2049}, (_, i) => s.epoch + s.duration * i / 2048), ...ledger.map(e => e.t)])].sort((a, b) => a - b);
-    return {...v, portSamples:{} as PortSamples, samples: epochs.map(t => runner.sample(t)), ledger, boundaries:runner.eventBoundaries};
+    return {...v,id:s.ship.id,ship:s.ship,ports:s.logistics?.ports??[],cargoCapacity:s.logistics?.cargoCapacity??s.ship.cargoMass,arcs:v.bundle.program.thrustArcs??[],continuousFuel:v.bundle.program.thrustArcs!==undefined, portSamples:{} as PortSamples, samples: epochs.map(t => runner.sample(t)), ledger, boundaries:runner.eventBoundaries};
   });
   const epochs=[...new Set(vessels.flatMap(v=>v.samples.map(s=>s.t)))].sort((a,b)=>a-b);
   const portSamples:PortSamples=Object.fromEntries((set.vessels[0].bundle.scenario.logistics?.ports??[])
     .filter(p=>p.rail.kind==='ballistic').map(p=>[p.id,epochs.map(t=>({t,y:runners[0].portState(p.id,t)}))]));
   vessels.forEach(v=>v.portSamples=portSamples);
-  const run: SetRun = {...set, vessels,portSamples};
+  const scenario=set.vessels[0].bundle.scenario;
+  const run: SetRun = {...set, vessels,portSamples,world:{bodies:scenario.bodies,ports:scenario.logistics?.ports??[],units:scenario.units},window:{start:scenario.epoch,end:scenario.epoch+scenario.duration}};
   const ports = vessels[0].bundle.scenario.logistics?.ports ?? [];
   // Check every discrete change, including simultaneous transfers as one epoch.
   // Each independent run has already proved its own tanks, cargo, and captures.
@@ -95,8 +116,8 @@ export function prepareSet(value: ModelSet): SetRun {
   return run;
 }
 
-export function sampleVessel(v: VesselRun, t: number): Sample {
-  const [a,b] = bracket(v, t),sample={...structuredClone(a),t,y:stateAt(v,t)};
+export function sampleVessel(v: VesselView, t: number): ViewSample {
+  const [a,b] = bracket(v, t),sample={...structuredClone(a),t,y:a.activity?.kind==='fault'?[...a.y] as State:stateAt(v,t)};
   if(a.fuelUsed!==undefined && a!==b && a.t!==t) {
     const endpoint=v.boundaries.find(e=>e.t===b.t)?.before??b,u=(t-a.t)/(b.t-a.t);
     sample.propellant=a.propellant+u*(endpoint.propellant-a.propellant);
@@ -106,14 +127,14 @@ export function sampleVessel(v: VesselRun, t: number): Sample {
   // Throttle/heading are piecewise constant; mass and therefore force/acceleration
   // vary smoothly. These are drawing values, never a target or propagation origin.
   if(sample.thrust) {
-    const engine=v.bundle.scenario.ship.engine!,arc=v.bundle.program.thrustArcs!.find(a=>a.id===sample.thrust!.id)!;
-    const mass=v.bundle.scenario.ship.dryMass+(sample.logistics?.cargoMass??v.bundle.scenario.ship.cargoMass)+sample.propellant;
+    const engine=v.ship.engine!,arc=v.arcs.find(a=>a.id===sample.thrust!.id)!;
+    const mass=v.ship.dryMass+(sample.logistics?.cargoMass??v.ship.cargoMass)+sample.propellant;
     sample.thrust.force=Math.min(engine.maxThrust*arc.throttle,(engine.maxAcceleration??Infinity)*mass);
     sample.thrust.acceleration=sample.thrust.force/mass*Math.hypot(...arc.direction);
   }
   return sample;
 }
-function bracket(v: VesselRun, t: number): [Sample, Sample] {
+function bracket(v: VesselView, t: number): [ViewSample, ViewSample] {
   const samples = v.samples;
   if (!Number.isFinite(t) || t < samples[0].t || t > samples.at(-1)!.t) throw new Error('Display epoch outside set');
   let lo = 0, hi = samples.length - 1;
@@ -124,11 +145,12 @@ function bracket(v: VesselRun, t: number): [Sample, Sample] {
   const a = samples[lo], b = samples[Math.min(lo + 1, samples.length - 1)];
   return [a, b];
 }
-export function stateAt(v: VesselRun, t: number): State {
+export function stateAt(v: VesselView, t: number): State {
   const [a, b] = bracket(v, t);
+  if(a.activity?.kind==='fault' && t>(a.activity.knownEpoch??a.t))throw new Error('Reference vessel has no state at this epoch');
   if (a.t === t || a === b) return [...a.y];
   if (a.logistics?.dockedPortId) {
-    const port = v.bundle.scenario.logistics!.ports.find(p => p.id === a.logistics!.dockedPortId)!;
+    const port = v.ports.find(p => p.id === a.logistics!.dockedPortId)!;
     return displayPortState(port,v.portSamples,t);
   }
   const u = (t - a.t) / (b.t - a.t);
@@ -138,7 +160,7 @@ export function stateAt(v: VesselRun, t: number): State {
   return a.y.map((x, i) => x + u * (endpoint[i] - x)) as State;
 }
 
-export function portsOf(run: SetRun): Port[] { return run.vessels[0].bundle.scenario.logistics?.ports ?? []; }
+export function portsOf(run: SceneView): Port[] { return run.world.ports; }
 
 // Finite, disposable station drawing data. Physical docking uses Runner.portState.
 export function displayPortState(port:Port,samples:PortSamples,t:number):State {

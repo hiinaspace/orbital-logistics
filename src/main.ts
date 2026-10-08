@@ -5,9 +5,13 @@ import lunar from '../fixtures/model-sets/lunar-loop.json';
 import seleneFreight from '../fixtures/model-sets/selene-freight.json';
 import selenePowered from '../fixtures/model-sets/selene-powered.json';
 import orisonPowered from '../fixtures/model-sets/orison-powered.json';
+import trafficDefinition from '../fixtures/traffic/orison-service.json';
+import {TrafficViewStore} from './traffic/view';
+import type {TrafficDefinition} from './traffic/planner';
+import type {TrafficDelta} from './traffic/engine';
 import {bodyState} from './sim/dynamics';
 import type {State} from './sim/schema';
-import {displayPortState,portsOf, sampleVessel, setEvents, stockAt, type ModelSet, type SetEvent, type SetRun, type VesselRun} from './model-set/model';
+import {displayPortState,portsOf, sampleVessel, setEvents, stockAt, type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
 const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered] as ModelSet[];
@@ -16,20 +20,21 @@ const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;',
 const number = (v: number) => v.toFixed(2);
 document.body.innerHTML = `
 <main>
-  <header><h1>Orbital Logistics</h1><select id="set" aria-label="Model set">${sets.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><span id="load-status" role="status">Preparing scene…</span></header>
+  <header><h1>Orbital Logistics</h1><select id="set" aria-label="Model set">${[...sets,trafficDefinition].map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><span id="load-status" role="status">Preparing scene…</span></header>
   <div class="workspace">
     <section class="scene" aria-label="Orbital viewer">
       <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><button id="fit" title="Fit the scene (F)">Fit</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
       <div class="viewport"><canvas id="space" tabindex="0" aria-label="Orbital traffic. Drag to pan, scroll to zoom, click a ship or station to inspect."></canvas></div>
       <div id="timelines" aria-label="Ship activity timelines"></div>
-      <div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><label class="speed-control"><input id="speed" type="range" min="-4.32" max="4" step="0.01" value="0" aria-label="Playback speed" aria-valuetext="1×"><output id="speed-value">1×</output></label><input id="time" type="range" min="0" max="64" value="0" step="0.001" aria-label="Simulation time"><output id="clock">0.00</output><label class="replay"><input type="checkbox" id="replay" title="Rewind the prepared scene at the end">Replay</label></div>
+      <div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><label class="speed-control"><input id="speed" type="range" min="-4.32" max="4" step="0.01" value="0" aria-label="Playback speed" aria-valuetext="1×"><output id="speed-value">1×</output></label><input id="time" type="range" min="0" max="64" value="0" step="0.001" aria-label="Simulation time"><output id="clock">0.00</output><button id="live" hidden>Live</button><label class="replay"><input type="checkbox" id="replay" title="Rewind the prepared scene at the end">Replay</label></div>
     </section>
     <aside><div class="section-heading"><h2>Traffic</h2><span id="traffic-count"></span></div><div id="fleet"></div><div class="section-heading" id="station-heading"><h2>Stations</h2></div><div id="stations"></div><section id="inspector"></section><details id="model-details"><summary>About this set</summary><p id="description"></p><p id="provenance"></p><p>Drag to pan · Scroll to zoom · Space to pause · F to fit</p></details></aside>
   </div>
 </main><div id="hit-menu" hidden></div><pre id="state-json" hidden></pre>`;
 
 const canvas = $<HTMLCanvasElement>('space'), ctx = canvas.getContext('2d')!;
-let run: SetRun | undefined, worker: Worker | undefined, revision = 0;
+let run: SceneView | undefined, worker: Worker | undefined, revision = 0;
+let traffic:TrafficViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='';
 let events: SetEvent[] = [], selected = '', frame = 'inertial', t = 0, playing = false;
 let ready = false, width = 900, height = 600, scale = 100, center: [number, number] = [0, 0];
 let lastFrame = performance.now(), lastPanel = 0, playbackRate = 1;
@@ -40,11 +45,19 @@ let hits: {id: string; name: string; x: number; y: number}[] = [];
 const labelLayout=new StableLabels();let placedLabels:PlacedLabel[]=[],hovered='';
 const colors = {body: '#7893a4', station: '#c7d5de'};
 function html(id: string, value: string) { if ($(id).innerHTML !== value) $(id).innerHTML = value; }
-const end = () => {const s = run!.vessels[0].bundle.scenario; return s.epoch + s.duration;};
-const start = () => run!.vessels[0].bundle.scenario.epoch;
-const vessel = () => run?.vessels.find(v => v.bundle.scenario.ship.id === selected);
+const end = () => run!.window.end;
+const start = () => run!.window.start;
+const cursorEnd=()=>traffic?.frontier??end();
+function refreshTraffic(){if(!traffic)return;run=traffic.view(t);events=setEvents(run);const v=vessel(),chart=document.querySelector('.budget-chart');if(v && chart)chart.outerHTML=fuelGraph(v);buildTimeline();}
+function requestTraffic(target:number){
+ if(!traffic || !worker || pending || liveError || traffic.halt || !playing || !liveMode || document.hidden)return;
+ pending=true;requestedTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,target));
+ worker.postMessage({generation:revision,sequence:++sequence,target:requestedTarget,after:traffic.frontier});
+}
+function goLive(){if(!traffic)return;traffic.release();t=traffic.frontier;desiredTarget=t;liveMode=true;playing=!liveError && !traffic.halt;lastFrame=performance.now();refreshTraffic();updatePanels();}
+const vessel = () => run?.vessels.find(v => v.id === selected);
 function project(y: State, time: number): [number, number] {
-  const p = transform(run!, y, time, frame);
+  let p:State;try{p=transform(run!,y,time,frame);}catch{return [NaN,NaN];}
   return [width / 2 + (p[0] - center[0]) * scale, height / 2 - (p[1] - center[1]) * scale];
 }
 function fit() {
@@ -54,8 +67,9 @@ function fit() {
 }
 function seek(time: number, pause = true) {
   if (!ready) return;
-  t = Math.max(start(), Math.min(end(), time));
-  if (pause) playing = false;
+  t = Math.max(start(), Math.min(cursorEnd(), time));
+  if (pause) {playing=false;if(traffic)liveMode=false;}
+  refreshTraffic();
   draw();
   updatePanels();
 }
@@ -68,18 +82,24 @@ function eventLabel(e: SetEvent): string {
   if(e.kind==='thrust-start')return 'Begin thrust';
   if(e.kind==='thrust-end')return 'End thrust';
   if(e.kind==='fuel-depleted')return 'Fuel depleted';
+  if(e.kind==='planning-failed')return 'Waiting for transfer window';
+  if(e.kind==='unavailable')return 'Transfer unavailable';
+  if(e.kind==='fault')return 'Flight fault';
   return e.id.endsWith('capture') ? 'Arrival burn' : 'Departure burn';
 }
-function nextDock(v: VesselRun) { return events.find(e => e.vessel === v.bundle.scenario.ship.id && e.t > t + 1e-9 && e.kind === 'dock'); }
-function status(v: VesselRun): string {
+function nextDock(v: VesselView) { return events.find(e => e.vessel === v.id && e.t > t + 1e-9 && e.kind === 'dock'); }
+function status(v: VesselView): string {
   const s = sampleVessel(v, t), l = s.logistics;
+  if(s.activity?.kind==='fault')return `Fault · last seen ${number(s.activity.knownEpoch!)}`;
+  if(s.activity?.kind==='unavailable')return 'Transfer unavailable';
+  if(s.activity?.kind==='waiting' && s.activity.reason)return 'Waiting for transfer window';
   if (l?.service) return `${l.service.cargo < 0 ? 'Unloading' : 'Loading'} · ${l.service.portId}`;
   if (l?.dockedPortId) return `Docked · ${l.dockedPortId}`;
   if((s.thrust?.force??0)>0)return `Powered flight · ${nextDock(v)?.portId??''}`;
   const dock = nextDock(v);
   return dock ? `En route · ${dock.portId}` : 'Free flight';
 }
-function select(id: string) { selected = id; $('hit-menu').hidden = true; updatePanels(); }
+function select(id: string) { selected = id; $('hit-menu').hidden = true; draw();updatePanels(); }
 function buildTimeline() {
   $('timelines').innerHTML = run!.vessels.map(v => {
     const times = [...new Set([start(), end(), ...v.ledger.map(e => e.t)])].sort((a, b) => a - b);
@@ -89,33 +109,38 @@ function buildTimeline() {
       return `<rect x="${1000 * (a - start()) / (end() - start())}" y="${l?.service || powered ? 3 : 7}" width="${1000 * (b - a) / (end() - start())}" height="${l?.service || powered ? 14 : 6}" fill="${fill}" opacity="${powered?0.95:l?.dockedPortId && !l.service ? 0.8 : 0.65}"/>`;
     }).join('');
     const burns = v.ledger.filter(e => e.kind === 'burn').map(e => `<path d="M${1000 * (e.t - start()) / (end() - start())} 4v12" stroke="${v.color}" stroke-width="1"/>`).join('');
-    return `<div class="timeline-row" data-vessel="${esc(v.name)}"><button class="timeline-name" data-select="${esc(v.bundle.scenario.ship.id)}" style="color:${v.color}">${esc(v.name)}</button><div class="timeline-track"><svg viewBox="0 0 1000 20" preserveAspectRatio="none" aria-label="${esc(v.name)} activity; colored spans are flight, gold is cargo service">${blocks}${burns}</svg><span class="time-cursor"></span><button class="timeline-seek" aria-label="Scrub ${esc(v.name)} timeline"></button></div></div>`;
+    return `<div class="timeline-row" data-vessel="${esc(v.name)}"><button class="timeline-name" data-select="${esc(v.id)}" style="color:${v.color}">${esc(v.name)}</button><div class="timeline-track"><svg viewBox="0 0 1000 20" preserveAspectRatio="none" aria-label="${esc(v.name)} activity; colored spans are flight, gold is cargo service">${blocks}${burns}</svg>${traffic?`<span class="future-region" style="left:${100*(traffic.frontier-start())/(end()-start())}%" title="Planned"></span><span class="frontier-cursor" style="left:${100*(traffic.frontier-start())/(end()-start())}%" title="Simulation head"></span>`:""}<span class="time-cursor"></span><button class="timeline-seek" aria-label="Scrub ${esc(v.name)} timeline"></button></div></div>`;
   }).join('');
   document.querySelectorAll<HTMLButtonElement>('[data-select]').forEach(b => b.onclick = () => select(b.dataset.select!));
   document.querySelectorAll<HTMLButtonElement>('.timeline-seek').forEach(b => b.onclick = e => {
     const rect = b.getBoundingClientRect(); seek(start() + (e.clientX - rect.left) / rect.width * (end() - start()));
   });
 }
-function fuelChart(v: VesselRun): string {
+function fuelChart(v:VesselView):string {return `<div class="chart-key"><span>Fuel</span><span>Freight</span></div>${fuelGraph(v)}`;}
+function fuelGraph(v: VesselView): string {
   const path = (get: (s: typeof v.samples[number]) => number, max: number) => {
-    const points = v.samples.filter((s, i) => i === 0 || i === v.samples.length - 1 || (v.bundle.program.thrustArcs && v.boundaries.some(e=>e.t===s.t)) || get(s) !== get(v.samples[i - 1]));
+    const points = v.samples.filter((s, i) => i === 0 || i === v.samples.length - 1 || (v.continuousFuel && v.boundaries.some(e=>e.t===s.t)) || get(s) !== get(v.samples[i - 1]));
     return points.map((s, i) => {
       const x = 4 + (s.t - start()) / (end() - start()) * 232, y = 64 - Math.min(1, get(s) / Math.max(max, 1e-12)) * 54;
       const before=v.boundaries.find(e=>e.t===s.t)?.before;
-      if(i && v.bundle.program.thrustArcs && before){const left=64-Math.min(1,get(before)/Math.max(max,1e-12))*54;return `L${x},${left}V${y}`;}
-      return i ? v.bundle.program.thrustArcs?`L${x},${y}`:`H${x}V${y}` : `M${x},${y}`;
+      if(i && v.continuousFuel && before){const left=64-Math.min(1,get(before)/Math.max(max,1e-12))*54;return `L${x},${left}V${y}`;}
+      return i ? v.continuousFuel?`L${x},${y}`:`H${x}V${y}` : `M${x},${y}`;
     }).join(' ');
   };
-  return `<div class="chart-key"><span>Fuel</span><span>Freight</span></div><svg class="budget-chart" viewBox="0 0 240 72" role="img" aria-label="Fuel and freight over the scene"><path d="M4 64H236" stroke="#33414b"/><path d="${path(s => s.propellant, v.bundle.scenario.ship.tankCapacity)}" fill="none" stroke="#78c9c0" stroke-width="1.5"/><path d="${path(s => s.logistics?.cargoMass ?? v.bundle.scenario.ship.cargoMass, v.bundle.scenario.logistics?.cargoCapacity ?? 1)}" fill="none" stroke="#efb878" stroke-width="1.5"/><path class="budget-cursor" d="M0 5V66" stroke="#c7d5de" stroke-opacity="0.6"/></svg>`;
+  return `<svg class="budget-chart" viewBox="0 0 240 72" role="img" aria-label="Fuel and freight over the scene"><path d="M4 64H236" stroke="#33414b"/><path d="${path(s => s.propellant, v.ship.tankCapacity)}" fill="none" stroke="#78c9c0" stroke-width="1.5"/><path d="${path(s => s.logistics?.cargoMass ?? v.ship.cargoMass, v.cargoCapacity ?? 1)}" fill="none" stroke="#efb878" stroke-width="1.5"/><path class="budget-cursor" d="M0 5V66" stroke="#c7d5de" stroke-opacity="0.6"/></svg>`;
 }
 let inspectorKey = '';
 function updatePanels() {
   if (!run || !ready) return;
   $<HTMLButtonElement>('play').textContent = playing ? 'Pause' : 'Play';
   $<HTMLInputElement>('time').value = String(t);
-  $('clock').textContent = `${number(t)} / ${number(end())}`;
-  $('load-status').textContent = t === end() ? 'End of scene' : '';
-  html('fleet', run.vessels.map(v => `<button class="object-row ${selected === v.bundle.scenario.ship.id ? 'selected' : ''}" data-object="${esc(v.bundle.scenario.ship.id)}"><i style="background:${v.color}"></i><span><strong>${esc(v.name)}</strong><small>${esc(status(v))}</small></span></button>`).join(''));
+  $<HTMLInputElement>('time').min=String(start());$<HTMLInputElement>('time').max=String(cursorEnd());
+  $('clock').textContent=traffic?`${number(t)} · head ${number(traffic.frontier)}`:`${number(t)} / ${number(end())}`;
+  $('live').textContent=liveMode?'Live':'Return to live';$('live').setAttribute('aria-pressed',String(liveMode));
+  $('load-status').textContent = liveError || (traffic?.halt??(traffic?liveMode?'':playing?'Playing history':'History held':t===end()?'End of scene':''));
+  if(traffic){const origin=run.vessels.find(v=>v.id===frame);if(origin && sampleVessel(origin,t).activity?.kind==='fault'){frame='inertial';$<HTMLSelectElement>('frame').value=frame;}
+   for(const option of $<HTMLSelectElement>('frame').options){const v=run.vessels.find(v=>v.id===option.value);option.disabled=!!v && sampleVessel(v,t).activity?.kind==='fault';}}
+  html('fleet', run.vessels.map(v => `<button class="object-row ${selected === v.id ? 'selected' : ''}" data-object="${esc(v.id)}"><i style="background:${v.color}"></i><span><strong>${esc(v.name)}</strong><small>${esc(status(v))}</small></span></button>`).join(''));
   const stocks = stockAt(run, t);
   $('station-heading').hidden = !run.stations.length;
   $('stations').hidden = !run.stations.length;
@@ -133,19 +158,22 @@ function updatePanels() {
   }
   let upcoming: SetEvent | undefined;
   if (v) {
-    const s = sampleVessel(v, t), cargo = s.logistics?.cargoMass ?? v.bundle.scenario.ship.cargoMass;
+    const s = sampleVessel(v, t), cargo = s.logistics?.cargoMass ?? v.ship.cargoMass;
     $('object-status').textContent = status(v);
     const used = s.fuelUsed??v.ledger.filter(e => e.t <= t).reduce((sum, e) => sum + e.fuelUsed, 0);
-    $('readouts').innerHTML = `<div><dt>${esc(v.cargo)}</dt><dd>${number(cargo)} / ${number(v.bundle.scenario.logistics?.cargoCapacity ?? cargo)}</dd></div><div><dt>Propellant</dt><dd>${number(s.propellant)} / ${number(v.bundle.scenario.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${number(used)}</dd></div>`;
-    if(v.bundle.scenario.ship.engine)$('readouts').innerHTML+=`<div><dt>Thrust</dt><dd>${number(s.thrust?.force??0)} / ${number(v.bundle.scenario.ship.engine.maxThrust)}</dd></div><div><dt>Thrust acceleration</dt><dd>${number(s.thrust?.acceleration??0)}</dd></div>`;
-    const local=transform(run,s.y,t,frame);
+    $('readouts').innerHTML = `<div><dt>${esc(v.cargo)}</dt><dd>${number(cargo)} / ${number(v.cargoCapacity ?? cargo)}</dd></div><div><dt>Propellant</dt><dd>${number(s.propellant)} / ${number(v.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${number(used)}</dd></div>`;
+    if(v.ship.engine)$('readouts').innerHTML+=`<div><dt>Thrust</dt><dd>${number(s.thrust?.force??0)} / ${number(v.ship.engine.maxThrust)}</dd></div><div><dt>Thrust acceleration</dt><dd>${number(s.thrust?.acceleration??0)}</dd></div>`;
+    $<HTMLButtonElement>('object-frame').disabled=s.activity?.kind==='fault';
+    if(s.activity?.reason)$('readouts').innerHTML+=`<div class="fault-reason">${esc(s.activity.reason)}</div>`;
+    if(s.activity?.retryAt!==undefined)$('readouts').innerHTML+=`<div><dt>Retry</dt><dd>${number(s.activity.retryAt)}</dd></div>`;
+    const local=s.activity?.kind==='fault'?[0,0,0,0,0,0]:transform(run,s.y,t,frame);
     if(Math.abs(local[2])+Math.abs(local[5])>1e-9)$('readouts').innerHTML+=`<div><dt>Depth</dt><dd>${number(local[2])}</dd></div><div><dt>Vertical velocity</dt><dd>${number(local[5])}</dd></div>`;
     const cursor = document.querySelector<SVGPathElement>('.budget-cursor');
     cursor?.setAttribute('transform', `translate(${4 + (t - start()) / (end() - start()) * 232},0)`);
     upcoming = events.find(e => e.vessel === selected && e.t > t + 1e-9 && e.kind !== 'burn');
   } else {
     const station = run.stations.find(s => s.id === selected), stock = stocks.find(s => s.id === selected);
-    const body = run.vessels[0].bundle.scenario.bodies.find(b => b.id === selected);
+    const body = run.world.bodies.find(b => b.id === selected);
     $('object-status').textContent = station?.role ?? 'Gravity source';
     $('readouts').innerHTML = stock ? `<div><dt>Freight stock</dt><dd>${number(stock.cargo)}</dd></div><div><dt>Propellant stock</dt><dd>${number(stock.propellant)}</dd></div><div><dt>Berths</dt><dd>${stock.occupied} / ${station!.berths}</dd></div>` : `<div><dt>Gravitational μ</dt><dd>${number(body!.mu)}</dd></div>`;
     upcoming = events.find(e => e.portId === selected && e.t > t + 1e-9 && e.kind === 'dock');
@@ -154,11 +182,13 @@ function updatePanels() {
   if (upcoming) {
     const e = upcoming;
     $('next-event').textContent = `${eventLabel(e)} · ${number(e.t)} →`;
+    $<HTMLButtonElement>('next-event').disabled=!!traffic && e.t>traffic.frontier;
+    $('next-event').title=traffic && e.t>traffic.frontier?'Planned · not flown yet':'';
     $('next-event').onclick = () => seek(e.t);
   }
   const relevant = events.filter(e => (v ? e.vessel === selected : e.portId === selected) && e.kind !== 'burn' && e.kind !== 'transfer-start');
   $('schedule').hidden = !relevant.length;
-  html('event-list', relevant.map(e => `<button data-time="${e.t}" class="event ${e.t <= t ? 'past' : ''}"><span>${number(e.t)}</span>${esc(eventLabel(e))}</button>`).join(''));
+  html('event-list', relevant.map(e => `<button data-time="${e.t}" ${traffic && e.t>traffic.frontier?'disabled title="Planned · not flown yet"':''} class="event ${e.t <= t ? 'past' : ''}"><span>${number(e.t)}</span>${esc(eventLabel(e))}</button>`).join(''));
   document.querySelectorAll<HTMLButtonElement>('[data-time]').forEach(b => b.onclick = () => seek(Number(b.dataset.time)));
   const percent = (t - start()) / (end() - start()) * 100;
   document.querySelectorAll<HTMLElement>('.time-cursor').forEach(c => c.style.left = `${percent}%`);
@@ -167,28 +197,32 @@ function updatePanels() {
   publishState();
 }
 function publishState() {
-  $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, frame, selected, layers,
-    ships: run?.vessels.map(v => ({id: v.bundle.scenario.ship.id, ...sampleVessel(v, t), screen: project(sampleVessel(v, t).y, t)})),
+  $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, frame, selected, layers, traffic:traffic?{frontier:traffic.frontier,oldest:traffic.oldest,pending,sequence,live:liveMode,stats:run?.traffic?.stats,halt:traffic.halt,error:liveError}:undefined,
+    ships: run?.vessels.map(v => ({id: v.id, ...sampleVessel(v, t), screen: project(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t)})),
     labels:placedLabels.map(({id,anchor,alpha,left,top})=>({id,anchor,alpha,left,top})),
     stocks: run ? stockAt(run, t) : [], events, thrustWhiskers, camera: {center, scale}, hits});
 }
 function loadSet(id: string) {
+  const continuous=id===trafficDefinition.id;
   const set = sets.find(s => s.id === id)!;
   labelLayout.reset();placedLabels=[];hovered='';
-  worker?.terminate(); revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
+  worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=true;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
   $('load-status').textContent = 'Preparing scene…';
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
   $('state-json').textContent = JSON.stringify({ready, revision});
+  $('live').hidden=!continuous;document.querySelector<HTMLElement>('.replay')!.hidden=continuous;
+  $('restart').title=continuous?'Restart run':'Rewind';
+  if(continuous){loadTraffic();return;}
   worker = new Worker(new URL('./model-set/prepare.worker.ts', import.meta.url), {type: 'module'});
   const currentRevision = revision;
-  worker.onmessage = (e: MessageEvent<{revision: number; run?: SetRun; error?: string}>) => {
+  worker.onmessage = (e: MessageEvent<{revision: number; run?: SceneView; error?: string}>) => {
     if (e.data.revision !== revision || currentRevision !== revision) return;
     if (e.data.error) { $('load-status').textContent = e.data.error; return; }
-    run = e.data.run!; events = setEvents(run); ready = true; selected = run.vessels[0].bundle.scenario.ship.id;
+    run = e.data.run!; events = setEvents(run); ready = true; selected = run.vessels[0].id;
     frame = 'inertial'; t = run.id === 'orison-freight' ? 2 : 0; playing = true;
     $<HTMLInputElement>('time').min = String(start()); $<HTMLInputElement>('time').max = String(end());
     $('frame').innerHTML = `<option value="inertial">Inertial</option><option value="rotating">${esc(run.rotating.name)}</option>` +
-      [...run.vessels[0].bundle.scenario.bodies.map(b => [b.id, b.id]), ...run.stations.map(s => [s.id, s.id]), ...run.vessels.map(v => [v.bundle.scenario.ship.id, v.name])].map(([id, name]) => `<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
+      [...run.world.bodies.map(b => [b.id, b.id]), ...run.stations.map(s => [s.id, s.id]), ...run.vessels.map(v => [v.id, v.name])].map(([id, name]) => `<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
     $('description').textContent = run.description; $('provenance').textContent = run.provenance;
     $('traffic-count').textContent = String(run.vessels.length);
     $<HTMLButtonElement>('play').disabled = false; fit(); buildTimeline(); updatePanels();
@@ -198,7 +232,28 @@ function loadSet(id: string) {
   worker.postMessage({revision, set});
 }
 
+function loadTraffic(){
+ traffic=new TrafficViewStore(trafficDefinition as unknown as TrafficDefinition);
+ worker=new Worker(new URL('./traffic/traffic.worker.ts',import.meta.url),{type:'module'});
+ const generation=revision;pending=true;
+ worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta;error?:string}>)=>{
+  if(generation!==revision || e.data.generation!==revision || e.data.sequence!==sequence)return;
+  pending=false;
+  if(e.data.error){liveError=`Simulation paused: ${e.data.error}`;playing=false;$('load-status').textContent=liveError;updatePanels();return;}
+  const first=!ready;traffic!.ingest(e.data.delta!,!liveMode || !playing && !first);
+  if(first){ready=true;selected=traffic!.definition.vessels[0].id;frame='inertial';t=0;playing=true;}
+  else if(liveMode && playing)t=traffic!.frontier;
+  refreshTraffic();
+  if(first){$('frame').innerHTML=`<option value="inertial">Inertial</option><option value="rotating">${esc(run!.rotating.name)}</option>`+[...run!.world.bodies.map(b=>[b.id,b.id]),...run!.stations.map(s=>[s.id,s.id]),...run!.vessels.map(v=>[v.id,v.name])].map(([id,name])=>`<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
+   $('description').textContent=run!.description;$('provenance').textContent=run!.provenance;$('traffic-count').textContent=String(run!.vessels.length);$<HTMLButtonElement>('play').disabled=false;fit();}
+  updatePanels();
+ };
+ worker.onerror=()=>{if(generation===revision){pending=false;liveError='Simulation paused: worker failed';playing=false;$('load-status').textContent=liveError;updatePanels();}};
+ worker.postMessage({generation,sequence,definition:trafficDefinition});
+}
+
 function path(points: [number, number][], color: string, lineWidth = 1, alpha = 1, dash: number[] = []) {
+  points=points.filter(p=>p.every(Number.isFinite));
   if (!points.length) return;
   ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = lineWidth; ctx.globalAlpha = alpha; ctx.setLineDash(dash);
   points.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
@@ -211,8 +266,9 @@ function draw() {
   for (let i = 0; i < 65; i++) { ctx.globalAlpha = 0.12 + (i % 4) * 0.035; ctx.fillRect((i * 313.47) % width, (i * 137.33) % height, 1, 1); }
   ctx.globalAlpha = 1;
   if (!run || !ready) return;
+  const reference=run.vessels.find(v=>v.id===frame);if(reference && sampleVessel(reference,t).activity?.kind==='fault'){frame='inertial';$<HTMLSelectElement>('frame').value=frame;}
   hits = [];thrustWhiskers=[];
-  const scenario = run.vessels[0].bundle.scenario;
+  const scenario = run.world;
   const labelRequests:Label[]=[];
   if (layers.orbits) {
     const orbitEpochs = (period: number) => {
@@ -231,26 +287,26 @@ function draw() {
     }
   }
   for (const v of run.vessels) {
-    const id = v.bundle.scenario.ship.id, isSelected = id === selected;
+    const id = v.id, isSelected = id === selected;
     if (layers.trails) {
       const trailStart = Math.max(start(), t - (run.id === 'lunar-loop' ? 9 : 12));
       let prev: [number, number] | undefined;
       for (const sample of v.samples) {
-        if (sample.t < trailStart || sample.t > t) continue;
+        if (sample.t < trailStart || sample.t > t || sample.activity?.kind==='fault') continue;
         const p = project(sample.y, sample.t);
         if (prev) path([prev, p], v.color, isSelected ? 1.7 : 1.1, (isSelected ? 0.7 : 0.4) * Math.exp(-(t - sample.t) / 4));
         prev = p;
       }
-      if (prev) path([prev, project(sampleVessel(v, t).y, t)], v.color, 1.5, 0.75);
+      if (prev && sampleVessel(v,t).activity?.kind!=='fault') path([prev, project(sampleVessel(v, t).y, t)], v.color, 1.5, 0.75);
     }
-    if (layers.plan && isSelected) {
+    if (layers.plan && isSelected && sampleVessel(v,t).activity?.kind!=='fault') {
       const stop = nextDock(v)?.t ?? Math.min(end(), t + (run.id === 'lunar-loop' ? 5.58 : 8));
       path([project(sampleVessel(v, t).y, t), ...v.samples.filter(s => s.t > t && s.t <= stop).map(s => project(s.y, s.t))], '#b5bdc7', 1, 0.28, [3, 5]);
     }
-    if(layers.plan && isSelected)for(const arc of v.bundle.program.thrustArcs??[]) {
+    if(layers.plan && isSelected)for(const arc of v.arcs) {
       const stop=nextDock(v)?.t??end();
-      if(arc.throttle===0 || arc.end<=t || arc.start>=stop)continue;
-      const curve=[project(sampleVessel(v,arc.start).y,arc.start),...v.samples.filter(s=>s.t>arc.start && s.t<arc.end).map(s=>project(s.y,s.t)),project(sampleVessel(v,arc.end).y,arc.end)];
+      if(arc.throttle===0 || arc.end<=t || arc.start>=stop || arc.end>end() || sampleVessel(v,t).activity?.kind==='fault')continue;
+      const curve=[project(sampleVessel(v,Math.max(start(),arc.start)).y,Math.max(start(),arc.start)),...v.samples.filter(s=>s.t>arc.start && s.t<arc.end).map(s=>project(s.y,s.t)),project(sampleVessel(v,arc.end).y,arc.end)];
       const length=curve.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p[0]-curve[i][0],p[1]-curve[i][1]),0);
       const count=Math.max(2,Math.min(40,Math.ceil(length/14)));
       // Samples stay anchored to the whole arc, so whiskers disappear as flown
@@ -285,16 +341,19 @@ function draw() {
     label(port.id, port.id, ...p, '#a7bac7'); hits.push({id: port.id, name: port.id, x: p[0], y: p[1]});
   }
   for (const v of run.vessels) {
-    const state = sampleVessel(v, t), p = project(state.y, t), transformed = transform(run, state.y, t, frame);
+    const state=sampleVessel(v,t),epoch=state.activity?.kind==='fault'?state.activity.knownEpoch!:t,p=project(state.y,epoch);
+    if(!p.every(Number.isFinite))continue;
+    const transformed=transform(run,state.y,epoch,frame);
+    if(state.activity?.kind==='fault'){path([[p[0]-5,p[1]-5],[p[0]+5,p[1]+5]],'#ef8a81',2);path([[p[0]-5,p[1]+5],[p[0]+5,p[1]-5]],'#ef8a81',2);label(v.id,`${v.name} · fault`,...p,'#ef8a81');hits.push({id:v.id,name:v.name,x:p[0],y:p[1]});continue;}
     if(state.thrust && state.thrust.force>0) {
       const direction=transformDirection(run,state.thrust.direction,t,frame),dx=direction[0],dy=-direction[1],length=Math.hypot(dx,dy);
       if(length>1e-10)path([[p[0]-dx/length*5,p[1]-dy/length*5],[p[0]-dx/length*15,p[1]-dy/length*15]],'#ffe0a0',2,.9);
     }
     const angle = Math.hypot(transformed[3],transformed[4]) > 1e-10 ? Math.atan2(-transformed[4], transformed[3]) : 0;
     ctx.save(); ctx.translate(...p); ctx.rotate(angle); ctx.beginPath(); ctx.moveTo(6, 0); ctx.lineTo(-4, -3.5); ctx.lineTo(-2, 0); ctx.lineTo(-4, 3.5); ctx.closePath(); ctx.fillStyle = v.color; ctx.fill(); ctx.restore();
-    if (selected === v.bundle.scenario.ship.id) { ctx.beginPath(); ctx.arc(...p, 11, 0, Math.PI * 2); ctx.strokeStyle = v.color; ctx.globalAlpha = 0.65; ctx.stroke(); ctx.globalAlpha = 1; }
-    if (!state.logistics?.dockedPortId || selected===v.bundle.scenario.ship.id) label(v.bundle.scenario.ship.id, v.name, ...p, v.color);
-    hits.push({id: v.bundle.scenario.ship.id, name: v.name, x: p[0], y: p[1]});
+    if (selected === v.id) { ctx.beginPath(); ctx.arc(...p, 11, 0, Math.PI * 2); ctx.strokeStyle = v.color; ctx.globalAlpha = 0.65; ctx.stroke(); ctx.globalAlpha = 1; }
+    if (!state.logistics?.dockedPortId || selected===v.id) label(v.id, v.name, ...p, v.color);
+    hits.push({id: v.id, name: v.name, x: p[0], y: p[1]});
   }
   placedLabels=labelLayout.layout(labelRequests,performance.now());
   ctx.font='11px ui-sans-serif, system-ui';
@@ -308,8 +367,9 @@ function draw() {
 $<HTMLSelectElement>('set').onchange = e => loadSet((e.target as HTMLSelectElement).value);
 $<HTMLSelectElement>('frame').onchange = e => { frame = (e.target as HTMLSelectElement).value; fit(); updatePanels(); };
 $('fit').onclick = fit;
-$('play').onclick = () => { if (!ready) return; if (t >= end()) t = start(); playing = !playing; updatePanels(); };
-$('restart').onclick = () => { if (ready) seek(start()); };
+$('play').onclick=()=>{if(!ready)return;if(!traffic && t>=end())t=start();playing=!playing;if(traffic && !playing)liveMode=false;lastFrame=performance.now();updatePanels();};
+$('live').onclick=goLive;
+$('restart').onclick=()=>{if(ready){if(traffic)loadSet(trafficDefinition.id);else seek(start());}};
 $<HTMLInputElement>('time').oninput = e => seek(Number((e.target as HTMLInputElement).value));
 for (const key of Object.keys(layers) as (keyof typeof layers)[]) {
   $<HTMLInputElement>(`layer-${key}`).onchange = e => { layers[key] = (e.target as HTMLInputElement).checked; cleared = false; $('clear-view').setAttribute('aria-pressed', 'false'); updatePanels(); };
@@ -375,7 +435,11 @@ $<HTMLInputElement>('speed').oninput = () => {
 };
 function animate(now: number) {
   const dt = Math.min(0.1, (now - lastFrame) / 1000); lastFrame = now;
-  if (ready && playing) {
+  if(ready && playing && traffic && !document.hidden){
+   if(liveMode){desiredTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,desiredTarget)+dt*playbackRate);requestTraffic(desiredTarget);}
+   else {t=Math.min(traffic.frontier,t+dt*playbackRate);if(t>=traffic.frontier){traffic.release();desiredTarget=traffic.frontier;liveMode=true;}if(now-lastPanel>100)refreshTraffic();}
+  }
+  if (ready && playing && !traffic) {
     t = Math.min(end(), t + dt * playbackRate);
     if (t >= end()) { if ($<HTMLInputElement>('replay').checked) t = start(); else playing = false; }
   }
@@ -383,4 +447,5 @@ function animate(now: number) {
   if (ready && now - lastPanel > 100) { updatePanels(); lastPanel = now; }
   requestAnimationFrame(animate);
 }
+document.addEventListener('visibilitychange',()=>{lastFrame=performance.now();if(document.hidden && traffic){playing=false;liveMode=false;updatePanels();}});
 loadSet(sets[0].id); requestAnimationFrame(animate);

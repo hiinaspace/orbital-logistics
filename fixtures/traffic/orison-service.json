@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "id": "orison-service",
+  "name": "Orison · continuous service",
+  "extent": 1.9,
+  "description": "Two freighters cycle between an orbital supply terminal and an industrial ring.",
+  "provenance": "Fictional normalized fixed-primary system. Finite powered transfers, analytical stations, finite buffers with explicit external supply/consumption. Memory-only rolling history; restart creates a fresh run.",
+  "rotating": {
+    "name": "Anchor rotating",
+    "rate": 0.8108737462959251,
+    "phase": 0
+  },
+  "world": {
+    "scenario": {
+      "schemaVersion": 3,
+      "modelVersion": "rk4-canonical-v3",
+      "id": "orison-freight-v1",
+      "units": {
+        "length": "reference orbital radius",
+        "time": "inverse circular angular rate",
+        "mass": "reference dry mass"
+      },
+      "epoch": 0,
+      "duration": 16,
+      "policy": {
+        "step": 0.00048828125,
+        "maxNodes": 65536,
+        "maxSubdivision": 16
+      },
+      "bodies": [
+        {
+          "id": "Orison",
+          "mu": 1,
+          "radius": 0.28,
+          "rail": {
+            "kind": "fixed",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ship": {
+        "id": "Kestrel",
+        "state": [
+          1.15,
+          0,
+          0,
+          0,
+          0.9325048082403138,
+          0
+        ],
+        "dryMass": 1,
+        "cargoMass": 0,
+        "propellant": 0.65,
+        "tankCapacity": 1,
+        "exhaustVelocity": 3,
+        "engine": {
+          "maxThrust": 1
+        }
+      },
+      "logistics": {
+        "modelVersion": "kinematic-ports-v1",
+        "ports": [
+          {
+            "id": "Kiln",
+            "rail": {
+              "kind": "circular",
+              "center": [
+                0,
+                0,
+                0
+              ],
+              "u": [
+                1,
+                0,
+                0
+              ],
+              "v": [
+                0,
+                1,
+                0
+              ],
+              "radius": 0.8,
+              "rate": 1.3975424859373684,
+              "phase": 4.72854450350631
+            },
+            "cargo": 4,
+            "cargoCapacity": 12,
+            "propellant": 4,
+            "tankCapacity": 4,
+            "serviceDuration": 0.25
+          },
+          {
+            "id": "Anchor",
+            "rail": {
+              "kind": "circular",
+              "center": [
+                0,
+                0,
+                0
+              ],
+              "u": [
+                1,
+                0,
+                0
+              ],
+              "v": [
+                0,
+                1,
+                0
+              ],
+              "radius": 1.15,
+              "rate": 0.8108737462959251,
+              "phase": 0
+            },
+            "cargo": 4,
+            "cargoCapacity": 12,
+            "propellant": 4,
+            "tankCapacity": 4,
+            "serviceDuration": 0.25
+          }
+        ],
+        "cargoCapacity": 0.2,
+        "capture": {
+          "position": 0.00001,
+          "velocity": 0.00001
+        },
+        "objective": {
+          "destinationId": "Kiln",
+          "quota": 0.16,
+          "returnPortId": "Anchor",
+          "minPropellant": 0,
+          "hardwareCost": 1
+        }
+      }
+    },
+    "program": {
+      "schemaVersion": 3,
+      "id": "traffic-world-metadata",
+      "burns": []
+    }
+  },
+  "historyDuration": 128,
+  "sampleStep": 0.0625,
+  "forecastDuration": 12,
+  "stations": [
+    {
+      "id": "Anchor",
+      "role": "Supply terminal",
+      "berths": 2,
+      "cargo": 1.6,
+      "cargoCapacity": 4,
+      "propellant": 4,
+      "tankCapacity": 8,
+      "cargoRate": 0.02,
+      "propellantRate": 0.02
+    },
+    {
+      "id": "Kiln",
+      "role": "Industrial ring",
+      "berths": 2,
+      "cargo": 0,
+      "cargoCapacity": 4,
+      "propellant": 4,
+      "tankCapacity": 8,
+      "cargoRate": -0.02,
+      "propellantRate": 0.02
+    }
+  ],
+  "templates": [
+    {
+      "id": "Anchor-Kiln",
+      "source": "Anchor",
+      "destination": "Kiln",
+      "referenceDeparture": 0.7999999999999998,
+      "duration": 3.024522336946932,
+      "cargo": 0.16,
+      "propellant": 0.6500000000000001,
+      "arcs": [
+        {
+          "id": "leg0-departure",
+          "start": 0,
+          "end": 0.1583997739544153,
+          "direction": [
+            0.5529132653129363,
+            -0.8332388139309082,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "leg0-braking",
+          "start": 2.8538741787439084,
+          "end": 3.024522336946932,
+          "direction": [
+            -0.6890903701522925,
+            0.7246754182138211,
+            0
+          ],
+          "throttle": 1
+        }
+      ],
+      "provenance": "Paid Kestrel finite-thrust witness from fa9b935. Fixed-primary rotational/synodic symmetry; exact cargo/fuel/engine domain. No authored impulses."
+    },
+    {
+      "id": "Kiln-Anchor",
+      "source": "Kiln",
+      "destination": "Anchor",
+      "referenceDeparture": 12.185307878766574,
+      "duration": 3.024522336946932,
+      "cargo": 0,
+      "propellant": 0.6423113829300793,
+      "arcs": [
+        {
+          "id": "leg1-departure",
+          "start": 0,
+          "end": 0.15897741784739772,
+          "direction": [
+            -0.3308265667017472,
+            -0.9436915718413164,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "leg1-braking",
+          "start": 2.885743506661303,
+          "end": 3.024522336946932,
+          "direction": [
+            0.176379850063143,
+            0.9843221771816905,
+            0
+          ],
+          "throttle": 1
+        }
+      ],
+      "provenance": "Paid Kestrel finite-thrust witness from fa9b935. Fixed-primary rotational/synodic symmetry; exact cargo/fuel/engine domain. No authored impulses."
+    }
+  ],
+  "vessels": [
+    {
+      "id": "Kestrel",
+      "name": "Kestrel",
+      "color": "#efb878",
+      "cargo": "Supplies",
+      "portId": "Anchor",
+      "propellant": 0.65,
+      "route": [
+        "Anchor-Kiln",
+        "Kiln-Anchor"
+      ]
+    },
+    {
+      "id": "Finch",
+      "name": "Finch",
+      "color": "#78c9c0",
+      "cargo": "Supplies",
+      "portId": "Kiln",
+      "propellant": 0.6423113829300793,
+      "route": [
+        "Kiln-Anchor",
+        "Anchor-Kiln"
+      ]
+    }
+  ]
+}

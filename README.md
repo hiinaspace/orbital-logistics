@@ -14,7 +14,9 @@ The sets are **Orison · orbital freight** (four stations, four freighters),
 **Selene · lunar loop** (a distant retrograde orbit), and **Selene · lunar freight**
 (three freighters supplying a lunar depot and returning). **Selene · powered freight**
 and **Orison · powered transfer** add finite-thrust departure and braking with continuous
-fuel use. The speed slider adjusts smoothly from about0.05× to16×. Playback starts
+fuel use. **Orison · continuous service** runs two freighters repeatedly with finite
+station buffers and explicit supply/export flows. Pause/scrub holds history; Play
+catches up, Live resumes the head, and Restart run starts a fresh session. The speed slider adjusts smoothly from about0.05× to16×. Playback starts
 immediately. Click a ship or station to inspect it; overlapping objects open a chooser.
 Use the shared time slider or a ship's activity lane to scrub. Drag the view to pan,
 scroll to zoom, and use Frame or View from here to change reference frames. Space
@@ -34,9 +36,13 @@ npm run evidence:model-set
 npm run evidence:spatial
 npm run evidence:lunar
 npm run evidence:propulsion
+npm run evidence:traffic
 npx tsx scripts/model-set-fixtures.ts --check
 uv run --project spikes/numerics --group dev --group plots pre-commit run --config spikes/numerics/.pre-commit-config.yaml --all-files
 ```
+
+[Continuous traffic evidence](docs/evidence/continuous-traffic.md) and its
+[Astra-reviewed architecture](docs/design/continuous-traffic/README.md) cover the rolling runtime.
 
 [Current direction and architecture](docs/model-set.md) records the viewer contract
 and accepted scope. [Spatial evidence](docs/evidence/spatial-foundation.md) covers

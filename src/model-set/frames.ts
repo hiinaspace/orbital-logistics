@@ -1,14 +1,14 @@
 import { bodyState } from '../sim/dynamics';
 import type { State, Vec3 } from '../sim/schema';
-import { displayPortState, portsOf, stateAt, type SetRun } from './model';
+import { displayPortState, portsOf, stateAt, type SceneView } from './model';
 
-export function transform(run: SetRun, y: State, t: number, frame: string): State {
+export function transform(run: SceneView, y: State, t: number, frame: string): State {
   let origin: State = [0, 0, 0, 0, 0, 0], angle = 0, rate = 0;
   if (frame === 'rotating') { rate = run.rotating.rate; angle = run.rotating.phase + rate * t; }
   else if (frame !== 'inertial') {
-    const body = run.vessels[0].bundle.scenario.bodies.find(b => b.id === frame);
+    const body = run.world.bodies.find(b => b.id === frame);
     const port = portsOf(run).find(p => p.id === frame);
-    const vessel = run.vessels.find(v => v.bundle.scenario.ship.id === frame);
+    const vessel = run.vessels.find(v => v.id === frame);
     if (body) origin = bodyState(body, t);
     else if (port) origin = displayPortState(port,run.portSamples,t);
     else if (vessel) origin = stateAt(vessel, t);
@@ -22,7 +22,7 @@ export function transform(run: SetRun, y: State, t: number, frame: string): Stat
 
 // Forces/directions rotate with the axes. They have no translating origin or
 // angular-velocity term; that term belongs to velocities at a position.
-export function transformDirection(run:SetRun, direction:Vec3, t:number, frame:string):Vec3 {
+export function transformDirection(run:SceneView, direction:Vec3, t:number, frame:string):Vec3 {
   if(frame!=='rotating')return [...direction];
   const angle=run.rotating.phase+run.rotating.rate*t,c=Math.cos(angle),s=Math.sin(angle);
   return [c*direction[0]+s*direction[1],-s*direction[0]+c*direction[1],direction[2]];

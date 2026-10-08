@@ -53,7 +53,7 @@ The viewer set contains ship identity/color/cargo label, station roles/berth cou
 and a chosen rotating frame. All vessels must have identical world/port data and
 unique identities.
 
-These are overlays of independently executed test ships, not a joint fleet engine.
+The finite prepared sets are overlays of independently executed test ships.
 Before admission, the combined transfer ledger is checked against one finite stock
 per port at every change epoch; berth occupancy is checked too. The authored services
 have no ship-to-ship handoff, collision/mutual gravity, runtime dependency, or resource
@@ -76,6 +76,25 @@ view never edits a program. Model assumptions/provenance live in optional detail
 
 Replay rewinds the finite scene, including its inventories. It is a playback option,
 not sustained service, physical recurrence, or free resource replenishment.
+
+## Continuous analytical service
+
+Implemented after user-requested Astra review: **Orison · continuous service**.
+Two ships alternate between two analytical orbital stations, using revalidated
+rotated powered episodes at integer synodic windows. A fleet engine owns shared
+stocks, atomic service, external imports/exports, completed fuel usage and failure
+isolation. Its fixed-route dispatcher is a first seam for future demand/rescue policies.
+
+Pause/scrub holds a retained128-unit history; Play catches up to the held head and
+resumes, Live jumps to it, Restart creates new seeded resources. Known future plans
+remain separate from committed flight facts. Incremental worker deltas and bounded
+retention keep history independent of total runtime; display interpolation never
+restarts physics. A faulty ship shows its last known marker while others continue.
+
+See [reviewed ownership/playback/storage contract](design/continuous-traffic/README.md)
+and [numerical, retention and UI evidence](evidence/continuous-traffic.md). Memory-only
+sessions, a tested1m calendar limit and analytical stations bound this slice. Lunar
+continuation, maintained stationkeeping, demand dispatch and persistence remain open.
 
 ## Next decisions after viewing
 

@@ -15,7 +15,7 @@ The viewer retains an XY projection. The simulation is now canonical six-state v
 with explicit propulsion-free v1/v2 fixture/program conversion, spatial rails/burns/capture/safety, and
 planar guards on historical aiming tools. See docs/evidence/spatial-foundation.md and
 docs/design/spatial-foundation/disposition.md. Multi-system content, ground launches,
-production/upkeep and continuous operations remain future work. Prepared
+production/upkeep and general demand dispatch remain future work. Prepared
 multi-ship overlays are admitted only after shared-stock/berth checks; they are not a
 joint fleet scheduler. Current burns/operations remain static; route intent is deferred.
 Prior periodic/topology studies and the recovered Fable consultation are preserved in
@@ -30,7 +30,15 @@ powered safety, partial fuel accounting and analog speed are implemented. Read
 docs/design/bounded-propulsion/README.md and disposition.md. Powered demonstrations
 have no authored impulses; pre-snap residuals plus numerical allowance must each be
 below1e-7. Old snapshots require replay; legacy propulsion fields reject explicitly.
-No new editor, launch, runtime scheduler or 3D camera is part of this slice.
+The user accepted bounded propulsion and authorized continuous analytical traffic
+with Astra review. Read docs/design/continuous-traffic/README.md and disposition.md,
+and docs/evidence/continuous-traffic.md. TrafficEngine owns global service/resources,
+window retries and fleet commits; finite local Runner episodes own flight. Known
+plans become actual only at frontier epochs. Preserve exact local event timestamps,
+128-unit rolling history/resource anchors, one outstanding bounded worker request,
+held-head Pause/Play/Live semantics, and last-known fault validity. Current fixed-route
+dispatch is not a general optimizer, persistence, rescue or lunar continuation.
+No new editor, launch or3D camera is part of this slice.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

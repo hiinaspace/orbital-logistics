@@ -1,0 +1,12 @@
+{
+  "cli": "0.153.4",
+  "model": "gpt-6-astra",
+  "reasoningEffort": "xhigh",
+  "exitCode": 0,
+  "sessionId": "01a11c9f-1c67-77b2-8c9f-c93332da46a5",
+  "logSha256": "f5b1c526508393c62e7eac5f0f61aee25b37e7ea089f10c9a0feeeb87d24c522",
+  "reviewSha256": "d1083ce08684820ad935012847dddfc9a072cf18fe06e10ec45ff8b8d5f73f92",
+  "receivedReviewSha256": "ad34408df601ba3900cf3dde04f189a0521c602f4a5727bb40c4db8f21335da8",
+  "reportNormalization": "Removed one trailing blank line only; receivedReviewSha256 preserves original transport hash.",
+  "logCompaction": "Verbose log compacted after verification; logSha256 is the original full log hash."
+}

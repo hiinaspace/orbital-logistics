@@ -83,3 +83,6 @@ details p { line-height: 1.7; }
 #hit-menu button:hover { background: #294453; }
 [hidden] { display: none!important; }
 @media(max-width: 850px) { main { padding: 12px; } header { gap: 12px; margin-bottom: 10px; height: auto; flex-wrap: wrap; } h1 { font-size: 16px; } .workspace { grid-template-columns: 1fr; gap: 16px; } .scene { height: 70dvh; min-height: 500px; } aside { max-height: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; } aside > .section-heading { display: none; } #inspector, #model-details { grid-column: 1 / -1; } #frame-name { display: none; } .transport { flex-wrap: wrap; } #clock { min-width: 80px; } .replay { display: none; } }
+
+.frontier-cursor { position:absolute; top:0; bottom:0; border-left:1px dashed #78c9c0; pointer-events:none; }
+.future-region { position:absolute; top:0; bottom:0; right:0; background:#0c141d55; pointer-events:none; }
