@@ -23,13 +23,16 @@ orbital refueling, return freight, finite braking, touchdown and unloading at Ca
 and explicit supply/export flows. **Orison · crossing planes** adds two ships making
 paid changes between inclined circular orbits around different node axes.
 **Orison · inclined transfer** delivers freight to a 35° depot with smooth finite-thrust
-departure and braking, an acceleration cap and paid fuel.
+departure and braking, an acceleration cap and paid fuel. **Orison · maintained relay**
+adds a perturbed station with its own paid maintenance burns and a visiting ship.
 **Surface view** shows the close scale; choose a slower rate for launch or landing,
 then Fit or a ship frame to follow the orbit. Playback starts
 immediately. Click a ship or station to inspect it; overlapping objects open a chooser.
 Use the shared time slider or a ship's activity lane to scrub. View selects Top, 3D,
 Front or Side. In 3D, drag to orbit and Shift-drag (or right/middle-drag) to pan; the
-Orbit/Pan button changes the default gesture. Top drags pan. Scroll zooms at the
+Orbit/Pan button changes the default gesture. Orbit gestures pivot about the selection.
+Track → Follow holds it at the current angle; Chase follows its direction of travel.
+Fit releases tracking. Top drags pan. Scroll zooms at the
 pointer. Frame or View from here changes the physical reference frame while keeping
 the camera orientation. Space pauses; F fits; T returns overhead. Focus the canvas
 and use arrow keys to orbit, Shift-arrows to pan. Layers includes a clear view and optional See-through bodies; occlusion starts on. Replay explicitly rewinds the finite set.
@@ -54,11 +57,18 @@ npm run evidence:landing
 npm run evidence:surface-traffic
 npm run evidence:spatial-viewer
 npm run evidence:steering
+npm run evidence:stationkeeping
+npx tsx scripts/stationkeeping-fixture.ts --check
 npx tsx scripts/steering-fixture.ts --check
 npx tsx scripts/spatial-viewer-fixture.ts --check
 npx tsx scripts/model-set-fixtures.ts --check
 uv run --project spikes/numerics --group dev --group plots pre-commit run --config spikes/numerics/.pre-commit-config.yaml --all-files
 ```
+
+[Stationkeeping evidence](docs/evidence/stationkeeping.md), the
+[Astra-reviewed contract](docs/design/stationkeeping/README.md) and
+[tracking camera contract](docs/design/camera-tracking.md) cover paid relay corrections,
+actual-target rendezvous, Follow/Chase and selected-object orbiting.
 
 [Smooth steering evidence](docs/evidence/smooth-steering.md) and its
 [command/authoring contract](docs/design/smooth-steering/README.md) cover continuous

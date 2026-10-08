@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 from scipy.integrate import solve_ivp
 from steering_law import direction_at
+from target_oracle import integrate_target, target_at
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -81,6 +82,10 @@ def replay(bundle, tight):
 
     def port_state(port_id, epoch):
         rail = ports[port_id]["rail"]
+        if rail["kind"] == "powered":
+            if port_id not in target_solutions:
+                target_solutions[port_id] = integrate_target(s, rail, tight)
+            return target_at(target_solutions[port_id], epoch)[:6]
         if rail["kind"] == "ballistic":
             assert rail["epoch"] <= epoch <= rail["validUntil"]
             if port_id not in target_solutions:

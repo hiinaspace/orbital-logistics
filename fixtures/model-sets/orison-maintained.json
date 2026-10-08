@@ -1,0 +1,569 @@
+{
+  "schemaVersion": 1,
+  "id": "orison-maintained",
+  "name": "Orison · maintained relay",
+  "extent": 6.5,
+  "description": "Meridian maintains an inclined orbit under Mote’s perturbations. Tern visits between correction windows.",
+  "provenance": "Phase-free orbit maintenance compiled from actual prefix states at eight fixed checks. Finite paid pulses; no nominal-position resets. The relay has fixed ballast and its own maintenance fuel. Visiting ships keep their loadouts and depart before maintenance; no exchange at the relay. Compare the unmaintained drift in the Orbits layer. Reference, policy and solver outcomes are saved with the set.",
+  "rotating": {
+    "name": "Meridian rotating",
+    "rate": 0.19245008972987526,
+    "phase": -3.4017103972259655
+  },
+  "stations": [
+    {
+      "id": "Equator",
+      "role": "Ballistic origin",
+      "berths": 1
+    },
+    {
+      "id": "Meridian",
+      "role": "Maintained relay",
+      "berths": 1,
+      "maintenance": {
+        "reference": {
+          "kind": "circular",
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "u": [
+            0.8775825618903728,
+            0.479425538604203,
+            0
+          ],
+          "v": [
+            -0.3927224100319838,
+            0.7188735496048695,
+            0.573576436351046
+          ],
+          "radius": 3,
+          "rate": 0.19245008972987526,
+          "phase": -3.4017103972259655
+        },
+        "checks": [
+          {
+            "t": 4,
+            "outcome": "skip",
+            "before": [
+              0.0003812168618085405,
+              0.00019757000442456363
+            ],
+            "evaluations": 0
+          },
+          {
+            "t": 12,
+            "outcome": "correct",
+            "before": [
+              0.001421464461475945,
+              0.000582995411223042
+            ],
+            "after": [
+              2.2319201373244997e-12,
+              5.8923896056041784e-12
+            ],
+            "evaluations": 28
+          },
+          {
+            "t": 20,
+            "outcome": "correct",
+            "before": [
+              0.0006781188763156163,
+              0.0005955912543689174
+            ],
+            "after": [
+              6.520025161472063e-14,
+              1.2748671280293346e-13
+            ],
+            "evaluations": 35
+          },
+          {
+            "t": 28,
+            "outcome": "correct",
+            "before": [
+              0.0019767598070618998,
+              0.000988536919400513
+            ],
+            "after": [
+              6.799013145065762e-13,
+              9.873128845759012e-13
+            ],
+            "evaluations": 35
+          },
+          {
+            "t": 36,
+            "outcome": "correct",
+            "before": [
+              0.000905078514364827,
+              0.0006866303481999921
+            ],
+            "after": [
+              3.0649508316550464e-14,
+              4.62326581762197e-14
+            ],
+            "evaluations": 35
+          },
+          {
+            "t": 44,
+            "outcome": "correct",
+            "before": [
+              0.0006047273804890386,
+              0.00036460960191562585
+            ],
+            "after": [
+              8.95090418262362e-16,
+              3.493002594365906e-16
+            ],
+            "evaluations": 35
+          },
+          {
+            "t": 52,
+            "outcome": "skip",
+            "before": [
+              0.00042110949917031394,
+              0.00021411331442492895
+            ],
+            "evaluations": 0
+          },
+          {
+            "t": 60,
+            "outcome": "correct",
+            "before": [
+              0.002319709332703388,
+              0.0005948924402701555
+            ],
+            "after": [
+              6.206335383118183e-16,
+              1.6883057536160649e-16
+            ],
+            "evaluations": 35
+          }
+        ]
+      }
+    }
+  ],
+  "vessels": [
+    {
+      "name": "Tern",
+      "color": "#efbf7c",
+      "cargo": "Supplies",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "maintained-relay",
+          "units": {
+            "length": "Orison radius",
+            "time": "√(R³/μ)",
+            "mass": "mass unit"
+          },
+          "epoch": 0,
+          "duration": 64,
+          "policy": {
+            "step": 0.00390625,
+            "maxNodes": 65536,
+            "maxSubdivision": 20
+          },
+          "bodies": [
+            {
+              "id": "Orison",
+              "mu": 1,
+              "radius": 1,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "id": "Mote",
+              "mu": 0.004,
+              "radius": 0.12,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 6,
+                "rate": 0.06817732869618864,
+                "phase": 0.4
+              }
+            }
+          ],
+          "ship": {
+            "id": "Tern",
+            "state": [
+              1.917694458554595,
+              -0.5678450172617518,
+              0,
+              0.20076353118438844,
+              0.6780073779439094,
+              0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0.05,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3,
+            "engine": {
+              "maxThrust": 0.25,
+              "maxAcceleration": 0.14
+            }
+          },
+          "logistics": {
+            "modelVersion": "powered-ports-v4",
+            "ports": [
+              {
+                "id": "Equator",
+                "rail": {
+                  "kind": "ballistic",
+                  "epoch": 0,
+                  "validUntil": 64,
+                  "state": [
+                    1.917694458554595,
+                    -0.5678450172617518,
+                    0,
+                    0.20076353118438844,
+                    0.6780073779439094,
+                    0
+                  ],
+                  "policy": {
+                    "step": 0.00390625,
+                    "maxNodes": 65536,
+                    "maxSubdivision": 20
+                  },
+                  "minClearance": 0.2,
+                  "provenance": "Canonical prescribed-field trajectory; independent bounded DOP853 authoring witness."
+                },
+                "cargo": 0,
+                "cargoCapacity": 0,
+                "propellant": 0,
+                "tankCapacity": 0,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Meridian",
+                "rail": {
+                  "kind": "powered",
+                  "epoch": 0,
+                  "validUntil": 64,
+                  "state": [
+                    -2.847199207425709,
+                    -0.8352219450205697,
+                    0.44256183273128286,
+                    0.08879753744354311,
+                    -0.4722701890295808,
+                    -0.32001437347603606
+                  ],
+                  "policy": {
+                    "step": 0.00390625,
+                    "maxNodes": 65536,
+                    "maxSubdivision": 20
+                  },
+                  "minClearance": 0.2,
+                  "provenance": "Canonical prescribed-field trajectory; independent bounded DOP853 authoring witness.",
+                  "propulsion": {
+                    "dryMass": 4,
+                    "propellant": 0.6,
+                    "tankCapacity": 0.6,
+                    "exhaustVelocity": 3,
+                    "engine": {
+                      "maxThrust": 0.06,
+                      "maxAcceleration": 0.012
+                    }
+                  },
+                  "program": {
+                    "schemaVersion": 3,
+                    "id": "meridian-maintenance",
+                    "burns": [],
+                    "thrustArcs": [
+                      {
+                        "id": "maintain-1-0",
+                        "start": 12,
+                        "end": 13.9,
+                        "direction": [
+                          0.4426368275693632,
+                          -0.8894176596040482,
+                          0.11405641439124399
+                        ],
+                        "throttle": 0.01661688709987121
+                      },
+                      {
+                        "id": "maintain-1-1",
+                        "start": 14.1,
+                        "end": 16,
+                        "direction": [
+                          -0.8543296864179584,
+                          -0.5056923973654343,
+                          -0.11998327446687232
+                        ],
+                        "throttle": 0.029947515698731997
+                      },
+                      {
+                        "id": "maintain-2-0",
+                        "start": 20,
+                        "end": 21.9,
+                        "direction": [
+                          0.20176685423317806,
+                          -0.9690493706862234,
+                          0.14224434507382616
+                        ],
+                        "throttle": 0.058263876916130865
+                      },
+                      {
+                        "id": "maintain-2-1",
+                        "start": 22.1,
+                        "end": 24,
+                        "direction": [
+                          0.8784504478450458,
+                          0.42504355056883614,
+                          -0.2183180954494514
+                        ],
+                        "throttle": 0.01543930808437173
+                      },
+                      {
+                        "id": "maintain-3-0",
+                        "start": 28,
+                        "end": 29.9,
+                        "direction": [
+                          0.6783743731359018,
+                          -0.6243338092546338,
+                          0.3873183503193089
+                        ],
+                        "throttle": 0.10958218294787116
+                      },
+                      {
+                        "id": "maintain-3-1",
+                        "start": 30.1,
+                        "end": 32,
+                        "direction": [
+                          -0.7970428772543363,
+                          0.2192028948779186,
+                          -0.562736832538327
+                        ],
+                        "throttle": 0.04244351274347017
+                      },
+                      {
+                        "id": "maintain-4-0",
+                        "start": 36,
+                        "end": 37.9,
+                        "direction": [
+                          -0.1952583693753552,
+                          -0.9447023624426955,
+                          0.26346084260107305
+                        ],
+                        "throttle": 0.05997944839497071
+                      },
+                      {
+                        "id": "maintain-4-1",
+                        "start": 38.1,
+                        "end": 40,
+                        "direction": [
+                          0.6674474180750175,
+                          0.2381435199816555,
+                          -0.7055505708280164
+                        ],
+                        "throttle": 0.041087842030134894
+                      },
+                      {
+                        "id": "maintain-5-0",
+                        "start": 44,
+                        "end": 45.9,
+                        "direction": [
+                          0.5391343983629298,
+                          -0.6846562033449771,
+                          -0.4904895347742732
+                        ],
+                        "throttle": 0.05419087041517253
+                      },
+                      {
+                        "id": "maintain-5-1",
+                        "start": 46.1,
+                        "end": 48,
+                        "direction": [
+                          0.12994929334142988,
+                          0.9063903097915103,
+                          0.40195744485718016
+                        ],
+                        "throttle": 0.034221291279487455
+                      },
+                      {
+                        "id": "maintain-7-0",
+                        "start": 60,
+                        "end": 61.9,
+                        "direction": [
+                          -0.5133983716367013,
+                          0.7747673197170456,
+                          0.3689955450940413
+                        ],
+                        "throttle": 0.05124687772508058
+                      },
+                      {
+                        "id": "maintain-7-1",
+                        "start": 62.1,
+                        "end": 64,
+                        "direction": [
+                          0.9187524178361174,
+                          -0.24981394086107736,
+                          -0.3057564221267416
+                        ],
+                        "throttle": 0.037979486562766174
+                      }
+                    ]
+                  },
+                  "minPropellant": 0.3
+                },
+                "cargo": 0,
+                "cargoCapacity": 0,
+                "propellant": 0,
+                "tankCapacity": 0,
+                "serviceDuration": 0.25
+              }
+            ],
+            "cargoCapacity": 0.1,
+            "capture": {
+              "position": 1e-7,
+              "velocity": 1e-7
+            },
+            "objective": {
+              "destinationId": "Meridian",
+              "quota": 0.05,
+              "returnPortId": "Equator",
+              "minPropellant": 0.2,
+              "hardwareCost": 0
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 4,
+          "id": "tern-relay-visit",
+          "burns": [],
+          "thrustArcs": [
+            {
+              "id": "visitor-0",
+              "start": 20,
+              "end": 21.538427763424835,
+              "direction": [
+                0.10565118943147583,
+                0.440398999238672,
+                0.8915641018128145
+              ],
+              "throttle": 1,
+              "steering": {
+                "kind": "spherical-smoothstep-v1",
+                "keys": [
+                  {
+                    "offset": 0,
+                    "direction": [
+                      0.10565118943147583,
+                      0.440398999238672,
+                      0.8915641018128145
+                    ]
+                  },
+                  {
+                    "offset": 0.7692138817124174,
+                    "direction": [
+                      0.3474371414078626,
+                      0.5378574311617008,
+                      0.7681125025114935
+                    ]
+                  },
+                  {
+                    "offset": 1.538427763424835,
+                    "direction": [
+                      0.031190383159158643,
+                      0.38387491001751534,
+                      0.9228581762423895
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "visitor-1",
+              "start": 32.30929429913477,
+              "end": 34,
+              "direction": [
+                -0.029386601807167022,
+                0.1538674431102717,
+                -0.987654412021196
+              ],
+              "throttle": 1,
+              "steering": {
+                "kind": "spherical-smoothstep-v1",
+                "keys": [
+                  {
+                    "offset": 0,
+                    "direction": [
+                      -0.029386601807167022,
+                      0.1538674431102717,
+                      -0.987654412021196
+                    ]
+                  },
+                  {
+                    "offset": 0.8453528504326151,
+                    "direction": [
+                      -0.43493089971044974,
+                      -0.015331824113705013,
+                      -0.9003332980882164
+                    ]
+                  },
+                  {
+                    "offset": 1.6907057008652302,
+                    "direction": [
+                      -0.32625414709967393,
+                      -0.21827379488318446,
+                      -0.9197362567429631
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "operations": [
+            {
+              "id": "initial-dock",
+              "t": 0,
+              "portId": "Equator",
+              "kind": "dock"
+            },
+            {
+              "id": "depart",
+              "t": 20,
+              "portId": "Equator",
+              "kind": "undock"
+            },
+            {
+              "id": "capture",
+              "t": 34,
+              "portId": "Meridian",
+              "kind": "dock"
+            },
+            {
+              "id": "release",
+              "t": 36,
+              "portId": "Meridian",
+              "kind": "undock"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

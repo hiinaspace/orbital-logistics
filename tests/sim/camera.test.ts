@@ -33,3 +33,14 @@ test('sphere occlusion distinguishes front/back, limb, silhouette crossings and 
  const crossing=visibleSegment([-20,0,-20],[20,0,20],spheres);for(const [a,b] of crossing)assert.equal(occluder(a.map((v,i)=>(v+b[i])/2) as [number,number,number],spheres),undefined);
  assert.deepEqual(visibleSegment([NaN,0,0],[1,2,3],spheres),[]);
 });
+
+test('chase rigs and selected pivots remain orthonormal and deterministic at degenerate states',async()=>{
+ const {chaseRig,orbitAround}=await import('../../src/model-set/camera');
+ for(const [p,v] of [[[2,0,0],[0,.7,.2]],[[0,0,0],[0,0,0]],[[2,0,0],[1,0,0]],[[0,0,2],[0,0,-1]]] as const){
+  const rig=chaseRig(p,v);assert.deepEqual(rig,chaseRig(p,v));const c=camera();c.rig=rig;orient(c,'oblique');c.rig=rig;
+  const a=axes(c);for(const x of Object.values(a))assert.ok(Math.abs(Math.hypot(...x)-1)<1e-14);
+  close([a.right[1]*a.up[2]-a.right[2]*a.up[1],a.right[2]*a.up[0]-a.right[0]*a.up[2],a.right[0]*a.up[1]-a.right[1]*a.up[0]],a.toward);
+  c.center=[-1,2,3];const pivot:[number,number,number]=[2,-3,4],before=cameraPoint(c,pivot,800,600);
+  orbitAround(c,pivot,74,-31);close(cameraPoint(c,pivot,800,600),before);
+ }
+});

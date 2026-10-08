@@ -48,14 +48,15 @@ export class Runner {
       ...(this.#bundle.program.thrustArcs?{thrustCursor:0,fuelUsed:0}:{}),
       ...(s.logistics ? {logistics: {operationCursor: 0, cargoMass: s.ship.cargoMass, fuelUsed: 0, ports: s.logistics.ports.map(p => ({id: p.id, cargo: p.cargo, propellant: p.propellant}))}} : {}) });
     for(const port of s.logistics?.ports??[]) {
-      if(port.rail.kind!=='ballistic')continue;
+      if(port.rail.kind!=='ballistic' && port.rail.kind!=='powered')continue;
       const rail=port.rail, scenario=clone(s);delete scenario.logistics;delete scenario.rendezvous;
       scenario.epoch=rail.epoch;scenario.duration=rail.validUntil-rail.epoch;scenario.policy=clone(rail.policy);
       scenario.bodies.forEach(b=>b.radius+=rail.minClearance);
       scenario.ship={id:port.id,state:[...rail.state],dryMass:1,cargoMass:0,propellant:0,tankCapacity:0,exhaustVelocity:1};
-      const target=new Runner({scenario,program:{schemaVersion:3,id:'ballistic-station-coast-v2',burns:[]}});
+      if(rail.kind==='powered')scenario.ship={...clone(rail.propulsion),id:port.id,state:[...rail.state],cargoMass:0};
+      const target=new Runner({scenario,program:rail.kind==='powered'?clone(rail.program):{schemaVersion:3,id:'ballistic-station-coast-v2',burns:[]}});
       const terminal=target.advanceTo(rail.validUntil);
-      if(terminal.status!=='horizon')throw new Error(`Unsafe ballistic station ${port.id}: ${terminal.status} ${terminal.detail}`);
+      if(terminal.status!=='horizon' || terminal.t!==rail.validUntil || rail.kind==='powered' && terminal.propellant<rail.minPropellant)throw new Error(`Unsafe ${rail.kind} station ${port.id}: ${terminal.status} ${terminal.detail}`);
       this.#portRunners.set(port.id,target);
     }
     for (const body of s.bodies) {
@@ -73,8 +74,14 @@ export class Runner {
     if(!Number.isFinite(t)||t<scenario.epoch||t>scenario.epoch+scenario.duration)throw new Error('Epoch outside scenario');
     const port=this.#bundle.scenario.logistics?.ports.find(p=>p.id===id);
     if(!port)throw new Error('Unknown port');
-    return port.rail.kind==='ballistic' ? this.#portRunners.get(id)!.sample(t).y : portState(port,t);
+    return port.rail.kind==='ballistic'||port.rail.kind==='powered' ? this.portSample(id,t).y : portState(port,t);
   }
+  portSample(id:string,t:number):Sample {
+    const target=this.#portRunners.get(id);if(!target || !Number.isFinite(t) || t<this.#bundle.scenario.epoch || t>this.#bundle.scenario.epoch+this.#bundle.scenario.duration)throw new Error('Invalid canonical target query');
+    const sample=target.sample(t);if(sample.t!==t || !['running','horizon'].includes(sample.status))throw new Error('Target has no valid physical state');return sample;
+  }
+  portBoundaries(id:string):EventBoundary[]{const target=this.#portRunners.get(id);if(!target)throw new Error('Unknown trajectory target');return target.eventBoundaries;}
+  portLedger(id:string):LedgerEntry[]{const target=this.#portRunners.get(id);if(!target)throw new Error('Unknown trajectory target');return target.ledger;}
   get bundle(): Bundle { return clone(this.#bundle); }
   get eventBoundaries(): EventBoundary[] { return clone(this.#boundaries.filter(e=>e.t<=this.current.t)); }
   get retainedNodes(): number { return this.#nodes.length; }
@@ -155,6 +162,7 @@ export class Runner {
       if (l.service) { this.#rejectOperation(op.id, `Service ${l.service.id} finishes at t ${l.service.end.toFixed(3)}`); return; }
       if (op.kind === 'dock' || op.kind==='land') {
         if (l.dockedPortId) { this.#rejectOperation(op.id, `Already docked at ${l.dockedPortId}`); return; }
+        if(port.rail.kind==='powered' && port.rail.program.thrustArcs!.some(a=>a.throttle>0&&n.t>=a.start&&n.t<a.end)){this.#rejectOperation(op.id,'Capture during station maintenance');return;}
         const y = this.portState(port.id, n.t), miss = distance(n.y,y), speed = relativeSpeed(n.y,y);
         if(op.kind==='dock' && port.rail.kind==='surface' && (n.t!==s.epoch || n.y.some((v,i)=>v!==y[i]))) {
           this.#rejectOperation(op.id,'Surface attachment requires exact initial pad state; use land for later arrival');return;

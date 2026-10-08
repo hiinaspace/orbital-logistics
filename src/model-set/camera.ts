@@ -1,14 +1,16 @@
 import type {Vec3} from '../sim/vectors';
 export type CameraPreset='top'|'oblique'|'front'|'side';
-export interface Camera {yaw:number;pitch:number;center:Vec3;scale:number}
+export interface Camera {yaw:number;pitch:number;center:Vec3;scale:number;rig?:{right:Vec3;forward:Vec3;up:Vec3}}
 export type ScreenPoint=[number,number,number]; // x/right, y/down, depth/toward viewer, in pixels
 export interface Sphere {id:string;point:ScreenPoint;radius:number}
 const dot=(a:readonly number[],b:readonly number[])=>a.reduce((sum,x,i)=>sum+x*b[i],0);
 export function axes(c:Camera):{right:Vec3;up:Vec3;toward:Vec3} {
  const cy=Math.cos(c.yaw),sy=Math.sin(c.yaw),cp=Math.cos(c.pitch),sp=Math.sin(c.pitch);
- return {right:[cy,sy,0],up:[-sy*sp,cy*sp,cp],toward:[sy*cp,-cy*cp,sp]};
+ const map=(v:Vec3):Vec3=>c.rig?v.map((_,i)=>v[0]*c.rig!.right[i]+v[1]*c.rig!.forward[i]+v[2]*c.rig!.up[i]) as Vec3:v;
+ return {right:map([cy,sy,0]),up:map([-sy*sp,cy*sp,cp]),toward:map([sy*cp,-cy*cp,sp])};
 }
 export function orient(c:Camera,preset:CameraPreset):void {
+ delete c.rig;
  [c.yaw,c.pitch]=({top:[0,Math.PI/2],oblique:[-.65,.6],front:[0,0],side:[Math.PI/2,0]} as const)[preset];
 }
 export function cameraVector(c:Camera,v:readonly number[]):Vec3 {
@@ -63,4 +65,23 @@ export function visibleSegment(a:ScreenPoint,b:ScreenPoint,spheres:Sphere[]):[Sc
   if(last && Math.hypot(...from.map((x,j)=>x-last[1][j]))<1e-7)last[1]=to;else pieces.push([from,to]);
  }
  return pieces;
+}
+
+const cross=(a:readonly number[],b:readonly number[]):Vec3=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const unit=(v:Vec3):Vec3=>{const n=Math.hypot(...v);return v.map(x=>x/n) as Vec3;};
+// Deterministic velocity-relative rig. No wall-clock lag, so scrubbing/rewind
+// produces exactly the same pose. Degenerate radial/zero-speed states stay finite.
+export function chaseRig(position:readonly number[],velocity:readonly number[]):NonNullable<Camera['rig']> {
+ const forward:Vec3=Math.hypot(...velocity)>1e-10?unit([...velocity] as Vec3):[1,0,0];
+ let normal=cross(position,forward);
+ if(Math.hypot(...normal)<=1e-10*Math.max(1,Math.hypot(...position))) {
+  const axis=forward.map(Math.abs).indexOf(Math.min(...forward.map(Math.abs))),fallback:Vec3=[0,0,0];fallback[axis]=1;normal=cross(forward,fallback);
+ }
+ const up=unit(normal),right=unit(cross(forward,up));
+ return {right,forward,up};
+}
+export function orbitAround(c:Camera,pivot:Vec3|undefined,dx:number,dy:number):void {
+ const before=pivot?cameraVector(c,pivot.map((x,i)=>x-c.center[i])):undefined;
+ orbit(c,dx,dy);
+ if(pivot && before){const a=axes(c);c.center=pivot.map((x,i)=>x-before[0]*a.right[i]-before[1]*a.up[i]-before[2]*a.toward[i]) as Vec3;}
 }

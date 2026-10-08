@@ -2,9 +2,9 @@ import {directionAt} from '../sim/steering';
 import { Runner, type LedgerEntry, type Sample, type EventBoundary } from '../sim/runner';
 import {resourcesAt,type ResourceAnchor,type Depot} from '../traffic/resources';
 import {portState} from '../sim/logistics';
-import { validateBundle, type Bundle, type Port, type Scenario, type State, type ThrustArc } from '../sim/schema';
+import { validateBundle, type Bundle, type Port, type Scenario, type Rail, type State, type ThrustArc } from '../sim/schema';
 
-export interface Station { id: string; role: string; berths: number }
+export interface Station { id: string; role: string; berths: number; maintenance?:{reference:Extract<Rail,{kind:'circular'}>;checks:{t:number;outcome:string;before:number[];after?:number[];evaluations:number}[]} }
 export interface Vessel { name: string; color: string; cargo: string; bundle: Bundle }
 export interface ModelSet {
   schemaVersion: 1; id: string; name: string; extent: number;
@@ -23,7 +23,9 @@ export interface VesselView {
  trajectories?:{start:number;end:number;through:number;samples:ViewSample[];boundaries:EventBoundary[];arcs?:ThrustArc[]}[];
 }
 export interface VesselRun extends Vessel,VesselView {}
+export interface MaintainedView extends VesselView {baseline:{t:number;y:State}[]}
 export interface SceneView {
+ maintained?:Record<string,MaintainedView>;
  schemaVersion:1;id:string;name:string;extent:number;description:string;provenance:string;
  stations:Station[];rotating:ModelSet['rotating'];vessels:VesselView[];portSamples:PortSamples;
  world:{bodies:Scenario['bodies'];ports:Port[];units:Scenario['units']};window:{start:number;end:number};
@@ -53,11 +55,22 @@ export function validateSet(value: ModelSet): ModelSet {
   if (new Set(ids).size !== ids.length || ids.some(id => ports.some(p => p.id === id) || bodies.some(b => b.id === id)) ||
       new Set(set.stations.map(s => s.id)).size !== set.stations.length || set.stations.length !== ports.length ||
       set.stations.some(s => !ports.some(p => p.id === s.id) || !Number.isInteger(s.berths) || s.berths < 1)) throw new Error('Invalid set identities/berths');
+  if(ports.some(p=>p.rail.kind==='powered')){
+    if(ports.some(p=>p.rail.kind==='powered'&&!set.stations.find(s=>s.id===p.id)?.maintenance))throw new Error('Powered station requires maintenance reference');
+    const s=set.vessels[0].bundle.scenario,targetWork=ports.reduce((n,p)=>n+('policy' in p.rail?s.duration/p.rail.policy.step:0),0),baselineWork=ports.reduce((n,p)=>n+(p.rail.kind==='powered'?s.duration/p.rail.policy.step:0),0);
+    const work=set.vessels.reduce((n,v)=>n+v.bundle.scenario.duration/v.bundle.scenario.policy.step+targetWork+4096,baselineWork);
+    if(set.vessels.length>2 || work>262144)throw new Error('Maintained scene preparation budget exceeded');
+  }
+  for(const station of set.stations)if(station.maintenance){
+    const ref=station.maintenance.reference;
+    validateBundle({scenario:{...set.vessels[0].bundle.scenario,logistics:undefined,bodies:[{id:'reference',mu:1,radius:.0001,rail:ref}]},program:{schemaVersion:3,id:'reference-validation',burns:[]}});
+    if(!ports.some(p=>p.id===station.id&&p.rail.kind==='powered') || station.maintenance.checks.length>8 || station.maintenance.checks.some(c=>!Number.isFinite(c.t)||!['skip','correct'].includes(c.outcome)))throw new Error('Invalid maintenance presentation');
+  }
   return set;
 }
 
 export function setEvents(run: SceneView): SetEvent[] {
-  return run.vessels.flatMap(v => v.ledger.map(e => ({...e, vessel: v.id, color: v.color})))
+  return [...run.vessels,...Object.values(run.maintained??{})].flatMap(v => v.ledger.map(e => ({...e,...(run.maintained?.[v.id]?{portId:v.id}:{}), vessel: v.id, color: v.color})))
     .sort((a, b) => a.t - b.t || eventOrder(a) - eventOrder(b) || a.vessel.localeCompare(b.vessel));
 }
 function eventOrder(e: ViewerEvent): number {
@@ -117,10 +130,21 @@ export function prepareSet(value: ModelSet): SetRun {
   });
   const epochs=[...new Set(vessels.flatMap(v=>v.samples.map(s=>s.t)))].sort((a,b)=>a-b);
   const portSamples:PortSamples=Object.fromEntries((set.vessels[0].bundle.scenario.logistics?.ports??[])
-    .filter(p=>p.rail.kind==='ballistic').map(p=>[p.id,epochs.map(t=>({t,y:runners[0].portState(p.id,t)}))]));
+    .filter(p=>p.rail.kind==='ballistic'||p.rail.kind==='powered').map(p=>[p.id,epochs.map(t=>({t,y:runners[0].portState(p.id,t)}))]));
+  const maintained:Record<string,MaintainedView>={};
+  for(const port of set.vessels[0].bundle.scenario.logistics?.ports??[])if(port.rail.kind==='powered') {
+    const rail=port.rail,ledger=runners[0].portLedger(port.id),boundaries=runners[0].portBoundaries(port.id);
+    const times=[...new Set([...epochs,...Array.from({length:4097},(_,i)=>rail.epoch+(rail.validUntil-rail.epoch)*i/4096),...ledger.map(e=>e.t),...rail.program.thrustArcs!.flatMap(a=>a.steering?.keys.map(k=>a.start+k.offset)??[])])].sort((a,b)=>a-b);
+    const samples=times.map(t=>runners[0].portSample(port.id,t));
+    portSamples[port.id]=samples.map(s=>({t:s.t,y:s.y}));
+    const scenario={...set.vessels[0].bundle.scenario,logistics:undefined,ship:{...rail.propulsion,id:port.id,state:rail.state,cargoMass:0},policy:rail.policy};
+    const baseline=new Runner({scenario,program:{schemaVersion:3,id:'unmaintained-comparison',burns:[]}});
+    if(baseline.advanceTo(rail.validUntil).status!=='horizon')throw new Error('Unsafe unmaintained comparison');
+    maintained[port.id]={id:port.id,name:port.id,color:'#85c9c0',cargo:'Ballast',ship:scenario.ship,ports:[],cargoCapacity:0,arcs:rail.program.thrustArcs!,continuousFuel:true,portSamples:{},samples,ledger,boundaries,baseline:times.map(t=>({t,y:baseline.sample(t).y}))};
+  }
   vessels.forEach(v=>v.portSamples=portSamples);
   const scenario=set.vessels[0].bundle.scenario;
-  const run: SetRun = {...set, vessels,portSamples,world:{bodies:scenario.bodies,ports:scenario.logistics?.ports??[],units:scenario.units},window:{start:scenario.epoch,end:scenario.epoch+scenario.duration}};
+  const run: SetRun = {...set, vessels,portSamples,...(Object.keys(maintained).length?{maintained}:{}),world:{bodies:scenario.bodies,ports:scenario.logistics?.ports??[],units:scenario.units},window:{start:scenario.epoch,end:scenario.epoch+scenario.duration}};
   const ports = vessels[0].bundle.scenario.logistics?.ports ?? [];
   // Check every discrete change, including simultaneous transfers as one epoch.
   // Each independent run has already proved its own tanks, cargo, and captures.
@@ -132,6 +156,7 @@ export function prepareSet(value: ModelSet): SetRun {
           stock.propellant > port.tankCapacity + 1e-10 || stock.occupied < 0 || stock.occupied > berth.berths) throw new Error(`Shared stock or berths exceeded at ${stock.id}, t=${t}`);
     }
   }
+  if(run.maintained && new TextEncoder().encode(JSON.stringify(run)).byteLength>8_000_000)throw new Error('Maintained scene display packet budget exceeded');
   return run;
 }
 
@@ -188,10 +213,16 @@ export function portsOf(run: SceneView): Port[] { return run.world.ports; }
 
 // Finite, disposable station drawing data. Physical docking uses Runner.portState.
 export function displayPortState(port:Port,samples:PortSamples,t:number):State {
-  if(port.rail.kind!=='ballistic')return portState(port,t);
+  if(port.rail.kind!=='ballistic' && port.rail.kind!=='powered')return portState(port,t);
   const points=samples[port.id];
   if(!points || !Number.isFinite(t) || t<points[0].t || t>points.at(-1)!.t)throw new Error('Display target epoch outside validity');
   let lo=0,hi=points.length-1;while(lo<hi){const mid=Math.ceil((lo+hi)/2);if(points[mid].t<=t)lo=mid;else hi=mid-1;}
   const a=points[lo],b=points[Math.min(lo+1,points.length-1)];if(a.t===t || a===b)return [...a.y];
   const u=(t-a.t)/(b.t-a.t);return a.y.map((x,i)=>x+u*(b.y[i]-x)) as State;
+}
+
+export function orbitError(y:State,reference:Extract<Rail,{kind:'circular'}>):{position:number;velocity:number} {
+ const r=y.slice(0,3).map((x,i)=>x-reference.center[i]),angle=Math.atan2(r.reduce((s,x,i)=>s+x*reference.v[i],0),r.reduce((s,x,i)=>s+x*reference.u[i],0)),c=Math.cos(angle),sn=Math.sin(angle);
+ const p=reference.center.map((x,i)=>x+reference.radius*(reference.u[i]*c+reference.v[i]*sn)),v=reference.u.map((x,i)=>reference.radius*reference.rate*(-x*sn+reference.v[i]*c));
+ return {position:Math.hypot(...p.map((x,i)=>x-y[i])),velocity:Math.hypot(...v.map((x,i)=>x-y[i+3]))};
 }

@@ -10,15 +10,17 @@ export interface Engine { maxThrust: number; maxAcceleration?: number }
 export interface Steering {kind:'spherical-smoothstep-v1';keys:{offset:number;direction:Vec3}[]}
 export interface ThrustArc { id: string; start: number; end: number; direction: Vec3; throttle: number; steering?:Steering }
 export interface BallisticRail {kind:'ballistic'; epoch:number; validUntil:number; state:State; policy:Scenario['policy']; minClearance:number; provenance:string}
+// A powered target owns a frozen logistics-free propulsion program and tank.
+export interface PoweredRail extends Omit<BallisticRail,'kind'> {kind:'powered';propulsion:{dryMass:number;propellant:number;tankCapacity:number;exhaustVelocity:number;engine:Engine};program:Program;minPropellant:number}
 // Physical support geometry. Circular fields are derived by validation, never trusted.
 export interface SurfaceRail {kind:'surface';bodyId:string;centerHeight:number;center:Vec3;u:Vec3;v:Vec3;radius:number;rate:number;phase:number}
 export interface Port {
-  id: string; rail: Extract<Rail, {kind: 'circular'}> | BallisticRail | SurfaceRail;
+  id: string; rail: Extract<Rail, {kind: 'circular'}> | BallisticRail | PoweredRail | SurfaceRail;
   cargo: number; cargoCapacity: number; propellant: number; tankCapacity: number;
   serviceDuration: number;
 }
 export interface Logistics {
-  modelVersion: 'kinematic-ports-v1' | 'ballistic-ports-v2' | 'surface-ports-v3'; ports: Port[]; cargoCapacity: number;
+  modelVersion: 'kinematic-ports-v1' | 'ballistic-ports-v2' | 'surface-ports-v3' | 'powered-ports-v4'; ports: Port[]; cargoCapacity: number;
   capture: {position: number; velocity: number};
   objective: {destinationId: string; quota: number; returnPortId: string; minPropellant: number; hardwareCost: number; deadline?: number};
 }
@@ -171,23 +173,24 @@ export function validateBundle(value: unknown): Bundle {
   }
   if (s.logistics !== undefined) {
     const l = object(s.logistics), capture = object(l.capture), goal = object(l.objective);
-    if ((l.modelVersion !== 'kinematic-ports-v1' && l.modelVersion !== 'ballistic-ports-v2' && l.modelVersion !== 'surface-ports-v3') || scenario.rendezvous ||
-        (l.modelVersion !== 'ballistic-ports-v2' && (bodies.length !== 1 || bodies[0].rail.kind !== 'fixed')) ||
+    if ((l.modelVersion !== 'kinematic-ports-v1' && l.modelVersion !== 'ballistic-ports-v2' && l.modelVersion !== 'surface-ports-v3' && l.modelVersion !== 'powered-ports-v4') || scenario.rendezvous ||
+        (!['ballistic-ports-v2','powered-ports-v4'].includes(l.modelVersion as string) && (bodies.length !== 1 || bodies[0].rail.kind !== 'fixed')) ||
         !Array.isArray(l.ports) || l.ports.length < 2 || l.ports.length > 8) throw new Error('Unsupported logistics domain');
     const primary = bodies[0];
     const center = primary.rail.kind==='fixed' ? primary.rail.position : undefined;
     const ports: Port[] = l.ports.map(value => {
       const port = object(value), r = object(port.rail);
       let rail: Port['rail'];
+      if((l.modelVersion!=='powered-ports-v4'||r.kind!=='powered') && ['propulsion','program','minPropellant','maintenance'].some(k=>r[k]!==undefined))throw new Error('Powered target fields require powered-ports-v4');
       if(l.modelVersion==='surface-ports-v3' && r.kind==='surface') {
         const centerHeight=finite(r.centerHeight,'supported COM height',Number.MIN_VALUE),radius=primary.radius+centerHeight;
         const rate=finite(r.rate,'physical spin'),phase=finite(r.phase,'pad longitude');
         if(r.bodyId!==primary.id || !center || radius<=primary.radius || !Number.isFinite(radius) ||
           Math.abs(rate)>=Math.sqrt(primary.mu/radius**3) || !center.every(x=>Number.isFinite(x+radius)&&Number.isFinite(x-radius)))throw new Error('Unsupported surface support');
         rail={kind:'surface',bodyId:primary.id,centerHeight,center:[...center],u:[1,0,0],v:[0,1,0],radius,rate,phase};
-      } else if(l.modelVersion==='ballistic-ports-v2') {
+      } else if(l.modelVersion==='ballistic-ports-v2'||l.modelVersion==='powered-ports-v4') {
         const p=object(r.policy), targetEpoch=finite(r.epoch,'target epoch'),validUntil=finite(r.validUntil,'target validity');
-        if(r.kind!=='ballistic' || targetEpoch!==epoch || validUntil!==epoch+duration)throw new Error('Ballistic port must cover the complete scenario');
+        if((r.kind!=='ballistic' && !(l.modelVersion==='powered-ports-v4' && r.kind==='powered')) || targetEpoch!==epoch || validUntil!==epoch+duration)throw new Error('Ballistic port must cover the complete scenario');
         const targetStep=finite(p.step,'target step',1/65536), targetNodes=integer(p.maxNodes,'target nodes',2,65536);
         if(duration/targetStep!==Math.floor(duration/targetStep) || duration/targetStep+2>targetNodes)throw new Error('Invalid target work budget');
         const minClearance=finite(r.minClearance,'target clearance',0);
@@ -195,6 +198,16 @@ export function validateBundle(value: unknown): Bundle {
           policy:{step:targetStep,maxNodes:targetNodes,maxSubdivision:integer(p.maxSubdivision,'target subdivisions',0,20)},
           minClearance,provenance:name(r.provenance)};
         if(!bodies.every(b=>Number.isFinite(b.radius+minClearance)))throw new Error('Invalid target clearance');
+        if(r.kind==='powered') {
+          const controls=object(r.program),propulsion=object(r.propulsion);
+          if(!Array.isArray(controls.burns)||controls.burns.length || controls.operations!==undefined || !Array.isArray(controls.thrustArcs)||controls.thrustArcs.length>16)throw new Error('Powered targets require finite arcs without impulses/operations');
+          const target=validateBundle({scenario:{...scenario,logistics:undefined,rendezvous:undefined,policy:rail.policy,ship:{...propulsion,id:name(port.id),state:rail.state,cargoMass:0}},program:controls});
+          if(!target.scenario.ship.engine)throw new Error('Powered target engine required');
+          const {dryMass,propellant,tankCapacity,exhaustVelocity,engine}=target.scenario.ship;
+          rail={...rail,kind:'powered',propulsion:{dryMass,propellant,tankCapacity,exhaustVelocity,engine},program:target.program,minPropellant:finite(r.minPropellant,'target reserve',0)};
+          if(rail.minPropellant>propellant || [port.cargo,port.cargoCapacity,port.propellant,port.tankCapacity].some(x=>x!==0))throw new Error('Powered target has fixed ballast and no exchange inventory');
+        }
+
       } else {
         const circular=circularRail(r,primary.radius), expectedRate=Math.sqrt(primary.mu/circular.radius**3);
         if(r.kind!=='circular' || circular.radius<=primary.radius || !center || circular.center.some((v,i)=>v!==center[i]) ||
@@ -327,6 +340,22 @@ export function validateBundle(value: unknown): Bundle {
   const ids=[...burns.map(b=>b.id),...(program.operations??[]).map(o=>o.id),...(program.thrustArcs??[]).map(a=>a.id)];
   if(new Set(ids).size!==ids.length)throw new Error('Duplicate program ID');
   if((program.operations??[]).some(o=>(program.thrustArcs??[]).some(a=>o.t>a.start && o.t<a.end)))throw new Error('Operation inside powered arc');
+  const powered=scenario.logistics?.ports.filter(p=>p.rail.kind==='powered')??[];
+  if(scenario.logistics?.modelVersion==='powered-ports-v4' && (powered.length!==1 || scenario.logistics.ports.length!==2 || scenario.logistics.ports.reduce((n,p)=>n+('policy' in p.rail?duration/p.rail.policy.step:0),0)>65536))throw new Error('Powered world requires one relay and one ballistic origin within preparation budget');
+  if(powered.length>1 || powered.reduce((n,p)=>n+(p.rail.kind==='powered'?duration/p.rail.policy.step:0),0)>32768)throw new Error('Powered provider preparation budget exceeded');
+  for(const port of powered) {
+    if(port.rail.kind!=='powered')continue;
+    const arcs=port.rail.program.thrustArcs!.filter(a=>a.throttle>0);
+    let attached:number|undefined;
+    const check=(a:number,b:number)=>{if(arcs.some(arc=>a<arc.end && b>arc.start))throw new Error('Attachment overlaps station maintenance');};
+    for(const op of program.operations??[]) {
+      if(op.portId!==port.id)continue;
+      if(op.kind==='transfer')throw new Error('Powered station exchange is unsupported');
+      if(op.kind==='dock'){if(arcs.some(a=>op.t>=a.start&&op.t<a.end))throw new Error('Capture during station maintenance');attached=op.t;}
+      if(op.kind==='undock' && attached!==undefined){check(attached,op.t);attached=undefined;}
+    }
+    if(attached!==undefined)check(attached,epoch+duration);
+  }
   return { scenario, program };
 }
 

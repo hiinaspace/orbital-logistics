@@ -16,7 +16,7 @@ export const isSurfaceService=(d:TrafficDefinition)=>d.domain==='airless-surface
 export function validateTraffic(value:TrafficDefinition):TrafficDefinition {
  const d=structuredClone(value);d.world=validateBundle(d.world);
  const s=d.world.scenario,body=s.bodies[0],ports=s.logistics?.ports??[],surface=isSurfaceService(d);
- const rails=ports.every(p=>p.rail.kind!=='ballistic' && p.rail.rate>0 && p.rail.center.every(x=>x===0) && p.rail.u.every((x,i)=>x===[1,0,0][i]) && p.rail.v.every((x,i)=>x===[0,1,0][i]));
+ const rails=ports.every(p=>p.rail.kind!=='ballistic' && p.rail.kind!=='powered' && p.rail.rate>0 && p.rail.center.every(x=>x===0) && p.rail.u.every((x,i)=>x===[1,0,0][i]) && p.rail.v.every((x,i)=>x===[0,1,0][i]));
  const hardware=s.ship.dryMass===1 && s.ship.exhaustVelocity===3 && (surface
   ? s.ship.engine?.maxThrust===5 && s.ship.engine.maxAcceleration===3 && body.radius===1 && ports.filter(p=>p.rail.kind==='surface').length===1 && ports.filter(p=>p.rail.kind==='circular').length===1 && s.logistics?.modelVersion==='surface-ports-v3' && d.vessels.length===1
   : s.ship.engine?.maxThrust===1 && s.ship.engine.maxAcceleration===undefined && ports.every(p=>p.rail.kind==='circular'));
@@ -43,7 +43,7 @@ export function validateTraffic(value:TrafficDefinition):TrafficDefinition {
 }
 export function nextWindow(d:TrafficDefinition,t:TransferTemplate,after:number,minIndex=-Infinity):Window {
  const from=d.world.scenario.logistics!.ports.find(p=>p.id===t.source)!,to=d.world.scenario.logistics!.ports.find(p=>p.id===t.destination)!;
- if(from.rail.kind==='ballistic' || to.rail.kind==='ballistic')throw new Error('Unsupported window rails');
+ if(from.rail.kind==='ballistic' || from.rail.kind==='powered' || to.rail.kind==='ballistic' || to.rail.kind==='powered')throw new Error('Unsupported window rails');
  const period=tau/Math.abs(to.rail.rate-from.rail.rate);
  if(!Number.isFinite(period) || period<=0 || !Number.isFinite(after))throw new Error('Unsupported window');
  let index=Math.max(Math.ceil((after-t.referenceDeparture)/period),minIndex),departure=t.referenceDeparture+index*period;
@@ -54,7 +54,7 @@ export function nextWindow(d:TrafficDefinition,t:TransferTemplate,after:number,m
 export function admitEpisode(d:TrafficDefinition,t:TransferTemplate,shipId:string,voyage:number,admittedAt:number,w:Window,cargo:number,fuel:number):Episode {
  if(Math.abs(cargo-t.cargo)>1e-12 || Math.abs(fuel-t.propellant)>1e-12)throw new Error('Unsupported departure loadout');
  const b=structuredClone(d.world),s=b.scenario,ports=s.logistics!.ports,source=ports.find(p=>p.id===t.source)!,destination=ports.find(p=>p.id===t.destination)!;
- if(source.rail.kind==='ballistic')throw new Error('Unsupported source');
+ if(source.rail.kind==='ballistic' || source.rail.kind==='powered')throw new Error('Unsupported source');
  const angle=phase(source.rail.rate*(w.departure-t.referenceDeparture)),c=Math.cos(angle),sn=Math.sin(angle);
  // Private support prelude replays the existing atomic launch without a schema
  // exception. Fleet attachment and resources remain authoritative before local0.
@@ -62,7 +62,7 @@ export function admitEpisode(d:TrafficDefinition,t:TransferTemplate,shipId:strin
  s.duration=Math.ceil((t.duration-s.epoch)/s.policy.step)*s.policy.step;
  s.ship.id=shipId;s.ship.cargoMass=cargo;s.ship.propellant=fuel;
  s.policy.maxNodes=Math.min(65536,Math.ceil(s.duration/s.policy.step)+1024);
- ports.forEach(p=>{if(p.rail.kind!=='ballistic')p.rail.phase=phase(p.rail.phase+p.rail.rate*w.departure);});
+ ports.forEach(p=>{if(p.rail.kind!=='ballistic' && p.rail.kind!=='powered')p.rail.phase=phase(p.rail.phase+p.rail.rate*w.departure);});
  s.ship.state=portState(source,s.epoch);
  const id=`${shipId}:${voyage}`,arrivalOperationId=`${id}:capture`;
  const rotate=(v:Vec3):Vec3=>[c*v[0]-sn*v[1],sn*v[0]+c*v[1],v[2]];

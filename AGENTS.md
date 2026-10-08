@@ -69,8 +69,19 @@ Orison · inclined transfer is a paid one-way finite delivery with an accelerati
 not continuous guidance or an optimized mission. Keys split canonical intervals and
 use C1 spherical easing; display evaluates the same law. See-through bodies is a
 session display preference, off by default. Existing surface/continuous programs
-are not retargeted. Atmosphere, staging, attitude/slew limits, stationkeeping and
-arbitrary ground latitude/spin axes remain deferred.
+are not retargeted. The user accepted smooth steering and selected camera tracking
+and stationkeeping, explicitly requesting Astra high-level review. Read
+docs/design/stationkeeping/README.md, disposition.md and docs/evidence/stationkeeping.md.
+Orison · maintained relay uses a frozen offline phase-free maintenance policy and one
+visiting ship. powered-ports-v4 owns one fully admitted canonical powered target and
+one ballistic origin; no target impulses, operations, cargo/fuel exchange or attached
+maintenance. Half-open attachment windows permit release at burn start and capture
+at burn end. Preserve separate tank/mass ownership, exact physical target queries,
+version rejection and aggregate work/display budgets. This is not continuous adaptive
+maintenance; shared mass/event ownership must precede maintained-station service.
+Follow/Chase and selection-pivot orbiting are presentation only; see
+docs/design/camera-tracking.md. Atmosphere, staging, attitude/slew limits and arbitrary
+ground latitude/spin axes remain deferred.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

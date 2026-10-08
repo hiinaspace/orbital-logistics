@@ -1,0 +1,9 @@
+{
+  "stationError": 0.000003410050992008573,
+  "visitorError": 0.00003086904445577799,
+  "maxEnvelope": 0.0023656965504235106,
+  "stationSamples": 4113,
+  "visitorSamples": 2053,
+  "packetBytes": 4268138,
+  "limitBytes": 8000000
+}

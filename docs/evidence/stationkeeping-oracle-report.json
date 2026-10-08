@@ -1,0 +1,169 @@
+{
+  "checks": [
+    {
+      "step": 0.03125,
+      "visitorPosition": 1.0857283490886958e-08,
+      "visitorVelocity": 2.2517942107203396e-09,
+      "visitorFuel": 1.238262659075673e-09,
+      "stationPosition": 1.222975865042614e-09,
+      "stationVelocity": 2.3224257625009768e-10,
+      "stationFuel": 1.887379141862766e-15,
+      "oracleRefinement": 2.2157323418382235e-11,
+      "capturePosition": 1.1176788178123237e-08,
+      "captureSpeed": 2.2060565835344003e-09,
+      "paidCapture": 1.2382757423302532e-09,
+      "stationNodes": 2061,
+      "visitorNodes": 2054,
+      "certifiedStationIntervals": 2060
+    },
+    {
+      "step": 0.015625,
+      "visitorPosition": 6.628256810752082e-10,
+      "visitorVelocity": 1.3693348486695955e-10,
+      "visitorFuel": 7.516270938978664e-11,
+      "stationPosition": 7.444613257091656e-11,
+      "stationVelocity": 1.4111592733766051e-11,
+      "stationFuel": 1.887379141862766e-15,
+      "oracleRefinement": 2.2157323418382235e-11,
+      "capturePosition": 6.823262141765677e-10,
+      "captureSpeed": 1.3392989936254581e-10,
+      "paidCapture": 7.517583494841522e-11,
+      "stationNodes": 4109,
+      "visitorNodes": 4102,
+      "certifiedStationIntervals": 4108
+    },
+    {
+      "step": 0.0078125,
+      "visitorPosition": 4.178876316966713e-11,
+      "visitorVelocity": 8.65222553157951e-12,
+      "visitorFuel": 4.750921878127201e-12,
+      "stationPosition": 4.774127823932786e-12,
+      "stationVelocity": 9.009273772174903e-13,
+      "stationFuel": 1.887379141862766e-15,
+      "oracleRefinement": 2.2157323418382235e-11,
+      "capturePosition": 4.318175657613729e-11,
+      "captureSpeed": 8.48732410408941e-12,
+      "paidCapture": 4.763997278075331e-12,
+      "stationNodes": 8205,
+      "visitorNodes": 8198,
+      "certifiedStationIntervals": 8204
+    },
+    {
+      "step": 0.00390625,
+      "visitorPosition": 2.4538116816961173e-12,
+      "visitorVelocity": 5.070777493404303e-13,
+      "visitorFuel": 2.7489122089718876e-13,
+      "stationPosition": 5.079961783603851e-13,
+      "stationVelocity": 1.016783589133014e-13,
+      "stationFuel": 1.887379141862766e-15,
+      "oracleRefinement": 2.2157323418382235e-11,
+      "capturePosition": 2.6818142427224406e-12,
+      "captureSpeed": 5.13031386824205e-13,
+      "paidCapture": 2.879682807474446e-13,
+      "stationNodes": 16397,
+      "visitorNodes": 16390,
+      "certifiedStationIntervals": 16396
+    },
+    {
+      "step": 0.001953125,
+      "visitorPosition": 1.140783742093531e-12,
+      "visitorVelocity": 2.327847551292928e-13,
+      "visitorFuel": 1.5165646516379638e-13,
+      "stationPosition": 6.58470542927639e-13,
+      "stationVelocity": 1.2294927579482745e-13,
+      "stationFuel": 1.887379141862766e-15,
+      "oracleRefinement": 2.2157323418382235e-11,
+      "capturePosition": 1.4757288082991565e-12,
+      "captureSpeed": 2.93509248890983e-13,
+      "paidCapture": 1.6474889442890033e-13,
+      "stationNodes": 32781,
+      "visitorNodes": 32774,
+      "certifiedStationIntervals": 32780
+    }
+  ],
+  "independentPreCapturePosition": 3.5573673469945786e-14,
+  "independentPreCaptureSpeed": 1.1377382521923799e-14,
+  "stationFinal": [
+    -2.8736420865571195,
+    -0.2103270844679195,
+    0.835430234015309,
+    -0.04777243775567845,
+    -0.49722991045674125,
+    -0.28950568849574126,
+    0.5790620342038737
+  ],
+  "visitorFinal": {
+    "t": 64,
+    "status": "horizon",
+    "fuel": 0.6339220063906653,
+    "fuelUsed": 0.26607799360933465,
+    "cargo": 0.05,
+    "stocks": {
+      "Equator": [
+        0,
+        0
+      ],
+      "Meridian": [
+        0,
+        0
+      ]
+    },
+    "captures": [
+      {
+        "t": 0,
+        "position": 0.0,
+        "velocity": 0.0
+      },
+      {
+        "t": 34,
+        "position": 3.5573673469945786e-14,
+        "velocity": 1.1377382521923799e-14
+      }
+    ],
+    "trace": [
+      [
+        0,
+        "dock",
+        "initial-dock"
+      ],
+      [
+        20,
+        "undock",
+        "depart"
+      ],
+      [
+        20,
+        "thrust-start",
+        "visitor-0"
+      ],
+      [
+        21.538427763424835,
+        "thrust-end",
+        "visitor-0"
+      ],
+      [
+        32.30929429913477,
+        "thrust-start",
+        "visitor-1"
+      ],
+      [
+        34,
+        "thrust-end",
+        "visitor-1"
+      ],
+      [
+        34,
+        "dock",
+        "capture"
+      ],
+      [
+        36,
+        "undock",
+        "release"
+      ]
+    ],
+    "complete": false,
+    "completedAt": null
+  },
+  "firstPositionRefinement": 16.380299980644573
+}

@@ -1,0 +1,103 @@
+{
+  "policy": {
+    "checks": [
+      4,
+      20,
+      36,
+      52
+    ],
+    "correctionDuration": 4,
+    "deadbandPosition": 0.001,
+    "deadbandVelocity": 0.0003,
+    "envelopePosition": 0.02,
+    "envelopeVelocity": 0.005,
+    "maxEvaluations": 64,
+    "reserve": 0.3
+  },
+  "bodies": [
+    {
+      "id": "Orison",
+      "mu": 1.0,
+      "radius": 1.0,
+      "rail": {
+        "kind": "fixed",
+        "position": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "Mote",
+      "mu": 0.004,
+      "radius": 0.12,
+      "rail": {
+        "kind": "circular",
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ],
+        "radius": 6.0,
+        "rate": 0.06817732869618864,
+        "phase": 0.4
+      }
+    }
+  ],
+  "station": {
+    "dryMass": 4.0,
+    "cargoMass": 0.0,
+    "propellant": 0.6,
+    "tankCapacity": 0.6,
+    "exhaustVelocity": 3.0,
+    "engine": {
+      "maxThrust": 0.06,
+      "maxAcceleration": 0.012
+    }
+  },
+  "visitor": {
+    "dryMass": 1.0,
+    "cargoMass": 0.05,
+    "propellant": 0.9,
+    "tankCapacity": 1.0,
+    "exhaustVelocity": 3.0,
+    "engine": {
+      "maxThrust": 0.25,
+      "maxAcceleration": 0.14
+    }
+  },
+  "nominal": {
+    "kind": "circular",
+    "center": [
+      0,
+      0,
+      0
+    ],
+    "u": [
+      0.8775825618903728,
+      0.479425538604203,
+      0.0
+    ],
+    "v": [
+      -0.3927224100319838,
+      0.7188735496048695,
+      0.573576436351046
+    ],
+    "radius": 3,
+    "rate": 0.19245008972987526,
+    "phase": -2.247009858846714
+  },
+  "status": "failed",
+  "failure": "maintenance envelope exceeded"
+}

@@ -241,4 +241,29 @@ See-through bodies is a session preference under Layers, initially off. Enabling
 keeps rear paths/markers visible and selectable while preserving the overlap chooser
 and physical state. Existing launch/landing/continuous witnesses keep their original
 headings; retargeting those flights, attitude/gimbal dynamics, state-feedback guidance
-and stationkeeping remain separate work. Human viewing of the steered set is next.
+remain separate work. The user accepted smooth steering and the inclined set.
+
+
+## Tracking and maintained relay — 2026-10-08
+
+Track offers Follow at the current angle/zoom and deterministic velocity-relative
+Chase, independently of the physical reference frame. Orbit gestures pivot about the
+selected object while preserving its projected position. Fit releases tracking;
+set changes reset it. See [camera contract](design/camera-tracking.md).
+
+After the requested Astra review, **Orison · maintained relay** adds a station with
+its own finite propulsion budget in a perturbed inclined orbit. Offline bounded
+checks maintain orbital geometry while allowing phase drift. Six corrections and
+two skips compile to a frozen program. The visitor solves against that actual
+canonical trajectory, arrives, dwells and releases before maintenance. Station
+fuel/error readouts, activity lane, whiskers and an unmaintained comparison expose
+what the corrections buy.
+
+The new `powered-ports-v4` domain admits one maintained relay and one ballistic
+origin over a finite horizon. The relay has fixed ballast, its own tank and no cargo/
+fuel exchange; visitor attachment cannot overlap a station burn. Admission checks
+complete target safety/reserve, exact epoch validity and explicit aggregate work/
+display limits. Display samples never drive capture. This is the finite ownership
+witness before continuous maintained traffic, shared mass/refuelling or runtime
+maintenance. See [review/contract](design/stationkeeping/README.md) and
+[evidence](evidence/stationkeeping.md). Human viewing of the new set and cameras is next.

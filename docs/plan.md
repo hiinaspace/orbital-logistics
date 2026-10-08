@@ -1,6 +1,6 @@
 # Tactical plan — updated 2026-10-08
 
-Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic, continuous airless surface service and orthographic 3D viewer and smooth finite steering implemented**.
+Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic, continuous airless surface service and orthographic 3D viewer and smooth finite steering, tracking cameras and finite maintained relay implemented**.
 
 On 2026-10-08 the user chose fictional orbital buildups and traffic as the next
 product direction, authorized retiring the CoaDE editing UI, and requested implementation.
@@ -57,9 +57,16 @@ is implemented with a paid one-way delivery to a 35° depot, two C1 steered fini
 and an acceleration cap. Program schema 4 protects the new heading semantics; scenario/
 snapshot v3 and old fixed programs retain their contracts. See
 [contract](design/smooth-steering/README.md) and [evidence](evidence/smooth-steering.md).
-Human steered-scene review remains.
-Lunar continuation, demand routing/rescue, persistence, staging/recovery, maintained
-stations, attitude dynamics and retargeting of existing surface steering remain separate extensions. No general
+The user accepted the steered scene and requested tracking cameras plus stationkeeping
+with Astra high-level review. **Orison · maintained relay** is now implemented after
+[review](design/stationkeeping/README.md): phase-free paid offline maintenance, actual
+canonical target rendezvous/dwell/release, separate fuel/mass ownership and bounded
+preparation. Follow/Chase and selected pivots remain independent presentation.
+[Evidence](evidence/stationkeeping.md) records numerical and UI checks. Human viewing
+of this finite witness is next; continuous maintained service/shared exchange needs
+an authoritative station mass/event owner before implementation.
+Lunar continuation, demand routing/rescue, persistence, staging/recovery,
+attitude dynamics and retargeting of existing surface steering remain separate extensions. No general
 steering optimizer is claimed.
 
 The [recovered Fable consultation](design/orbital-model-set/README.md) and
