@@ -1,0 +1,208 @@
+{
+  "provenance": {
+    "fixture": "fixtures/m0-binary.json",
+    "mu": 0.02,
+    "moon_surface_radius": 0.025,
+    "primary_surface_radius": 0.08,
+    "integrator": "scipy.integrate.solve_ivp DOP853",
+    "rtol": 1e-12,
+    "atol": 1e-14,
+    "python": "3.13.13",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "frames": "rotating: moon (0.98,0), primary (-0.02,0); inertial coincides at t=0"
+  },
+  "family": [
+    {
+      "d": 0.1,
+      "converged": true,
+      "x0_rot": 1.08,
+      "vy0_rot": -0.5588666767780881,
+      "half_crossing_vx_residual": 5.273559366969494e-16,
+      "half_crossing_x": 0.8819308883499293,
+      "period": 1.1861542798075746,
+      "jacobi": 3.035886219405197,
+      "jacobi_drift_one_period": 9.467981954003335e-13,
+      "rotating_closure_one_period": {
+        "position": 4.74350589212048e-13,
+        "velocity": 2.7441580028767758e-12
+      },
+      "min_moon_center_distance": 0.0980691116500707,
+      "max_moon_center_distance": 0.1047539498557011,
+      "time_mean_moon_distance": 0.10192663431931663,
+      "min_moon_surface_clearance": 0.07306911165007071,
+      "min_primary_center_distance": 0.9019308883499293,
+      "min_primary_surface_clearance": 0.8219308883499293,
+      "retrograde_about_moon_all_samples": true
+    },
+    {
+      "d": 0.15,
+      "converged": true,
+      "x0_rot": 1.13,
+      "vy0_rot": -0.5423981767974734,
+      "half_crossing_vx_residual": 2.3158558404290375e-16,
+      "half_crossing_x": 0.8353133646028652,
+      "period": 1.984358941681429,
+      "jacobi": 2.9537187105604,
+      "jacobi_drift_one_period": 1.8607337892717624e-13,
+      "rotating_closure_one_period": {
+        "position": 1.0263276384857925e-13,
+        "velocity": 3.755990778029586e-13
+      },
+      "min_moon_center_distance": 0.14468663539713478,
+      "max_moon_center_distance": 0.1686313731932766,
+      "time_mean_moon_distance": 0.1582986961972268,
+      "min_moon_surface_clearance": 0.11968663539713478,
+      "min_primary_center_distance": 0.8553133646028652,
+      "min_primary_surface_clearance": 0.7753133646028653,
+      "retrograde_about_moon_all_samples": true
+    },
+    {
+      "d": 0.2,
+      "converged": true,
+      "x0_rot": 1.18,
+      "vy0_rot": -0.5641778504126743,
+      "half_crossing_vx_residual": 2.4528989950312052e-15,
+      "half_crossing_x": 0.7898993301736444,
+      "period": 2.7903664817016236,
+      "jacobi": 2.9074366864370673,
+      "jacobi_drift_one_period": 2.3092638912203256e-14,
+      "rotating_closure_one_period": {
+        "position": 8.564678073724878e-14,
+        "velocity": 6.32091188577633e-14
+      },
+      "min_moon_center_distance": 0.19010066982635554,
+      "max_moon_center_distance": 0.24547700394214003,
+      "time_mean_moon_distance": 0.221438591803319,
+      "min_moon_surface_clearance": 0.16510066982635555,
+      "min_primary_center_distance": 0.8098993301736445,
+      "min_primary_surface_clearance": 0.7298993301736445,
+      "retrograde_about_moon_all_samples": true
+    },
+    {
+      "d": 0.25,
+      "converged": true,
+      "x0_rot": 1.23,
+      "vy0_rot": -0.6057676314152435,
+      "half_crossing_vx_residual": -8.994541222939745e-16,
+      "half_crossing_x": 0.7449107483815409,
+      "period": 3.5499629275882416,
+      "jacobi": 2.8739455767295654,
+      "jacobi_drift_one_period": -1.4654943925052066e-14,
+      "rotating_closure_one_period": {
+        "position": 2.0003348256184473e-13,
+        "velocity": 1.3990296594019334e-13
+      },
+      "min_moon_center_distance": 0.23508925161845906,
+      "max_moon_center_distance": 0.33580397941195733,
+      "time_mean_moon_distance": 0.2920801773585578,
+      "min_moon_surface_clearance": 0.21008925161845907,
+      "min_primary_center_distance": 0.7649107483815409,
+      "min_primary_surface_clearance": 0.684910748381541,
+      "retrograde_about_moon_all_samples": true
+    },
+    {
+      "d": 0.3,
+      "converged": true,
+      "x0_rot": 1.28,
+      "vy0_rot": -0.6596389318784656,
+      "half_crossing_vx_residual": 4.0314973581701e-15,
+      "half_crossing_x": 0.6995933096071841,
+      "period": 4.2160141272135805,
+      "jacobi": 2.844302120575878,
+      "jacobi_drift_one_period": -7.37188088351104e-14,
+      "rotating_closure_one_period": {
+        "position": 9.633970516604349e-14,
+        "velocity": 1.6440242999105986e-13
+      },
+      "min_moon_center_distance": 0.28040669039281585,
+      "max_moon_center_distance": 0.4372997168392379,
+      "time_mean_moon_distance": 0.3693211709648677,
+      "min_moon_surface_clearance": 0.2554066903928158,
+      "min_primary_center_distance": 0.7195933096071842,
+      "min_primary_surface_clearance": 0.6395933096071842,
+      "retrograde_about_moon_all_samples": true
+    }
+  ],
+  "chosen_d": 0.2,
+  "chosen_inertial": {
+    "initial_inertial_state": [
+      1.18,
+      0.0,
+      0.0,
+      0.6158221495873256
+    ],
+    "horizon": 24.0,
+    "periods_in_horizon": 8.601020746695717,
+    "nfev": 7256,
+    "closure_rotating_frame": [
+      {
+        "k": 1,
+        "t": 2.7903664817016236,
+        "position_error": 2.3368764766212934e-12,
+        "velocity_error": 4.174808791904798e-12
+      },
+      {
+        "k": 2,
+        "t": 5.580732963403247,
+        "position_error": 4.108949390458977e-12,
+        "velocity_error": 7.41320249672121e-12
+      },
+      {
+        "k": 3,
+        "t": 8.371099445104871,
+        "position_error": 3.7594828127779295e-12,
+        "velocity_error": 8.05572828174697e-12
+      },
+      {
+        "k": 4,
+        "t": 11.161465926806494,
+        "position_error": 4.605356494170322e-12,
+        "velocity_error": 1.0441551700434778e-11
+      },
+      {
+        "k": 5,
+        "t": 13.951832408508118,
+        "position_error": 1.3291685746295656e-11,
+        "velocity_error": 2.493855260899263e-11
+      },
+      {
+        "k": 6,
+        "t": 16.742198890209743,
+        "position_error": 1.543103492002102e-11,
+        "velocity_error": 3.073521061469955e-11
+      },
+      {
+        "k": 7,
+        "t": 19.532565371911364,
+        "position_error": 1.8410451910371885e-11,
+        "velocity_error": 3.6914136548198856e-11
+      },
+      {
+        "k": 8,
+        "t": 22.32293185361299,
+        "position_error": 2.1879697208752142e-11,
+        "velocity_error": 4.3630745082361513e-11
+      }
+    ],
+    "max_moon_center_distance": 0.2454770039391245,
+    "min_moon_center_distance": 0.19010066992366217,
+    "min_moon_surface_clearance": 0.16510066992366218,
+    "min_primary_center_distance": 0.8098993303522958,
+    "min_primary_surface_clearance": 0.7298993303522958,
+    "max_abs_jacobi_drift": 5.6745719234641e-12
+  },
+  "ship_state_json": [
+    1.18,
+    0.0,
+    0.0,
+    0.6158221495873256
+  ],
+  "two_body_comparison": {
+    "radius": 0.221438591803319,
+    "circular_speed": 0.3005303535997697,
+    "period": 4.629614579012089,
+    "dro_period": 2.7903664817016236,
+    "note": "isolated-moon circular orbit at the DRO's time-mean moon distance"
+  }
+}

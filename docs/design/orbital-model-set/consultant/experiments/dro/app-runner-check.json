@@ -1,0 +1,68 @@
+{
+  "fixture": "fixtures/m0-binary.json",
+  "shipState": [
+    1.18,
+    0,
+    0,
+    0.6158221495873256
+  ],
+  "period": 2.7903664817016236,
+  "runs": [
+    {
+      "step": 0.001953125,
+      "status": "horizon",
+      "retainedNodes": 12289,
+      "closure": [
+        {
+          "k": 1,
+          "position": 2.442639346991636e-11,
+          "velocity": 4.3782508197454885e-11
+        },
+        {
+          "k": 2,
+          "position": 2.5771076942644754e-11,
+          "velocity": 5.747647900939787e-11
+        },
+        {
+          "k": 3,
+          "position": 5.734949716156481e-11,
+          "velocity": 1.1155860874304125e-10
+        },
+        {
+          "k": 8,
+          "position": 1.3943278020317412e-10,
+          "velocity": 2.8267517020335273e-10
+        }
+      ],
+      "minMoonCentreDistance": 0.19010083062899122
+    },
+    {
+      "step": 0.0009765625,
+      "status": "horizon",
+      "retainedNodes": 24577,
+      "closure": [
+        {
+          "k": 1,
+          "position": 2.4569608282107885e-12,
+          "velocity": 4.385356705078584e-12
+        },
+        {
+          "k": 2,
+          "position": 2.5593316504202703e-12,
+          "velocity": 5.721038015720295e-12
+        },
+        {
+          "k": 3,
+          "position": 5.807480001094059e-12,
+          "velocity": 1.126138249490013e-11
+        },
+        {
+          "k": 8,
+          "position": 1.4110614168360524e-11,
+          "velocity": 2.8563737817805488e-11
+        }
+      ],
+      "minMoonCentreDistance": 0.19010083063148173
+    }
+  ]
+}

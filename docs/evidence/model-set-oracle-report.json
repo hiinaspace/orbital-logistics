@@ -1,0 +1,602 @@
+[
+  {
+    "case": "Kestrel",
+    "terminal": {
+      "t": 64,
+      "status": "horizon",
+      "fuel": 0.368900413562727,
+      "fuelUsed": 0.5810995864372728,
+      "cargo": 0.0,
+      "stocks": {
+        "Kiln": [
+          4.48,
+          3.6999999999999997
+        ],
+        "Anchor": [
+          3.5199999999999996,
+          4
+        ],
+        "Crown": [
+          4,
+          4
+        ],
+        "Farpoint": [
+          4,
+          4
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "initial-dock"
+        ],
+        [
+          0.49999999999999983,
+          "transfer-start",
+          "voyage-1-load"
+        ],
+        [
+          0.7499999999999998,
+          "transfer",
+          "voyage-1-load"
+        ],
+        [
+          0.7999999999999998,
+          "undock",
+          "voyage-1-out-undock"
+        ],
+        [
+          0.7999999999999998,
+          "burn",
+          "voyage-1-out-depart"
+        ],
+        [
+          3.8245223369469317,
+          "burn",
+          "voyage-1-out-capture"
+        ],
+        [
+          3.8245223369469317,
+          "dock",
+          "voyage-1-out-dock"
+        ],
+        [
+          3.8245223369469317,
+          "transfer-start",
+          "voyage-1-unload"
+        ],
+        [
+          4.074522336946932,
+          "transfer",
+          "voyage-1-unload"
+        ],
+        [
+          12.185307878766574,
+          "undock",
+          "voyage-1-back-undock"
+        ],
+        [
+          12.185307878766574,
+          "burn",
+          "voyage-1-back-depart"
+        ],
+        [
+          15.209830215713506,
+          "burn",
+          "voyage-1-back-capture"
+        ],
+        [
+          15.209830215713506,
+          "dock",
+          "voyage-1-back-dock"
+        ],
+        [
+          21.919874224148042,
+          "transfer-start",
+          "voyage-2-load"
+        ],
+        [
+          22.169874224148042,
+          "transfer",
+          "voyage-2-load"
+        ],
+        [
+          22.219874224148043,
+          "undock",
+          "voyage-2-out-undock"
+        ],
+        [
+          22.219874224148043,
+          "burn",
+          "voyage-2-out-depart"
+        ],
+        [
+          25.244396561094973,
+          "burn",
+          "voyage-2-out-capture"
+        ],
+        [
+          25.244396561094973,
+          "dock",
+          "voyage-2-out-dock"
+        ],
+        [
+          25.244396561094973,
+          "transfer-start",
+          "voyage-2-unload"
+        ],
+        [
+          25.494396561094973,
+          "transfer",
+          "voyage-2-unload"
+        ],
+        [
+          33.605182102914625,
+          "undock",
+          "voyage-2-back-undock"
+        ],
+        [
+          33.605182102914625,
+          "burn",
+          "voyage-2-back-depart"
+        ],
+        [
+          36.629704439861555,
+          "burn",
+          "voyage-2-back-capture"
+        ],
+        [
+          36.629704439861555,
+          "dock",
+          "voyage-2-back-dock"
+        ],
+        [
+          43.3397484482961,
+          "transfer-start",
+          "voyage-3-load"
+        ],
+        [
+          43.5897484482961,
+          "transfer",
+          "voyage-3-load"
+        ],
+        [
+          43.639748448296096,
+          "undock",
+          "voyage-3-out-undock"
+        ],
+        [
+          43.639748448296096,
+          "burn",
+          "voyage-3-out-depart"
+        ],
+        [
+          46.664270785243026,
+          "burn",
+          "voyage-3-out-capture"
+        ],
+        [
+          46.664270785243026,
+          "dock",
+          "voyage-3-out-dock"
+        ],
+        [
+          46.664270785243026,
+          "transfer-start",
+          "voyage-3-unload"
+        ],
+        [
+          46.914270785243026,
+          "transfer",
+          "voyage-3-unload"
+        ],
+        [
+          55.02505632706268,
+          "undock",
+          "voyage-3-back-undock"
+        ],
+        [
+          55.02505632706268,
+          "burn",
+          "voyage-3-back-depart"
+        ],
+        [
+          58.04957866400961,
+          "burn",
+          "voyage-3-back-capture"
+        ],
+        [
+          58.04957866400961,
+          "dock",
+          "voyage-3-back-dock"
+        ]
+      ],
+      "complete": true,
+      "completedAt": 58.04957866400961
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 4.426085971634647e-12,
+        "velocity": 3.132928462809803e-12,
+        "oracleRefinement": 1.0145862903534594e-11
+      }
+    ]
+  },
+  {
+    "case": "Tern",
+    "terminal": {
+      "t": 64,
+      "status": "horizon",
+      "fuel": 0.5903911831248115,
+      "fuelUsed": 0.15960881687518846,
+      "cargo": 0.0,
+      "stocks": {
+        "Kiln": [
+          4,
+          4
+        ],
+        "Anchor": [
+          3.84,
+          4
+        ],
+        "Crown": [
+          4.16,
+          3.9
+        ],
+        "Farpoint": [
+          4,
+          4
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "initial-dock"
+        ],
+        [
+          1.5000000000000027,
+          "transfer-start",
+          "voyage-1-load"
+        ],
+        [
+          1.7500000000000027,
+          "transfer",
+          "voyage-1-load"
+        ],
+        [
+          1.8000000000000027,
+          "undock",
+          "voyage-1-out-undock"
+        ],
+        [
+          1.8000000000000027,
+          "burn",
+          "voyage-1-out-depart"
+        ],
+        [
+          6.865285394586684,
+          "burn",
+          "voyage-1-out-capture"
+        ],
+        [
+          6.865285394586684,
+          "dock",
+          "voyage-1-out-dock"
+        ],
+        [
+          6.865285394586684,
+          "transfer-start",
+          "voyage-1-unload"
+        ],
+        [
+          7.115285394586684,
+          "transfer",
+          "voyage-1-unload"
+        ],
+        [
+          20.603284888594274,
+          "undock",
+          "voyage-1-back-undock"
+        ],
+        [
+          20.603284888594274,
+          "burn",
+          "voyage-1-back-depart"
+        ],
+        [
+          25.668570283180955,
+          "burn",
+          "voyage-1-back-capture"
+        ],
+        [
+          25.668570283180955,
+          "dock",
+          "voyage-1-back-dock"
+        ]
+      ],
+      "complete": true,
+      "completedAt": 25.668570283180955
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 7.151454904837266e-13,
+        "velocity": 3.4336432465933117e-13,
+        "oracleRefinement": 1.4737269792532275e-11
+      }
+    ]
+  },
+  {
+    "case": "Petrel",
+    "terminal": {
+      "t": 64,
+      "status": "horizon",
+      "fuel": 0.36719686397093787,
+      "fuelUsed": 0.48280313602906216,
+      "cargo": 0.0,
+      "stocks": {
+        "Kiln": [
+          4,
+          4
+        ],
+        "Anchor": [
+          3.6799999999999997,
+          4
+        ],
+        "Crown": [
+          4,
+          4
+        ],
+        "Farpoint": [
+          4.32,
+          3.8
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "initial-dock"
+        ],
+        [
+          2.9000000000000026,
+          "transfer-start",
+          "voyage-1-load"
+        ],
+        [
+          3.1500000000000026,
+          "transfer",
+          "voyage-1-load"
+        ],
+        [
+          3.2000000000000024,
+          "undock",
+          "voyage-1-out-undock"
+        ],
+        [
+          3.2000000000000024,
+          "burn",
+          "voyage-1-out-depart"
+        ],
+        [
+          9.558136490109506,
+          "burn",
+          "voyage-1-out-capture"
+        ],
+        [
+          9.558136490109506,
+          "dock",
+          "voyage-1-out-dock"
+        ],
+        [
+          9.558136490109506,
+          "transfer-start",
+          "voyage-1-unload"
+        ],
+        [
+          9.808136490109506,
+          "transfer",
+          "voyage-1-unload"
+        ],
+        [
+          14.354379826897544,
+          "undock",
+          "voyage-1-back-undock"
+        ],
+        [
+          14.354379826897544,
+          "burn",
+          "voyage-1-back-depart"
+        ],
+        [
+          20.712516317007047,
+          "burn",
+          "voyage-1-back-capture"
+        ],
+        [
+          20.712516317007047,
+          "dock",
+          "voyage-1-back-dock"
+        ],
+        [
+          29.626948030990842,
+          "transfer-start",
+          "voyage-2-load"
+        ],
+        [
+          29.876948030990842,
+          "transfer",
+          "voyage-2-load"
+        ],
+        [
+          29.926948030990843,
+          "undock",
+          "voyage-2-out-undock"
+        ],
+        [
+          29.926948030990843,
+          "burn",
+          "voyage-2-out-depart"
+        ],
+        [
+          36.285084521100345,
+          "burn",
+          "voyage-2-out-capture"
+        ],
+        [
+          36.285084521100345,
+          "dock",
+          "voyage-2-out-dock"
+        ],
+        [
+          36.285084521100345,
+          "transfer-start",
+          "voyage-2-unload"
+        ],
+        [
+          36.535084521100345,
+          "transfer",
+          "voyage-2-unload"
+        ],
+        [
+          41.08132785788838,
+          "undock",
+          "voyage-2-back-undock"
+        ],
+        [
+          41.08132785788838,
+          "burn",
+          "voyage-2-back-depart"
+        ],
+        [
+          47.439464347997884,
+          "burn",
+          "voyage-2-back-capture"
+        ],
+        [
+          47.439464347997884,
+          "dock",
+          "voyage-2-back-dock"
+        ]
+      ],
+      "complete": true,
+      "completedAt": 47.439464347997884
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 1.0672587506003796e-12,
+        "velocity": 3.4912320088940425e-13,
+        "oracleRefinement": 1.1676976604334704e-11
+      }
+    ]
+  },
+  {
+    "case": "Swift",
+    "terminal": {
+      "t": 64,
+      "status": "horizon",
+      "fuel": 0.5903911831248312,
+      "fuelUsed": 0.15960881687516865,
+      "cargo": 0.0,
+      "stocks": {
+        "Kiln": [
+          4,
+          4
+        ],
+        "Anchor": [
+          4.16,
+          3.9
+        ],
+        "Crown": [
+          3.84,
+          4
+        ],
+        "Farpoint": [
+          4,
+          4
+        ]
+      },
+      "trace": [
+        [
+          0,
+          "dock",
+          "initial-dock"
+        ],
+        [
+          0.46798572156605217,
+          "transfer-start",
+          "voyage-1-load"
+        ],
+        [
+          0.7179857215660521,
+          "transfer",
+          "voyage-1-load"
+        ],
+        [
+          0.7679857215660522,
+          "undock",
+          "voyage-1-out-undock"
+        ],
+        [
+          0.7679857215660522,
+          "burn",
+          "voyage-1-out-depart"
+        ],
+        [
+          5.8332711161527335,
+          "burn",
+          "voyage-1-out-capture"
+        ],
+        [
+          5.8332711161527335,
+          "dock",
+          "voyage-1-out-dock"
+        ],
+        [
+          5.8332711161527335,
+          "transfer-start",
+          "voyage-1-unload"
+        ],
+        [
+          6.0832711161527335,
+          "transfer",
+          "voyage-1-unload"
+        ],
+        [
+          21.635299167028226,
+          "undock",
+          "voyage-1-back-undock"
+        ],
+        [
+          21.635299167028226,
+          "burn",
+          "voyage-1-back-depart"
+        ],
+        [
+          26.700584561614907,
+          "burn",
+          "voyage-1-back-capture"
+        ],
+        [
+          26.700584561614907,
+          "dock",
+          "voyage-1-back-dock"
+        ]
+      ],
+      "complete": true,
+      "completedAt": 26.700584561614907
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 7.472758049371331e-13,
+        "velocity": 3.4267525994873467e-13,
+        "oracleRefinement": 4.798264361922417e-12
+      }
+    ]
+  }
+]

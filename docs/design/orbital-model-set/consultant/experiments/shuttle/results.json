@@ -1,0 +1,39 @@
+{
+  "synodic": 15.85388282241825,
+  "horizon": 64,
+  "tugs": [
+    {
+      "tug": 1,
+      "departure": 0.5,
+      "homeArrival": 19.626757036464838,
+      "status": "horizon",
+      "cargoDelivered": 0.2,
+      "fuelUsed": 0.13140358472737598,
+      "finalPropellant": 0.168596415272624,
+      "dockedAtEnd": "Home"
+    },
+    {
+      "tug": 2,
+      "departure": 16.35388282241825,
+      "homeArrival": 35.48063985888309,
+      "status": "horizon",
+      "cargoDelivered": 0.2,
+      "fuelUsed": 0.13140358472736677,
+      "finalPropellant": 0.16859641527263325,
+      "dockedAtEnd": "Home"
+    }
+  ],
+  "sharedStockAfterBoth": {
+    "Home": {
+      "cargo": 0.6000000000000001,
+      "propellant": 0.4
+    },
+    "Depot": {
+      "cargo": 0.4,
+      "propellant": 0.04999999999999999
+    }
+  },
+  "contention": [],
+  "thirdTripWouldOverdrawDepotFuel": true,
+  "interpretation": "Independent single-ship runs of a staggered service are physically valid individually. Shared-stock honesty is a separate offline check; here two tugs fit, a third refuel would not (Depot fuel 0.25, 0.1 per visit)."
+}

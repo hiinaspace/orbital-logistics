@@ -7,6 +7,9 @@ updated: 2026-10-06
 
 # Orbital Logistics — initial charter and local Codex brief
 
+> Superseded product direction: the user accepted an orbital model-set viewer on
+> 2026-10-08. Read [current direction](model-set.md) and [tactical plan](plan.md).
+
 > Historical charter snapshot copied on 2026-10-06 from
 > `/home/s/org/projects/orbital-logistics/charter.md`. Current repository state,
 > decisions and evidence are in `README.md`, `docs/plan.md` and `docs/evidence/`.

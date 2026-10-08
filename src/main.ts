@@ -1,609 +1,337 @@
 import './style.css';
-import orbit from '../fixtures/m1-orbit.json';
-import binary from '../fixtures/m0-binary.json';
-import delivery from '../fixtures/m3-delivery.json';
-import roundTrip from '../fixtures/m3-round-trip.json';
-import { puzzles, puzzleFor } from './puzzles/catalog';
-import { mountPuzzles } from './editor/puzzle-ui';
-import { followedUntil, trailAlpha } from './view/layers';
-import { mountLogistics } from './editor/logistics-ui';
-import { portState } from './sim/logistics';
-import rendezvous from '../fixtures/m2-rendezvous.json';
-import { targetBundle } from './planning/target';
-import { departureUnavailable, type RendezvousProposal, type PortTarget } from './planning/rendezvous';
-import type { EncounterProposal, Opportunity } from './planning/encounters';
-import { EditorSession } from './editor/session';
-import { predict, type Prediction } from './planning/predict';
-import type { Encounter } from './planning/events';
-import { Runner, type Sample } from './sim/runner';
-import { bodyState } from './sim/dynamics';
-import { validateBundle, type Burn, type Bundle, type State } from './sim/schema';
-import { frameState, hitPath, project, unproject, type Camera } from './view/coordinates';
+import freight from '../fixtures/model-sets/orison-freight.json';
+import lunar from '../fixtures/model-sets/lunar-loop.json';
+import {bodyState} from './sim/dynamics';
+import {portState} from './sim/logistics';
+import type {State} from './sim/schema';
+import {portsOf, sampleVessel, setEvents, stockAt, type ModelSet, type SetEvent, type SetRun, type VesselRun} from './model-set/model';
+import {transform} from './model-set/frames';
 
+const sets = [freight, lunar] as ModelSet[];
+const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
+const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
+const number = (v: number) => v.toFixed(2);
 document.body.innerHTML = `
 <main>
-  <header><h1>Orbital Logistics</h1><select id="scene" aria-label="Scenario"><optgroup label="Puzzles"><option value="return-ticket">1 · Return ticket</option><option value="express-return">2 · Express return</option></optgroup><optgroup label="Sandbox"><option value="orbit">Orbit shaping</option><option value="moon">Moon encounter</option><option value="rendezvous">Rendezvous</option><option value="delivery">Delivery</option></optgroup></select>
-    <div class="header-actions"><button id="undo" title="Undo (Ctrl+Z)" aria-label="Undo">↶</button><button id="redo" title="Redo (Ctrl+Shift+Z)" aria-label="Redo">↷</button><button id="files">Save / load</button></div></header>
+  <header><h1>Orbital Logistics</h1><select id="set" aria-label="Model set">${sets.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><span id="load-status" role="status">Preparing scene…</span></header>
   <div class="workspace">
-    <section class="scene"><div class="view-tools"><label>Frame <select id="frame" aria-label="View frame"></select></label><button id="fit">Fit</button><button id="focus">Focus</button><details id="layers"><summary>Layers</summary><div class="layer-options"><label><input id="layer-plan" type="checkbox" checked>Plan</label><label><input id="layer-orbits" type="checkbox" checked>Orbits</label><label><input id="layer-markers" type="checkbox" checked>Markers</label><label><input id="layer-trail" type="checkbox" checked>Trail</label><button id="bodies-only" aria-pressed="false">Bodies only</button></div></details><span id="prediction-status" role="status"></span></div>
-      <canvas width="1000" height="650" aria-label="Trajectory editor" tabindex="0"></canvas>
-      <div class="scene-bottom"><div class="legend"><span class="baseline-key">Reference</span><span class="draft-key">Plan</span><span class="live-key">Execution</span><span id="proposal-key" class="proposal-key" hidden>Proposal</span></div><span id="hint"></span></div>
+    <section class="scene" aria-label="Orbital viewer">
+      <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><button id="fit" title="Fit the scene (F)">Fit</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
+      <div class="viewport"><canvas id="space" tabindex="0" aria-label="Orbital traffic. Drag to pan, scroll to zoom, click a ship or station to inspect."></canvas></div>
+      <div id="timelines" aria-label="Ship activity timelines"></div>
+      <div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><select id="speed" aria-label="Playback speed"><option value="0.25">¼×</option><option value="1" selected>1×</option><option value="4">4×</option><option value="16">16×</option></select><input id="time" type="range" min="0" max="64" value="0" step="0.001" aria-label="Simulation time"><output id="clock">0.00</output><label class="replay"><input type="checkbox" id="replay" title="Rewind the prepared scene at the end">Replay</label></div>
     </section>
-    <aside><section id="puzzle" hidden></section><nav id="objects" aria-label="Objects"></nav><div class="section-title"><h2 id="selected-object">Ship</h2><button id="plan">Plan trajectory</button></div>
-      <div id="goal"><span id="goal-label">Apoapsis in the band</span><strong id="goal-value">—</strong></div>
-      <div class="section-title"><h2>Maneuvers</h2><button id="add" title="Add at preview epoch" aria-label="Add maneuver">+</button></div>
-      <div id="burns" role="list"></div>
-      <section id="inspector" hidden><div class="section-title"><strong id="node-name"></strong><div><button id="previous" aria-label="Previous maneuver">‹</button><button id="next" aria-label="Next maneuver">›</button><button id="delete" aria-label="Delete maneuver">×</button></div></div>
-        <div class="node-cost">Δv <output id="node-dv"></output></div>
-        <details id="precision"><summary>Precision</summary>
-          <label>Epoch <input id="burn-time" type="number" step="0.001"></label><div class="nudges"><button data-nudge="-0.01" data-field="t">−0.01</button><button data-nudge="0.01" data-field="t">+0.01</button></div>
-          <label>Reference <select id="burn-reference"></select></label>
-          <label>Radial <input id="radial" type="number" step="0.001"></label><div class="nudges"><button data-nudge="-0.001" data-field="radial">−</button><button data-nudge="0.001" data-field="radial">+</button></div>
-          <label>Transverse <input id="transverse" type="number" step="0.001"></label><div class="nudges"><button data-nudge="-0.001" data-field="transverse">−</button><button data-nudge="0.001" data-field="transverse">+</button></div>
-        </details>
-        <div class="snap-controls"><select id="apsis" aria-label="Apsis occurrence"></select><button id="snap">Snap</button></div><div id="snap-state"></div><button id="keep-epoch" hidden>Keep epoch</button>
-      </section>
-      <dl><div><dt>Total Δv</dt><dd id="total-dv"></dd></div><div><dt>Fuel remaining</dt><dd id="fuel"></dd></div></dl>
-      <details id="encounter"><summary>Closest approach</summary><label>Body <select id="encounter-body"></select></label><div id="encounter-readout"></div></details>
-      <section id="targeting" hidden><div class="section-title"><h2>Rendezvous</h2><button id="solve">Target</button></div>
-        <div id="port-target" hidden><label>Port <select id="target-port"></select></label><label>Departure <input id="port-departure" type="number" step="0.1" value="15.5"></label><label>Arrival <input id="port-arrival" type="number" step="0.1" value="19.5"></label><button id="port-place">Place departure</button></div>
-        <dl><div><dt>Arrival miss</dt><dd id="target-miss"></dd></div><div><dt>Relative speed</dt><dd id="target-speed"></dd></div></dl><p id="solve-status" role="status"></p><div id="proposal" hidden><div id="proposal-values"></div><div class="buttons"><button id="accept-proposal">Accept</button><button id="reject-proposal">Reject</button></div></div>
-      </section>
-      <section id="logistics" hidden></section>
-      <p id="message" role="status"></p><button id="execute" class="primary">Execute plan</button>
-    </aside>
+    <aside><div class="section-heading"><h2>Traffic</h2><span id="traffic-count"></span></div><div id="fleet"></div><div class="section-heading" id="station-heading"><h2>Stations</h2></div><div id="stations"></div><section id="inspector"></section><details id="model-details"><summary>About this set</summary><p id="description"></p><p id="provenance"></p><p>Drag to pan · Scroll to zoom · Space to pause · F to fit</p></details></aside>
   </div>
-  <section class="transport"><div class="transport-row"><button id="play">Play</button><button id="step">+0.25</button><button id="reset">Reset</button><select id="warp" aria-label="Playback speed"><option value="0.5">½×</option><option value="1" selected>1×</option><option value="4">4×</option><option value="16">16×</option></select><span id="status" role="status"></span><span class="live-time">Execution <output id="time"></output></span></div>
-    <label class="scrub">Preview <input id="epoch" type="range" min="0" max="8" step="0.001" value="0"><output id="preview-time"></output><button id="live">Live</button></label>
-  </section>
-  <details id="file-panel"><summary>Scenario / program JSON</summary><div class="buttons"><button id="save">Save to JSON</button><button id="download">Download</button><button id="load">Load JSON</button></div><textarea id="json" aria-label="Scenario and program JSON" spellcheck="false"></textarea><p id="import-status" role="status"></p></details>
-  <div id="hit-menu" role="menu" aria-label="Choose action" hidden></div>
-  <details><summary>Debug</summary><pre id="state-json"></pre></details>
-</main>`;
+</main><div id="hit-menu" hidden></div><pre id="state-json" hidden></pre>`;
 
-function el<T extends HTMLElement>(id: string): T { return document.getElementById(id) as T; }
-const canvas = document.querySelector('canvas')!, ctx = canvas.getContext('2d')!;
-const frameSelect = el<HTMLSelectElement>('frame'), slider = el<HTMLInputElement>('epoch');
-let session: EditorSession, baseline: Prediction, draft: Prediction, acceptedReference: Runner, acceptedPath: Prediction;
-let camera: Camera = { center: [0, 0], scale: 150 }, selectedObject = 'ship', selectedBurn: string | undefined;
-let planning = false, playing = false, previewTime: number | undefined, pinnedTime = 1.137;
-let worker: Worker | undefined, generation = 0, pending = false, predictionError = '';
-let lastEditAt = 0, latency: number[] = [], feedbackLatency: number[] = [], geometry: { t: number; p: number[] }[] = [];
-let snapEvents: ReturnType<EditorSession['snapCandidates']> = [];
-let handle: { axis: 'radial' | 'transverse' | 'time'; bounds?: [number, number]; origin: [number, number]; direction: [number, number]; start: number } | undefined;
-let targetReference: Runner | undefined, targetPath: Prediction | undefined;
-let targetWorker: Worker | undefined, targetGeneration = 0, solving = false, solveStatus = '';
-let proposal: { value: RendezvousProposal | EncounterProposal; prediction: Prediction; revision: number } | undefined;
-let pan: { point: [number, number]; center: [number, number] } | undefined;
-let handles: { axis: 'radial' | 'transverse'; p: [number, number]; direction: [number, number] }[] = [];
-let apsisPoints: { event: Encounter; p: [number, number] }[] = [];
-let nodePoints: { id: string; p: [number, number] }[] = [];
-let encounterPoints: { event: Opportunity; p: [number, number] }[] = [];
-let menuLabels: string[] = [];
-const layers = { plan: true, orbits: true, markers: true, trail: true };
-let restoredLayers = { ...layers };
-let objectPoints: { id: string; p: [number, number]; radius: number }[] = [];
-const logisticsUI = mountLogistics(el('logistics'), {session: () => session, edit: change => edited(change), epoch: () => previewTime ?? pinnedTime,
-  preview: t => {selectedBurn = undefined; previewTime = t; pinnedTime = t; setPlaying(false); refreshInspector(); updateUI(); render();},
-  example: () => edited(() => session.change(validateBundle(roundTrip).program))});
-const puzzleUI = mountPuzzles(el('puzzle'), {session: () => session, restart: bundle => install(new EditorSession(bundle)), replay: bundle => {
-  install(new EditorSession(bundle)); session.execute(); acceptedPath = predict(bundle,-1); acceptedReference = new Runner(bundle); setPlaying(true); previewTime = undefined; render();
-}});
-const portTarget = (): PortTarget | undefined => session.scenario.logistics ? {portId: el<HTMLSelectElement>('target-port').value, arrivalEpoch: el<HTMLInputElement>('port-arrival').valueAsNumber} : undefined;
-const endTime = () => session.scenario.epoch + session.scenario.duration;
-const currentBurn = () => session.draft.burns.find(b => b.id === selectedBurn);
-const limit = () => session.scenario.bodies.length > 1 ? 0.03 : 0.25;
-const gain = () => session.scenario.bodies.length > 1 ? 4000 : 600;
-const statusLabel = (status: Sample['status']) => ({ running: 'Running', horizon: 'Complete', collision: 'Surface contact',
-  'unsupported-approach': 'Approach unresolved', 'burn-rejected': 'Not enough fuel', 'work-limit': 'Prediction incomplete', 'operation-rejected': 'Operation blocked' })[status];
-
-function samplePrediction(prediction: Prediction, t: number): Sample {
-  const rows = prediction.samples; t = Math.min(t, prediction.terminal.t);
-  let lo = 0, hi = rows.length - 1;
-  while (lo < hi) { const mid = Math.ceil((lo + hi) / 2); if (rows[mid].t <= t) lo = mid; else hi = mid - 1; }
-  const a = rows[lo], b = rows[lo + 1];
-  if (!b || t === a.t) return a;
-  const u = (t - a.t) / (b.t - a.t);
-  // View-only interpolation. Burns and execution always use the Runner.
-  return { ...a, t, y: a.y.map((v, i) => v + u * (b.y[i] - v)) as State };
-}
-function relative(y: State, t: number): State {
-  if (frameSelect.value === session.scenario.rendezvous?.target.id && targetReference) return frameState(session.scenario, y, t, 'ship', targetReference.sample(t).y);
-  const port = session.scenario.logistics?.ports.find(p => p.id === frameSelect.value);
-  if (port) return frameState(session.scenario, y, t, 'ship', portState(port, t));
-  return frameState(session.scenario, y, t, frameSelect.value,
-    frameSelect.value === 'ship' ? acceptedReference.sample(t).y : [0, 0, 0, 0]);
-}
-function point(y: State, t: number): [number, number] { return project(relative(y, t), camera); }
-function setPlaying(value: boolean) { playing = value; el('play').textContent = playing ? 'Pause' : 'Play'; }
-function message(text = '') { el('message').textContent = text; }
-function selectOptions(select: HTMLSelectElement, entries: [string, string][], value?: string) {
-  select.replaceChildren(...entries.map(([id, label]) => { const option = document.createElement('option'); option.value = id; option.textContent = label; return option; }));
-  if (value && entries.some(([id]) => id === value)) select.value = value;
+const canvas = $<HTMLCanvasElement>('space'), ctx = canvas.getContext('2d')!;
+let run: SetRun | undefined, worker: Worker | undefined, revision = 0;
+let events: SetEvent[] = [], selected = '', frame = 'inertial', t = 0, playing = false;
+let ready = false, width = 900, height = 600, scale = 100, center: [number, number] = [0, 0];
+let lastFrame = performance.now(), lastPanel = 0;
+let layers = {orbits: true, trails: true, plan: true, labels: true};
+let savedLayers = {...layers}, cleared = false;
+let hits: {id: string; name: string; x: number; y: number}[] = [];
+const colors = {body: '#7893a4', station: '#c7d5de'};
+function html(id: string, value: string) { if ($(id).innerHTML !== value) $(id).innerHTML = value; }
+const end = () => {const s = run!.vessels[0].bundle.scenario; return s.epoch + s.duration;};
+const start = () => run!.vessels[0].bundle.scenario.epoch;
+const vessel = () => run?.vessels.find(v => v.bundle.scenario.ship.id === selected);
+function project(y: State, time: number): [number, number] {
+  const p = transform(run!, y, time, frame);
+  return [width / 2 + (p[0] - center[0]) * scale, height / 2 - (p[1] - center[1]) * scale];
 }
 function fit() {
-  const positions = [...baseline.samples, ...draft.samples, ...(targetPath?.samples ?? [])].map(p => relative(p.y, p.t));
-  if (session.scenario.id === 'm1-orbit-v1') positions.push([-1.7, -1.7, 0, 0], [1.7, 1.7, 0, 0]);
-  for (const body of session.scenario.bodies) for (const sample of baseline.samples) positions.push(relative(bodyState(body, sample.t), sample.t));
-  const xs = positions.map(p => p[0]), ys = positions.map(p => p[1]);
-  const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
-  camera = { center: [(minX + maxX) / 2, (minY + maxY) / 2], scale: Math.min(800 / Math.max(maxX - minX, 0.1), 480 / Math.max(maxY - minY, 0.1)) };
+  if (!run) return;
+  center = [0, 0];
+  scale = Math.min(width, height) / (2 * run.extent * (frame === 'inertial' || frame === 'rotating' ? 1 : 1.8));
 }
-function install(next: EditorSession, preview = next.scenario.epoch) {
-  closeMenu(); cancelTarget(); worker?.terminate(); worker = undefined; pending = false; generation++; session = next;
-  targetReference = session.scenario.rendezvous ? new Runner(targetBundle(session.bundle)) : undefined;
-  targetPath = targetReference ? predict(targetBundle(session.bundle), -1) : undefined;
-  acceptedReference = new Runner({ scenario: session.scenario, program: session.accepted });
-  baseline = predict({ scenario: session.scenario, program: session.baseline }, -1); draft = baseline;
-  acceptedPath = predict({ scenario: session.scenario, program: session.accepted }, -1);
-  selectedObject = 'ship'; selectedBurn = undefined; planning = false; handle = undefined; previewTime = undefined;
-  pinnedTime = preview; setPlaying(false); message(); latency = []; feedbackLatency = []; lastEditAt = 0;
-  selectOptions(frameSelect, [['inertial', 'Inertial'], ...session.scenario.bodies.map(b => [b.id, b.id + ' centered'] as [string, string]), ['ship', 'Execution ship'], ...(session.scenario.logistics?.ports.map(p => [p.id, p.id + ' centered'] as [string,string]) ?? []), ...(session.scenario.rendezvous ? [[session.scenario.rendezvous.target.id, 'Target centered'] as [string, string]] : [])]);
-  const bodies = session.scenario.bodies.map(b => [b.id, b.id] as [string, string]);
-  selectOptions(el('burn-reference'), bodies); selectOptions(el('encounter-body'), bodies, bodies.at(-1)?.[0]);
-  el('objects').replaceChildren(...[['ship', 'Ship'], ...bodies, ...(session.scenario.logistics?.ports.map(p => [p.id,p.id]) ?? []), ...(session.scenario.rendezvous ? [[session.scenario.rendezvous.target.id, 'Target']] : [])].map(([id, label]) => {
-    const button = document.createElement('button'); button.textContent = label; button.dataset.object = id;
-    button.addEventListener('click', () => { selectedObject = id; planning = false; updateUI(); render(); }); return button;
-  }));
-  selectOptions(el('target-port'), session.scenario.logistics?.ports.map(p => [p.id,p.id]) ?? [], session.scenario.logistics?.objective.returnPortId);
-  el<HTMLInputElement>('port-arrival').value = String(Math.min(19.5,endTime()-0.5));
-  el<HTMLInputElement>('port-departure').value = String(Math.min(15.5,endTime()-1));
-  slider.min = String(session.scenario.epoch); slider.max = String(endTime());
-  el<HTMLSelectElement>('scene').value = puzzleFor(session.scenario)?.id ?? (session.scenario.id === 'm1-orbit-v1' ? 'orbit' : session.scenario.id === binary.scenario.id ? 'moon' : session.scenario.logistics ? 'delivery' : session.scenario.rendezvous ? 'rendezvous' : '');
-  el('goal').hidden = !session.scenario.logistics && !session.scenario.rendezvous && session.scenario.id !== 'm1-orbit-v1' && session.scenario.id !== binary.scenario.id;
-  el('goal-label').textContent = session.scenario.rendezvous ? `Meet target · t ${session.scenario.rendezvous.arrivalEpoch.toFixed(3)}` : session.scenario.id === binary.scenario.id ? 'Moon altitude · t 2.4–2.6' : 'Apoapsis in the band';
-  el<HTMLTextAreaElement>('json').value = session.serialize(preview); fit(); refreshInspector(); schedulePrediction();
+function seek(time: number, pause = true) {
+  if (!ready) return;
+  t = Math.max(start(), Math.min(end(), time));
+  if (pause) playing = false;
+  draw();
+  updatePanels();
 }
-function refreshInspector() {
-  const burn = currentBurn(); el('inspector').hidden = !burn;
-  if (!burn) { snapEvents = []; return; }
-  el<HTMLInputElement>('port-departure').value = String(burn.t);
-  for (const [id, value] of [['burn-time', burn.t], ['radial', burn.radial], ['transverse', burn.transverse]] as const) el<HTMLInputElement>(id).value = String(value);
-  el<HTMLInputElement>('burn-time').min = String(session.scenario.epoch); el<HTMLInputElement>('burn-time').max = String(endTime());
-  for (const id of ['radial', 'transverse']) { el<HTMLInputElement>(id).min = String(-limit()); el<HTMLInputElement>(id).max = String(limit()); }
-  el<HTMLSelectElement>('burn-reference').value = burn.referenceBodyId;
-  snapEvents = session.snapCandidates(burn.id);
-  selectOptions(el('apsis'), snapEvents.length ? snapEvents.map((e, i) => [String(i), `${e.kind} · ${e.bodyId} · ${e.t.toFixed(3)}`]) : [['', 'No unique apsis']]);
-  el<HTMLButtonElement>('snap').disabled = snapEvents.length === 0;
-  const snapState = session.snapState(burn.id);
-  el('snap-state').textContent = snapState === 'current' ? `Snapped · ${burn.snap!.kind}` : snapState ? `Apsis ${snapState} · re-snap or keep epoch` : '';
-  el('keep-epoch').hidden = !snapState || snapState === 'current';
+function eventLabel(e: SetEvent): string {
+  const port = e.portId ?? '';
+  if (e.kind === 'dock') return `Dock ${port}`;
+  if (e.kind === 'undock') return `Depart ${port}`;
+  if (e.kind === 'transfer-start') return `Service ${port}`;
+  if (e.kind === 'transfer') return `${e.cargoAfter! < e.cargoBefore! ? 'Unload' : 'Load'} freight · ${port}`;
+  return e.id.endsWith('capture') ? 'Arrival burn' : 'Departure burn';
 }
-function updateUI() {
-  const program = session.draft, burn = currentBurn(), live = session.execution.current;
-  el<HTMLButtonElement>('undo').disabled = !session.canUndo; el<HTMLButtonElement>('redo').disabled = !session.canRedo;
-  el<HTMLButtonElement>('plan').disabled = selectedObject !== 'ship';
-  el('plan').textContent = planning ? 'Inspect' : 'Plan trajectory';
-  el('selected-object').textContent = selectedObject === 'ship' ? 'Ship' : selectedObject;
-  document.querySelectorAll<HTMLButtonElement>('[data-object]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.object === selectedObject)));
-  el<HTMLButtonElement>('add').disabled = !planning || pending || !!handle;
-  el('burns').replaceChildren(...program.burns.map((b, index) => {
-    const button = document.createElement('button'); button.className = 'burn-row'; button.dataset.burn = b.id;
-    button.setAttribute('role', 'listitem'); button.setAttribute('aria-current', String(b.id === selectedBurn));
-    button.textContent = `${index + 1}  ·  t ${b.t.toFixed(3)}     Δv ${Math.hypot(b.radial, b.transverse).toFixed(4)}`;
-    button.addEventListener('click', () => selectBurn(b.id)); return button;
-  }));
-  if (!program.burns.length) { const empty = document.createElement('span'); empty.className = 'muted'; empty.textContent = 'No maneuvers'; el('burns').append(empty); }
-  el('inspector').hidden = !burn;
-  if (burn) { el('node-name').textContent = `Maneuver ${program.burns.findIndex(b => b.id === burn.id) + 1}`; el('node-dv').textContent = Math.hypot(burn.radial, burn.transverse).toFixed(5); }
-  el('total-dv').textContent = program.burns.reduce((sum, b) => sum + Math.hypot(b.radial, b.transverse), 0).toFixed(5);
-  el('fuel').textContent = (pending ? live.propellant : draft.terminal.propellant).toFixed(5);
-  const staleSnap = program.burns.some(b => b.snap && session.snapState(b.id) !== 'current');
-  el<HTMLButtonElement>('execute').disabled = pending || !!handle || !!predictionError || draft.revision !== session.revision || draft.terminal.status !== 'horizon' || draft.accuracy?.status !== 'converged' || staleSnap;
-  el('prediction-status').textContent = predictionError ? 'Prediction failed' : pending ? 'Updating…' : draft.terminal.status !== 'horizon' ? statusLabel(draft.terminal.status) : draft.accuracy?.status !== 'converged' ? 'Path unresolved' : session.changed ? 'Draft' : '';
-  el('prediction-status').classList.toggle('stale', pending);
-  const moonGoal = session.scenario.id === binary.scenario.id;
-  const goal = moonGoal ? draft.diagnostics.moon?.closest : draft.diagnostics.primary?.apsides.find(e => e.kind === 'apoapsis' && e.t > (program.burns[0]?.t ?? 0));
-  const achieved = !!goal && (moonGoal ? goal.altitude >= 0.065 && goal.altitude <= 0.075 && goal.t >= 2.4 && goal.t <= 2.6 : goal.distance >= 1.4 && goal.distance <= 1.6);
-  el('goal-value').textContent = pending ? '…' : goal ? `${(moonGoal ? goal.altitude : goal.distance).toFixed(3)}${achieved ? ' · In band' : ''}` : '—';
-  let goalAchieved = achieved;
-  if (session.scenario.rendezvous) {
-    const meet = draft.rendezvous, tolerance = session.scenario.rendezvous.tolerance;
-    goalAchieved = !!meet && meet.positionError < tolerance.position && meet.relativeSpeed < tolerance.velocity;
-    el('goal-label').textContent = meet?.kind === 'match-orbit' ? `Match orbit · t ${meet.t.toFixed(3)}` : `Meet target · t ${(meet?.t ?? session.scenario.rendezvous.arrivalEpoch).toFixed(3)}`;
-    el('goal-value').textContent = pending ? '…' : goalAchieved ? (meet?.kind === 'match-orbit' ? 'Orbit matched' : 'Matched') : meet ? `Miss ${meet.positionError.toFixed(3)}` : '—';
-  }
-  if (session.scenario.logistics) {
-    const goal = session.scenario.logistics.objective; goalAchieved = !!draft.logistics?.complete && draft.terminal.status === 'horizon';
-    el('goal-label').textContent = puzzleFor(session.scenario) ? 'Plan' : `${goal.quota.toFixed(3)} to ${goal.destinationId} · return ${goal.returnPortId} ≥ ${goal.minPropellant.toFixed(3)} fuel`;
-    el('goal-value').textContent = pending ? '…' : draft.terminal.status === 'operation-rejected' ? 'Operation blocked' : draft.logistics?.reason ?? '—';
-  }
-  el('goal').classList.toggle('achieved', !pending && draft.accuracy?.status === 'converged' && goalAchieved);
-  el('targeting').hidden = !session.scenario.rendezvous && !session.scenario.logistics;
-  el('port-target').hidden = !session.scenario.logistics;
-  el<HTMLButtonElement>('port-place').disabled = pending || !!handle || !!burn;
-  el('target-miss').textContent = pending ? '…' : draft.rendezvous?.positionError.toExponential(3) ?? '—';
-  el('target-speed').textContent = pending ? '…' : draft.rendezvous?.relativeSpeed.toExponential(3) ?? '—';
-  const destination = portTarget();
-  if (destination && !pending && !departureUnavailable(session.bundle, selectedBurn, destination)) {
-    const at = new Runner(session.bundle).sample(destination.arrivalEpoch), port = session.scenario.logistics!.ports.find(p => p.id === destination.portId)!;
-    const target = portState(port, destination.arrivalEpoch);
-    el('target-miss').textContent = at.t === destination.arrivalEpoch ? Math.hypot(at.y[0]-target[0],at.y[1]-target[1]).toExponential(3) : '—';
-    el('target-speed').textContent = at.t === destination.arrivalEpoch ? Math.hypot(at.y[2]-target[2],at.y[3]-target[3]).toExponential(3) : '—';
-  }
-  const unavailable = departureUnavailable(session.bundle, selectedBurn, portTarget());
-  el<HTMLButtonElement>('solve').disabled = pending || !!handle || (!solving && !!unavailable);
-  el('solve').title = unavailable ?? 'Refine this departure for the selected arrival';
-  el('solve').textContent = solving ? 'Cancel' : 'Target';
-  el('solve-status').textContent = solveStatus || (session.scenario.rendezvous || session.scenario.logistics ? unavailable ?? '' : '');
-  el('proposal').hidden = !proposal; el('proposal-key').hidden = !proposal;
-  el<HTMLButtonElement>('accept-proposal').disabled = !proposal || proposal.revision !== session.revision || proposal.prediction.accuracy?.status !== 'converged';
-  if (proposal) {
-    const p = proposal.value;
-    el('proposal-values').textContent = `${'departure' in p ? `Departure Δv ${Math.hypot(p.departure.radial, p.departure.transverse).toFixed(5)}\n` : ''}Arrival Δv ${Math.hypot(p.arrival.radial, p.arrival.transverse).toFixed(5)}\nTotal Δv ${p.totalDv.toFixed(5)} (${p.addedDv >= 0 ? '+' : ''}${p.addedDv.toFixed(5)})\nFuel ${p.propellantUsed.toFixed(5)}\nMiss ${p.positionError.toExponential(2)}${'addedOperations' in p ? (p.addedOperations ?? []).map(o => `\n${o.kind === 'undock' ? 'Undock' : 'Dock'} ${o.portId} · t ${o.t.toFixed(3)}`).join('') : ''}`;
-  }
-  const encounter = draft.diagnostics[el<HTMLSelectElement>('encounter-body').value]?.closest;
-  el('encounter-readout').textContent = pending ? 'Updating…' : encounter ? `t ${encounter.t.toFixed(5)}\nCenter ${encounter.distance.toFixed(6)}\nAltitude ${encounter.altitude.toFixed(6)}\nRelative speed ${encounter.relativeSpeed.toFixed(6)}` : '';
+function nextDock(v: VesselRun) { return events.find(e => e.vessel === v.bundle.scenario.ship.id && e.t > t + 1e-9 && e.kind === 'dock'); }
+function status(v: VesselRun): string {
+  const s = sampleVessel(v, t), l = s.logistics;
+  if (l?.service) return `${l.service.cargo < 0 ? 'Unloading' : 'Loading'} · ${l.service.portId}`;
+  if (l?.dockedPortId) return `Docked · ${l.dockedPortId}`;
+  const dock = nextDock(v);
+  return dock ? `En route · ${dock.portId}` : 'Free flight';
 }
-function schedulePrediction(inputAt?: number) {
-  if (inputAt !== undefined) lastEditAt = inputAt;
-  if (pending) { worker?.terminate(); worker = undefined; }
-  pending = true; predictionError = '';
-  const ticket = ++generation, revision = session.revision, bundle = session.bundle;
-  worker ??= new Worker(new URL('./planning/prediction.worker.ts', import.meta.url), { type: 'module' });
-  worker.onmessage = ({ data }) => {
-    if (ticket !== generation || revision !== session.revision) return;
-    if (data.error) { pending = false; predictionError = data.error; message(data.error); updateUI(); render(); return; }
-    const result = data.result as Prediction;
-    if (result.scenarioId !== session.scenario.id || result.modelVersion !== session.scenario.modelVersion || result.revision !== revision || result.horizon !== endTime()) return;
-    draft = result; pending = false; updateUI();
-    requestAnimationFrame(() => {
-      render();
-      requestAnimationFrame(() => { if (ticket === generation && lastEditAt) { latency.push(performance.now() - lastEditAt); latency = latency.slice(-64); lastEditAt = 0; render(); } });
-    });
-  };
-  worker.onerror = event => { if (ticket !== generation) return; pending = false; predictionError = event.message; worker?.terminate(); worker = undefined; message(event.message); updateUI(); render(); };
-  worker.postMessage({ bundle, revision, horizon: endTime() }); updateUI(); render();
-  if (inputAt !== undefined) requestAnimationFrame(() => { if (ticket === generation) { feedbackLatency.push(performance.now() - inputAt); feedbackLatency = feedbackLatency.slice(-64); } });
-}
-function selectBurn(id: string) {
-  if (handle) finishHandle(true);
-  selectedBurn = id; selectedObject = 'ship'; planning = true; setPlaying(false);
-  pinnedTime = currentBurn()!.t; previewTime = pinnedTime; refreshInspector(); updateUI(); render();
-}
-function edited(change: () => void, inspector = true) {
-  const inputAt = performance.now();
-  try {
-    closeMenu(); cancelTarget(); const previous = session.revision; change(); setPlaying(false); message();
-    if (inspector) refreshInspector();
-    if (session.revision === previous) { updateUI(); render(); return; }
-    schedulePrediction(inputAt);
-  }
-  catch (error) { message((error as Error).message); if (inspector) refreshInspector(); render(); }
-}
-function addBurn(t: number, apsis?: Encounter) {
-  edited(() => {
-    session.beginGesture();
-    try {
-      const id = session.addBurn(apsis ? t : Math.round(t * 1e6) / 1e6, apsis?.bodyId ?? (el<HTMLSelectElement>('burn-reference').value || session.scenario.bodies[0].id));
-      if (apsis) session.snap(id, apsis, [Math.max(session.scenario.epoch, t - 0.5), Math.min(endTime(), t + 0.5)]);
-      session.endGesture(true); selectedBurn = id; pinnedTime = currentBurn()!.t; previewTime = pinnedTime;
-    } catch (error) { session.endGesture(false); throw error; }
+function select(id: string) { selected = id; $('hit-menu').hidden = true; updatePanels(); }
+function buildTimeline() {
+  $('timelines').innerHTML = run!.vessels.map(v => {
+    const times = [...new Set([start(), end(), ...v.ledger.map(e => e.t)])].sort((a, b) => a - b);
+    const blocks = times.slice(0, -1).map((a, i) => {
+      const b = times[i + 1], state = sampleVessel(v, (a + b) / 2), l = state.logistics;
+      const fill = l?.service ? '#e9c485' : l?.dockedPortId ? '#35434d' : v.color;
+      return `<rect x="${1000 * (a - start()) / (end() - start())}" y="${l?.service ? 3 : 7}" width="${1000 * (b - a) / (end() - start())}" height="${l?.service ? 14 : 6}" fill="${fill}" opacity="${l?.dockedPortId && !l.service ? 0.8 : 0.65}"/>`;
+    }).join('');
+    const burns = v.ledger.filter(e => e.kind === 'burn').map(e => `<path d="M${1000 * (e.t - start()) / (end() - start())} 4v12" stroke="${v.color}" stroke-width="1"/>`).join('');
+    return `<div class="timeline-row" data-vessel="${esc(v.name)}"><button class="timeline-name" data-select="${esc(v.bundle.scenario.ship.id)}" style="color:${v.color}">${esc(v.name)}</button><div class="timeline-track"><svg viewBox="0 0 1000 20" preserveAspectRatio="none" aria-label="${esc(v.name)} activity; colored spans are flight, gold is cargo service">${blocks}${burns}</svg><span class="time-cursor"></span><button class="timeline-seek" aria-label="Scrub ${esc(v.name)} timeline"></button></div></div>`;
+  }).join('');
+  document.querySelectorAll<HTMLButtonElement>('[data-select]').forEach(b => b.onclick = () => select(b.dataset.select!));
+  document.querySelectorAll<HTMLButtonElement>('.timeline-seek').forEach(b => b.onclick = e => {
+    const rect = b.getBoundingClientRect(); seek(start() + (e.clientX - rect.left) / rect.width * (end() - start()));
   });
 }
-function hitApsis(p: [number, number]) {
-  return apsisPoints.filter(a => Math.hypot(p[0] - a.p[0], p[1] - a.p[1]) < 12)
-    .sort((a, b) => Math.abs(a.event.t - (previewTime ?? pinnedTime)) - Math.abs(b.event.t - (previewTime ?? pinnedTime)))[0];
-}
-function finishHandle(commit: boolean) {
-  if (!handle) return;
-  const inputAt = performance.now();
-  const previous = session.revision; handle = undefined; session.endGesture(commit);
-  if (currentBurn()) { pinnedTime = currentBurn()!.t; previewTime = pinnedTime; }
-  refreshInspector();
-  if (session.revision !== previous) schedulePrediction(inputAt); else { updateUI(); render(); }
-}
-function render() {
-  if (!session) return;
-  const live = session.execution.current; if (live.status !== 'running') setPlaying(false);
-  const t = previewTime ?? live.t, ghost = samplePrediction(draft, t), s = session.scenario;
-  puzzleUI.update();
-  logisticsUI.update(draft, previewTime === undefined ? live : ghost, pending);
-  if (s.logistics && !pending && draft.terminal.status === 'operation-rejected') message(draft.terminal.detail);
-  el('time').textContent = live.t.toFixed(3); el('preview-time').textContent = t.toFixed(3); slider.value = String(t);
-  el('status').textContent = live.status === 'running' ? (playing ? 'Running' : 'Paused') : statusLabel(live.status);
-  el('hint').textContent = handle?.axis === 'time' ? 'Move left/right · click to set · Esc to cancel' : handle ? 'Move · click to set · Esc to cancel' : planning && !selectedBurn ? 'Click the orbit to place a maneuver' : planning && selectedBurn ? 'Click R, T or the node to adjust' : '';
-  ctx.fillStyle = '#0f1821'; ctx.fillRect(0, 0, 1000, 650); ctx.strokeStyle = '#1b2a35'; ctx.lineWidth = 1;
-  const spacing = 50;
-  if (layers.markers) for (let x = 0; x <= 1000; x += spacing) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 650); ctx.stroke(); }
-  if (layers.markers) for (let y = 0; y <= 650; y += spacing) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1000, y); ctx.stroke(); }
-  if (layers.orbits && s.id === 'm1-orbit-v1' && frameSelect.value !== 'ship') {
-    const p = point(bodyState(s.bodies[0], t), t);
-    ctx.beginPath(); ctx.arc(...p, 1.5 * camera.scale, 0, 2 * Math.PI); ctx.strokeStyle = '#7bb2a322'; ctx.lineWidth = 0.2 * camera.scale; ctx.stroke();
-    ctx.lineWidth = 1; ctx.strokeStyle = '#7bb2a366'; ctx.setLineDash([4, 7]);
-    for (const r of [1.4, 1.6]) { ctx.beginPath(); ctx.arc(...p, r * camera.scale, 0, 2 * Math.PI); ctx.stroke(); } ctx.setLineDash([]);
-  }
-  if (layers.orbits && s.id === binary.scenario.id && frameSelect.value !== 'ship') {
-    const p = point(bodyState(s.bodies[1], t), t);
-    ctx.beginPath(); ctx.arc(...p, 0.095 * camera.scale, 0, 2 * Math.PI); ctx.strokeStyle = '#7bb2a344'; ctx.lineWidth = 0.01 * camera.scale; ctx.stroke();
-  }
-  function path(prediction: Prediction, color: string, dashed = false, past = -Infinity) {
-    ctx.setLineDash(dashed ? [5, 6] : []);
-    for (let i = 1; i < prediction.samples.length; i++) {
-      const a = prediction.samples[i-1], b = prediction.samples[i];
-      ctx.strokeStyle = b.t <= past ? '#9ba7af35' : color; ctx.lineWidth = b.t <= past ? 1 : 2;
-      ctx.beginPath(); ctx.moveTo(...point(a.y, a.t)); ctx.lineTo(...point(b.y, b.t)); ctx.stroke();
-    }
-    ctx.setLineDash([]);
-  }
-  if (layers.orbits && targetPath) path(targetPath, '#80c8be55');
-  const followed = followedUntil(session.accepted, session.draft, live.t);
-  if (layers.plan) {
-    path(baseline, '#5d798d40', false, followedUntil(session.accepted, session.baseline, live.t));
-    path(draft, pending ? '#c7a37488' : '#edbc74', pending, followed);
-    if (proposal) path(proposal.prediction, '#bf9de8', true);
-  }
-  if (layers.trail) {
-    const past = [...acceptedPath.samples.filter(p => p.t < live.t), live];
-    ctx.lineWidth = 2.8;
-    for (let i = 1; i < past.length; i++) {
-      const a = past[i-1], b = past[i];
-      ctx.strokeStyle = `rgba(119,195,216,${trailAlpha(live.t - b.t, s.duration)})`;
-      ctx.beginPath(); ctx.moveTo(...point(a.y, a.t)); ctx.lineTo(...point(b.y, b.t)); ctx.stroke();
-    }
-  }
-  apsisPoints = [];
-  const apsisBody = s.bodies.find(b => b.id === frameSelect.value)?.id ?? currentBurn()?.referenceBodyId ?? s.bodies[0].id;
-  for (const event of layers.markers ? draft.diagnostics[apsisBody]?.apsides ?? [] : []) {
-    const p = point(samplePrediction(draft, event.t).y, event.t);
-    apsisPoints.push({ event, p });
-    ctx.beginPath(); ctx.arc(...p, 4, 0, 2 * Math.PI); ctx.fillStyle = pending ? '#9c8b72' : '#edbc74'; ctx.fill();
-    ctx.font = '11px system-ui'; ctx.fillText(event.kind === 'periapsis' ? 'Pe' : 'Ap', p[0] + 8, p[1] - 8);
-  }
-  geometry = layers.plan ? draft.samples.map(p => ({ t: p.t, p: point(p.y, p.t) })) : [];
-  // A body's trail and its preview marker use the reference origin at each
-  // sample's epoch, never the current body's position for an entire trajectory.
-  for (const body of s.bodies) if (layers.orbits && body.rail.kind === 'circular') {
-    ctx.beginPath(); ctx.strokeStyle = '#66848b55'; ctx.lineWidth = 1;
-    baseline.samples.forEach((sample, i) => { const p = point(bodyState(body, sample.t), sample.t); if (i === 0) ctx.moveTo(...p); else ctx.lineTo(...p); }); ctx.stroke();
-  }
-  objectPoints = [];
-  for (const body of s.bodies) {
-    const p = point(bodyState(body, ghost.t), ghost.t), radius = Math.max(2, body.radius * camera.scale);
-    objectPoints.push({ id: body.id, p, radius }); ctx.beginPath(); ctx.arc(...p, radius, 0, 2 * Math.PI); ctx.fillStyle = body.id === 'moon' ? '#c4ced3' : '#76afac'; ctx.fill();
-    if (layers.markers && selectedObject === body.id) { ctx.beginPath(); ctx.arc(...p, radius + 6, 0, 2 * Math.PI); ctx.strokeStyle = '#e8eff3'; ctx.lineWidth = 1; ctx.stroke(); }
-    if (layers.markers) { ctx.font = '13px system-ui'; ctx.fillStyle = '#a8bbc6'; ctx.fillText(body.id, p[0] + radius + 8, p[1] + 4); }
-  }
-  for (const port of s.logistics?.ports ?? []) {
-    if (layers.orbits) { ctx.beginPath(); ctx.strokeStyle = '#80c8be33'; ctx.lineWidth = 1;
-    draft.samples.forEach((sample, i) => {const p = point(portState(port, sample.t), sample.t); if (i) ctx.lineTo(...p); else ctx.moveTo(...p);}); ctx.stroke(); }
-    const p = point(portState(port, t), t); objectPoints.push({id: port.id, p, radius: 9});
-    ctx.strokeStyle = '#80c8be'; ctx.lineWidth = layers.markers && selectedObject === port.id ? 3 : 2; ctx.strokeRect(p[0]-7,p[1]-7,14,14);
-    if (layers.markers) { ctx.font = '12px system-ui'; ctx.fillStyle = '#80c8be'; ctx.fillText(port.id,p[0]+12,p[1]-10); }
-  }
-  if (targetReference && s.rendezvous) {
-    const target = targetReference.sample(t), p = point(target.y, target.t);
-    objectPoints.push({ id: s.rendezvous.target.id, p, radius: 8 });
-    ctx.strokeStyle = '#80c8be'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(...p, 7, 0, 2 * Math.PI); ctx.stroke();
-    if (layers.markers) { ctx.font = '12px system-ui'; ctx.fillStyle = '#80c8be'; ctx.fillText('Target', p[0] - 50, p[1] - 15); }
-  }
-  const livePoint = !layers.markers && previewTime !== undefined ? point(ghost.y, ghost.t) : point(live.y, live.t); ctx.fillStyle = '#77c3d8'; ctx.beginPath(); ctx.arc(...livePoint, 5, 0, 2 * Math.PI); ctx.fill();
-  objectPoints.push({ id: 'ship', p: livePoint, radius: 7 });
-  if (layers.markers && selectedObject === 'ship') { ctx.strokeStyle = '#77c3d8'; ctx.lineWidth = 1; ctx.strokeRect(livePoint[0] - 10, livePoint[1] - 10, 20, 20); }
-  if (layers.markers && previewTime !== undefined) { const p = point(ghost.y, ghost.t); ctx.strokeStyle = '#f3d3a2'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(...p, 6, 0, 2 * Math.PI); ctx.stroke(); ctx.fillStyle = '#f3d3a2'; ctx.font = '12px system-ui'; ctx.fillText(`t ${ghost.t.toFixed(3)}`, p[0] + 12, p[1] - 12); }
-  if (layers.markers && proposal && previewTime !== undefined) {
-    const sample = samplePrediction(proposal.prediction, t), p = point(sample.y, sample.t);
-    ctx.strokeStyle = '#bf9de8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(...p, 9, 0, 2 * Math.PI); ctx.stroke();
-  }
-  encounterPoints = [];
-  for (const event of layers.markers ? draft.opportunities : []) {
-    const p = point(event.y, event.t); encounterPoints.push({ event, p });
-    ctx.beginPath(); ctx.arc(...p, event.kind === 'intercept' ? 10 : 7, 0, 2 * Math.PI);
-    ctx.strokeStyle = pending ? '#7d8b90' : event.kind === 'intercept' ? '#bf9de8' : '#80c8be'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = ctx.strokeStyle; ctx.font = 'bold 11px system-ui';
-    ctx.fillText(event.kind === 'intercept' ? 'I' : 'M', p[0] + (event.kind === 'intercept' ? 11 : -18), p[1] - 12);
-  }
-  nodePoints = []; handles = [];
-  for (const [index, burn] of layers.markers ? session.draft.burns.entries() : []) {
-    const state = draft.burnStates[burn.id]; if (!state || state.t !== burn.t) continue;
-    const p = point(state.y, burn.t); nodePoints.push({ id: burn.id, p });
-    ctx.strokeStyle = '#edbc74'; ctx.fillStyle = '#edbc74'; ctx.lineWidth = burn.id === selectedBurn ? 2 : 1;
-    ctx.strokeRect(p[0] - 6, p[1] - 6, 12, 12); ctx.font = '12px system-ui'; ctx.fillText(String(index + 1), p[0] + 10, p[1] + 15);
-    if (burn.id !== selectedBurn || !planning) continue;
-    const ref = bodyState(s.bodies.find(b => b.id === burn.referenceBodyId)!, burn.t), dx = state.y[0] - ref[0], dy = state.y[1] - ref[1], r = Math.hypot(dx, dy);
-    for (const [axis, direction, color] of [['radial', [dx / r, -dy / r], '#d68b91'], ['transverse', [-dy / r, -dx / r], '#80c8be']] as const) {
-      const length = 70 + burn[axis] * gain(), tip: [number, number] = [p[0] + direction[0] * length, p[1] + direction[1] * length];
-      handles.push({ axis, p: tip, direction: [...direction] }); ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.moveTo(...p); ctx.lineTo(...tip); ctx.stroke();
-      ctx.beginPath(); ctx.fillStyle = color; ctx.arc(...tip, handle?.axis === axis ? 9 : 7, 0, 2 * Math.PI); ctx.fill();
-      ctx.font = 'bold 12px system-ui'; ctx.fillStyle = '#111d27'; ctx.fillText(axis === 'radial' ? 'R' : 'T', tip[0] - 4, tip[1] + 4);
-    }
-  }
-  el('state-json').textContent = JSON.stringify({ ...live, ledger: session.execution.ledger, draft: session.draft,
-    accepted: session.accepted, baseline: session.baseline, revision: session.revision, readyRevision: draft.revision, pending,
-    previewTime: previewTime ?? null, pinnedTime, mode: handle?.axis === 'time' ? 'time-edit' : handle ? 'handle-edit' : selectedBurn ? 'epoch-pinned' : planning ? 'hover-preview' : 'inspect',
-    layers, followedUntil: followed, selectedObject, selectedBurn, frame: frameSelect.value, camera, handles, nodePoints, apsisPoints, encounterPoints, objectPoints, menuLabels, geometry,
-    targeting: { solving, proposal: proposal?.value ?? null, revision: proposal?.revision, status: solveStatus }, rendezvous: draft.rendezvous, logisticsResult: draft.logistics, terminal: draft.terminal, diagnostics: draft.diagnostics, accuracy: draft.accuracy, latency, feedbackLatency }, null, 2);
-}
-
-type Pick = { kind: 'handle' | 'node' | 'apsis' | 'encounter' | 'object' | 'manual'; label: string; t?: number; run: () => void };
-function startNodeTime(id: string, p: [number, number]) {
-  selectBurn(id); const burns = session.draft.burns, at = burns.findIndex(b => b.id === id);
-  session.beginGesture(); handle = { axis: 'time', origin: p, direction: [1, 0], start: currentBurn()!.t,
-    bounds: [at > 0 ? burns[at - 1].t + 1e-6 : session.scenario.epoch, at < burns.length - 1 ? burns[at + 1].t - 1e-6 : endTime()] };
-  updateUI(); render();
-}
-function collectPicks(p: [number, number]): Pick[] {
-  const picks: Pick[] = [], near = (q: number[], radius = 12) => Math.hypot(p[0] - q[0], p[1] - q[1]) < radius;
-  if (!pending) {
-    for (const h of handles) if (near(h.p, 14) && selectedBurn) picks.push({ kind: 'handle', label: h.axis === 'radial' ? 'Adjust radial burn' : 'Adjust transverse burn', run: () => { session.beginGesture(); handle = { axis: h.axis, origin: p, direction: h.direction, start: currentBurn()![h.axis] }; updateUI(); render(); } });
-    for (const n of nodePoints) if (near(n.p)) { const burns = session.draft.burns, index = burns.findIndex(b => b.id === n.id), burn = burns[index]; picks.push({ kind: 'node', label: `Maneuver ${index + 1} · t ${burn.t.toFixed(3)}`, t: burn.t, run: () => startNodeTime(n.id, p) }); }
-    for (const e of encounterPoints) if (near(e.p)) picks.push({ kind: 'encounter', label: `${e.event.kind === 'intercept' ? 'Intercept' : 'Match orbit'} · t ${e.event.t.toFixed(3)} · Δv ${e.event.relativeSpeed.toFixed(4)}`, t: e.event.t, run: () => requestCorrection(e.event) });
-    if (planning) for (const a of apsisPoints) if (near(a.p)) picks.push({ kind: 'apsis', label: `Snap to ${a.event.kind} · ${a.event.bodyId} · t ${a.event.t.toFixed(3)}`, t: a.event.t, run: () => addBurn(a.event.t, a.event) });
-  }
-  for (const o of objectPoints) if (near(o.p, Math.max(12, o.radius))) picks.push({ kind: 'object', label: `Select ${o.id}`, run: () => { selectedObject = o.id; selectedBurn = undefined; planning = false; refreshInspector(); updateUI(); render(); } });
-  return picks;
-}
-function closeMenu() { menuLabels = []; el('hit-menu').hidden = true; }
-function openMenu(picks: Pick[], x: number, y: number) {
-  const menu = el('hit-menu'); menu.replaceChildren(); setPlaying(false);
-  menuLabels = picks.map(p => p.label);
-  for (const pick of picks) {
-    const button = document.createElement('button'); button.type = 'button'; button.setAttribute('role', 'menuitem'); button.textContent = pick.label;
-    button.addEventListener('click', () => { closeMenu(); canvas.focus(); pick.run(); render(); }); menu.append(button);
-  }
-  menu.hidden = false; menu.style.left = `${Math.max(8, Math.min(x, innerWidth - menu.offsetWidth - 8))}px`;
-  menu.style.top = `${Math.max(8, Math.min(y, innerHeight - menu.offsetHeight - 8))}px`;
-  (menu.firstElementChild as HTMLButtonElement)?.focus(); render();
-}
-el('hit-menu').addEventListener('keydown', event => {
-  const buttons = [...el('hit-menu').querySelectorAll<HTMLButtonElement>('button')], at = buttons.indexOf(document.activeElement as HTMLButtonElement);
-  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') { event.preventDefault(); buttons[(at + (event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length]?.focus(); }
-  if (event.key === 'Escape' || event.key === 'Tab') { closeMenu(); canvas.focus(); }
-});
-
-// Switching to another control cancels the latched edit before that control acts.
-document.addEventListener('pointerdown', event => {
-  if (handle && event.target !== canvas) finishHandle(false);
-  if (event.target !== canvas && !el('hit-menu').contains(event.target as Node)) closeMenu();
-}, true);
-canvas.addEventListener('pointerdown', event => {
-  if (handle) return;
-  if (event.button === 1 || event.button === 2 || (event.button === 0 && event.shiftKey)) {
-    event.preventDefault(); closeMenu(); pan = { point: pointer(event), center: [...camera.center] }; canvas.setPointerCapture(event.pointerId);
-  }
-});
-canvas.addEventListener('contextmenu', event => event.preventDefault());
-canvas.addEventListener('pointerup', event => { if (pan) { pan = undefined; canvas.releasePointerCapture(event.pointerId); } });
-canvas.addEventListener('pointercancel', () => { pan = undefined; finishHandle(false); });
-function pointer(event: MouseEvent): [number, number] {
-  const rect = canvas.getBoundingClientRect(); return [(event.clientX - rect.left) * 1000 / rect.width, (event.clientY - rect.top) * 650 / rect.height];
-}
-canvas.addEventListener('pointermove', event => {
-  const p = pointer(event);
-  if (pan) { camera.center = [pan.center[0] - (p[0] - pan.point[0]) / camera.scale, pan.center[1] + (p[1] - pan.point[1]) / camera.scale]; render(); return; }
-  if (handle?.axis === 'time' && selectedBurn) {
-    const value = Math.max(handle.bounds![0], Math.min(handle.bounds![1], Math.round((handle.start + (p[0] - handle.origin[0]) * session.scenario.duration / 800) * 1e6) / 1e6));
-    if (value !== currentBurn()!.t) edited(() => { session.updateBurn(selectedBurn!, { t: value }); pinnedTime = value; previewTime = value; }, false);
-    return;
-  }
-  if (handle && selectedBurn) {
-    const value = Math.max(-limit(), Math.min(limit(), handle.start + ((p[0] - handle.origin[0]) * handle.direction[0] + (p[1] - handle.origin[1]) * handle.direction[1]) / gain()));
-    edited(() => session.updateBurn(selectedBurn!, { [handle!.axis]: Math.round(value * 1e6) / 1e6 }), false); return;
-  }
-  if (planning && !pending && el('hit-menu').hidden) { const apsis = hitApsis(p); const hit = hitPath(geometry, p, pinnedTime); const encounter = encounterPoints.find(e => Math.hypot(p[0] - e.p[0], p[1] - e.p[1]) < 12); if (encounter || apsis || hit) { previewTime = encounter?.event.t ?? apsis?.event.t ?? hit!.t; render(); } }
-  canvas.style.cursor = handles.some(h => Math.hypot(p[0] - h.p[0], p[1] - h.p[1]) < 14) ? 'crosshair' : planning ? 'crosshair' : 'default';
-});
-canvas.addEventListener('click', event => {
-  if (event.shiftKey || event.button !== 0) return;
-  const p = pointer(event); canvas.focus();
-  if (handle) { finishHandle(true); return; }
-  const picks = collectPicks(p);
-  if (picks.length > 1 || picks.some(p => p.kind === 'encounter')) {
-    const manualTimes = picks.filter(p => p.kind === 'encounter').map(p => p.t!);
-    const hit = hitPath(geometry, p, previewTime ?? pinnedTime);
-    if (!manualTimes.length && planning && hit) manualTimes.push(hit.t);
-    for (const t of [...new Set(manualTimes.map(t => Number(t.toFixed(8))))]) picks.push({ kind: 'manual', label: `Add new manual maneuver · t ${t.toFixed(3)}`, t, run: () => addBurn(t) });
-    openMenu(picks, event.clientX, event.clientY); return;
-  }
-  closeMenu();
-  if (picks.length) { picks[0].run(); return; }
-  if (planning && !pending) { const hit = hitPath(geometry, p, previewTime ?? pinnedTime); if (hit) addBurn(hit.t); }
-
-});
-canvas.addEventListener('wheel', event => {
-  event.preventDefault(); if (handle) return; closeMenu();
-  const p = pointer(event), before = unproject(p, camera);
-  camera.scale = Math.max(20, Math.min(10000, camera.scale * Math.exp(-event.deltaY * 0.001)));
-  const after = unproject(p, camera); camera.center[0] += before[0] - after[0]; camera.center[1] += before[1] - after[1]; render();
-}, { passive: false });
-el('plan').addEventListener('click', () => { if (handle) finishHandle(false); planning = !planning; selectedBurn = undefined; setPlaying(false); previewTime = planning ? pinnedTime : undefined; refreshInspector(); updateUI(); render(); });
-el('add').addEventListener('click', () => addBurn(previewTime ?? pinnedTime));
-el('delete').addEventListener('click', () => edited(() => { session.removeBurn(selectedBurn!); selectedBurn = undefined; }));
-for (const [id, field] of [['burn-time', 't'], ['radial', 'radial'], ['transverse', 'transverse']] as const) el<HTMLInputElement>(id).addEventListener('change', () => {
-  const value = el<HTMLInputElement>(id).valueAsNumber;
-  if (field !== 't' && Math.abs(value) > limit()) { message(`Range: ${-limit()} to ${limit()}`); refreshInspector(); return; }
-  edited(() => { session.updateBurn(selectedBurn!, { [field]: value }); pinnedTime = currentBurn()!.t; previewTime = pinnedTime; });
-});
-document.querySelectorAll<HTMLButtonElement>('[data-nudge]').forEach(button => button.addEventListener('click', () => {
-  const field = button.dataset.field as 't' | 'radial' | 'transverse', burn = currentBurn()!, value = Math.round((burn[field] + Number(button.dataset.nudge)) * 1e6) / 1e6;
-  if (field !== 't' && Math.abs(value) > limit()) return;
-  edited(() => { session.updateBurn(burn.id, { [field]: value }); previewTime = currentBurn()!.t; pinnedTime = previewTime; });
-}));
-el('burn-reference').addEventListener('change', () => edited(() => session.updateBurn(selectedBurn!, { referenceBodyId: el<HTMLSelectElement>('burn-reference').value })));
-el('snap').addEventListener('click', () => {
-  const event = snapEvents[Number(el<HTMLSelectElement>('apsis').value)]; if (!event) return;
-  edited(() => { session.snap(selectedBurn!, event, [Math.max(session.scenario.epoch, event.t - 0.5), Math.min(endTime(), event.t + 0.5)]); pinnedTime = event.t; previewTime = event.t; });
-});
-el('keep-epoch').addEventListener('click', () => edited(() => session.updateBurn(selectedBurn!, { t: currentBurn()!.t })));
-for (const [id, direction] of [['previous', -1], ['next', 1]] as const) el(id).addEventListener('click', () => { const burns = session.draft.burns, at = burns.findIndex(b => b.id === selectedBurn); if (burns.length) selectBurn(burns[(at + direction + burns.length) % burns.length].id); });
-function history(redo = false) { if (handle) finishHandle(false); edited(() => { if (redo) session.redo(); else session.undo(); if (!currentBurn()) selectedBurn = undefined; }); }
-el('undo').addEventListener('click', () => history()); el('redo').addEventListener('click', () => history(true));
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape') { closeMenu(); finishHandle(false); return; }
-  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z' && !(event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement)) { event.preventDefault(); history(event.shiftKey); }
-});
-function syncLayers() {
-  for (const key of Object.keys(layers) as (keyof typeof layers)[]) el<HTMLInputElement>('layer-'+key).checked = layers[key];
-  el('bodies-only').setAttribute('aria-pressed', String(!Object.values(layers).some(Boolean)));
-  document.querySelector<HTMLElement>('.legend')!.hidden = !Object.values(layers).some(Boolean); closeMenu(); render();
-}
-for (const key of Object.keys(layers) as (keyof typeof layers)[]) el('layer-'+key).addEventListener('change', () => { layers[key] = el<HTMLInputElement>('layer-'+key).checked; syncLayers(); });
-el('bodies-only').addEventListener('click', () => {
-  if (Object.values(layers).some(Boolean)) { restoredLayers = { ...layers }; Object.assign(layers, {plan: false, orbits: false, markers: false, trail: false}); }
-  else Object.assign(layers, restoredLayers);
-  syncLayers();
-});
-frameSelect.addEventListener('change' , () => { closeMenu(); if (handle) finishHandle(false); fit(); render(); });
-el('fit').addEventListener('click', () => { closeMenu(); if (!handle) { fit(); render(); } });
-el('focus').addEventListener('click', () => { if (handle) return; const t = previewTime ?? session.execution.current.t, y = selectedObject === 'ship' ? samplePrediction(draft, t).y : selectedObject === session.scenario.rendezvous?.target.id && targetReference ? targetReference.sample(t).y : session.scenario.logistics?.ports.some(p => p.id === selectedObject) ? portState(session.scenario.logistics.ports.find(p => p.id === selectedObject)!, t) : bodyState(session.scenario.bodies.find(b => b.id === selectedObject)!, t); const r = relative(y, t); camera.center = [r[0], r[1]]; render(); });
-el('encounter-body').addEventListener('change', () => updateUI());
-el('execute').addEventListener('click', () => {
-  try { session.execute(); acceptedReference = new Runner({ scenario: session.scenario, program: session.accepted }); acceptedPath = draft; previewTime = undefined; planning = false; selectedBurn = undefined; setPlaying(true); message(); refreshInspector(); updateUI(); render(); }
-  catch (error) { message((error as Error).message); }
-});
-el('play').addEventListener('click', () => { if (session.execution.current.status !== 'running') session.execution.reset(); previewTime = undefined; setPlaying(!playing); render(); });
-el('step').addEventListener('click', () => { setPlaying(false); previewTime = undefined; session.execution.advance(0.25); render(); });
-el('reset').addEventListener('click', () => { setPlaying(false); previewTime = undefined; session.execution.reset(); render(); });
-slider.addEventListener('input', () => { if (handle) finishHandle(false); previewTime = Number(slider.value); pinnedTime = previewTime; setPlaying(false); render(); });
-el('live').addEventListener('click', () => { previewTime = undefined; render(); });
-el('scene').addEventListener('change', () => install(new EditorSession(validateBundle(puzzles.find(p => p.id === el<HTMLSelectElement>('scene').value)?.bundle ?? (el<HTMLSelectElement>('scene').value === 'moon' ? binary : el<HTMLSelectElement>('scene').value === 'rendezvous' ? rendezvous : el<HTMLSelectElement>('scene').value === 'delivery' ? delivery : orbit)))));
-el('files').addEventListener('click', () => { const panel = el<HTMLDetailsElement>('file-panel'); panel.open = !panel.open; if (panel.open) panel.scrollIntoView({ behavior: 'smooth' }); });
-el('save').addEventListener('click', () => { el<HTMLTextAreaElement>('json').value = session.serialize(previewTime ?? session.execution.current.t); el('import-status').textContent = 'Saved'; });
-el('download').addEventListener('click', () => { const url = URL.createObjectURL(new Blob([session.serialize(previewTime ?? session.execution.current.t)], { type: 'application/json' })); const a = document.createElement('a'); a.href = url; a.download = 'orbital-logistics-plan.json'; a.click(); URL.revokeObjectURL(url); });
-el('load').addEventListener('click', () => { try { const { session: next, previewEpoch } = EditorSession.deserialize(el<HTMLTextAreaElement>('json').value); install(next, previewEpoch); previewTime = previewEpoch; el('import-status').textContent = 'Loaded'; } catch (error) { el('import-status').textContent = `Import rejected: ${(error as Error).message}`; } });
-function cancelTarget() {
-  targetWorker?.terminate(); targetWorker = undefined; targetGeneration++;
-  solving = false; proposal = undefined; solveStatus = '';
-}
-function requestCorrection(opportunity?: Opportunity) {
-  if (solving) { cancelTarget(); updateUI(); render(); return; }
-  if (!opportunity && !currentBurn()) return;
-  cancelTarget(); solving = true; solveStatus = 'Solving…';
-  const generation = targetGeneration, revision = session.revision, horizon = endTime(), bundle = session.bundle;
-  targetWorker = new Worker(new URL('./planning/rendezvous.worker.ts', import.meta.url), { type: 'module' });
-  targetWorker.onmessage = ({ data }) => {
-    if (generation !== targetGeneration || revision !== session.revision || data.generation !== generation || data.revision !== revision) return;
-    targetWorker?.terminate(); targetWorker = undefined; solving = false;
-    if (data.error) solveStatus = data.error;
-    else if (data.scenarioId !== session.scenario.id || data.modelVersion !== session.scenario.modelVersion || data.horizon !== endTime()) return;
-    else if (data.result.status === 'failed') solveStatus = data.result.reason;
-    else if (data.prediction.accuracy?.status !== 'converged') solveStatus = 'Proposal accuracy unresolved';
-    else if (opportunity) {
-      const value = data.result.proposal as EncounterProposal;
-      edited(() => session.change(value.program)); selectedBurn = value.arrival.id; selectedObject = 'ship'; planning = true;
-      previewTime = value.arrival.t; pinnedTime = value.arrival.t; refreshInspector();
-    } else { proposal = { value: data.result.proposal, prediction: data.prediction, revision }; solveStatus = 'Correction proposal'; previewTime = data.result.proposal.arrival.t; }
-    updateUI(); render();
+function fuelChart(v: VesselRun): string {
+  const path = (get: (s: typeof v.samples[number]) => number, max: number) => {
+    const points = v.samples.filter((s, i) => i === 0 || i === v.samples.length - 1 || get(s) !== get(v.samples[i - 1]));
+    return points.map((s, i) => {
+      const x = 4 + (s.t - start()) / (end() - start()) * 232, y = 64 - Math.min(1, get(s) / Math.max(max, 1e-12)) * 54;
+      return i ? `H${x}V${y}` : `M${x},${y}`;
+    }).join(' ');
   };
-  targetWorker.onerror = event => { if (generation !== targetGeneration) return; cancelTarget(); solveStatus = event.message; updateUI(); render(); };
-  targetWorker.postMessage({ bundle, burnId: currentBurn()?.id, opportunityId: opportunity?.id, portTarget: opportunity ? undefined : portTarget(), revision, horizon, generation }); updateUI(); render();
+  return `<div class="chart-key"><span>Fuel</span><span>Freight</span></div><svg class="budget-chart" viewBox="0 0 240 72" role="img" aria-label="Fuel and freight over the scene"><path d="M4 64H236" stroke="#33414b"/><path d="${path(s => s.propellant, v.bundle.scenario.ship.tankCapacity)}" fill="none" stroke="#78c9c0" stroke-width="1.5"/><path d="${path(s => s.logistics?.cargoMass ?? v.bundle.scenario.ship.cargoMass, v.bundle.scenario.logistics?.cargoCapacity ?? 1)}" fill="none" stroke="#efb878" stroke-width="1.5"/><path class="budget-cursor" d="M0 5V66" stroke="#c7d5de" stroke-opacity="0.6"/></svg>`;
 }
-el('port-place').addEventListener('click', () => { planning = true; selectedObject = 'ship'; addBurn(el<HTMLInputElement>('port-departure').valueAsNumber); });
-el('port-departure').addEventListener('change', () => {
-  if (!currentBurn()) return;
-  edited(() => { session.updateBurn(selectedBurn!, {t: el<HTMLInputElement>('port-departure').valueAsNumber}); pinnedTime = currentBurn()!.t; previewTime = pinnedTime; });
-});
-for (const id of ['target-port','port-arrival']) el(id).addEventListener('change', () => { cancelTarget(); updateUI(); render(); });
-el('solve').addEventListener('click', () => requestCorrection());
-el('reject-proposal').addEventListener('click', () => { cancelTarget(); updateUI(); render(); });
-el('accept-proposal').addEventListener('click', () => {
-  if (!proposal || proposal.revision !== session.revision || proposal.prediction.accuracy?.status !== 'converged') return;
-  const program = structuredClone(proposal.value.program); edited(() => session.change(program));
-});
-install(new EditorSession(validateBundle(orbit)));
-let lastFrame = 0;
-function tick(now: number) {
-  if (playing && lastFrame) { session.execution.advance(Math.min((now - lastFrame) / 1000, 0.1) * Number(el<HTMLSelectElement>('warp').value)); render(); }
-  lastFrame = now; requestAnimationFrame(tick);
+let inspectorKey = '';
+function updatePanels() {
+  if (!run || !ready) return;
+  $<HTMLButtonElement>('play').textContent = playing ? 'Pause' : 'Play';
+  $<HTMLInputElement>('time').value = String(t);
+  $('clock').textContent = `${number(t)} / ${number(end())}`;
+  $('load-status').textContent = t === end() ? 'End of scene' : '';
+  html('fleet', run.vessels.map(v => `<button class="object-row ${selected === v.bundle.scenario.ship.id ? 'selected' : ''}" data-object="${esc(v.bundle.scenario.ship.id)}"><i style="background:${v.color}"></i><span><strong>${esc(v.name)}</strong><small>${esc(status(v))}</small></span></button>`).join(''));
+  const stocks = stockAt(run, t);
+  $('station-heading').hidden = !run.stations.length;
+  $('stations').hidden = !run.stations.length;
+  html('stations', run.stations.length ? run.stations.map(station => {
+    const stock = stocks.find(s => s.id === station.id)!;
+    return `<button class="object-row ${selected === station.id ? 'selected' : ''}" data-object="${esc(station.id)}"><i class="station-dot"></i><span><strong>${esc(station.id)}</strong></span><span class="berths">${stock.occupied}/${station.berths}</span></button>`;
+  }).join('') : '');
+  document.querySelectorAll<HTMLButtonElement>('[data-object]').forEach(b => b.onclick = () => select(b.dataset.object!));
+  const v = vessel(), key = run.id + ':' + selected;
+  if (key !== inspectorKey) {
+    inspectorKey = key;
+    const heading = v?.name ?? selected;
+    $('inspector').innerHTML = `<div class="section-heading"><h2>${esc(heading)}</h2><button id="object-frame">View from here</button></div><p id="object-status"></p><dl id="readouts"></dl><button id="next-event" class="next-event"></button>${v ? fuelChart(v) : ''}<details id="schedule"><summary>Schedule</summary><div id="event-list"></div></details>`;
+    $('object-frame').onclick = () => { frame = selected; $<HTMLSelectElement>('frame').value = frame; fit(); updatePanels(); };
+  }
+  let upcoming: SetEvent | undefined;
+  if (v) {
+    const s = sampleVessel(v, t), cargo = s.logistics?.cargoMass ?? v.bundle.scenario.ship.cargoMass;
+    $('object-status').textContent = status(v);
+    const used = v.ledger.filter(e => e.t <= t).reduce((sum, e) => sum + e.fuelUsed, 0);
+    $('readouts').innerHTML = `<div><dt>${esc(v.cargo)}</dt><dd>${number(cargo)} / ${number(v.bundle.scenario.logistics?.cargoCapacity ?? cargo)}</dd></div><div><dt>Propellant</dt><dd>${number(s.propellant)} / ${number(v.bundle.scenario.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${number(used)}</dd></div>`;
+    const cursor = document.querySelector<SVGPathElement>('.budget-cursor');
+    cursor?.setAttribute('transform', `translate(${4 + (t - start()) / (end() - start()) * 232},0)`);
+    upcoming = events.find(e => e.vessel === selected && e.t > t + 1e-9 && e.kind !== 'burn');
+  } else {
+    const station = run.stations.find(s => s.id === selected), stock = stocks.find(s => s.id === selected);
+    const body = run.vessels[0].bundle.scenario.bodies.find(b => b.id === selected);
+    $('object-status').textContent = station?.role ?? 'Gravity source';
+    $('readouts').innerHTML = stock ? `<div><dt>Freight stock</dt><dd>${number(stock.cargo)}</dd></div><div><dt>Propellant stock</dt><dd>${number(stock.propellant)}</dd></div><div><dt>Berths</dt><dd>${stock.occupied} / ${station!.berths}</dd></div>` : `<div><dt>Gravitational μ</dt><dd>${number(body!.mu)}</dd></div>`;
+    upcoming = events.find(e => e.portId === selected && e.t > t + 1e-9 && e.kind === 'dock');
+  }
+  $('next-event').hidden = !upcoming;
+  if (upcoming) {
+    const e = upcoming;
+    $('next-event').textContent = `${eventLabel(e)} · ${number(e.t)} →`;
+    $('next-event').onclick = () => seek(e.t);
+  }
+  const relevant = events.filter(e => (v ? e.vessel === selected : e.portId === selected) && e.kind !== 'burn' && e.kind !== 'transfer-start');
+  $('schedule').hidden = !relevant.length;
+  html('event-list', relevant.map(e => `<button data-time="${e.t}" class="event ${e.t <= t ? 'past' : ''}"><span>${number(e.t)}</span>${esc(eventLabel(e))}</button>`).join(''));
+  document.querySelectorAll<HTMLButtonElement>('[data-time]').forEach(b => b.onclick = () => seek(Number(b.dataset.time)));
+  const percent = (t - start()) / (end() - start()) * 100;
+  document.querySelectorAll<HTMLElement>('.time-cursor').forEach(c => c.style.left = `${percent}%`);
+  document.querySelectorAll<HTMLElement>('.timeline-row').forEach(r => r.classList.toggle('selected', r.dataset.vessel === v?.name));
+  $('frame-name').textContent = $<HTMLSelectElement>('frame').selectedOptions[0]?.textContent ?? '';
+  publishState();
 }
-requestAnimationFrame(tick);
+function publishState() {
+  $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, frame, selected, layers,
+    ships: run?.vessels.map(v => ({id: v.bundle.scenario.ship.id, ...sampleVessel(v, t), screen: project(sampleVessel(v, t).y, t)})),
+    stocks: run ? stockAt(run, t) : [], events, camera: {center, scale}, hits});
+}
+function loadSet(id: string) {
+  const set = sets.find(s => s.id === id)!;
+  worker?.terminate(); revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
+  $('load-status').textContent = 'Preparing scene…';
+  $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
+  $('state-json').textContent = JSON.stringify({ready, revision});
+  worker = new Worker(new URL('./model-set/prepare.worker.ts', import.meta.url), {type: 'module'});
+  const currentRevision = revision;
+  worker.onmessage = (e: MessageEvent<{revision: number; run?: SetRun; error?: string}>) => {
+    if (e.data.revision !== revision || currentRevision !== revision) return;
+    if (e.data.error) { $('load-status').textContent = e.data.error; return; }
+    run = e.data.run!; events = setEvents(run); ready = true; selected = run.vessels[0].bundle.scenario.ship.id;
+    frame = 'inertial'; t = run.id === 'orison-freight' ? 2 : 0; playing = true;
+    $<HTMLInputElement>('time').min = String(start()); $<HTMLInputElement>('time').max = String(end());
+    $('frame').innerHTML = `<option value="inertial">Inertial</option><option value="rotating">${esc(run.rotating.name)}</option>` +
+      [...run.vessels[0].bundle.scenario.bodies.map(b => [b.id, b.id]), ...run.stations.map(s => [s.id, s.id]), ...run.vessels.map(v => [v.bundle.scenario.ship.id, v.name])].map(([id, name]) => `<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
+    $('description').textContent = run.description; $('provenance').textContent = run.provenance;
+    $('traffic-count').textContent = String(run.vessels.length);
+    $<HTMLButtonElement>('play').disabled = false; fit(); buildTimeline(); updatePanels();
+    worker?.terminate(); worker = undefined;
+  };
+  worker.onerror = () => { if (currentRevision === revision) $('load-status').textContent = 'Could not prepare this scene'; };
+  worker.postMessage({revision, set});
+}
+
+function path(points: [number, number][], color: string, lineWidth = 1, alpha = 1, dash: number[] = []) {
+  if (!points.length) return;
+  ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = lineWidth; ctx.globalAlpha = alpha; ctx.setLineDash(dash);
+  points.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+}
+function draw() {
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#0c141d'; ctx.fillRect(0, 0, width, height);
+  // Quiet schematic background; no decorative planetary rendering.
+  ctx.fillStyle = '#7e98aa';
+  for (let i = 0; i < 65; i++) { ctx.globalAlpha = 0.12 + (i % 4) * 0.035; ctx.fillRect((i * 313.47) % width, (i * 137.33) % height, 1, 1); }
+  ctx.globalAlpha = 1;
+  if (!run || !ready) return;
+  hits = [];
+  const scenario = run.vessels[0].bundle.scenario;
+  const labelBoxes: {x: number; y: number; w: number}[] = [];
+  if (layers.orbits) {
+    const orbitEpochs = (period: number) => {
+      const duration = Math.min(period, end() - start());
+      const first = Math.max(start(), Math.min(t - duration / 2, end() - duration));
+      return Array.from({length: 161}, (_, i) => first + duration * i / 160);
+    };
+    for (const port of portsOf(run)) {
+      const period = 2 * Math.PI / port.rail.rate;
+      path(orbitEpochs(period).map(epoch => project(portState(port, epoch), epoch)), '#647c8d', 0.8, 0.3);
+    }
+    for (const body of scenario.bodies.filter(b => b.rail.kind === 'circular')) {
+      const rail = body.rail as Extract<typeof body.rail, {kind: 'circular'}>, period = 2 * Math.PI / Math.abs(rail.rate);
+      path(orbitEpochs(period).map(epoch => project(bodyState(body, epoch), epoch)), '#647c8d', 0.8, 0.2);
+    }
+  }
+  for (const v of run.vessels) {
+    const id = v.bundle.scenario.ship.id, isSelected = id === selected;
+    if (layers.trails) {
+      const trailStart = Math.max(start(), t - (run.id === 'lunar-loop' ? 9 : 12));
+      let prev: [number, number] | undefined;
+      for (const sample of v.samples) {
+        if (sample.t < trailStart || sample.t > t) continue;
+        const p = project(sample.y, sample.t);
+        if (prev) path([prev, p], v.color, isSelected ? 1.7 : 1.1, (isSelected ? 0.7 : 0.4) * Math.exp(-(t - sample.t) / 4));
+        prev = p;
+      }
+      if (prev) path([prev, project(sampleVessel(v, t).y, t)], v.color, 1.5, 0.75);
+    }
+    if (layers.plan && isSelected) {
+      const stop = nextDock(v)?.t ?? Math.min(end(), t + (run.id === 'lunar-loop' ? 5.58 : 8));
+      path([project(sampleVessel(v, t).y, t), ...v.samples.filter(s => s.t > t && s.t <= stop).map(s => project(s.y, s.t))], '#b5bdc7', 1, 0.28, [3, 5]);
+    }
+  }
+  function label(text: string, x: number, y: number, color: string) {
+    if (!layers.labels) return;
+    ctx.font = '11px ui-sans-serif, system-ui';
+    const w = ctx.measureText(text).width;
+    const offsets = [[13, -10], [13, 19], [-w - 13, -10], [-w - 13, 19], [13, -28], [13, 36]];
+    const offset = offsets.find(([dx, dy]) => labelBoxes.every(b =>
+      x + dx + w + 3 < b.x || x + dx > b.x + b.w + 3 || y + dy < b.y - 14 || y + dy - 12 > b.y + 3)) ?? offsets[0];
+    const lx = x + offset[0], ly = y + offset[1];
+    labelBoxes.push({x: lx, y: ly, w}); ctx.fillStyle = color; ctx.fillText(text, lx, ly);
+  }
+  for (const body of scenario.bodies) {
+    const p = project(bodyState(body, t), t), r = Math.max(7, body.radius * scale);
+    ctx.beginPath(); ctx.arc(...p, r, 0, Math.PI * 2); ctx.fillStyle = '#192a37'; ctx.fill(); ctx.strokeStyle = '#445c6e'; ctx.lineWidth = 1; ctx.stroke();
+    if (selected === body.id) { ctx.beginPath(); ctx.arc(...p, r + 5, 0, Math.PI * 2); ctx.strokeStyle = '#b2c6d2'; ctx.stroke(); }
+    label(body.id === 'primary' ? 'Planet' : body.id === 'moon' ? 'Selene' : body.id, p[0] + r, p[1], colors.body);
+    hits.push({id: body.id, name: body.id, x: p[0], y: p[1]});
+  }
+  for (const port of portsOf(run)) {
+    const p = project(portState(port, t), t);
+    ctx.save(); ctx.translate(...p); ctx.rotate(Math.PI / 4); ctx.strokeStyle = colors.station; ctx.lineWidth = 1.2; ctx.strokeRect(-4, -4, 8, 8); ctx.restore();
+    if (selected === port.id) { ctx.beginPath(); ctx.arc(...p, 10, 0, Math.PI * 2); ctx.strokeStyle = '#c7d5de'; ctx.stroke(); }
+    label(port.id, ...p, '#a7bac7'); hits.push({id: port.id, name: port.id, x: p[0], y: p[1]});
+  }
+  for (const v of run.vessels) {
+    const state = sampleVessel(v, t), p = project(state.y, t), transformed = transform(run, state.y, t, frame);
+    const angle = Math.atan2(-transformed[3], transformed[2]);
+    ctx.save(); ctx.translate(...p); ctx.rotate(angle); ctx.beginPath(); ctx.moveTo(6, 0); ctx.lineTo(-4, -3.5); ctx.lineTo(-2, 0); ctx.lineTo(-4, 3.5); ctx.closePath(); ctx.fillStyle = v.color; ctx.fill(); ctx.restore();
+    if (selected === v.bundle.scenario.ship.id) { ctx.beginPath(); ctx.arc(...p, 11, 0, Math.PI * 2); ctx.strokeStyle = v.color; ctx.globalAlpha = 0.65; ctx.stroke(); ctx.globalAlpha = 1; }
+    if (!state.logistics?.dockedPortId) label(v.name, ...p, v.color);
+    hits.push({id: v.bundle.scenario.ship.id, name: v.name, x: p[0], y: p[1]});
+  }
+  ctx.fillStyle = '#4c6477'; ctx.font = '10px ui-monospace, monospace';
+  const unit = 10 ** Math.floor(Math.log10(80 / scale));
+  const bar = unit * scale; ctx.fillRect(20, height - 22, bar, 1); ctx.fillText(`${unit} u`, 20, height - 29);
+}
+
+$<HTMLSelectElement>('set').onchange = e => loadSet((e.target as HTMLSelectElement).value);
+$<HTMLSelectElement>('frame').onchange = e => { frame = (e.target as HTMLSelectElement).value; fit(); updatePanels(); };
+$('fit').onclick = fit;
+$('play').onclick = () => { if (!ready) return; if (t >= end()) t = start(); playing = !playing; updatePanels(); };
+$('restart').onclick = () => { if (ready) seek(start()); };
+$<HTMLInputElement>('time').oninput = e => seek(Number((e.target as HTMLInputElement).value));
+for (const key of Object.keys(layers) as (keyof typeof layers)[]) {
+  $<HTMLInputElement>(`layer-${key}`).onchange = e => { layers[key] = (e.target as HTMLInputElement).checked; cleared = false; $('clear-view').setAttribute('aria-pressed', 'false'); updatePanels(); };
+}
+$('clear-view').onclick = () => {
+  if (!cleared) {savedLayers = {...layers}; layers = {orbits: false, trails: false, plan: false, labels: false};}
+  else layers = {...savedLayers};
+  cleared = !cleared; $('clear-view').setAttribute('aria-pressed', String(cleared));
+  for (const key of Object.keys(layers) as (keyof typeof layers)[]) $<HTMLInputElement>(`layer-${key}`).checked = layers[key];
+  updatePanels();
+};
+new ResizeObserver(() => {
+  const rect = canvas.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  width = rect.width; height = rect.height; canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); fit();
+}).observe(canvas);
+let drag: {x: number; y: number; center: [number, number]; moved: boolean} | undefined;
+canvas.onpointerdown = e => { canvas.focus(); canvas.setPointerCapture(e.pointerId); drag = {x: e.clientX, y: e.clientY, center: [...center], moved: false}; $('hit-menu').hidden = true; };
+canvas.onpointermove = e => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  drag.moved ||= Math.hypot(dx, dy) > 4;
+  if (drag.moved) center = [drag.center[0] - dx / scale, drag.center[1] + dy / scale];
+};
+canvas.onpointerup = e => {
+  if (!drag) return;
+  const moved = drag.moved; drag = undefined;
+  if (moved) return;
+  const rect = canvas.getBoundingClientRect(), x = e.clientX - rect.left, y = e.clientY - rect.top;
+  const found = hits.filter(h => Math.hypot(h.x - x, h.y - y) < 14);
+  if (found.length === 1) select(found[0].id);
+  else if (found.length > 1) {
+    const menu = $('hit-menu'); menu.innerHTML = found.map(h => `<button data-hit="${esc(h.id)}">${esc(h.name)}</button>`).join(''); menu.hidden = false;
+    menu.style.left = `${Math.max(8, Math.min(e.clientX, window.innerWidth - 180))}px`;
+    menu.style.top = `${Math.max(8, Math.min(e.clientY, window.innerHeight - found.length * 40 - 16))}px`;
+    menu.querySelectorAll<HTMLButtonElement>('[data-hit]').forEach(b => b.onclick = () => select(b.dataset.hit!));
+  }
+};
+canvas.onpointercancel = () => {drag = undefined;};
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect(), x = e.clientX - rect.left - width / 2, y = height / 2 - (e.clientY - rect.top);
+  const before: [number, number] = [center[0] + x / scale, center[1] + y / scale];
+  scale = Math.max(20, Math.min(5000, scale * Math.exp(-e.deltaY * 0.0015)));
+  center = [before[0] - x / scale, before[1] - y / scale];
+}, {passive: false});
+document.addEventListener('pointerdown', e => { if (!canvas.contains(e.target as Node) && !$('hit-menu').contains(e.target as Node)) $('hit-menu').hidden = true; });
+document.addEventListener('keydown', e => {
+  if ((e.target as HTMLElement).matches('input, select, button, summary')) return;
+  if (e.code === 'Space') { e.preventDefault(); $('play').click(); }
+  if (e.key.toLowerCase() === 'f') fit();
+  if (e.key === 'Escape') $('hit-menu').hidden = true;
+});
+function animate(now: number) {
+  const dt = Math.min(0.1, (now - lastFrame) / 1000); lastFrame = now;
+  if (ready && playing) {
+    t = Math.min(end(), t + dt * Number($<HTMLSelectElement>('speed').value));
+    if (t >= end()) { if ($<HTMLInputElement>('replay').checked) t = start(); else playing = false; }
+  }
+  draw();
+  if (ready && now - lastPanel > 100) { updatePanels(); lastPanel = now; }
+  requestAnimationFrame(animate);
+}
+loadSet(sets[0].id); requestAnimationFrame(animate);

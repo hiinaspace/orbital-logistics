@@ -182,7 +182,7 @@ def evaluate(pieces, t):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--milestone", choices=["m3", "m4"], default="m3")
+    parser.add_argument("--milestone", choices=["m3", "m4", "model-set"], default="m3")
     milestone = parser.parse_args().milestone
     request = json.loads((ROOT / f"docs/evidence/{milestone}-oracle-input.json").read_text())
     rows = []

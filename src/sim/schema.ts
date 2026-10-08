@@ -117,7 +117,7 @@ export function validateBundle(value: unknown): Bundle {
   if (s.logistics !== undefined) {
     const l = object(s.logistics), capture = object(l.capture), goal = object(l.objective);
     if (l.modelVersion !== 'kinematic-ports-v1' || scenario.rendezvous || bodies.length !== 1 || bodies[0].rail.kind !== 'fixed' ||
-        !Array.isArray(l.ports) || l.ports.length !== 2) throw new Error('Unsupported logistics domain');
+        !Array.isArray(l.ports) || l.ports.length < 2 || l.ports.length > 8) throw new Error('Unsupported logistics domain');
     const primary = bodies[0], center = (primary.rail as Extract<Rail, {kind: 'fixed'}>).position;
     const ports: Port[] = l.ports.map(value => {
       const port = object(value), r = object(port.rail), radius = finite(r.radius, 'port radius', primary.radius);

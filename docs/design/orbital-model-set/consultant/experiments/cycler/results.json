@@ -1,0 +1,143 @@
+{
+  "provenance": {
+    "script": "cycler.py",
+    "integrator": "scipy solve_ivp DOP853, rtol=1e-12, atol=1e-14",
+    "app_execution": false,
+    "reference": "docs/design/topology-study/consultant/hohmann_routes.py conventions"
+  },
+  "model_limits": [
+    "Massless kinematic ports cannot give gravity assists; the cycler re-meets A only because P = 2 T_A = T_B exactly (2:1 commensurate periods).",
+    "Not the Aldrin cycler: that uses Earth flybys each synodic period to rotate the line of apsides; here nothing rotates it and none is needed.",
+    "Boarding/alighting are idealized instantaneous impulses (|relative velocity|, any direction); no docking with a moving elliptical target exists in the app (ports only), a multi-ship runner would be needed.",
+    "Single scenario with hand-picked radii; no claim about fun or generalization.",
+    "Times in A-phase-0 convention; taxi must wait at A until t=kP (A is at periapsis only then) and the cycler comes through every P=4*pi=12.57."
+  ],
+  "geometry": {
+    "mu": 1.0,
+    "surface_radius": 0.08,
+    "r_A": 1.0,
+    "T_A": 6.283185307179586,
+    "r_B": 1.5874010519681994,
+    "T_B": 12.56637061435917,
+    "cycler_a": 1.5874010519681994,
+    "cycler_e": 0.3700394750525634,
+    "cycler_r_peri": 1.0,
+    "cycler_r_apo": 2.1748021039363987,
+    "cycler_period": 12.56637061435917,
+    "periapsis_clearance_above_surface": 0.92,
+    "numerical_min_radius_over_3_periods": 1.0000000000000002
+  },
+  "crossing_outbound": {
+    "t_x": 2.4015137034846665,
+    "eccentric_anomaly": 1.5707963267948966,
+    "true_anomaly": 1.9498478383814084,
+    "flight_path_angle_rad": 0.3790515115865118,
+    "flight_path_angle_deg": 21.718051831961347,
+    "cycler_speed": 0.7937005259840997,
+    "circular_speed_B": 0.7937005259840998,
+    "relative_velocity_radial": 0.2937005259840997,
+    "relative_velocity_tangential": -0.056340013084134534,
+    "relative_speed_analytic": 0.29905550661650965,
+    "relative_speed_integrated": 0.2990555066171246,
+    "relative_speed_check": "2 v sin(gamma/2) since speeds are equal",
+    "relative_speed_formula_value": 0.29905550661650965,
+    "B_phase_required": 0.7490909866390751,
+    "B_rate": 0.5
+  },
+  "crossing_inbound": {
+    "t_in": 10.164856910874507,
+    "true_anomaly": 4.333337468798177,
+    "B_angle_at_t_in": 5.8315194420763286,
+    "angular_offset_B_minus_cycler_rad": 1.4981819732781512,
+    "B_is_there": false,
+    "note": "B is not at the inbound crossing (offset shown); relative speed below applies only to a hypothetical B phased there.",
+    "relative_speed_if_phased_there": 0.2990555066165097,
+    "relative_velocity_radial": -0.2937005259840996,
+    "relative_velocity_tangential": -0.056340013084134874
+  },
+  "encounter_A": {
+    "t": "k*P",
+    "cycler_speed_peri": 1.1704868538572157,
+    "circular_speed_A": 1.0,
+    "relative_speed_board": 0.17048685385721574,
+    "relative_velocity_radial": 0.0,
+    "relative_velocity_tangential": 0.17048685385721574
+  },
+  "cycler_route": {
+    "flight_time_A_to_B": 2.4015137034846665,
+    "board_dv": 0.17048685385721574,
+    "alight_dv": 0.29905550661650965,
+    "total_dv": 0.4695423604737254,
+    "propellant_taxi_dry1_cargo0.2_ve3": {
+      "initial_mass": 1.4033127296402945,
+      "propellant": 0.20331272964029456
+    }
+  },
+  "hohmann_route": {
+    "dv1": 0.10771096449903439,
+    "dv2": 0.09588634529825679,
+    "total_dv": 0.20359730979729118,
+    "flight_time": 4.622751037886555,
+    "wait_for_window_with_this_B_phase": 12.404118318344292,
+    "propellant_taxi_dry1_cargo0.2_ve3": {
+      "initial_mass": 1.2842659714961135,
+      "propellant": 0.08426597149611359
+    }
+  },
+  "verification": {
+    "ship_to_A_distance": {
+      "t=1P=12.566371": 2.8318698033982596e-11,
+      "t=2P=25.132741": 2.5288478997607957e-11,
+      "t=3P=37.699112": 1.9330786895390476e-11
+    },
+    "ship_to_B_distance": {
+      "t_x+0P=2.401514": 1.131268188953119e-12,
+      "t_x+1P=14.967884": 1.5305887960444137e-11,
+      "t_x+2P=27.534255": 1.1972848992233309e-11
+    },
+    "max_distance_error": 2.8318698033982596e-11,
+    "energy_error_after_3_periods": 1.5101808692463692e-12
+  },
+  "reproduction": {
+    "ship_state_xyvxvy": [
+      1.0000000000000002,
+      0.0,
+      0.0,
+      1.1704868538572157
+    ],
+    "ship_state_note": "at t=0 at periapsis co-located with A; a taxi is NOT this ship: it must burn to reach it",
+    "ports": [
+      {
+        "id": "A",
+        "rail": {
+          "kind": "circular",
+          "center": [
+            0,
+            0
+          ],
+          "radius": 1.0,
+          "rate": 1.0,
+          "phase": 0.0
+        }
+      },
+      {
+        "id": "B",
+        "rail": {
+          "kind": "circular",
+          "center": [
+            0,
+            0
+          ],
+          "radius": 1.5874010519681994,
+          "rate": 0.5,
+          "phase": 0.7490909866390751
+        }
+      }
+    ],
+    "scenario_rate_rule": "rate = sqrt(mu / r^3) exactly",
+    "rate_check": {
+      "A": 1.0,
+      "B": 0.5
+    }
+  }
+}

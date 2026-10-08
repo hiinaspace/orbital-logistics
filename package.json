@@ -22,7 +22,8 @@
     "evidence:m2": "tsx scripts/m2-evidence.ts && uv run --project spikes/numerics python spikes/numerics/m2_oracle.py",
     "evidence:m2-encounters": "tsx scripts/m2-encounter-evidence.ts && uv run --project spikes/numerics python spikes/numerics/m2_encounter_oracle.py",
     "evidence:m4": "tsx scripts/m4-evidence.ts && uv run --project spikes/numerics python spikes/numerics/m3_oracle.py --milestone m4",
-    "evidence:m3": "tsx scripts/m3-evidence.ts && uv run --project spikes/numerics python spikes/numerics/m3_oracle.py"
+    "evidence:m3": "tsx scripts/m3-evidence.ts && uv run --project spikes/numerics python spikes/numerics/m3_oracle.py",
+    "evidence:model-set": "tsx scripts/model-set-evidence.ts && uv run --project spikes/numerics python spikes/numerics/m3_oracle.py --milestone model-set"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

@@ -1,6 +1,26 @@
-# Tactical plan — updated 2026-10-07
+# Tactical plan — updated 2026-10-08
 
-Status: **M1/M2/M3a accepted; initial M4a fixed-program puzzles implemented**.
+Status: **orbital model-set viewer direction accepted; initial 2D viewer implemented**.
+
+On 2026-10-08 the user chose fictional orbital buildups and traffic as the next
+product direction, authorized retiring the CoaDE editing UI, and requested implementation.
+The main app now opens a prepared four-station/four-freighter set and the lunar DRO set.
+See [current direction and architecture](model-set.md) and [viewer evidence](evidence/model-set.md).
+Multi-system content, ground launch/landing, upkeep/production, new propulsion and 3D
+remain follow-up work. The initial slice retains the validated planar engine; a coherent
+3D migration is documented rather than adding a misleading z=0 field alone.
+
+The [recovered Fable consultation](design/orbital-model-set/README.md) and
+[synthesis](design/orbital-model-set/synthesis.md) informed this direction. Watching
+and exploring are sufficient; no required courier/puzzle optimization gate remains.
+Shared stocks and berths are validated for prepared independent runs, not a general
+joint fleet scheduler. Runtime intent remains deferred.
+
+## Historical editor and puzzle milestones
+
+M1/M2/M3a were accepted; initial M4a fixed-program puzzles were implemented.
+The following records their original scope and gates, which no longer prescribe the
+next product step.
 On 2026-10-06 the user accepted the manual editor and initial rendezvous helper,
 requested encounter markers, selected-node hover and overlap selection, then
 explicitly authorized continuing with M3 tasks. Those M2 follow-ups are implemented
@@ -28,7 +48,7 @@ consultant with its own experiments/subagents. The [new synthesis](design/topolo
 [OpenTTD source notes](design/topology-study/source-notes.md) and
 [independent consultation](design/topology-study/consultant/recommendation.md)
 recommend a finite three-port courier probe **before** the recipe/timeline build.
-This recommendation awaits user review; no app source was changed.
+This historical recommendation was superseded by the accepted model-set direction above. No app source was changed during that study.
 
 An offline analytical scan found circuit versus serial-shuttle time/fuel choices
 with one tug, and a faster two-tug alternative. All ships return; both impulses

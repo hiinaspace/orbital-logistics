@@ -1,0 +1,99 @@
+{
+  "recovered_on": "2026-10-07",
+  "session_id": "8cb491ca-ab15-454a-9441-8f542e59cb37",
+  "normal_exit_confirmed": false,
+  "terminal_result_present": false,
+  "final_usage_available": false,
+  "stream": {
+    "path": "docs/design/orbital-model-set/consultation-stream.jsonl",
+    "sha256": "14035f1e3d1e393e25d6431bbcb3c549cc5c76498e3ed0c57dd0985abb1bd13f",
+    "events": 908,
+    "retention": "Duplicate capture removed after verification on 2026-10-08; original main/subagent journals retained."
+  },
+  "stderr_bytes": 0,
+  "journals": [
+    {
+      "journal": "/home/s/.claude/projects/-home-s-code-orbital-logistics/8cb491ca-ab15-454a-9441-8f542e59cb37.jsonl",
+      "sha256": "4998704f4f05221eb1a740b181877c509397110f218cd9203df9368a1f2304b8",
+      "events": 237,
+      "role": "main consultation",
+      "status": "report saved; closing response interrupted",
+      "actual_models": [
+        "claude-fable-5-1"
+      ],
+      "recorded_efforts": [
+        "high"
+      ]
+    },
+    {
+      "journal": "/home/s/.claude/projects/-home-s-code-orbital-logistics/8cb491ca-ab15-454a-9441-8f542e59cb37/subagents/agent-a71e9486ce49e5039.jsonl",
+      "sha256": "3008903affc13c73eb420c09eef17f53f39fcc0cbf503f7de8b92531f91977bc",
+      "events": 64,
+      "role": "cycler experiment",
+      "status": "complete",
+      "actual_models": [
+        "claude-sonnet-5-5"
+      ],
+      "recorded_efforts": [
+        "high"
+      ]
+    },
+    {
+      "journal": "/home/s/.claude/projects/-home-s-code-orbital-logistics/8cb491ca-ab15-454a-9441-8f542e59cb37/subagents/agent-a8c6b35ece589528a.jsonl",
+      "sha256": "1bb9678436c12f5863c7ccf7b55cf024d8e8bccef29381dcc58510ea21fd69b4",
+      "events": 80,
+      "role": "viewer research",
+      "status": "complete",
+      "actual_models": [
+        "claude-sonnet-5-5"
+      ],
+      "recorded_efforts": [
+        "high"
+      ]
+    },
+    {
+      "journal": "/home/s/.claude/projects/-home-s-code-orbital-logistics/8cb491ca-ab15-454a-9441-8f542e59cb37/subagents/agent-a948ba24f66a5046a.jsonl",
+      "sha256": "9259f64c32c3f899d9d80f5c9801eca3d3c4ebede423b89fad2b6eeae28cfc43",
+      "events": 95,
+      "role": "DRO experiment",
+      "status": "complete",
+      "actual_models": [
+        "claude-opus-5-5"
+      ],
+      "recorded_efforts": [
+        "high"
+      ]
+    },
+    {
+      "journal": "/home/s/.claude/projects/-home-s-code-orbital-logistics/8cb491ca-ab15-454a-9441-8f542e59cb37/subagents/agent-adcba5e24c417bafe.jsonl",
+      "sha256": "ceeafaae8e4f8af8229a6146b0538501f73e6e8f76aa0412c5703a22b53a2ffd",
+      "events": 137,
+      "role": "mission research",
+      "status": "complete",
+      "actual_models": [
+        "claude-sonnet-5-5"
+      ],
+      "recorded_efforts": [
+        "high"
+      ]
+    },
+    {
+      "journal": "/home/s/.claude/projects/-home-s-code-orbital-logistics/8cb491ca-ab15-454a-9441-8f542e59cb37/subagents/agent-af52a781fe477b327.jsonl",
+      "sha256": "ef4680d804cfa184a698c5e72b58f65a4c6e0561b398d83b6548a23cc0216799",
+      "events": 27,
+      "role": "final adversarial review",
+      "status": "interrupted; no returned findings",
+      "actual_models": [
+        "claude-opus-5-5"
+      ],
+      "recorded_efforts": [
+        "high"
+      ]
+    }
+  ],
+  "saved_report": {
+    "path": "docs/design/orbital-model-set/consultant/recommendation.md",
+    "sha256": "9431526cad8134fb4475e2aa2257c97609af175b35df173f794c868872ebe84a"
+  },
+  "recovery_followup": "User accepted model-set viewer direction and authorized implementation on 2026-10-08."
+}

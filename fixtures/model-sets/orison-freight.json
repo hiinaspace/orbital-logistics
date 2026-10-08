@@ -1,0 +1,1161 @@
+{
+  "schemaVersion": 1,
+  "id": "orison-freight",
+  "name": "Orison · orbital freight",
+  "extent": 2.6,
+  "description": "Four orbital stations. Four reusable freighters. Prepared Hohmann services with finite freight and fuel stocks.",
+  "provenance": "Fictional normalized system; fixed primary and circular test ports. Spacecraft follow integrated impulsive trajectories. No mutual gravity, manufacturing, or ground launches. Shared inventories and multi-berth occupancy checked before viewing.",
+  "rotating": {
+    "name": "Anchor rotating",
+    "rate": 0.8108737462959251,
+    "phase": 0
+  },
+  "stations": [
+    {
+      "id": "Kiln",
+      "role": "Fabrication ring",
+      "berths": 4
+    },
+    {
+      "id": "Anchor",
+      "role": "Freight hub",
+      "berths": 4
+    },
+    {
+      "id": "Crown",
+      "role": "Habitat",
+      "berths": 4
+    },
+    {
+      "id": "Farpoint",
+      "role": "Survey station",
+      "berths": 4
+    }
+  ],
+  "vessels": [
+    {
+      "name": "Kestrel",
+      "color": "#efb878",
+      "cargo": "Freight",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 1,
+          "modelVersion": "rk4-canonical-v1",
+          "id": "orison-freight-v1",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 64,
+          "policy": {
+            "step": 0.001953125,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "Orison",
+              "mu": 1,
+              "radius": 0.28,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "ship": {
+            "id": "Kestrel",
+            "state": [
+              1.15,
+              0,
+              0,
+              0.9325048082403138
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.65,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          },
+          "logistics": {
+            "modelVersion": "kinematic-ports-v1",
+            "ports": [
+              {
+                "id": "Kiln",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 0.8,
+                  "rate": 1.3975424859373684,
+                  "phase": 4.72854450350631
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Anchor",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 1.15,
+                  "rate": 0.8108737462959251,
+                  "phase": 0
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Crown",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 1.6,
+                  "rate": 0.4941058844013092,
+                  "phase": 1.2089874853628153
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Farpoint",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 2.05,
+                  "rate": 0.34069770525345283,
+                  "phase": 2.4799534730571544
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              }
+            ],
+            "cargoCapacity": 0.2,
+            "capture": {
+              "position": 0.00001,
+              "velocity": 0.00001
+            },
+            "objective": {
+              "destinationId": "Kiln",
+              "quota": 0.16,
+              "returnPortId": "Anchor",
+              "minPropellant": 0,
+              "hardwareCost": 1
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 1,
+          "id": "Kestrel-service-v1",
+          "burns": [
+            {
+              "id": "voyage-1-out-depart",
+              "t": 0.7999999999999998,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.08782178536037977
+            },
+            {
+              "id": "voyage-1-out-capture",
+              "t": 3.8245223369469317,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.09619785664001013
+            },
+            {
+              "id": "voyage-1-back-depart",
+              "t": 12.185307878766574,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.09619785664001013
+            },
+            {
+              "id": "voyage-1-back-capture",
+              "t": 15.209830215713506,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.08782178536037977
+            },
+            {
+              "id": "voyage-2-out-depart",
+              "t": 22.219874224148043,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.08782178536037977
+            },
+            {
+              "id": "voyage-2-out-capture",
+              "t": 25.244396561094973,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.09619785664001013
+            },
+            {
+              "id": "voyage-2-back-depart",
+              "t": 33.605182102914625,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.09619785664001013
+            },
+            {
+              "id": "voyage-2-back-capture",
+              "t": 36.629704439861555,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.08782178536037977
+            },
+            {
+              "id": "voyage-3-out-depart",
+              "t": 43.639748448296096,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.08782178536037977
+            },
+            {
+              "id": "voyage-3-out-capture",
+              "t": 46.664270785243026,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.09619785664001013
+            },
+            {
+              "id": "voyage-3-back-depart",
+              "t": 55.02505632706268,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.09619785664001013
+            },
+            {
+              "id": "voyage-3-back-capture",
+              "t": 58.04957866400961,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.08782178536037977
+            }
+          ],
+          "operations": [
+            {
+              "id": "initial-dock",
+              "t": 0,
+              "portId": "Anchor",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-1-load",
+              "t": 0.49999999999999983,
+              "portId": "Anchor",
+              "kind": "transfer",
+              "cargo": 0.16,
+              "propellant": 0
+            },
+            {
+              "id": "voyage-1-out-undock",
+              "t": 0.7999999999999998,
+              "portId": "Anchor",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-1-out-dock",
+              "t": 3.8245223369469317,
+              "portId": "Kiln",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-1-unload",
+              "t": 3.8245223369469317,
+              "portId": "Kiln",
+              "kind": "transfer",
+              "cargo": -0.16,
+              "propellant": 0.1
+            },
+            {
+              "id": "voyage-1-back-undock",
+              "t": 12.185307878766574,
+              "portId": "Kiln",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-1-back-dock",
+              "t": 15.209830215713506,
+              "portId": "Anchor",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-2-load",
+              "t": 21.919874224148042,
+              "portId": "Anchor",
+              "kind": "transfer",
+              "cargo": 0.16,
+              "propellant": 0
+            },
+            {
+              "id": "voyage-2-out-undock",
+              "t": 22.219874224148043,
+              "portId": "Anchor",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-2-out-dock",
+              "t": 25.244396561094973,
+              "portId": "Kiln",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-2-unload",
+              "t": 25.244396561094973,
+              "portId": "Kiln",
+              "kind": "transfer",
+              "cargo": -0.16,
+              "propellant": 0.1
+            },
+            {
+              "id": "voyage-2-back-undock",
+              "t": 33.605182102914625,
+              "portId": "Kiln",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-2-back-dock",
+              "t": 36.629704439861555,
+              "portId": "Anchor",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-3-load",
+              "t": 43.3397484482961,
+              "portId": "Anchor",
+              "kind": "transfer",
+              "cargo": 0.16,
+              "propellant": 0
+            },
+            {
+              "id": "voyage-3-out-undock",
+              "t": 43.639748448296096,
+              "portId": "Anchor",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-3-out-dock",
+              "t": 46.664270785243026,
+              "portId": "Kiln",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-3-unload",
+              "t": 46.664270785243026,
+              "portId": "Kiln",
+              "kind": "transfer",
+              "cargo": -0.16,
+              "propellant": 0.1
+            },
+            {
+              "id": "voyage-3-back-undock",
+              "t": 55.02505632706268,
+              "portId": "Kiln",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-3-back-dock",
+              "t": 58.04957866400961,
+              "portId": "Anchor",
+              "kind": "dock"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Tern",
+      "color": "#78c9c0",
+      "cargo": "Freight",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 1,
+          "modelVersion": "rk4-canonical-v1",
+          "id": "orison-freight-v1",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 64,
+          "policy": {
+            "step": 0.001953125,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "Orison",
+              "mu": 1,
+              "radius": 0.28,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "ship": {
+            "id": "Tern",
+            "state": [
+              1.15,
+              0,
+              0,
+              0.9325048082403138
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.65,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          },
+          "logistics": {
+            "modelVersion": "kinematic-ports-v1",
+            "ports": [
+              {
+                "id": "Kiln",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 0.8,
+                  "rate": 1.3975424859373684,
+                  "phase": 4.72854450350631
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Anchor",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 1.15,
+                  "rate": 0.8108737462959251,
+                  "phase": 0
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Crown",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 1.6,
+                  "rate": 0.4941058844013092,
+                  "phase": 1.2089874853628153
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Farpoint",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 2.05,
+                  "rate": 0.34069770525345283,
+                  "phase": 2.4799534730571544
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              }
+            ],
+            "cargoCapacity": 0.2,
+            "capture": {
+              "position": 0.00001,
+              "velocity": 0.00001
+            },
+            "objective": {
+              "destinationId": "Crown",
+              "quota": 0.16,
+              "returnPortId": "Anchor",
+              "minPropellant": 0,
+              "hardwareCost": 1
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 1,
+          "id": "Tern-service-v1",
+          "burns": [
+            {
+              "id": "voyage-1-out-depart",
+              "t": 1.8000000000000027,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.07340657329877676
+            },
+            {
+              "id": "voyage-1-out-capture",
+              "t": 6.865285394586684,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.06757060956087368
+            },
+            {
+              "id": "voyage-1-back-depart",
+              "t": 20.603284888594274,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.06757060956087368
+            },
+            {
+              "id": "voyage-1-back-capture",
+              "t": 25.668570283180955,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.07340657329877676
+            }
+          ],
+          "operations": [
+            {
+              "id": "initial-dock",
+              "t": 0,
+              "portId": "Anchor",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-1-load",
+              "t": 1.5000000000000027,
+              "portId": "Anchor",
+              "kind": "transfer",
+              "cargo": 0.16,
+              "propellant": 0
+            },
+            {
+              "id": "voyage-1-out-undock",
+              "t": 1.8000000000000027,
+              "portId": "Anchor",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-1-out-dock",
+              "t": 6.865285394586684,
+              "portId": "Crown",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-1-unload",
+              "t": 6.865285394586684,
+              "portId": "Crown",
+              "kind": "transfer",
+              "cargo": -0.16,
+              "propellant": 0.1
+            },
+            {
+              "id": "voyage-1-back-undock",
+              "t": 20.603284888594274,
+              "portId": "Crown",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-1-back-dock",
+              "t": 25.668570283180955,
+              "portId": "Anchor",
+              "kind": "dock"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Petrel",
+      "color": "#a6a4e8",
+      "cargo": "Freight",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 1,
+          "modelVersion": "rk4-canonical-v1",
+          "id": "orison-freight-v1",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 64,
+          "policy": {
+            "step": 0.001953125,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "Orison",
+              "mu": 1,
+              "radius": 0.28,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "ship": {
+            "id": "Petrel",
+            "state": [
+              1.15,
+              0,
+              0,
+              0.9325048082403138
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.65,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          },
+          "logistics": {
+            "modelVersion": "kinematic-ports-v1",
+            "ports": [
+              {
+                "id": "Kiln",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 0.8,
+                  "rate": 1.3975424859373684,
+                  "phase": 4.72854450350631
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Anchor",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 1.15,
+                  "rate": 0.8108737462959251,
+                  "phase": 0
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Crown",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 1.6,
+                  "rate": 0.4941058844013092,
+                  "phase": 1.2089874853628153
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Farpoint",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 2.05,
+                  "rate": 0.34069770525345283,
+                  "phase": 2.4799534730571544
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              }
+            ],
+            "cargoCapacity": 0.2,
+            "capture": {
+              "position": 0.00001,
+              "velocity": 0.00001
+            },
+            "objective": {
+              "destinationId": "Farpoint",
+              "quota": 0.16,
+              "returnPortId": "Anchor",
+              "minPropellant": 0,
+              "hardwareCost": 1
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 1,
+          "id": "Petrel-service-v1",
+          "burns": [
+            {
+              "id": "voyage-1-out-depart",
+              "t": 3.2000000000000024,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.12301896448231364
+            },
+            {
+              "id": "voyage-1-out-capture",
+              "t": 9.558136490109506,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.1063072037544458
+            },
+            {
+              "id": "voyage-1-back-depart",
+              "t": 14.354379826897544,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.1063072037544458
+            },
+            {
+              "id": "voyage-1-back-capture",
+              "t": 20.712516317007047,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.12301896448231364
+            },
+            {
+              "id": "voyage-2-out-depart",
+              "t": 29.926948030990843,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.12301896448231364
+            },
+            {
+              "id": "voyage-2-out-capture",
+              "t": 36.285084521100345,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.1063072037544458
+            },
+            {
+              "id": "voyage-2-back-depart",
+              "t": 41.08132785788838,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.1063072037544458
+            },
+            {
+              "id": "voyage-2-back-capture",
+              "t": 47.439464347997884,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.12301896448231364
+            }
+          ],
+          "operations": [
+            {
+              "id": "initial-dock",
+              "t": 0,
+              "portId": "Anchor",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-1-load",
+              "t": 2.9000000000000026,
+              "portId": "Anchor",
+              "kind": "transfer",
+              "cargo": 0.16,
+              "propellant": 0
+            },
+            {
+              "id": "voyage-1-out-undock",
+              "t": 3.2000000000000024,
+              "portId": "Anchor",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-1-out-dock",
+              "t": 9.558136490109506,
+              "portId": "Farpoint",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-1-unload",
+              "t": 9.558136490109506,
+              "portId": "Farpoint",
+              "kind": "transfer",
+              "cargo": -0.16,
+              "propellant": 0.1
+            },
+            {
+              "id": "voyage-1-back-undock",
+              "t": 14.354379826897544,
+              "portId": "Farpoint",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-1-back-dock",
+              "t": 20.712516317007047,
+              "portId": "Anchor",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-2-load",
+              "t": 29.626948030990842,
+              "portId": "Anchor",
+              "kind": "transfer",
+              "cargo": 0.16,
+              "propellant": 0
+            },
+            {
+              "id": "voyage-2-out-undock",
+              "t": 29.926948030990843,
+              "portId": "Anchor",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-2-out-dock",
+              "t": 36.285084521100345,
+              "portId": "Farpoint",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-2-unload",
+              "t": 36.285084521100345,
+              "portId": "Farpoint",
+              "kind": "transfer",
+              "cargo": -0.16,
+              "propellant": 0.1
+            },
+            {
+              "id": "voyage-2-back-undock",
+              "t": 41.08132785788838,
+              "portId": "Farpoint",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-2-back-dock",
+              "t": 47.439464347997884,
+              "portId": "Anchor",
+              "kind": "dock"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Swift",
+      "color": "#dc91b3",
+      "cargo": "Freight",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 1,
+          "modelVersion": "rk4-canonical-v1",
+          "id": "orison-freight-v1",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 64,
+          "policy": {
+            "step": 0.001953125,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "Orison",
+              "mu": 1,
+              "radius": 0.28,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "ship": {
+            "id": "Swift",
+            "state": [
+              0.5663464719977348,
+              1.4964129355414297,
+              -0.7393864369452574,
+              0.27983512442400205
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.65,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          },
+          "logistics": {
+            "modelVersion": "kinematic-ports-v1",
+            "ports": [
+              {
+                "id": "Kiln",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 0.8,
+                  "rate": 1.3975424859373684,
+                  "phase": 4.72854450350631
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Anchor",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 1.15,
+                  "rate": 0.8108737462959251,
+                  "phase": 0
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Crown",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 1.6,
+                  "rate": 0.4941058844013092,
+                  "phase": 1.2089874853628153
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Farpoint",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0
+                  ],
+                  "radius": 2.05,
+                  "rate": 0.34069770525345283,
+                  "phase": 2.4799534730571544
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              }
+            ],
+            "cargoCapacity": 0.2,
+            "capture": {
+              "position": 0.00001,
+              "velocity": 0.00001
+            },
+            "objective": {
+              "destinationId": "Anchor",
+              "quota": 0.16,
+              "returnPortId": "Crown",
+              "minPropellant": 0,
+              "hardwareCost": 1
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 1,
+          "id": "Swift-service-v1",
+          "burns": [
+            {
+              "id": "voyage-1-out-depart",
+              "t": 0.7679857215660522,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.06757060956087368
+            },
+            {
+              "id": "voyage-1-out-capture",
+              "t": 5.8332711161527335,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": -0.07340657329877676
+            },
+            {
+              "id": "voyage-1-back-depart",
+              "t": 21.635299167028226,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.07340657329877676
+            },
+            {
+              "id": "voyage-1-back-capture",
+              "t": 26.700584561614907,
+              "referenceBodyId": "Orison",
+              "basis": "radial-transverse-ccw-v1",
+              "radial": 0,
+              "transverse": 0.06757060956087368
+            }
+          ],
+          "operations": [
+            {
+              "id": "initial-dock",
+              "t": 0,
+              "portId": "Crown",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-1-load",
+              "t": 0.46798572156605217,
+              "portId": "Crown",
+              "kind": "transfer",
+              "cargo": 0.16,
+              "propellant": 0
+            },
+            {
+              "id": "voyage-1-out-undock",
+              "t": 0.7679857215660522,
+              "portId": "Crown",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-1-out-dock",
+              "t": 5.8332711161527335,
+              "portId": "Anchor",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-1-unload",
+              "t": 5.8332711161527335,
+              "portId": "Anchor",
+              "kind": "transfer",
+              "cargo": -0.16,
+              "propellant": 0.1
+            },
+            {
+              "id": "voyage-1-back-undock",
+              "t": 21.635299167028226,
+              "portId": "Anchor",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-1-back-dock",
+              "t": 26.700584561614907,
+              "portId": "Crown",
+              "kind": "dock"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
