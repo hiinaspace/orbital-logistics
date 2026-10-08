@@ -76,7 +76,7 @@ test('lunar set supports rotating exploration, finite playback and explicit repl
   await expect(page.locator('#fleet .object-row')).toHaveCount(1);
   await page.getByLabel('Reference frame').selectOption('rotating');
   await seek(page, 7); await page.screenshot({path:'test-results/model-set-lunar.png',fullPage:true});
-  await seek(page, 23.99); await page.getByLabel('Playback speed').selectOption('16'); await page.getByRole('button',{name:'Play',exact:true}).click();
+  await seek(page, 23.99); await page.getByLabel('Playback speed').fill('4'); await page.getByRole('button',{name:'Play',exact:true}).click();
   await expect(page.getByRole('button',{name:'Play',exact:true})).toBeVisible();
   await expect(page.locator('#load-status')).toHaveText('End of scene');
   expect((await state(page)).t).toBe(24);
@@ -129,4 +129,36 @@ test('lunar freight exposes three finite round trips, depot stocks and shared ro
   await page.locator('#stations [data-object="Selene Hub"]').click();await expect(page.locator('#readouts')).toContainText('Freight stock');
   await page.screenshot({path:'test-results/selene-freight.png',fullPage:true});
   await seek(page,0);expect((await state(page)).stocks.find((p:{id:string})=>p.id==='Selene Hub').cargo).toBe(0);
+});
+
+test('continuous playback speed supports intermediate rates without changing physics or pause',async({page})=>{
+  await seek(page,8);const before=await state(page);
+  await page.getByLabel('Playback speed').fill('-1');
+  expect((await state(page)).playbackRate).toBe(.5);
+  expect((await state(page)).playing).toBe(false);
+  expect((await state(page)).ships).toEqual(before.ships);
+  await expect(page.locator('#speed-value')).toHaveText('0.50×');
+  await page.getByRole('button',{name:'Play',exact:true}).click();
+  await expect.poll(async()=> (await state(page)).t).toBeGreaterThan(8.05);
+  await pause(page);const stopped=await state(page);
+  await page.getByLabel('Playback speed').fill('0');
+  expect((await state(page)).playing).toBe(false);expect((await state(page)).t).toBe(stopped.t);
+});
+
+test('powered freight shows finite acceleration, continuous resources and both completed returns',async({page})=>{
+ await page.getByLabel('Model set').selectOption('selene-powered');await ready(page);await pause(page);
+ await expect(page.locator('#fleet .object-row')).toHaveCount(2);await expect(page.locator('#stations .object-row')).toHaveCount(3);
+ await page.locator('#fleet [data-object="Wren"]').click();await seek(page,.6);
+ const burning=await state(page);expect(burning.ships[0].thrust.force).toBe(2);
+ await expect(page.locator('#object-status')).toContainText('Powered flight');await expect(page.locator('#readouts')).toContainText('Thrust');
+ await seek(page,.61);expect((await state(page)).ships[0].propellant).toBeLessThan(burning.ships[0].propellant);
+ await page.getByLabel('Reference frame').selectOption('rotating');await seek(page,3.2);
+ await page.screenshot({path:'test-results/selene-powered.png',fullPage:true});
+ const before=await state(page);await page.getByLabel('Reference frame').selectOption('Wren');
+ expect((await state(page)).ships.map((s:{y:number[];propellant:number})=>[s.y,s.propellant])).toEqual(before.ships.map((s:{y:number[];propellant:number})=>[s.y,s.propellant]));
+ await seek(page,12);const end=await state(page);
+ expect(end.stocks.find((p:{id:string})=>p.id==='Selene Hub').cargo).toBeCloseTo(.32,12);
+ expect(end.ships.every((s:{propellant:number;logistics:{dockedPortId:string;cargoMass:number}})=>s.propellant>.05 && s.logistics.cargoMass===0 && s.logistics.dockedPortId==='Nightfall')).toBe(true);
+ await page.getByLabel('Model set').selectOption('orison-powered');await ready(page);await pause(page);await seek(page,16);
+ expect((await state(page)).ships[0].logistics.dockedPortId).toBe('Anchor');
 });

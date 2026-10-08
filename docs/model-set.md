@@ -32,7 +32,11 @@ content/model directions, not implemented capabilities or current prototype task
   paid departure/arrival/capture, unloading and finite-stock refueling. See
   [experiment and provenance](design/lunar-freight/README.md) and
   [validation](evidence/lunar-freight.md).
-- Shared play/pause/speed/scrub/replay, pan/zoom/fit, inertial/rotating/object-centered
+- Orison · powered transfer and Selene · powered freight: finite fixed-heading
+  departure/braking arcs, continuously consumed fuel, thrust/acceleration inspection,
+  powered timeline/path spans, finite service stocks and paid returns. The lunar set
+  compares force2/4 at the same times; [bounded propulsion evidence](evidence/bounded-propulsion.md).
+- Shared play/pause/analog-speed/scrub/replay, pan/zoom/fit, inertial/rotating/object-centered
   frames, selection and overlap chooser, ship activity lanes, selected fuel/freight
   traces, finite station stocks, event jumps, and reversible display layers.
 - No puzzle objectives, scoring, maneuver handles, precision editor, or acceptance
@@ -58,7 +62,8 @@ which prepared sets are admitted. They are not a general scheduler.
 
 The worker returns dense disposable drawing samples plus exact event epochs and each
 ledger. Physics checkpoints stay inside the Runner. Playback performs view-only
-interpolation; cargo/fuel/service state changes at exact ledger epochs. Docked positions
+interpolation; cargo/service and refueling change at exact ledger epochs, while powered
+fuel/cumulative usage interpolate continuously to event-left resources. Docked positions
 are evaluated on analytical rails or disposable ballistic target drawing samples.
 Physics uses the target's dedicated canonical Runner, including capture, constrained
 dwell and undock; view interpolation is never a physical target. Free-coast display velocities use pre-burn
@@ -109,3 +114,15 @@ validated migration covers:
 A z=0 field alone would not validate these requirements. Conversely, viewing a supplied
 3D trajectory through a 2D projection is a narrower option than validating its forward
 propagation. Do not assume either requires replacing all existing numerical work.
+
+## Bounded propulsion
+
+Implemented after user-requested Astra architecture review. Canonical v3 converts
+propulsion-free v1/v2 bundles explicitly. Fixed inertial headings, throttle, thrust
+and optional acceleration caps use an anchored exact mass law at all RK stages.
+Start/end/cap/depletion boundaries are independent of viewing; interrupted arcs retain
+paid prefixes. Historical aiming tools reject powered programs. See
+[contract and provenance](design/bounded-propulsion/README.md).
+The user accepted stable labels and the original lunar set. Powered choreography is
+the current viewing gate. Continuous operations/rolling history and 3D presentation
+are follow-up choices; finite Replay still rewinds stocks.

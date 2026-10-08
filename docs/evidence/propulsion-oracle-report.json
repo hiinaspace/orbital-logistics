@@ -1,0 +1,757 @@
+{
+  "trips": [
+    {
+      "case": "Kestrel",
+      "set": "orison-powered",
+      "terminal": {
+        "t": 16,
+        "status": "horizon",
+        "fuel": 0.5430592999472663,
+        "fuelUsed": 0.2089347272035485,
+        "cargo": 0.0,
+        "stocks": {
+          "Kiln": [
+            4.16,
+            3.898005972849185
+          ],
+          "Anchor": [
+            3.84,
+            4
+          ],
+          "Crown": [
+            4,
+            4
+          ],
+          "Farpoint": [
+            4,
+            4
+          ]
+        },
+        "captures": [
+          {
+            "t": 0,
+            "position": 0.0,
+            "velocity": 0.0
+          },
+          {
+            "t": 3.8245223369469317,
+            "position": 3.288783143143975e-10,
+            "velocity": 2.9686667790585655e-10
+          },
+          {
+            "t": 15.209830215713506,
+            "position": 4.964689154445764e-10,
+            "velocity": 5.284387005472931e-10
+          }
+        ],
+        "trace": [
+          [
+            0,
+            "dock",
+            "initial-dock"
+          ],
+          [
+            0.49999999999999983,
+            "transfer-start",
+            "voyage-1-load"
+          ],
+          [
+            0.7499999999999998,
+            "transfer",
+            "voyage-1-load"
+          ],
+          [
+            0.7999999999999998,
+            "undock",
+            "voyage-1-out-undock"
+          ],
+          [
+            0.7999999999999998,
+            "thrust-start",
+            "leg0-departure"
+          ],
+          [
+            0.9583997739544151,
+            "thrust-end",
+            "leg0-departure"
+          ],
+          [
+            3.653874178743908,
+            "thrust-start",
+            "leg0-braking"
+          ],
+          [
+            3.8245223369469317,
+            "thrust-end",
+            "leg0-braking"
+          ],
+          [
+            3.8245223369469317,
+            "dock",
+            "voyage-1-out-dock"
+          ],
+          [
+            3.8245223369469317,
+            "transfer-start",
+            "voyage-1-unload"
+          ],
+          [
+            4.074522336946932,
+            "transfer",
+            "voyage-1-unload"
+          ],
+          [
+            12.185307878766574,
+            "undock",
+            "voyage-1-back-undock"
+          ],
+          [
+            12.185307878766574,
+            "thrust-start",
+            "leg1-departure"
+          ],
+          [
+            12.344285296613972,
+            "thrust-end",
+            "leg1-departure"
+          ],
+          [
+            15.071051385427877,
+            "thrust-start",
+            "leg1-braking"
+          ],
+          [
+            15.209830215713506,
+            "thrust-end",
+            "leg1-braking"
+          ],
+          [
+            15.209830215713506,
+            "dock",
+            "voyage-1-back-dock"
+          ]
+        ],
+        "complete": true,
+        "completedAt": 15.209830215713506
+      },
+      "checks": [
+        {
+          "step": 0.001953125,
+          "stateBudget": 1e-06,
+          "position": 5.485634928838734e-12,
+          "velocity": 4.120955145966207e-12,
+          "fuelError": 2.8543833963112775e-12,
+          "usageError": 2.8543278851600462e-12,
+          "oracleRefinement": 1.7765495185646831e-12,
+          "captures": [
+            {
+              "t": 0,
+              "productionPosition": 0,
+              "productionVelocity": 0,
+              "oraclePosition": 0.0,
+              "oracleVelocity": 0.0
+            },
+            {
+              "t": 3.8245223369469317,
+              "productionPosition": 3.291835164929317e-10,
+              "productionVelocity": 2.981978205248239e-10,
+              "oraclePosition": 3.288783143143975e-10,
+              "oracleVelocity": 2.9686667790585655e-10
+            },
+            {
+              "t": 15.209830215713506,
+              "productionPosition": 5.008327926138025e-10,
+              "productionVelocity": 5.325217007253849e-10,
+              "oraclePosition": 4.964689154445764e-10,
+              "oracleVelocity": 5.284387005472931e-10
+            }
+          ],
+          "clearanceCertified": true
+        },
+        {
+          "step": 0.0009765625,
+          "stateBudget": 1e-07,
+          "position": 4.2547327505821826e-13,
+          "velocity": 3.538378591058658e-13,
+          "fuelError": 2.4702462297909733e-13,
+          "usageError": 2.471634008571755e-13,
+          "oracleRefinement": 1.7765495185646831e-12,
+          "captures": [
+            {
+              "t": 0,
+              "productionPosition": 0,
+              "productionVelocity": 0,
+              "oraclePosition": 0.0,
+              "oracleVelocity": 0.0
+            },
+            {
+              "t": 3.8245223369469317,
+              "productionPosition": 3.289459812532324e-10,
+              "productionVelocity": 2.969838577567405e-10,
+              "oraclePosition": 3.288783143143975e-10,
+              "oracleVelocity": 2.9686667790585655e-10
+            },
+            {
+              "t": 15.209830215713506,
+              "productionPosition": 4.968346601212305e-10,
+              "productionVelocity": 5.287904593706945e-10,
+              "oraclePosition": 4.964689154445764e-10,
+              "oracleVelocity": 5.284387005472931e-10
+            }
+          ],
+          "clearanceCertified": true
+        },
+        {
+          "step": 0.00048828125,
+          "stateBudget": 1e-08,
+          "position": 2.4982795924335145e-13,
+          "velocity": 3.1160165061252063e-13,
+          "fuelError": 5.0737192225369654e-14,
+          "usageError": 5.08759701034478e-14,
+          "oracleRefinement": 1.7765495185646831e-12,
+          "captures": [
+            {
+              "t": 0,
+              "productionPosition": 0,
+              "productionVelocity": 0,
+              "oraclePosition": 0.0,
+              "oracleVelocity": 0.0
+            },
+            {
+              "t": 3.8245223369469317,
+              "productionPosition": 3.2888284161064513e-10,
+              "productionVelocity": 2.968675224894797e-10,
+              "oraclePosition": 3.288783143143975e-10,
+              "oracleVelocity": 2.9686667790585655e-10
+            },
+            {
+              "t": 15.209830215713506,
+              "productionPosition": 4.965661745812777e-10,
+              "productionVelocity": 5.285370556862478e-10,
+              "oraclePosition": 4.964689154445764e-10,
+              "oracleVelocity": 5.284387005472931e-10
+            }
+          ],
+          "clearanceCertified": true
+        }
+      ],
+      "oracleFuelRefinement": 4.85944617878431e-13
+    },
+    {
+      "case": "Wren",
+      "set": "selene-powered",
+      "terminal": {
+        "t": 12,
+        "status": "horizon",
+        "fuel": 0.23716338878938278,
+        "fuelUsed": 1.180574191595306,
+        "cargo": 0.0,
+        "stocks": {
+          "Meridian": [
+            2,
+            4
+          ],
+          "Nightfall": [
+            1.84,
+            4
+          ],
+          "Selene Hub": [
+            0.16,
+            3.4822624196153114
+          ]
+        },
+        "captures": [
+          {
+            "t": 0,
+            "position": 0.0,
+            "velocity": 0.0
+          },
+          {
+            "t": 3.5,
+            "position": 2.3023523532248644e-10,
+            "velocity": 3.344388147969911e-10
+          },
+          {
+            "t": 8.5,
+            "position": 1.9564280964133473e-10,
+            "velocity": 6.412598652962284e-10
+          }
+        ],
+        "trace": [
+          [
+            0,
+            "dock",
+            "initial-dock"
+          ],
+          [
+            0,
+            "transfer-start",
+            "load"
+          ],
+          [
+            0.25,
+            "transfer",
+            "load"
+          ],
+          [
+            0.5,
+            "undock",
+            "leave-home"
+          ],
+          [
+            0.5,
+            "thrust-start",
+            "leg0-departure"
+          ],
+          [
+            0.7402778476188632,
+            "thrust-end",
+            "leg0-departure"
+          ],
+          [
+            2.8886714772914197,
+            "thrust-start",
+            "leg0-braking"
+          ],
+          [
+            3.5,
+            "thrust-end",
+            "leg0-braking"
+          ],
+          [
+            3.5,
+            "dock",
+            "dock-selene"
+          ],
+          [
+            3.5,
+            "transfer-start",
+            "unload-refuel"
+          ],
+          [
+            3.75,
+            "transfer",
+            "unload-refuel"
+          ],
+          [
+            5.5,
+            "undock",
+            "leave-selene"
+          ],
+          [
+            5.5,
+            "thrust-start",
+            "leg1-departure"
+          ],
+          [
+            5.896551650737728,
+            "thrust-end",
+            "leg1-departure"
+          ],
+          [
+            7.977296734318421,
+            "thrust-start",
+            "leg1-braking"
+          ],
+          [
+            8.5,
+            "thrust-end",
+            "leg1-braking"
+          ],
+          [
+            8.5,
+            "dock",
+            "return-home"
+          ]
+        ],
+        "complete": true,
+        "completedAt": 8.5
+      },
+      "checks": [
+        {
+          "step": 0.0009765625,
+          "stateBudget": 1e-06,
+          "position": 2.4465175699211336e-11,
+          "velocity": 7.179779270567824e-11,
+          "fuelError": 2.209030180999605e-11,
+          "usageError": 2.2089885476361815e-11,
+          "oracleRefinement": 3.943332507344806e-12,
+          "captures": [
+            {
+              "t": 0,
+              "productionPosition": 0,
+              "productionVelocity": 0,
+              "oraclePosition": 0.0,
+              "oracleVelocity": 0.0
+            },
+            {
+              "t": 3.5,
+              "productionPosition": 2.3987263671288185e-10,
+              "productionVelocity": 3.4624192243500523e-10,
+              "oraclePosition": 2.3023523532248644e-10,
+              "oracleVelocity": 3.344388147969911e-10
+            },
+            {
+              "t": 8.5,
+              "productionPosition": 2.086516209324031e-10,
+              "productionVelocity": 6.805924963820212e-10,
+              "oraclePosition": 1.9564280964133473e-10,
+              "oracleVelocity": 6.412598652962284e-10
+            }
+          ],
+          "clearanceCertified": true
+        },
+        {
+          "step": 0.00048828125,
+          "stateBudget": 1e-07,
+          "position": 1.6407669336785473e-12,
+          "velocity": 4.78802102667438e-12,
+          "fuelError": 1.204425448264601e-12,
+          "usageError": 1.2041478925084448e-12,
+          "oracleRefinement": 3.943332507344806e-12,
+          "captures": [
+            {
+              "t": 0,
+              "productionPosition": 0,
+              "productionVelocity": 0,
+              "oraclePosition": 0.0,
+              "oracleVelocity": 0.0
+            },
+            {
+              "t": 3.5,
+              "productionPosition": 2.305667235769043e-10,
+              "productionVelocity": 3.348970636431885e-10,
+              "oraclePosition": 2.3023523532248644e-10,
+              "oracleVelocity": 3.344388147969911e-10
+            },
+            {
+              "t": 8.5,
+              "productionPosition": 1.9641023978934957e-10,
+              "productionVelocity": 6.436301158151396e-10,
+              "oraclePosition": 1.9564280964133473e-10,
+              "oracleVelocity": 6.412598652962284e-10
+            }
+          ],
+          "clearanceCertified": true
+        },
+        {
+          "step": 0.000244140625,
+          "stateBudget": 1e-08,
+          "position": 7.532257136195083e-13,
+          "velocity": 2.134025498983871e-12,
+          "fuelError": 1.3633816298153079e-12,
+          "usageError": 1.3631318296347672e-12,
+          "oracleRefinement": 3.943332507344806e-12,
+          "captures": [
+            {
+              "t": 0,
+              "productionPosition": 0,
+              "productionVelocity": 0,
+              "oraclePosition": 0.0,
+              "oracleVelocity": 0.0
+            },
+            {
+              "t": 3.5,
+              "productionPosition": 2.3023368859751777e-10,
+              "productionVelocity": 3.345117767991573e-10,
+              "oraclePosition": 2.3023523532248644e-10,
+              "oracleVelocity": 3.344388147969911e-10
+            },
+            {
+              "t": 8.5,
+              "productionPosition": 1.9676981036987207e-10,
+              "productionVelocity": 6.444807799489579e-10,
+              "oraclePosition": 1.9564280964133473e-10,
+              "oracleVelocity": 6.412598652962284e-10
+            }
+          ],
+          "clearanceCertified": true
+        }
+      ],
+      "oracleFuelRefinement": 1.372874036675853e-12
+    },
+    {
+      "case": "Lark",
+      "set": "selene-powered",
+      "terminal": {
+        "t": 12,
+        "status": "horizon",
+        "fuel": 0.344387349526729,
+        "fuelUsed": 1.0421587640241714,
+        "cargo": 0.0,
+        "stocks": {
+          "Meridian": [
+            2,
+            4
+          ],
+          "Nightfall": [
+            1.84,
+            4
+          ],
+          "Selene Hub": [
+            0.16,
+            3.5134538864490996
+          ]
+        },
+        "captures": [
+          {
+            "t": 0,
+            "position": 0.0,
+            "velocity": 0.0
+          },
+          {
+            "t": 3.5,
+            "position": 7.38226233509788e-10,
+            "velocity": 1.0577683974285772e-09
+          },
+          {
+            "t": 8.5,
+            "position": 2.1961491796665913e-10,
+            "velocity": 5.582545258399084e-10
+          }
+        ],
+        "trace": [
+          [
+            0,
+            "dock",
+            "initial-dock"
+          ],
+          [
+            0,
+            "transfer-start",
+            "load"
+          ],
+          [
+            0.25,
+            "transfer",
+            "load"
+          ],
+          [
+            0.5,
+            "undock",
+            "leave-home"
+          ],
+          [
+            0.5,
+            "thrust-start",
+            "leg0-departure"
+          ],
+          [
+            0.6260555388614392,
+            "thrust-end",
+            "leg0-departure"
+          ],
+          [
+            3.2236459541012166,
+            "thrust-start",
+            "leg0-braking"
+          ],
+          [
+            3.5,
+            "thrust-end",
+            "leg0-braking"
+          ],
+          [
+            3.5,
+            "dock",
+            "dock-selene"
+          ],
+          [
+            3.5,
+            "transfer-start",
+            "unload-refuel"
+          ],
+          [
+            3.75,
+            "transfer",
+            "unload-refuel"
+          ],
+          [
+            5.5,
+            "undock",
+            "leave-selene"
+          ],
+          [
+            5.5,
+            "thrust-start",
+            "leg1-departure"
+          ],
+          [
+            5.661681418138767,
+            "thrust-end",
+            "leg1-departure"
+          ],
+          [
+            8.282471930471354,
+            "thrust-start",
+            "leg1-braking"
+          ],
+          [
+            8.5,
+            "thrust-end",
+            "leg1-braking"
+          ],
+          [
+            8.5,
+            "dock",
+            "return-home"
+          ]
+        ],
+        "complete": true,
+        "completedAt": 8.5
+      },
+      "checks": [
+        {
+          "step": 0.0009765625,
+          "stateBudget": 1e-06,
+          "position": 2.4465175699211336e-11,
+          "velocity": 7.179779270567824e-11,
+          "fuelError": 1.0000666961218485e-11,
+          "usageError": 1.000088900582341e-11,
+          "oracleRefinement": 3.661822321857666e-12,
+          "captures": [
+            {
+              "t": 0,
+              "productionPosition": 0,
+              "productionVelocity": 0,
+              "oraclePosition": 0.0,
+              "oracleVelocity": 0.0
+            },
+            {
+              "t": 3.5,
+              "productionPosition": 7.394932066075689e-10,
+              "productionVelocity": 1.060693129106751e-09,
+              "oraclePosition": 7.38226233509788e-10,
+              "oracleVelocity": 1.0577683974285772e-09
+            },
+            {
+              "t": 8.5,
+              "productionPosition": 2.2414631386877454e-10,
+              "productionVelocity": 5.772584099387972e-10,
+              "oraclePosition": 2.1961491796665913e-10,
+              "oracleVelocity": 5.582545258399084e-10
+            }
+          ],
+          "clearanceCertified": true
+        },
+        {
+          "step": 0.00048828125,
+          "stateBudget": 1e-07,
+          "position": 1.6407669336785473e-12,
+          "velocity": 4.78802102667438e-12,
+          "fuelError": 9.816036872223322e-13,
+          "usageError": 9.816591983735634e-13,
+          "oracleRefinement": 3.661822321857666e-12,
+          "captures": [
+            {
+              "t": 0,
+              "productionPosition": 0,
+              "productionVelocity": 0,
+              "oraclePosition": 0.0,
+              "oracleVelocity": 0.0
+            },
+            {
+              "t": 3.5,
+              "productionPosition": 7.382989678745133e-10,
+              "productionVelocity": 1.0580008445528539e-09,
+              "oraclePosition": 7.38226233509788e-10,
+              "oracleVelocity": 1.0577683974285772e-09
+            },
+            {
+              "t": 8.5,
+              "productionPosition": 2.2017806461809536e-10,
+              "productionVelocity": 5.601836590102859e-10,
+              "oraclePosition": 2.1961491796665913e-10,
+              "oracleVelocity": 5.582545258399084e-10
+            }
+          ],
+          "clearanceCertified": true
+        },
+        {
+          "step": 0.000244140625,
+          "stateBudget": 1e-08,
+          "position": 7.793760062971003e-13,
+          "velocity": 2.134025498983871e-12,
+          "fuelError": 1.5497048089230248e-12,
+          "usageError": 1.5498713423767185e-12,
+          "oracleRefinement": 3.661822321857666e-12,
+          "captures": [
+            {
+              "t": 0,
+              "productionPosition": 0,
+              "productionVelocity": 0,
+              "oraclePosition": 0.0,
+              "oracleVelocity": 0.0
+            },
+            {
+              "t": 3.5,
+              "productionPosition": 7.383317092566729e-10,
+              "productionVelocity": 1.0579983848594347e-09,
+              "oraclePosition": 7.38226233509788e-10,
+              "oracleVelocity": 1.0577683974285772e-09
+            },
+            {
+              "t": 8.5,
+              "productionPosition": 2.2083294073173968e-10,
+              "productionVelocity": 5.614543317313398e-10,
+              "oraclePosition": 2.1961491796665913e-10,
+              "oracleVelocity": 5.582545258399084e-10
+            }
+          ],
+          "clearanceCertified": true
+        }
+      ],
+      "oracleFuelRefinement": 2.072952920428861e-12
+    }
+  ],
+  "calibrations": [
+    {
+      "case": "cap",
+      "terminalEpoch": 2,
+      "checks": [
+        {
+          "step": 0.00390625,
+          "stateError": 9.22049339387117e-14,
+          "fuelError": 4.085620730620576e-14,
+          "oracleRefinement": 2.0846862813517563e-12
+        },
+        {
+          "step": 0.001953125,
+          "stateError": 7.044466248548063e-14,
+          "fuelError": 4.085620730620576e-14,
+          "oracleRefinement": 2.0846862813517563e-12
+        },
+        {
+          "step": 0.0009765625,
+          "stateError": 7.298650542484383e-14,
+          "fuelError": 4.085620730620576e-14,
+          "oracleRefinement": 2.0846862813517563e-12
+        }
+      ]
+    },
+    {
+      "case": "depletion",
+      "terminalEpoch": 0.4229999999999998,
+      "checks": [
+        {
+          "step": 0.00390625,
+          "stateError": 8.589501439048555e-14,
+          "fuelError": 2.220446049250313e-16,
+          "oracleRefinement": 2.4818327625104646e-14
+        },
+        {
+          "step": 0.001953125,
+          "stateError": 2.0107237878525885e-14,
+          "fuelError": 2.220446049250313e-16,
+          "oracleRefinement": 2.4818327625104646e-14
+        },
+        {
+          "step": 0.0009765625,
+          "stateError": 1.67388804063116e-14,
+          "fuelError": 2.220446049250313e-16,
+          "oracleRefinement": 2.4818327625104646e-14
+        }
+      ]
+    }
+  ]
+}

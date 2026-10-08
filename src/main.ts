@@ -3,12 +3,14 @@ import {StableLabels,type Label,type PlacedLabel} from './view/labels';
 import freight from '../fixtures/model-sets/orison-freight.json';
 import lunar from '../fixtures/model-sets/lunar-loop.json';
 import seleneFreight from '../fixtures/model-sets/selene-freight.json';
+import selenePowered from '../fixtures/model-sets/selene-powered.json';
+import orisonPowered from '../fixtures/model-sets/orison-powered.json';
 import {bodyState} from './sim/dynamics';
 import type {State} from './sim/schema';
 import {displayPortState,portsOf, sampleVessel, setEvents, stockAt, type ModelSet, type SetEvent, type SetRun, type VesselRun} from './model-set/model';
 import {transform} from './model-set/frames';
 
-const sets = [freight, lunar, seleneFreight] as ModelSet[];
+const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered] as ModelSet[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
@@ -20,7 +22,7 @@ document.body.innerHTML = `
       <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><button id="fit" title="Fit the scene (F)">Fit</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
       <div class="viewport"><canvas id="space" tabindex="0" aria-label="Orbital traffic. Drag to pan, scroll to zoom, click a ship or station to inspect."></canvas></div>
       <div id="timelines" aria-label="Ship activity timelines"></div>
-      <div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><select id="speed" aria-label="Playback speed"><option value="0.25">¼×</option><option value="1" selected>1×</option><option value="4">4×</option><option value="16">16×</option></select><input id="time" type="range" min="0" max="64" value="0" step="0.001" aria-label="Simulation time"><output id="clock">0.00</output><label class="replay"><input type="checkbox" id="replay" title="Rewind the prepared scene at the end">Replay</label></div>
+      <div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><label class="speed-control"><input id="speed" type="range" min="-4.32" max="4" step="0.01" value="0" aria-label="Playback speed" aria-valuetext="1×"><output id="speed-value">1×</output></label><input id="time" type="range" min="0" max="64" value="0" step="0.001" aria-label="Simulation time"><output id="clock">0.00</output><label class="replay"><input type="checkbox" id="replay" title="Rewind the prepared scene at the end">Replay</label></div>
     </section>
     <aside><div class="section-heading"><h2>Traffic</h2><span id="traffic-count"></span></div><div id="fleet"></div><div class="section-heading" id="station-heading"><h2>Stations</h2></div><div id="stations"></div><section id="inspector"></section><details id="model-details"><summary>About this set</summary><p id="description"></p><p id="provenance"></p><p>Drag to pan · Scroll to zoom · Space to pause · F to fit</p></details></aside>
   </div>
@@ -30,7 +32,7 @@ const canvas = $<HTMLCanvasElement>('space'), ctx = canvas.getContext('2d')!;
 let run: SetRun | undefined, worker: Worker | undefined, revision = 0;
 let events: SetEvent[] = [], selected = '', frame = 'inertial', t = 0, playing = false;
 let ready = false, width = 900, height = 600, scale = 100, center: [number, number] = [0, 0];
-let lastFrame = performance.now(), lastPanel = 0;
+let lastFrame = performance.now(), lastPanel = 0, playbackRate = 1;
 let layers = {orbits: true, trails: true, plan: true, labels: true};
 let savedLayers = {...layers}, cleared = false;
 let hits: {id: string; name: string; x: number; y: number}[] = [];
@@ -62,6 +64,9 @@ function eventLabel(e: SetEvent): string {
   if (e.kind === 'undock') return `Depart ${port}`;
   if (e.kind === 'transfer-start') return `Service ${port}`;
   if (e.kind === 'transfer') return `${e.cargoAfter! < e.cargoBefore! ? 'Unload' : 'Load'} freight · ${port}`;
+  if(e.kind==='thrust-start')return 'Begin thrust';
+  if(e.kind==='thrust-end')return 'End thrust';
+  if(e.kind==='fuel-depleted')return 'Fuel depleted';
   return e.id.endsWith('capture') ? 'Arrival burn' : 'Departure burn';
 }
 function nextDock(v: VesselRun) { return events.find(e => e.vessel === v.bundle.scenario.ship.id && e.t > t + 1e-9 && e.kind === 'dock'); }
@@ -69,6 +74,7 @@ function status(v: VesselRun): string {
   const s = sampleVessel(v, t), l = s.logistics;
   if (l?.service) return `${l.service.cargo < 0 ? 'Unloading' : 'Loading'} · ${l.service.portId}`;
   if (l?.dockedPortId) return `Docked · ${l.dockedPortId}`;
+  if((s.thrust?.force??0)>0)return `Powered flight · ${nextDock(v)?.portId??''}`;
   const dock = nextDock(v);
   return dock ? `En route · ${dock.portId}` : 'Free flight';
 }
@@ -77,9 +83,9 @@ function buildTimeline() {
   $('timelines').innerHTML = run!.vessels.map(v => {
     const times = [...new Set([start(), end(), ...v.ledger.map(e => e.t)])].sort((a, b) => a - b);
     const blocks = times.slice(0, -1).map((a, i) => {
-      const b = times[i + 1], state = sampleVessel(v, (a + b) / 2), l = state.logistics;
+      const b = times[i + 1], state = sampleVessel(v, (a + b) / 2), l = state.logistics, powered=(state.thrust?.force??0)>0;
       const fill = l?.service ? '#e9c485' : l?.dockedPortId ? '#35434d' : v.color;
-      return `<rect x="${1000 * (a - start()) / (end() - start())}" y="${l?.service ? 3 : 7}" width="${1000 * (b - a) / (end() - start())}" height="${l?.service ? 14 : 6}" fill="${fill}" opacity="${l?.dockedPortId && !l.service ? 0.8 : 0.65}"/>`;
+      return `<rect x="${1000 * (a - start()) / (end() - start())}" y="${l?.service || powered ? 3 : 7}" width="${1000 * (b - a) / (end() - start())}" height="${l?.service || powered ? 14 : 6}" fill="${fill}" opacity="${powered?0.95:l?.dockedPortId && !l.service ? 0.8 : 0.65}"/>`;
     }).join('');
     const burns = v.ledger.filter(e => e.kind === 'burn').map(e => `<path d="M${1000 * (e.t - start()) / (end() - start())} 4v12" stroke="${v.color}" stroke-width="1"/>`).join('');
     return `<div class="timeline-row" data-vessel="${esc(v.name)}"><button class="timeline-name" data-select="${esc(v.bundle.scenario.ship.id)}" style="color:${v.color}">${esc(v.name)}</button><div class="timeline-track"><svg viewBox="0 0 1000 20" preserveAspectRatio="none" aria-label="${esc(v.name)} activity; colored spans are flight, gold is cargo service">${blocks}${burns}</svg><span class="time-cursor"></span><button class="timeline-seek" aria-label="Scrub ${esc(v.name)} timeline"></button></div></div>`;
@@ -91,10 +97,12 @@ function buildTimeline() {
 }
 function fuelChart(v: VesselRun): string {
   const path = (get: (s: typeof v.samples[number]) => number, max: number) => {
-    const points = v.samples.filter((s, i) => i === 0 || i === v.samples.length - 1 || get(s) !== get(v.samples[i - 1]));
+    const points = v.samples.filter((s, i) => i === 0 || i === v.samples.length - 1 || (v.bundle.program.thrustArcs && v.boundaries.some(e=>e.t===s.t)) || get(s) !== get(v.samples[i - 1]));
     return points.map((s, i) => {
       const x = 4 + (s.t - start()) / (end() - start()) * 232, y = 64 - Math.min(1, get(s) / Math.max(max, 1e-12)) * 54;
-      return i ? `H${x}V${y}` : `M${x},${y}`;
+      const before=v.boundaries.find(e=>e.t===s.t)?.before;
+      if(i && v.bundle.program.thrustArcs && before){const left=64-Math.min(1,get(before)/Math.max(max,1e-12))*54;return `L${x},${left}V${y}`;}
+      return i ? v.bundle.program.thrustArcs?`L${x},${y}`:`H${x}V${y}` : `M${x},${y}`;
     }).join(' ');
   };
   return `<div class="chart-key"><span>Fuel</span><span>Freight</span></div><svg class="budget-chart" viewBox="0 0 240 72" role="img" aria-label="Fuel and freight over the scene"><path d="M4 64H236" stroke="#33414b"/><path d="${path(s => s.propellant, v.bundle.scenario.ship.tankCapacity)}" fill="none" stroke="#78c9c0" stroke-width="1.5"/><path d="${path(s => s.logistics?.cargoMass ?? v.bundle.scenario.ship.cargoMass, v.bundle.scenario.logistics?.cargoCapacity ?? 1)}" fill="none" stroke="#efb878" stroke-width="1.5"/><path class="budget-cursor" d="M0 5V66" stroke="#c7d5de" stroke-opacity="0.6"/></svg>`;
@@ -126,8 +134,9 @@ function updatePanels() {
   if (v) {
     const s = sampleVessel(v, t), cargo = s.logistics?.cargoMass ?? v.bundle.scenario.ship.cargoMass;
     $('object-status').textContent = status(v);
-    const used = v.ledger.filter(e => e.t <= t).reduce((sum, e) => sum + e.fuelUsed, 0);
+    const used = s.fuelUsed??v.ledger.filter(e => e.t <= t).reduce((sum, e) => sum + e.fuelUsed, 0);
     $('readouts').innerHTML = `<div><dt>${esc(v.cargo)}</dt><dd>${number(cargo)} / ${number(v.bundle.scenario.logistics?.cargoCapacity ?? cargo)}</dd></div><div><dt>Propellant</dt><dd>${number(s.propellant)} / ${number(v.bundle.scenario.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${number(used)}</dd></div>`;
+    if(v.bundle.scenario.ship.engine)$('readouts').innerHTML+=`<div><dt>Thrust</dt><dd>${number(s.thrust?.force??0)} / ${number(v.bundle.scenario.ship.engine.maxThrust)}</dd></div><div><dt>Thrust acceleration</dt><dd>${number(s.thrust?.acceleration??0)}</dd></div>`;
     const local=transform(run,s.y,t,frame);
     if(Math.abs(local[2])+Math.abs(local[5])>1e-9)$('readouts').innerHTML+=`<div><dt>Depth</dt><dd>${number(local[2])}</dd></div><div><dt>Vertical velocity</dt><dd>${number(local[5])}</dd></div>`;
     const cursor = document.querySelector<SVGPathElement>('.budget-cursor');
@@ -157,7 +166,7 @@ function updatePanels() {
   publishState();
 }
 function publishState() {
-  $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, frame, selected, layers,
+  $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, frame, selected, layers,
     ships: run?.vessels.map(v => ({id: v.bundle.scenario.ship.id, ...sampleVessel(v, t), screen: project(sampleVessel(v, t).y, t)})),
     labels:placedLabels.map(({id,anchor,alpha,left,top})=>({id,anchor,alpha,left,top})),
     stocks: run ? stockAt(run, t) : [], events, camera: {center, scale}, hits});
@@ -237,6 +246,12 @@ function draw() {
       const stop = nextDock(v)?.t ?? Math.min(end(), t + (run.id === 'lunar-loop' ? 5.58 : 8));
       path([project(sampleVessel(v, t).y, t), ...v.samples.filter(s => s.t > t && s.t <= stop).map(s => project(s.y, s.t))], '#b5bdc7', 1, 0.28, [3, 5]);
     }
+    if(layers.plan || layers.trails)for(const arc of v.bundle.program.thrustArcs??[]) {
+      if(arc.throttle===0)continue;
+      const first=layers.trails?Math.max(arc.start,t-12):Math.max(arc.start,t),last=layers.plan && isSelected?arc.end:Math.min(arc.end,t);
+      if(last<=first)continue;
+      path([project(sampleVessel(v,first).y,first),...v.samples.filter(s=>s.t>first && s.t<last).map(s=>project(s.y,s.t)),project(sampleVessel(v,last).y,last)],v.color,2.4,.7);
+    }
   }
   function label(id: string, text: string, x: number, y: number, color: string) {
     if (!layers.labels) return;
@@ -258,6 +273,11 @@ function draw() {
   }
   for (const v of run.vessels) {
     const state = sampleVessel(v, t), p = project(state.y, t), transformed = transform(run, state.y, t, frame);
+    if(state.thrust && state.thrust.force>0) {
+      const other=[...state.y] as State;for(let i=0;i<3;i++)other[i+3]+=state.thrust.direction[i];
+      const direction=transform(run,other,t,frame),dx=direction[3]-transformed[3],dy=-(direction[4]-transformed[4]),length=Math.hypot(dx,dy);
+      if(length>1e-10)path([[p[0]-dx/length*5,p[1]-dy/length*5],[p[0]-dx/length*15,p[1]-dy/length*15]],'#ffe0a0',2,.9);
+    }
     const angle = Math.hypot(transformed[3],transformed[4]) > 1e-10 ? Math.atan2(-transformed[4], transformed[3]) : 0;
     ctx.save(); ctx.translate(...p); ctx.rotate(angle); ctx.beginPath(); ctx.moveTo(6, 0); ctx.lineTo(-4, -3.5); ctx.lineTo(-2, 0); ctx.lineTo(-4, 3.5); ctx.closePath(); ctx.fillStyle = v.color; ctx.fill(); ctx.restore();
     if (selected === v.bundle.scenario.ship.id) { ctx.beginPath(); ctx.arc(...p, 11, 0, Math.PI * 2); ctx.strokeStyle = v.color; ctx.globalAlpha = 0.65; ctx.stroke(); ctx.globalAlpha = 1; }
@@ -334,10 +354,17 @@ document.addEventListener('keydown', e => {
   if (e.key.toLowerCase() === 'f') fit();
   if (e.key === 'Escape') $('hit-menu').hidden = true;
 });
+$<HTMLInputElement>('speed').oninput = () => {
+  playbackRate = 2 ** Number($<HTMLInputElement>('speed').value);
+  const text = `${playbackRate < 1 ? playbackRate.toFixed(2) : Number(playbackRate.toFixed(2))}×`;
+  $('speed-value').textContent = text;
+  $('speed').setAttribute('aria-valuetext', text);
+  if (ready) updatePanels();
+};
 function animate(now: number) {
   const dt = Math.min(0.1, (now - lastFrame) / 1000); lastFrame = now;
   if (ready && playing) {
-    t = Math.min(end(), t + dt * Number($<HTMLSelectElement>('speed').value));
+    t = Math.min(end(), t + dt * playbackRate);
     if (t >= end()) { if ($<HTMLInputElement>('replay').checked) t = start(); else playing = false; }
   }
   draw();

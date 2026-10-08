@@ -20,7 +20,7 @@ export function predict(bundle: Bundle, revision: number, horizon = bundle.scena
   bundle=validateBundle(bundle);
   const runner = new Runner(bundle), samples: Sample[] = [], start = bundle.scenario.epoch;
   // Display sampling is disposable; canonical coast brackets drive events.
-  const eventEpochs = [...bundle.program.burns.map(b => b.t), ...(bundle.program.operations ?? []).flatMap(o => [o.t, ...(o.kind === 'transfer' ? [o.t + bundle.scenario.logistics!.ports.find(p => p.id === o.portId)!.serviceDuration] : [])])];
+  const eventEpochs = [...bundle.program.burns.map(b => b.t), ...(bundle.program.thrustArcs??[]).flatMap(a=>[a.start,a.end]), ...(bundle.program.operations ?? []).flatMap(o => [o.t, ...(o.kind === 'transfer' ? [o.t + bundle.scenario.logistics!.ports.find(p => p.id === o.portId)!.serviceDuration] : [])])];
   const epochs = [...new Set([...Array.from({length: 801}, (_, i) => start + (horizon - start) * i / 800), ...eventEpochs.filter(t => t >= start && t <= horizon)])].sort((a,b) => a-b);
   for (const t of epochs) {
     const sample = runner.sample(t);

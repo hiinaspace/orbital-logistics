@@ -1,7 +1,7 @@
 import {burnMagnitude} from '../sim/burns';
 import {distance, relativeSpeed, position, velocity, subtract, dot} from '../sim/vectors';
 import {validateBundle} from '../sim/schema';
-import { bodyState, rk4 } from '../sim/dynamics';
+import { bodyState } from '../sim/dynamics';
 import { Runner, type CoastSegment } from '../sim/runner';
 import type { Bundle, State } from '../sim/schema';
 
@@ -27,7 +27,7 @@ export function inspectEvents(bundle: Bundle, runner: Runner, bodyId: string, ho
   function root(segment: CoastSegment, g0: number): number {
     let lo = segment.t0, hi = segment.t1;
     for (let i = 0; i < 40 && hi - lo > 1e-10; i++) {
-      const t = (lo + hi) / 2, y = rk4(scenario, segment.t0, segment.y0, t - segment.t0);
+      const t = (lo + hi) / 2, y = runner.segmentState(segment,t);
       if (radialSpeed(t, y) * g0 > 0) lo = t; else hi = t;
     }
     return (lo + hi) / 2;
@@ -45,7 +45,7 @@ export function inspectEvents(bundle: Bundle, runner: Runner, bodyId: string, ho
       const t = root(segment, g0);
       if (impulses.some(b => Math.abs(t - b.t) < 1e-6) ||
           candidates.some(a => Math.abs(a.event.t - t) < 1e-7)) continue;
-      const event = inspect(t, rk4(scenario, segment.t0, segment.y0, t - segment.t0), g0 < 0 ? 'periapsis' : 'apoapsis');
+      const event = inspect(t, runner.segmentState(segment,t), g0 < 0 ? 'periapsis' : 'apoapsis');
       candidates.push({ event, group });
       if (event.distance < closest.distance) closest = event;
     }

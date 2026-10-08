@@ -1,24 +1,27 @@
 import {resolveBurn} from './burns';
 import {distance, relativeSpeed, norm} from './vectors';
-import { bodyState, certifiedCoast, rk4 } from './dynamics';
+import { bodyState, certifiedCoast } from './dynamics';
 import { portState, logisticsResult, copyLogistics, type LogisticsState } from './logistics';
 import { MODEL, parseBundle, validateBundle, type Bundle, type State } from './schema';
+import {intervalStep,massLaw,massAt,thrustAt,thrustBound,propulsiveDeltaV,type MassLaw} from './propulsion';
 
-export type Status = 'running' | 'horizon' | 'collision' | 'unsupported-approach' | 'burn-rejected' | 'work-limit' | 'operation-rejected';
+export type Status = 'running' | 'horizon' | 'collision' | 'unsupported-approach' | 'burn-rejected' | 'work-limit' | 'operation-rejected' | 'fuel-depleted';
 export interface LedgerEntry {
-  t: number; kind: 'burn' | 'burn-rejected' | 'collision' | 'unsupported-approach' | 'work-limit' | 'dock' | 'undock' | 'transfer-start' | 'transfer' | 'operation-rejected';
+  t: number; kind: 'burn' | 'burn-rejected' | 'collision' | 'unsupported-approach' | 'work-limit' | 'dock' | 'undock' | 'transfer-start' | 'transfer' | 'operation-rejected' | 'thrust-start' | 'thrust-end' | 'fuel-depleted';
   id: string; deltaV: number; fuelUsed: number; propellantBefore: number; propellantAfter: number;
   portId?: string; cargoBefore?: number; cargoAfter?: number; portCargoBefore?: number; portCargoAfter?: number;
   portPropellantBefore?: number; portPropellantAfter?: number; detail?: string; positionError?: number;
 }
 export interface Sample {
   t: number; y: State; propellant: number; burnCursor: number; status: Status; detail: string; logistics?: LogisticsState;
+  fuelUsed?:number; thrust?:{id:string;force:number;acceleration:number;direction:[number,number,number]};
 }
 export interface EventBoundary {t: number; before: Sample; after: Sample}
-export interface CoastSegment { t0: number; y0: State; t1: number; y1: State }
-interface Node extends Sample { nextGridIndex: number }
+export interface CoastSegment { t0: number; y0: State; t1: number; y1: State; massLaw?:MassLaw }
+interface ActiveThrust {index:number;law:MassLaw;fuelBefore:number;usageBefore:number}
+interface Node extends Sample { nextGridIndex: number; thrustCursor?:number; activeThrust?:ActiveThrust }
 export interface Snapshot {
-  schemaVersion: 2; modelVersion: typeof MODEL; requestedEpoch: number;
+  schemaVersion: 3; modelVersion: typeof MODEL; requestedEpoch: number;
   anchor: Node; ledger: LedgerEntry[];
 }
 const clone = <T>(value: T): T => structuredClone(value);
@@ -41,6 +44,7 @@ export class Runner {
     this.#requestedEpoch = s.epoch;
     this.#nodes.push({ t: s.epoch, y: [...s.ship.state], propellant: s.ship.propellant,
       burnCursor: 0, nextGridIndex: 1, status: 'running', detail: '',
+      ...(this.#bundle.program.thrustArcs?{thrustCursor:0,fuelUsed:0}:{}),
       ...(s.logistics ? {logistics: {operationCursor: 0, cargoMass: s.ship.cargoMass, fuelUsed: 0, ports: s.logistics.ports.map(p => ({id: p.id, cargo: p.cargo, propellant: p.propellant}))}} : {}) });
     for(const port of s.logistics?.ports??[]) {
       if(port.rail.kind!=='ballistic')continue;
@@ -48,7 +52,7 @@ export class Runner {
       scenario.epoch=rail.epoch;scenario.duration=rail.validUntil-rail.epoch;scenario.policy=clone(rail.policy);
       scenario.bodies.forEach(b=>b.radius+=rail.minClearance);
       scenario.ship={id:port.id,state:[...rail.state],dryMass:1,cargoMass:0,propellant:0,tankCapacity:0,exhaustVelocity:1};
-      const target=new Runner({scenario,program:{schemaVersion:2,id:'ballistic-station-coast-v2',burns:[]}});
+      const target=new Runner({scenario,program:{schemaVersion:3,id:'ballistic-station-coast-v2',burns:[]}});
       const terminal=target.advanceTo(rail.validUntil);
       if(terminal.status!=='horizon')throw new Error(`Unsafe ballistic station ${port.id}: ${terminal.status} ${terminal.detail}`);
       this.#portRunners.set(port.id,target);
@@ -77,7 +81,7 @@ export class Runner {
   get current(): Sample { return this.sample(this.#requestedEpoch); }
   #last(): Node { return this.#nodes[this.#nodes.length - 1]; }
   #stop(kind: 'collision' | 'unsupported-approach' | 'work-limit', id: string): void {
-    const n = this.#last(); n.status = kind; n.detail = id;
+    const n = this.#last(); this.#closeThrust(kind); n.status = kind; n.detail = id;
     this.#ledger.push({ t: n.t, kind, id, deltaV: 0, fuelUsed: 0,
       propellantBefore: n.propellant, propellantAfter: n.propellant });
   }
@@ -104,29 +108,37 @@ export class Runner {
     }
     n.y = [n.y[0], n.y[1], n.y[2], v[0],v[1],v[2]]; n.propellant -= used; n.burnCursor++;
     if (n.logistics) n.logistics.fuelUsed += used;
+    if(n.fuelUsed!==undefined)n.fuelUsed+=used;
     this.#ledger.push({ t: n.t, kind: 'burn', id: b.id, deltaV, fuelUsed: used,
       propellantBefore: before, propellantAfter: n.propellant });
   }
   #rejectOperation(id: string, detail: string): void {
-    const n = this.#last(); n.status = 'operation-rejected'; n.detail = `${id}: ${detail}`;
+    const n = this.#last(); this.#closeThrust('operation-rejected'); n.status = 'operation-rejected'; n.detail = `${id}: ${detail}`;
     this.#ledger.push({t: n.t, kind: 'operation-rejected', id, deltaV: 0, fuelUsed: 0, propellantBefore: n.propellant, propellantAfter: n.propellant, detail});
   }
   #applyEvents(): void {
     const n=this.#last();
+    const arc=this.#bundle.program.thrustArcs?.[n.thrustCursor??0],active=n.activeThrust;
     if(this.#bundle.program.burns[n.burnCursor]?.t!==n.t &&
-      this.#bundle.program.operations?.[n.logistics?.operationCursor??0]?.t!==n.t && n.logistics?.service?.end!==n.t)return;
+      this.#bundle.program.operations?.[n.logistics?.operationCursor??0]?.t!==n.t && n.logistics?.service?.end!==n.t &&
+      arc?.start!==n.t && !(active && (this.#bundle.program.thrustArcs![active.index].end===n.t || active.law.depletionEpoch===n.t)))return;
     const before=clone(n), cursor=this.#ledger.length;
     this.#performEvents();
     if(this.#ledger.length!==cursor) {
-      const sample = ({nextGridIndex: _grid, ...s}: Node): Sample => s;
+      const sample = ({nextGridIndex: _grid,activeThrust:_active,thrustCursor:_cursor, ...s}: Node): Sample => s;
       this.#boundaries.push({t:n.t,before:sample(before),after:sample(clone(n))});
     }
   }
   #performEvents(): void {
     const n = this.#last(), s = this.#bundle.scenario, l = n.logistics, spec = s.logistics;
     if (n.status !== 'running') return;
-    if (!l || !spec) { this.#applyBurn(); return; }
-    // Fixed simultaneous order: completion, undock, burn, dock, transfer start.
+    if(n.activeThrust) {
+      const arc=this.#bundle.program.thrustArcs![n.activeThrust.index];
+      if(n.t===arc.end)this.#closeThrust('completed');
+      else if(n.t===n.activeThrust.law.depletionEpoch){this.#closeThrust('fuel-depleted');n.status='fuel-depleted';n.detail=arc.id;return;}
+    }
+    if (!l || !spec) { this.#applyBurn(); this.#startThrust(); return; }
+    // End thrust, completion, undock, impulse, dock, transfer start, start thrust.
     if (l.service?.end === n.t) {
       const service = l.service, port = l.ports.find(p => p.id === service.portId)!;
       this.#ledger.push({t: n.t, kind: 'transfer', id: service.id, portId: port.id, deltaV: 0, fuelUsed: 0,
@@ -149,6 +161,7 @@ export class Runner {
         const used = (s.ship.dryMass + l.cargoMass + n.propellant) * -Math.expm1(-speed / s.ship.exhaustVelocity);
         if (used > n.propellant || !Number.isFinite(used)) { this.#rejectOperation(op.id, 'Not enough fuel for capture residual'); return; }
         const before = n.propellant; n.propellant -= used; l.fuelUsed += used;
+        if(n.fuelUsed!==undefined)n.fuelUsed+=used;
         // Explicit constrained-port interface: bounded position attachment and a
         // fully charged residual velocity impulse. There is no free capture burn.
         n.y = y; l.dockedPortId = port.id;
@@ -171,7 +184,35 @@ export class Runner {
     while (operations[l.operationCursor]?.t === n.t && operations[l.operationCursor].kind === 'undock' && n.status === 'running') operate();
     this.#applyBurn();
     while (operations[l.operationCursor]?.t === n.t && n.status === 'running') operate();
+    this.#startThrust();
     if (logisticsResult(spec, l, n.propellant, n.t).complete) l.completedAt ??= n.t; else delete l.completedAt;
+  }
+  #startThrust():void {
+    const n=this.#last(),s=this.#bundle.scenario,index=n.thrustCursor??0,arc=this.#bundle.program.thrustArcs?.[index];
+    if(n.status!=='running' || !arc || arc.start!==n.t)return;
+    if(n.logistics?.dockedPortId || n.logistics?.service){this.#rejectOperation(arc.id,'Undock before powered flight');return;}
+    const law=massLaw(s.ship.engine!,arc,s.ship.dryMass+(n.logistics?.cargoMass??s.ship.cargoMass),n.propellant,s.ship.exhaustVelocity);
+    n.activeThrust={index,law,fuelBefore:n.propellant,usageBefore:n.fuelUsed??0};n.thrustCursor=index+1;
+    this.#ledger.push({t:n.t,kind:'thrust-start',id:arc.id,deltaV:0,fuelUsed:0,propellantBefore:n.propellant,propellantAfter:n.propellant});
+    if(law.depletionEpoch===n.t && arc.end>n.t){this.#closeThrust('fuel-depleted');n.status='fuel-depleted';n.detail=arc.id;}
+  }
+  #closeThrust(reason:string):void {
+    const n=this.#last(),active=n.activeThrust;if(!active)return;
+    const arc=this.#bundle.program.thrustArcs![active.index];
+    this.#ledger.push({t:n.t,kind:reason==='fuel-depleted'?'fuel-depleted':'thrust-end',id:arc.id,
+      deltaV:propulsiveDeltaV(active.law,n.t),fuelUsed:active.fuelBefore-n.propellant,
+      propellantBefore:active.fuelBefore,propellantAfter:n.propellant,detail:reason});
+    delete n.activeThrust;
+  }
+  #interval(n:Node,end:number):{y:State;propellant:number;fuelUsed?:number} {
+    const active=n.activeThrust;
+    const y=end===n.t || n.logistics?.dockedPortId?[...n.y] as State:intervalStep(this.#bundle.scenario,n.t,n.y,end-n.t,active?.law);
+    const propellant=active?massAt(active.law,end)-active.law.nonfuel:n.propellant;
+    return {y,propellant,...(n.fuelUsed!==undefined?{fuelUsed:active?active.usageBefore+active.fuelBefore-propellant:n.fuelUsed}:{})};
+  }
+  segmentState(segment:CoastSegment,t:number):State {
+    if(!Number.isFinite(t) || t<segment.t0 || t>segment.t1)throw new Error('Epoch outside segment');
+    return intervalStep(this.#bundle.scenario,segment.t0,segment.y0,t-segment.t0,segment.massLaw);
   }
   #coast(end: number, depth = 0): boolean {
     const n = this.#last(), s = this.#bundle.scenario, dt = end - n.t;
@@ -180,16 +221,18 @@ export class Runner {
       const port = s.logistics!.ports.find(p => p.id === n.logistics!.dockedPortId)!;
       this.#nodes.push({...n, logistics: copyLogistics(n.logistics), t: end, y: this.portState(port.id, end)}); return true;
     }
-    if (!certifiedCoast(s, n.t, n.y, dt)) {
+    if (!certifiedCoast(s, n.t, n.y, dt,thrustBound(n.activeThrust?.law))) {
       if (depth >= s.policy.maxSubdivision || n.t + dt / 2 === n.t) {
         this.#stop('unsupported-approach', 'clearance certificate exhausted'); return false;
       }
       const middle = n.t + dt / 2;
       return this.#coast(middle, depth + 1) && this.#coast(end, depth + 1);
     }
-    const y = rk4(s, n.t, n.y, dt);
+    const propagated=this.#interval(n,end),y=propagated.y;
     if (y.some(v => !Number.isFinite(v))) { this.#stop('unsupported-approach', 'nonfinite propagation'); return false; }
-    this.#nodes.push({ ...n, ...(n.logistics ? {logistics: copyLogistics(n.logistics)} : {}), t: end, y });
+    const next={ ...n, ...(n.logistics ? {logistics: copyLogistics(n.logistics)} : {}),...propagated,t: end };
+    if(next.logistics && n.activeThrust)next.logistics.fuelUsed+=(next.fuelUsed!-n.fuelUsed!);
+    this.#nodes.push(next);
     return true;
   }
   #ensure(t: number): void {
@@ -198,7 +241,10 @@ export class Runner {
       const n = this.#last(), grid = s.epoch + n.nextGridIndex * s.policy.step;
       const burn = this.#bundle.program.burns[n.burnCursor];
       const operation = this.#bundle.program.operations?.[n.logistics?.operationCursor ?? 0];
-      const end = Math.min(grid, burn?.t ?? Infinity, operation?.t ?? Infinity, n.logistics?.service?.end ?? Infinity, s.epoch + s.duration);
+      const active=n.activeThrust,arc=this.#bundle.program.thrustArcs?.[n.thrustCursor??0];
+      const end = Math.min(grid, burn?.t ?? Infinity, operation?.t ?? Infinity, n.logistics?.service?.end ?? Infinity, s.epoch + s.duration,
+        arc?.start??Infinity,active?this.#bundle.program.thrustArcs![active.index].end:Infinity,
+        active?.law.depletionEpoch??Infinity,(active?.law.capEpoch??-Infinity)>n.t?active!.law.capEpoch!:Infinity);
       if (!this.#coast(end)) break;
       if (end === grid) this.#last().nextGridIndex++;
       this.#applyEvents();
@@ -222,8 +268,12 @@ export class Runner {
     const last = this.#last();
     if (t > last.t) t = last.t; // Terminated forecasts have no continuation.
     const n = this.#nodes[this.#index(t)];
-    const y = n.logistics?.dockedPortId ? this.portState(n.logistics.dockedPortId,t) : t === n.t ? [...n.y] as State : rk4(s, n.t, n.y, t - n.t);
-    return { t, y, propellant: n.propellant, burnCursor: n.burnCursor, status: n.status, detail: n.detail, ...(n.logistics ? {logistics: copyLogistics(n.logistics)} : {}) };
+    const propagated=this.#interval(n,t),y=n.logistics?.dockedPortId?this.portState(n.logistics.dockedPortId,t):propagated.y;
+    const logistics=n.logistics?copyLogistics(n.logistics):undefined;
+    if(logistics && n.activeThrust)logistics.fuelUsed+=propagated.fuelUsed!-n.fuelUsed!;
+    const active=n.activeThrust,arc=active?this.#bundle.program.thrustArcs![active.index]:undefined;
+    return { t, ...propagated,y, burnCursor: n.burnCursor, status: n.status, detail: n.detail, ...(logistics ? {logistics} : {}),
+      ...(active && n.status==='running'?{thrust:{id:arc!.id,force:thrustAt(active.law,t),acceleration:thrustAt(active.law,t)/massAt(active.law,t)*norm(active.law.direction),direction:[...active.law.direction] as [number,number,number]}}:{}) };
   }
   advanceTo(t: number): Sample { const result = this.sample(t); this.#requestedEpoch = t; return result; }
   advance(dt: number): Sample {
@@ -242,21 +292,21 @@ export class Runner {
       if (a.logistics?.dockedPortId) continue;
       const end = Math.min(b.t, horizon);
       segments.push({ t0: a.t, y0: [...a.y], t1: end,
-        y1: end === b.t && a.burnCursor === b.burnCursor && a.logistics?.operationCursor === b.logistics?.operationCursor ? [...b.y] : rk4(this.#bundle.scenario, a.t, a.y, end - a.t) });
+        y1: this.#interval(a,end).y,...(a.activeThrust?{massLaw:clone(a.activeThrust.law)}:{}) });
     }
     return segments;
   }
   reset(): Sample { this.#requestedEpoch = this.#bundle.scenario.epoch; return this.current; }
   snapshot(): Snapshot {
     const current = this.current, anchor = this.#nodes[this.#index(current.t)];
-    return clone({ schemaVersion: 2, modelVersion: MODEL, requestedEpoch: this.#requestedEpoch,
+    return clone({ schemaVersion: 3, modelVersion: MODEL, requestedEpoch: this.#requestedEpoch,
       anchor, ledger: this.#ledger.filter(e => e.t <= anchor.t) });
   }
   // Saved programs are durable. M0 reload validates a snapshot by forward replay;
   // it never trusts a supplied state, cursor or ledger as authoritative physics.
   static restore(bundle: Bundle, value: unknown): Runner {
     if (!value || typeof value !== 'object') throw new Error('Invalid snapshot');
-    if ((value as Snapshot).schemaVersion !== 2 || (value as Snapshot).modelVersion !== MODEL) throw new Error('Unsupported snapshot version; recover the scenario/program and replay without the old snapshot');
+    if ((value as Snapshot).schemaVersion !== 3 || (value as Snapshot).modelVersion !== MODEL) throw new Error('Unsupported snapshot version; recover the scenario/program and replay without the old snapshot');
     const snapshot = value as Snapshot, runner = new Runner(bundle);
     runner.advanceTo(snapshot.requestedEpoch);
     if (orderedJSON(runner.snapshot()) !== orderedJSON(value)) throw new Error('Snapshot does not match deterministic replay');

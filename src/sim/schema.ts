@@ -1,11 +1,13 @@
 // Versioned, structured-cloneable data. The simulation has no browser dependencies.
 import {dot, norm, type State, type Vec3} from './vectors';
 export type {State, Vec3} from './vectors';
-export const MODEL = 'rk4-canonical-v2' as const;
+export const MODEL = 'rk4-canonical-v3' as const;
 export type Rail =
   | { kind: 'fixed'; position: Vec3 }
   | { kind: 'circular'; center: Vec3; u: Vec3; v: Vec3; radius: number; rate: number; phase: number };
 export interface Body { id: string; mu: number; radius: number; rail: Rail }
+export interface Engine { maxThrust: number; maxAcceleration?: number }
+export interface ThrustArc { id: string; start: number; end: number; direction: Vec3; throttle: number }
 export interface BallisticRail {kind:'ballistic'; epoch:number; validUntil:number; state:State; policy:Scenario['policy']; minClearance:number; provenance:string}
 export interface Port {
   id: string; rail: Extract<Rail, {kind: 'circular'}> | BallisticRail;
@@ -29,7 +31,7 @@ export interface Rendezvous {
   tolerance: { position: number; velocity: number };
 }
 export interface Scenario {
-  schemaVersion: 2; modelVersion: typeof MODEL; id: string;
+  schemaVersion: 3; modelVersion: typeof MODEL; id: string;
   units: { length: string; time: string; mass: string };
   epoch: number; duration: number;
   policy: { step: number; maxNodes: number; maxSubdivision: number };
@@ -37,7 +39,7 @@ export interface Scenario {
   rendezvous?: Rendezvous;
   logistics?: Logistics;
   ship: { id: string; state: State; dryMass: number; cargoMass: number;
-    propellant: number; tankCapacity: number; exhaustVelocity: number };
+    propellant: number; tankCapacity: number; exhaustVelocity: number; engine?: Engine };
 }
 interface BurnBase {
   id: string; t: number; referenceBodyId: string;
@@ -46,7 +48,7 @@ interface BurnBase {
 }
 export type ReferenceBurn = BurnBase & {basis: 'radial-transverse-normal-v2'; radial: number; transverse: number; normal: number; orientationAxis: Vec3};
 export type Burn = ReferenceBurn | (BurnBase & {basis: 'inertial-cartesian-v2'; deltaVelocity: Vec3});
-export interface Program { schemaVersion: 2; id: string; burns: Burn[]; operations?: Operation[] }
+export interface Program { schemaVersion: 3; id: string; burns: Burn[]; operations?: Operation[]; thrustArcs?: ThrustArc[] }
 export interface Bundle { scenario: Scenario; program: Program }
 
 function object(value: unknown): Record<string, unknown> {
@@ -71,12 +73,19 @@ function integer(value: unknown, label: string, min: number, max: number): numbe
   return n;
 }
 
-// Only this boundary knows the v1 four-component wire format. Original JSON
-// stays durable; canonical runtime objects and newly saved programs are v2.
+// This boundary converts propulsion-free v1 planar and v2 spatial data. Original JSON
+// stays durable; canonical runtime objects and newly saved programs are v3.
 type LegacyStateWire = [number,number,number,number];
 function upgradeWire(value: unknown): unknown {
   const input = object(value), rawScenario = object(input.scenario), rawProgram = object(input.program);
   const result = structuredClone(input), s = object(result.scenario), p = object(result.program);
+  if ((rawScenario.schemaVersion !== 3 && (object(rawScenario.ship).engine !== undefined || rawScenario.engine !== undefined)) ||
+      (rawProgram.schemaVersion !== 3 && rawProgram.thrustArcs !== undefined)) throw new Error('Propulsion fields require schema3');
+  if (rawScenario.schemaVersion === 2) {
+    if (rawScenario.modelVersion !== 'rk4-canonical-v2') throw new Error('Unsupported schema/model version');
+    s.schemaVersion=3;s.modelVersion=MODEL;
+  }
+  if (rawProgram.schemaVersion === 2) p.schemaVersion=3;
   if (rawScenario.schemaVersion === 1) {
     if (rawScenario.modelVersion !== 'rk4-canonical-v1') throw new Error('Unsupported schema/model version');
     const lift = (v: unknown) => [...vector(v,2),0];
@@ -89,12 +98,12 @@ function upgradeWire(value: unknown): unknown {
     if (s.rendezvous) {const r=object(s.rendezvous),t=object(r.target);s.rendezvous={...r,target:{...t,state:liftState(t.state)}};}
     if (s.logistics) {const l=object(s.logistics);if (!Array.isArray(l.ports)) throw new Error('Invalid ports');
       s.logistics={...l,ports:l.ports.map(p=>({...object(p),rail:rail(object(p).rail)}))};}
-    s.schemaVersion=2;s.modelVersion=MODEL;
+    s.schemaVersion=3;s.modelVersion=MODEL;
   }
   if (rawProgram.schemaVersion === 1) {
     if (!Array.isArray(p.burns)) throw new Error('Invalid burns');
     p.burns=p.burns.map(value=>{const b=object(value);if(b.basis!=='radial-transverse-ccw-v1')throw new Error('Unsupported legacy burn');
-      return {...b,basis:'radial-transverse-normal-v2',orientationAxis:[0,0,1],normal:0};});p.schemaVersion=2;
+      return {...b,basis:'radial-transverse-normal-v2',orientationAxis:[0,0,1],normal:0};});p.schemaVersion=3;
   }
   return result;
 }
@@ -109,7 +118,7 @@ function circularRail(value: Record<string, unknown>, minRadius = 0): Extract<Ra
 // Reconstruct rather than casting JSON; failed imports cannot mutate an existing run.
 export function validateBundle(value: unknown): Bundle {
   const bundle = object(upgradeWire(value)), s = object(bundle.scenario), p = object(bundle.program);
-  if (s.schemaVersion !== 2 || p.schemaVersion !== 2 || s.modelVersion !== MODEL) throw new Error('Unsupported schema/model version');
+  if (s.schemaVersion !== 3 || p.schemaVersion !== 3 || s.modelVersion !== MODEL) throw new Error('Unsupported schema/model version');
   const units = object(s.units), policy = object(s.policy), ship = object(s.ship);
   const epoch = finite(s.epoch, 'epoch'), duration = finite(s.duration, 'duration', Number.MIN_VALUE);
   const step = finite(policy.step, 'step', 1 / 65536);
@@ -130,7 +139,7 @@ export function validateBundle(value: unknown): Bundle {
       radius: finite(b.radius, 'surface radius', Number.MIN_VALUE), rail };
   });
   if (new Set(bodies.map(b => b.id)).size !== bodies.length) throw new Error('Duplicate body ID');
-  const scenario: Scenario = { schemaVersion: 2, modelVersion: MODEL, id: name(s.id),
+  const scenario: Scenario = { schemaVersion: 3, modelVersion: MODEL, id: name(s.id),
     units: { length: name(units.length), time: name(units.time), mass: name(units.mass) },
     epoch, duration, policy: { step, maxNodes, maxSubdivision }, bodies,
     ship: { id: name(ship.id), state: vector(ship.state, 6) as State,
@@ -229,8 +238,27 @@ export function validateBundle(value: unknown): Bundle {
     }
     return burn;
   });
+  if (ship.engine !== undefined) {
+    const e=object(ship.engine);
+    scenario.ship.engine={maxThrust:finite(e.maxThrust,'maximum thrust',Number.MIN_VALUE),
+      ...(e.maxAcceleration!==undefined?{maxAcceleration:finite(e.maxAcceleration,'maximum acceleration',Number.MIN_VALUE)}:{})};
+    if(!Number.isFinite(scenario.ship.engine.maxThrust/scenario.ship.exhaustVelocity) ||
+       scenario.ship.engine.maxThrust/scenario.ship.exhaustVelocity===0 ||
+       !Number.isFinite(scenario.ship.engine.maxThrust/scenario.ship.dryMass))throw new Error('Unsupported engine scale');
+  }
   if (new Set(burns.map(b => b.id)).size !== burns.length) throw new Error('Duplicate burn ID');
-  const program: Program = { schemaVersion: 2, id: name(p.id), burns };
+  const program: Program = { schemaVersion: 3, id: name(p.id), burns };
+  if(p.thrustArcs!==undefined) {
+    if(!scenario.ship.engine || !Array.isArray(p.thrustArcs) || p.thrustArcs.length>128)throw new Error('Invalid thrust program');
+    let end=epoch;
+    program.thrustArcs=p.thrustArcs.map(value=>{
+      const a=object(value),start=finite(a.start,'thrust start',epoch),stop=finite(a.end,'thrust end',start),direction=vector(a.direction,3) as Vec3,throttle=finite(a.throttle,'throttle',0);
+      if(start<end || stop<=start || stop>epoch+duration || throttle>1 || Math.abs(norm(direction)-1)>1e-12 ||
+        burns.some(b=>b.t>=start && b.t<=stop && norm(b.basis==='inertial-cartesian-v2'?b.deltaVelocity:[b.radial,b.transverse,b.normal])>0))throw new Error('Overlapping/invalid thrust interval or impulse');
+      if(throttle>0 && scenario.ship.engine!.maxThrust*throttle/scenario.ship.exhaustVelocity===0)throw new Error('Unsupported throttle scale');
+      end=stop;return {id:name(a.id),start,end:stop,direction,throttle};
+    });
+  }
   if (p.operations !== undefined) {
     if (!scenario.logistics || !Array.isArray(p.operations) || p.operations.length > 128) throw new Error('Invalid operations');
     const operations: Operation[] = p.operations.map(value => {
@@ -247,6 +275,9 @@ export function validateBundle(value: unknown): Bundle {
         operations.some((o, i) => i > 0 && compareOperations(operations[i - 1], o) >= 0)) throw new Error('Invalid operation order/ID');
     program.operations = operations;
   }
+  const ids=[...burns.map(b=>b.id),...(program.operations??[]).map(o=>o.id),...(program.thrustArcs??[]).map(a=>a.id)];
+  if(new Set(ids).size!==ids.length)throw new Error('Duplicate program ID');
+  if((program.operations??[]).some(o=>(program.thrustArcs??[]).some(a=>o.t>a.start && o.t<a.end)))throw new Error('Operation inside powered arc');
   return { scenario, program };
 }
 

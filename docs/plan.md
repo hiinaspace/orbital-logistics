@@ -1,6 +1,6 @@
 # Tactical plan — updated 2026-10-08
 
-Status: **model-set viewer accepted; coherent 3D engine and lunar freight implemented**.
+Status: **model-set viewer accepted; coherent 3D engine, lunar freight and bounded propulsion implemented**.
 
 On 2026-10-08 the user chose fictional orbital buildups and traffic as the next
 product direction, authorized retiring the CoaDE editing UI, and requested implementation.
@@ -13,7 +13,16 @@ round trips now serve a ballistic lunar depot; burns, captures and refueling are
 See [spatial evidence](evidence/spatial-foundation.md) and
 [lunar freight evidence](evidence/lunar-freight.md). The viewer retains its 2D projection.
 Synchronized analytical views are deferred for taste feedback. Multi-system content,
-ground launch/landing, upkeep/production and new propulsion remain follow-up work.
+ground launch/landing, upkeep/production, runtime scheduling and 3D presentation remain follow-up work.
+
+The user accepted stable labels and lunar freight, then authorized bounded propulsion
+and an Astra senior review. [Reviewed contract](design/bounded-propulsion/README.md)
+and [evidence](evidence/bounded-propulsion.md) record canonical v3 finite thrust,
+acceleration caps, continuous fuel, deterministic depletion/failure/replay, analog
+speed and admitted fixed-primary/lunar powered round trips. The original impulsive
+sets remain. Current gate: watch Selene · powered freight and compare force2/4 burn
+choreography; then choose continuous prepared service or 3D viewing. No runtime
+solver, ground launch or general steering optimizer is claimed.
 
 The [recovered Fable consultation](design/orbital-model-set/README.md) and
 [synthesis](design/orbital-model-set/synthesis.md) informed this direction. Watching

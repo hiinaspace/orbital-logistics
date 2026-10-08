@@ -33,14 +33,14 @@ export function rk4(scenario: Scenario, t: number, y: State, h: number): State {
 // The spatial norm obeys the same triangle bound. The rail speed bound uses
 // the Frobenius norm of its accepted basis (conservative even within tolerance).
 // Failed certificates are subdivided by the runner, never softened or traversed.
-export function certifiedCoast(scenario: Scenario, t: number, y: State, h: number): boolean {
+export function certifiedCoast(scenario: Scenario, t: number, y: State, h: number, propulsiveAccelerationBound = 0): boolean {
   const clearances = scenario.bodies.map(body => {
     const b = bodyState(body, t);
     return distance(y,b) - body.radius;
   });
   if (clearances.some(c => c <= 0)) return false;
   const accelerationBound = scenario.bodies.reduce((sum, body, i) =>
-    sum + body.mu / (body.radius + clearances[i] / 2) ** 2, 0);
+    sum + body.mu / (body.radius + clearances[i] / 2) ** 2, propulsiveAccelerationBound);
   const speed = norm(velocity(y));
   return scenario.bodies.every((body, i) => {
     const sourceSpeed = body.rail.kind === 'fixed' ? 0 : Math.abs(body.rail.radius * body.rail.rate) * Math.sqrt(norm(body.rail.u)**2 + norm(body.rail.v)**2);

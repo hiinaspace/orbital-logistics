@@ -1,0 +1,327 @@
+{
+  "schemaVersion": 1,
+  "id": "orison-powered",
+  "name": "Orison · powered transfer",
+  "extent": 2.6,
+  "description": "A finite-thrust freighter supplies an orbital depot and returns.",
+  "provenance": "Fixed-primary validation scene. Two fixed inertial thrust arcs per leg, force1, exhaust velocity3, paid fuel/service/capture. Finite prepared trip.",
+  "rotating": {
+    "name": "Anchor rotating",
+    "rate": 0.8108737462959251,
+    "phase": 0
+  },
+  "stations": [
+    {
+      "id": "Kiln",
+      "role": "Fabrication ring",
+      "berths": 4
+    },
+    {
+      "id": "Anchor",
+      "role": "Freight hub",
+      "berths": 4
+    },
+    {
+      "id": "Crown",
+      "role": "Habitat",
+      "berths": 4
+    },
+    {
+      "id": "Farpoint",
+      "role": "Survey station",
+      "berths": 4
+    }
+  ],
+  "vessels": [
+    {
+      "name": "Kestrel",
+      "color": "#efb878",
+      "cargo": "Supplies",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "orison-freight-v1",
+          "units": {
+            "length": "reference orbital radius",
+            "time": "inverse circular angular rate",
+            "mass": "reference dry mass"
+          },
+          "epoch": 0,
+          "duration": 16,
+          "policy": {
+            "step": 0.00048828125,
+            "maxNodes": 65536,
+            "maxSubdivision": 16
+          },
+          "bodies": [
+            {
+              "id": "Orison",
+              "mu": 1,
+              "radius": 0.28,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "ship": {
+            "id": "Kestrel",
+            "state": [
+              1.15,
+              0,
+              0,
+              0,
+              0.9325048082403138,
+              0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.65,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3,
+            "engine": {
+              "maxThrust": 1
+            }
+          },
+          "logistics": {
+            "modelVersion": "kinematic-ports-v1",
+            "ports": [
+              {
+                "id": "Kiln",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 0.8,
+                  "rate": 1.3975424859373684,
+                  "phase": 4.72854450350631
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Anchor",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 1.15,
+                  "rate": 0.8108737462959251,
+                  "phase": 0
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Crown",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 1.6,
+                  "rate": 0.4941058844013092,
+                  "phase": 1.2089874853628153
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              },
+              {
+                "id": "Farpoint",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 2.05,
+                  "rate": 0.34069770525345283,
+                  "phase": 2.4799534730571544
+                },
+                "cargo": 4,
+                "cargoCapacity": 12,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.25
+              }
+            ],
+            "cargoCapacity": 0.2,
+            "capture": {
+              "position": 0.00001,
+              "velocity": 0.00001
+            },
+            "objective": {
+              "destinationId": "Kiln",
+              "quota": 0.16,
+              "returnPortId": "Anchor",
+              "minPropellant": 0,
+              "hardwareCost": 1
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 3,
+          "id": "Kestrel-powered-service-v3",
+          "burns": [],
+          "thrustArcs": [
+            {
+              "id": "leg0-departure",
+              "start": 0.7999999999999998,
+              "end": 0.9583997739544151,
+              "direction": [
+                0.5529132653129363,
+                -0.8332388139309082,
+                0
+              ],
+              "throttle": 1
+            },
+            {
+              "id": "leg0-braking",
+              "start": 3.653874178743908,
+              "end": 3.8245223369469317,
+              "direction": [
+                -0.6890903701522925,
+                0.7246754182138211,
+                0
+              ],
+              "throttle": 1
+            },
+            {
+              "id": "leg1-departure",
+              "start": 12.185307878766574,
+              "end": 12.344285296613972,
+              "direction": [
+                -0.3308265667017472,
+                -0.9436915718413164,
+                0
+              ],
+              "throttle": 1
+            },
+            {
+              "id": "leg1-braking",
+              "start": 15.071051385427877,
+              "end": 15.209830215713506,
+              "direction": [
+                0.176379850063143,
+                0.9843221771816905,
+                0
+              ],
+              "throttle": 1
+            }
+          ],
+          "operations": [
+            {
+              "id": "initial-dock",
+              "t": 0,
+              "portId": "Anchor",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-1-load",
+              "t": 0.49999999999999983,
+              "portId": "Anchor",
+              "kind": "transfer",
+              "cargo": 0.16,
+              "propellant": 0
+            },
+            {
+              "id": "voyage-1-out-undock",
+              "t": 0.7999999999999998,
+              "portId": "Anchor",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-1-out-dock",
+              "t": 3.8245223369469317,
+              "portId": "Kiln",
+              "kind": "dock"
+            },
+            {
+              "id": "voyage-1-unload",
+              "t": 3.8245223369469317,
+              "portId": "Kiln",
+              "kind": "transfer",
+              "cargo": -0.16,
+              "propellant": 0.10199402715081485
+            },
+            {
+              "id": "voyage-1-back-undock",
+              "t": 12.185307878766574,
+              "portId": "Kiln",
+              "kind": "undock"
+            },
+            {
+              "id": "voyage-1-back-dock",
+              "t": 15.209830215713506,
+              "portId": "Anchor",
+              "kind": "dock"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

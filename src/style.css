@@ -29,6 +29,9 @@ canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 .timeline-seek { position: absolute; inset: 0; width: 100%; opacity: 0; padding: 0; }
 .time-cursor { position: absolute; top: 0; bottom: 0; width: 1px; background: #b9c9d4; opacity: .65; pointer-events: none; }
 .transport { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-top: 1px solid #213341; font-size: 11px; }
+.speed-control { display:flex; align-items:center; gap:6px; flex:0 0 116px; }
+#speed { width:70px; min-width:0; }
+#speed-value { min-width:38px; font-variant-numeric:tabular-nums; }
 #play { min-width: 58px; }
 input[type=range] { min-width: 50px; flex: 1; accent-color: #efb878; }
 #clock { min-width: 93px; text-align: right; font-variant-numeric: tabular-nums; color: #afc3d0; }

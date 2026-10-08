@@ -96,8 +96,22 @@ export function prepareSet(value: ModelSet): SetRun {
 }
 
 export function sampleVessel(v: VesselRun, t: number): Sample {
-  const a = bracket(v, t)[0];
-  return {...structuredClone(a), t, y: stateAt(v, t)};
+  const [a,b] = bracket(v, t),sample={...structuredClone(a),t,y:stateAt(v,t)};
+  if(a.fuelUsed!==undefined && a!==b && a.t!==t) {
+    const endpoint=v.boundaries.find(e=>e.t===b.t)?.before??b,u=(t-a.t)/(b.t-a.t);
+    sample.propellant=a.propellant+u*(endpoint.propellant-a.propellant);
+    sample.fuelUsed=a.fuelUsed+u*(endpoint.fuelUsed!-a.fuelUsed);
+    if(sample.logistics)sample.logistics.fuelUsed=a.logistics!.fuelUsed+u*(endpoint.logistics!.fuelUsed-a.logistics!.fuelUsed);
+  }
+  // Throttle/heading are piecewise constant; mass and therefore force/acceleration
+  // vary smoothly. These are drawing values, never a target or propagation origin.
+  if(sample.thrust) {
+    const engine=v.bundle.scenario.ship.engine!,arc=v.bundle.program.thrustArcs!.find(a=>a.id===sample.thrust!.id)!;
+    const mass=v.bundle.scenario.ship.dryMass+(sample.logistics?.cargoMass??v.bundle.scenario.ship.cargoMass)+sample.propellant;
+    sample.thrust.force=Math.min(engine.maxThrust*arc.throttle,(engine.maxAcceleration??Infinity)*mass);
+    sample.thrust.acceleration=sample.thrust.force/mass*Math.hypot(...arc.direction);
+  }
+  return sample;
 }
 function bracket(v: VesselRun, t: number): [Sample, Sample] {
   const samples = v.samples;

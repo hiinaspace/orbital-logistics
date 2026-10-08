@@ -26,7 +26,7 @@ function window(a: Port, b: Port, earliest: number): number {
 function vessel(name: string, color: string, homeIndex: number, awayIndex: number, earliest: number) {
   const home = ports[homeIndex], away = ports[awayIndex], cargo = 0.16;
   const state = bodyState({id: home.id, mu: 0, radius: 0, rail: home.rail}, 0);
-  const scenario: Scenario = {schemaVersion: 2, modelVersion: MODEL, id: 'orison-freight-v1',
+  const scenario: Scenario = {schemaVersion: 3, modelVersion: MODEL, id: 'orison-freight-v1',
     units: {length: 'reference orbital radius', time: 'inverse circular angular rate', mass: 'reference dry mass'},
     epoch: 0, duration: 64, policy: {step: 1 / 512, maxNodes: 65536, maxSubdivision: 16},
     bodies: [{id: 'Orison', mu: 1, radius: 0.28, rail: {kind: 'fixed', position: [0, 0, 0]}}],
@@ -34,7 +34,7 @@ function vessel(name: string, color: string, homeIndex: number, awayIndex: numbe
     logistics: {modelVersion: 'kinematic-ports-v1', ports, cargoCapacity: 0.2,
       capture: {position: 1e-5, velocity: 1e-5},
       objective: {destinationId: away.id, quota: cargo, returnPortId: home.id, minPropellant: 0, hardwareCost: 1}}};
-  const program: Program = {schemaVersion: 2, id: `${name}-service-v1`, burns: [],
+  const program: Program = {schemaVersion: 3, id: `${name}-service-v1`, burns: [],
     operations: [{id: 'initial-dock', t: 0, kind: 'dock', portId: home.id}]};
   let ready = earliest, trip = 0;
   function leg(a: Port, b: Port, t: number, prefix: string) {
@@ -76,7 +76,7 @@ const droBundle: Bundle = validateBundle(JSON.parse(readFileSync('fixtures/m0-bi
 droBundle.scenario.duration = 24; droBundle.scenario.policy.maxNodes = 65536;
 droBundle.scenario.ship.id = 'Lark';
 droBundle.scenario.ship.state = [1.18, 0, 0, 0, 0.6158221495873256, 0];
-droBundle.program = {schemaVersion: 2, id: 'lark-dro-v1', burns: []};
+droBundle.program = {schemaVersion: 3, id: 'lark-dro-v1', burns: []};
 const lunar: ModelSet = {schemaVersion: 1, id: 'lunar-loop', name: 'Selene · lunar loop', extent: 1.65,
   description: 'A distant retrograde orbit in a circular planet–moon system.',
   provenance: 'Synthetic planar restricted three-body system, moon mass fraction 0.02. Prepared DRO from independent SciPy shooting, checked in the canonical Runner. Not an exact Earth–Moon mission; no insertion or stationkeeping modeled.',
