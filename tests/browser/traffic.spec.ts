@@ -25,7 +25,7 @@ test('pause during a delayed reply acknowledges the head without moving the curs
   window.Worker=class extends Native {
    constructor(url:string|URL,options?:WorkerOptions){
     super(url,options);
-    if(String(url).includes('traffic.worker'))Object.defineProperty(this,'onmessage',{set(fn:(e:MessageEvent)=>void){this.addEventListener('message',e=>setTimeout(()=>fn(e as MessageEvent),180));}});
+    if(options?.name==='continuous-traffic')Object.defineProperty(this,'onmessage',{set(fn:(e:MessageEvent)=>void){this.addEventListener('message',e=>setTimeout(()=>fn(e as MessageEvent),180));}});
    }
   };
  });
@@ -41,4 +41,27 @@ test('pause during a delayed reply acknowledges the head without moving the curs
  await page.waitForTimeout(250);expect((await state(page)).traffic.frontier).toBe(hidden.traffic.frontier);expect((await state(page)).playing).toBe(false);
  await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:false});document.dispatchEvent(new Event('visibilitychange'));});
  expect((await state(page)).playing).toBe(false);
+});
+
+test('an already-open viewer can switch sets after old worker assets are retired',async({page})=>{
+ test.setTimeout(45000);
+ await page.goto('/');await ready(page);
+ await page.getByLabel('Model set').selectOption('orison-service');await ready(page);await pause(page);
+ await page.getByLabel('Model set').selectOption('selene-freight');await ready(page);await pause(page);
+ // Models an open old tab after a build removed its hashed worker files.
+ await page.route(/\/assets\/[^/]*worker[^/]*\.js(?:\?.*)?$/,route=>route.fulfill({status:404,body:'retired worker asset'}));
+ await page.getByLabel('Model set').selectOption('orison-service');await ready(page);
+ expect((await state(page)).traffic.error).toBe('');
+ await pause(page);await page.getByLabel('Model set').selectOption('selene-freight');await ready(page);await pause(page);
+ await page.getByLabel('Model set').selectOption('orison-service');await ready(page);expect((await state(page)).traffic.error).toBe('');
+});
+
+test('repeated lunar freight and live round trips reset their worker generations',async({page})=>{
+ test.setTimeout(60000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('/');await ready(page);
+ for(let i=0;i<3;i++)for(const id of ['orison-service','selene-freight','orison-service','selene-powered']){
+  await page.getByLabel('Model set').selectOption(id);await ready(page);await pause(page);
+  const s=await state(page);expect(s.set).toBe(id);expect(s.traffic?.error??'').toBe('');
+ }
+ expect(errors).toEqual([]);
 });

@@ -1,4 +1,6 @@
 import './style.css';
+import PrepareWorker from './model-set/prepare.worker?worker&inline';
+import TrafficWorker from './traffic/traffic.worker?worker&inline';
 import {StableLabels,type Label,type PlacedLabel} from './view/labels';
 import freight from '../fixtures/model-sets/orison-freight.json';
 import lunar from '../fixtures/model-sets/lunar-loop.json';
@@ -213,7 +215,7 @@ function loadSet(id: string) {
   $('live').hidden=!continuous;document.querySelector<HTMLElement>('.replay')!.hidden=continuous;
   $('restart').title=continuous?'Restart run':'Rewind';
   if(continuous){loadTraffic();return;}
-  worker = new Worker(new URL('./model-set/prepare.worker.ts', import.meta.url), {type: 'module'});
+  worker = new PrepareWorker({name:'scene-prepare'});
   const currentRevision = revision;
   worker.onmessage = (e: MessageEvent<{revision: number; run?: SceneView; error?: string}>) => {
     if (e.data.revision !== revision || currentRevision !== revision) return;
@@ -234,7 +236,7 @@ function loadSet(id: string) {
 
 function loadTraffic(){
  traffic=new TrafficViewStore(trafficDefinition as unknown as TrafficDefinition);
- worker=new Worker(new URL('./traffic/traffic.worker.ts',import.meta.url),{type:'module'});
+ worker=new TrafficWorker({name:'continuous-traffic'});
  const generation=revision;pending=true;
  worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta;error?:string}>)=>{
   if(generation!==revision || e.data.generation!==revision || e.data.sequence!==sequence)return;
@@ -248,7 +250,7 @@ function loadTraffic(){
    $('description').textContent=run!.description;$('provenance').textContent=run!.provenance;$('traffic-count').textContent=String(run!.vessels.length);$<HTMLButtonElement>('play').disabled=false;fit();}
   updatePanels();
  };
- worker.onerror=()=>{if(generation===revision){pending=false;liveError='Simulation paused: worker failed';playing=false;$('load-status').textContent=liveError;updatePanels();}};
+ worker.onerror=(event)=>{if(generation===revision){pending=false;liveError=`Simulation paused: ${event.message||'worker failed'}`;playing=false;$('load-status').textContent=liveError;updatePanels();}};
  worker.postMessage({generation,sequence,definition:trafficDefinition});
 }
 
