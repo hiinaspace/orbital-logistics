@@ -1,0 +1,343 @@
+{
+  "schemaVersion": 1,
+  "id": "crossing-planes",
+  "name": "Orison · crossing planes",
+  "extent": 3.4,
+  "description": "Tern and Lark tilt their orbital planes at the nodes, then return to their original planes.",
+  "provenance": "Analytic circular plane-change witnesses with paid impulses. Different node axes and inclinations; fixed spherical primary. Reference beacons stay on their original orbits.",
+  "stations": [
+    {
+      "id": "Tern Beacon",
+      "role": "Reference orbit",
+      "berths": 1
+    },
+    {
+      "id": "Lark Beacon",
+      "role": "Reference orbit",
+      "berths": 1
+    }
+  ],
+  "rotating": {
+    "name": "Tern rotating",
+    "rate": 0.3535533905932738,
+    "phase": 0
+  },
+  "vessels": [
+    {
+      "name": "Tern",
+      "color": "#efbf7c",
+      "cargo": "Freight",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "tern-plane-changes",
+          "units": {
+            "length": "Orison radius",
+            "time": "√(R³/μ)",
+            "mass": "mass unit"
+          },
+          "epoch": 0,
+          "duration": 24,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 20
+          },
+          "bodies": [
+            {
+              "id": "Orison",
+              "mu": 1,
+              "radius": 1,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "ship": {
+            "id": "tern",
+            "state": [
+              0.31188738953074874,
+              -1.9755318919854712,
+              0,
+              0.6984559986366085,
+              0.11026884405188134,
+              0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          },
+          "logistics": {
+            "modelVersion": "kinematic-ports-v1",
+            "ports": [
+              {
+                "id": "Tern Beacon",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 2,
+                  "rate": 0.3535533905932738,
+                  "phase": -1.4142135623730951
+                },
+                "cargo": 0,
+                "cargoCapacity": 1,
+                "propellant": 0,
+                "tankCapacity": 1,
+                "serviceDuration": 0.3
+              },
+              {
+                "id": "Lark Beacon",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    0.6216099682706644,
+                    0.7833269096274834,
+                    0
+                  ],
+                  "v": [
+                    -0.6783810032053579,
+                    0.5383300237680343,
+                    -0.49999999999999994
+                  ],
+                  "radius": 2.8,
+                  "rate": 0.2134336802382846,
+                  "phase": -0.8537347209531384
+                },
+                "cargo": 0,
+                "cargoCapacity": 1,
+                "propellant": 0,
+                "tankCapacity": 1,
+                "serviceDuration": 0.3
+              }
+            ],
+            "cargoCapacity": 0.1,
+            "capture": {
+              "position": 1e-7,
+              "velocity": 1e-7
+            },
+            "objective": {
+              "destinationId": "Lark Beacon",
+              "quota": 0.1,
+              "returnPortId": "Tern Beacon",
+              "minPropellant": 0.1,
+              "hardwareCost": 0
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 3,
+          "id": "tern-inclination-demonstration",
+          "burns": [
+            {
+              "id": "tern-plane-change-out",
+              "t": 4,
+              "referenceBodyId": "Orison",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0,
+                -0.20710678118654752,
+                0.5
+              ]
+            },
+            {
+              "id": "tern-plane-change-back",
+              "t": 12.885765876316732,
+              "referenceBodyId": "Orison",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                0,
+                -0.20710678118654752,
+                0.5
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Lark",
+      "color": "#7ccbc7",
+      "cargo": "Freight",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "lark-plane-changes",
+          "units": {
+            "length": "Orison radius",
+            "time": "√(R³/μ)",
+            "mass": "mass unit"
+          },
+          "epoch": 0,
+          "duration": 24,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 20
+          },
+          "bodies": [
+            {
+              "id": "Orison",
+              "mu": 1,
+              "radius": 1,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "ship": {
+            "id": "lark",
+            "state": [
+              2.5755184672378966,
+              0.3052565664301249,
+              1.0552360179447278,
+              0.013577086826192254,
+              0.5642678117094603,
+              -0.1963679111382212
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3
+          },
+          "logistics": {
+            "modelVersion": "kinematic-ports-v1",
+            "ports": [
+              {
+                "id": "Tern Beacon",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 2,
+                  "rate": 0.3535533905932738,
+                  "phase": -1.4142135623730951
+                },
+                "cargo": 0,
+                "cargoCapacity": 1,
+                "propellant": 0,
+                "tankCapacity": 1,
+                "serviceDuration": 0.3
+              },
+              {
+                "id": "Lark Beacon",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    0.6216099682706644,
+                    0.7833269096274834,
+                    0
+                  ],
+                  "v": [
+                    -0.6783810032053579,
+                    0.5383300237680343,
+                    -0.49999999999999994
+                  ],
+                  "radius": 2.8,
+                  "rate": 0.2134336802382846,
+                  "phase": -0.8537347209531384
+                },
+                "cargo": 0,
+                "cargoCapacity": 1,
+                "propellant": 0,
+                "tankCapacity": 1,
+                "serviceDuration": 0.3
+              }
+            ],
+            "cargoCapacity": 0.1,
+            "capture": {
+              "position": 1e-7,
+              "velocity": 1e-7
+            },
+            "objective": {
+              "destinationId": "Lark Beacon",
+              "quota": 0.1,
+              "returnPortId": "Tern Beacon",
+              "minPropellant": 0.1,
+              "hardwareCost": 0
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 3,
+          "id": "lark-inclination-demonstration",
+          "burns": [
+            {
+              "id": "lark-plane-change-out",
+              "t": 4,
+              "referenceBodyId": "Orison",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                -0.018857285985145238,
+                0.014964220938702788,
+                0.5513698709634259
+              ]
+            },
+            {
+              "id": "lark-plane-change-back",
+              "t": 18.71929196030548,
+              "referenceBodyId": "Orison",
+              "basis": "inertial-cartesian-v2",
+              "deltaVelocity": [
+                -0.018857285985145238,
+                0.014964220938702788,
+                0.5513698709634259
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

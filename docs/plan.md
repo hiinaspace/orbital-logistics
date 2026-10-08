@@ -1,6 +1,6 @@
 # Tactical plan — updated 2026-10-08
 
-Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic and continuous airless surface service implemented**.
+Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic, continuous airless surface service and orthographic 3D viewer implemented**.
 
 On 2026-10-08 the user chose fictional orbital buildups and traffic as the next
 product direction, authorized retiring the CoaDE editing UI, and requested implementation.
@@ -11,9 +11,9 @@ six-state migration with planar compatibility and independent spatial calibratio
 stable label anchors/fades, and bounded lunar freight authoring. Three validated
 round trips now serve a ballistic lunar depot; burns, captures and refueling are paid.
 See [spatial evidence](evidence/spatial-foundation.md) and
-[lunar freight evidence](evidence/lunar-freight.md). The viewer retains its 2D projection.
-Synchronized analytical views are deferred for taste feedback. Multi-system content,
-upkeep/production, general demand scheduling and 3D presentation remain follow-up work.
+[lunar freight evidence](evidence/lunar-freight.md). The original overhead view is retained alongside the new 3D camera.
+Multi-system content, upkeep/production, general demand scheduling and synchronized
+analytical views remain follow-up work.
 
 The user accepted stable labels and lunar freight, then authorized bounded propulsion
 and an Astra senior review. [Reviewed contract](design/bounded-propulsion/README.md)
@@ -33,8 +33,7 @@ eight finite burns, circular insertion, cargo unloading and attached dwell.
 and denser disposable drawing samples. [Worker lifecycle follow-up](evidence/worker-lifecycle.md)
 reproduces and fixes a rebuild-related set-switch failure; the exact original error
 was not captured. The user accepted the ascent/close zoom and confirmed switching works. They approved
-landing + finite round trip, then continuous surface operations; 3D presentation remains
-deferred. Bounded position/velocity capture and overall ship statistics are preferred
+landing + finite round trip, then continuous surface operations. Bounded position/velocity capture and overall ship statistics are preferred
 over detailed hull/contact, vehicle construction or aerodynamic simulation. The finite
 return slice is implemented after [Astra review](design/surface-landing/README.md).
 **Selene · Surface round trip** retains the original outbound flight, refuels at
@@ -47,9 +46,15 @@ shortage retries and paid fault history after [Astra review](design/surface-serv
 [Evidence](evidence/continuous-surface.md) records long-run conservation, independent
 late-window admission and production browser playback. Whiskers point along exhaust
 and scale with actual force.
-Lunar continuation, demand routing/rescue, persistence, staging/recovery,
-a 3D camera remain separate extensions. No general steering
-optimizer is claimed.
+The user accepted continuous surface service and selected 3D viewer/controls before
+stationkeeping. [Camera contract](design/spatial-viewer.md) and
+[evidence](evidence/spatial-viewer.md) cover separate orthographic orbit/pan/zoom,
+Top/Front/Side presets, spherical occlusion and unchanged physical frames/history.
+**Orison · crossing planes** supplies two independently validated paid inclination
+changes around different node axes. Human control/readability review remains.
+Lunar continuation, demand routing/rescue, persistence, staging/recovery, maintained
+stations and variable steering/smoothing remain separate extensions. No general
+steering optimizer is claimed.
 
 The [recovered Fable consultation](design/orbital-model-set/README.md) and
 [synthesis](design/orbital-model-set/synthesis.md) informed this direction. Watching

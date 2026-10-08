@@ -116,8 +116,8 @@ Dynamic flight commands and a periodic programming language are not prerequisite
 ## A coherent 3D migration
 
 Implemented 2026-10-08 after user-requested Astra review. The engine now uses a
-canonical six-state contract with explicit legacy conversion; the viewer keeps its
-schematic XY projection. See [spatial evidence](evidence/spatial-foundation.md). The
+canonical six-state contract with explicit legacy conversion. The later
+orthographic camera adds 3D presentation while preserving Top/XY compatibility. See [spatial evidence](evidence/spatial-foundation.md). The
 validated migration covers:
 
 1. Versioned six-component state with an explicit v1 planar conversion; 3D source and
@@ -142,9 +142,8 @@ and optional acceleration caps use an anchored exact mass law at all RK stages.
 Start/end/cap/depletion boundaries are independent of viewing; interrupted arcs retain
 paid prefixes. Historical aiming tools reject powered programs. See
 [contract and provenance](design/bounded-propulsion/README.md).
-The user accepted stable labels and the original lunar set. Powered choreography is
-the current viewing gate. Continuous operations/rolling history and 3D presentation
-are follow-up choices; finite Replay still rewinds stocks.
+The user accepted stable labels and the original lunar set. The user also accepted powered choreography. Continuous operations and 3D presentation are now implemented
+in later slices; finite Replay still rewinds stocks.
 
 
 ## Airless ascent extension — 2026-10-08
@@ -200,5 +199,29 @@ held-head semantics; Restart preserves the selected set. Exhaust-side whiskers u
 actual capped force with a bounded nonlinear length scale.
 
 See [review/contract](design/surface-service/README.md) and
-[evidence](evidence/continuous-surface.md). 3D presentation remains deferred;
-stationkeeping, staging and atmosphere need separate model/content gates.
+[evidence](evidence/continuous-surface.md). The user accepted continuous service.
+Stationkeeping, staging and atmosphere need separate model/content gates.
+
+
+## Orthographic 3D viewer — 2026-10-08
+
+Implemented at the user's request before stationkeeping. The camera projects the
+already transformed six-state world onto a screen plane. It has no authority over
+physical frames, burns, propagation, sample epochs or continuous-service ownership.
+Top preserves the original XY view; 3D, Front and Side plus orbit/pan/cursor zoom
+expose inclined motion. A quiet XYZ triad describes camera orientation. Bodies are
+opaque spheres; paths are clipped to their silhouettes/front hemispheres, and hidden
+markers are neither labeled nor pickable through the globe. Visible projected
+overlaps retain the chooser. Surface view returns explicitly to Top/close scale.
+
+**Orison · crossing planes** is a small finite demonstration: Tern tilts 45° and Lark
+changes from −30° to +25° around a different node axis, then both restore their original
+planes at the opposite nodes. Impulses are paid by the unchanged Runner. Two reference
+beacons remain on the original circular rails. This validates spatial maneuver
+viewing rather than general 3D targeting or finite steering. Existing powered and
+continuous sets also support the camera and projected exhaust whiskers.
+
+See [camera contract](design/spatial-viewer.md) and [evidence](evidence/spatial-viewer.md).
+Ground pads still spin in the authored XY plane; camera changes do not add physical
+latitude, arbitrary spin axes, attitude or maintained stations. Steering keyframes/
+whisker smoothing remain deferred. Human control/readability feedback is next.

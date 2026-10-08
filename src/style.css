@@ -86,3 +86,9 @@ details p { line-height: 1.7; }
 
 .frontier-cursor { position:absolute; top:0; bottom:0; border-left:1px dashed #78c9c0; pointer-events:none; }
 .future-region { position:absolute; top:0; bottom:0; right:0; background:#0c141d55; pointer-events:none; }
+
+.view-tools { flex-wrap:wrap; }
+#camera-view { width:82px; }
+#drag-mode { min-width:48px; }
+#space { cursor:grab; }
+#space:active { cursor:grabbing; }

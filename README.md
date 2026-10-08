@@ -20,13 +20,17 @@ catches up, Live resumes the head, and Restart run starts a fresh session. The s
 adds an airless ascent from Cairn to Lantern. **Selene · Surface round trip** adds
 orbital refueling, return freight, finite braking, touchdown and unloading at Cairn.
 **Selene · continuous surface service** repeats the flights with finite shared stocks
-and explicit supply/export flows.
+and explicit supply/export flows. **Orison · crossing planes** adds two ships making
+paid changes between inclined circular orbits around different node axes.
 **Surface view** shows the close scale; choose a slower rate for launch or landing,
 then Fit or a ship frame to follow the orbit. Playback starts
 immediately. Click a ship or station to inspect it; overlapping objects open a chooser.
-Use the shared time slider or a ship's activity lane to scrub. Drag the view to pan,
-scroll to zoom, and use Frame or View from here to change reference frames. Space
-pauses; F fits. Layers includes a clear view. Replay explicitly rewinds the finite set.
+Use the shared time slider or a ship's activity lane to scrub. View selects Top, 3D,
+Front or Side. In 3D, drag to orbit and Shift-drag (or right/middle-drag) to pan; the
+Orbit/Pan button changes the default gesture. Top drags pan. Scroll zooms at the
+pointer. Frame or View from here changes the physical reference frame while keeping
+the camera orientation. Space pauses; F fits; T returns overhead. Focus the canvas
+and use arrow keys to orbit, Shift-arrows to pan. Layers includes a clear view. Replay explicitly rewinds the finite set.
 
 Cargo, propellant, docking and burns come from the simulation ledger. The model details
 are available under About this set. These scenes use normalized fictional systems,
@@ -46,9 +50,15 @@ npm run evidence:traffic
 npm run evidence:surface
 npm run evidence:landing
 npm run evidence:surface-traffic
+npm run evidence:spatial-viewer
+npx tsx scripts/spatial-viewer-fixture.ts --check
 npx tsx scripts/model-set-fixtures.ts --check
 uv run --project spikes/numerics --group dev --group plots pre-commit run --config spikes/numerics/.pre-commit-config.yaml --all-files
 ```
+
+[3D viewer evidence](docs/evidence/spatial-viewer.md) and its
+[camera contract](docs/design/spatial-viewer.md) cover orthographic controls, body
+occlusion, unchanged physical frames and independent noncoplanar maneuver checks.
 
 [Continuous surface evidence](docs/evidence/continuous-surface.md) and its
 [reviewed contract](docs/design/surface-service/README.md) cover recurring launch/landing,
@@ -66,7 +76,7 @@ return service, backward scrubbing and close drawing accuracy.
 
 [Current direction and architecture](docs/model-set.md) records the viewer contract
 and accepted scope. [Spatial evidence](docs/evidence/spatial-foundation.md) covers
-the 3D engine with 2D presentation; [lunar freight evidence](docs/evidence/lunar-freight.md)
+the 3D engine; [lunar freight evidence](docs/evidence/lunar-freight.md)
 covers the initial lunar set; [bounded propulsion evidence](docs/evidence/bounded-propulsion.md)
 covers the powered trips, acceleration caps and deterministic fuel/depletion model. [Prototype evidence](docs/evidence/model-set.md) records the original
 viewer checks. [Tactical plan](docs/plan.md) preserves the earlier

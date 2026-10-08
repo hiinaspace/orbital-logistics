@@ -11,7 +11,11 @@ stock/ship inspection and timelines. See docs/evidence/model-set.md,
 docs/evidence/lunar-freight.md and docs/evidence/bounded-propulsion.md for limits and validation. Watching is sufficient;
 do not reintroduce a puzzle/courier-optimization gate or mandatory authoring.
 
-The viewer retains an XY projection. The simulation is now canonical six-state v3,
+The viewer offers a separate orthographic 3D camera plus the original XY Top view.
+Read docs/design/spatial-viewer.md and docs/evidence/spatial-viewer.md. Orison · crossing
+planes is a finite two-ship, paid noncoplanar impulse witness, not a transfer solver.
+Camera orientation, pan, zoom and occlusion are disposable presentation; preserve
+physical reference frames, per-vertex epochs and canonical steps. The simulation is canonical six-state v3,
 with explicit propulsion-free v1/v2 fixture/program conversion, spatial rails/burns/capture/safety, and
 planar guards on historical aiming tools. See docs/evidence/spatial-foundation.md and
 docs/design/spatial-foundation/disposition.md. Multi-system content,
@@ -41,8 +45,8 @@ dispatch is not a general optimizer, persistence, rescue or lunar continuation.
 Airless ascent is implemented and user accepted, including close zoom; see
  docs/design/surface-ascent/README.md and docs/evidence/surface-ascent.md. Supported
 surface COM height/spin and atomic launch retain unchanged free-flight guards.
-The user selected finite airless landing/round trip, then continuous surface service;
-3D remains deferred. Schematic position/velocity capture and overall ship statistics
+The user selected finite airless landing/round trip, then continuous surface service.
+Schematic position/velocity capture and overall ship statistics
 are intended; do not add hull contact, detailed vehicle construction or atmosphere
 while implementing landing. Preserve the original one-way ascent set. Use an Astra
 senior review for consequential touchdown/operations architecture forks.
@@ -56,7 +60,9 @@ docs/design/surface-service/README.md and docs/evidence/continuous-surface.md.
 Preserve the private support prelude, exact designated arrival/local epochs,
 shared resource ownership, and 65,536 dense-sample budget plus one held pending
 episode. Dense prediction reuse requires identical execution; divergent fault
-fixtures must retain actual prefixes. This finite scene's Replay still rewinds resources.
+fixtures must retain actual prefixes. Finite Replay still rewinds resources. The user accepted continuous service and
+selected 3D viewer/controls before stationkeeping. Variable steering/whisker smoothing,
+atmosphere, staging and arbitrary ground latitude/spin axes remain deferred.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

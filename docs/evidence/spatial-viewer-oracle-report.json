@@ -1,0 +1,106 @@
+[
+  {
+    "vessel": "Tern",
+    "checks": [
+      {
+        "step": 0.001953125,
+        "stateError": 6.361217690708121e-13,
+        "fuelError": 0.0,
+        "analyticError": 2.7619542061964634e-13,
+        "refinement": 2.2494057638160596e-11,
+        "nodes": 12290,
+        "certifiedIntervals": 12289
+      },
+      {
+        "step": 0.0009765625,
+        "stateError": 1.093846825170731e-12,
+        "fuelError": 0.0,
+        "analyticError": 2.7619542061964634e-13,
+        "refinement": 2.2494057638160596e-11,
+        "nodes": 24578,
+        "certifiedIntervals": 24577
+      },
+      {
+        "step": 0.00048828125,
+        "stateError": 2.5260326849661225e-13,
+        "fuelError": 0.0,
+        "analyticError": 2.7619542061964634e-13,
+        "refinement": 2.2494057638160596e-11,
+        "nodes": 49154,
+        "certifiedIntervals": 49153
+      }
+    ],
+    "planeChangeDegrees": [
+      45.00000000000001,
+      45.00000000000001
+    ],
+    "fuelRemaining": 0.32452841923376197,
+    "departureNormal": [
+      -0.0,
+      0.0,
+      1.0
+    ],
+    "intermediateNormal": [
+      0.0,
+      -0.7071067811865475,
+      0.7071067811865475
+    ],
+    "finalNormal": [
+      -2.274228861132057e-16,
+      -7.314477884269527e-32,
+      1.0
+    ]
+  },
+  {
+    "vessel": "Lark",
+    "checks": [
+      {
+        "step": 0.001953125,
+        "stateError": 3.8331632282410107e-13,
+        "fuelError": 1.6653345369377348e-16,
+        "analyticError": 1.99472246797683e-13,
+        "refinement": 1.5905774438116444e-11,
+        "nodes": 12290,
+        "certifiedIntervals": 12289
+      },
+      {
+        "step": 0.0009765625,
+        "stateError": 3.972708603347672e-13,
+        "fuelError": 1.6653345369377348e-16,
+        "analyticError": 1.99472246797683e-13,
+        "refinement": 1.5905774438116444e-11,
+        "nodes": 24578,
+        "certifiedIntervals": 24577
+      },
+      {
+        "step": 0.00048828125,
+        "stateError": 2.3159825926199675e-13,
+        "fuelError": 1.6653345369377348e-16,
+        "analyticError": 1.99472246797683e-13,
+        "refinement": 1.5905774438116444e-11,
+        "nodes": 49154,
+        "certifiedIntervals": 49153
+      }
+    ],
+    "planeChangeDegrees": [
+      54.99999999999999,
+      55.0
+    ],
+    "fuelRemaining": 0.3151145659975661,
+    "departureNormal": [
+      -0.39166345481374165,
+      0.31080498413533214,
+      0.8660254037844387
+    ],
+    "intermediateNormal": [
+      0.33104825692148104,
+      -0.26270372427123956,
+      0.9063077870366499
+    ],
+    "finalNormal": [
+      -0.39166345481374165,
+      0.31080498413533225,
+      0.8660254037844387
+    ]
+  }
+]

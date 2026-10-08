@@ -1,0 +1,15 @@
+{
+  "maxInterpolation": 0.000004291532889568519,
+  "maxPixelsAt500": 0.0021457664447842592,
+  "samples": [
+    {
+      "id": "tern",
+      "count": 2051
+    },
+    {
+      "id": "lark",
+      "count": 2051
+    }
+  ],
+  "note": "Full 3D position interpolation discrepancy, invariant upper bound on any orthographic projection; not a close-zoom guarantee."
+}
