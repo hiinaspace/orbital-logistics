@@ -1,0 +1,19 @@
+{
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "cliVersion": "0.153.4",
+  "sessionId": "01a11d28-8f37-7da1-b00f-81fb7afb881a",
+  "exitCode": 0,
+  "verifiedBeforeReportRead": true,
+  "sha256": {
+    "brief.md": "be82b1a9700c5deae8fd5eda020b3c4d073b16b129002504082c45f773f71213",
+    "astra-review.md": "9ecea69e9da12a2252331d9937c2f5a1bfb85f8db5152821dfe7ee8303902679",
+    "astra-review.log": "10a244fa7f51f75b11daf26744212675d4b77e302f8f770f35df87eeaaa9c092"
+  },
+  "tokensUsed": 76074,
+  "cost": "Subscription; cash cost unavailable",
+  "retainedSha256": {
+    "astra-review.md": "549cfb285e843a4fa183d6d4daf982dfa2b7fe672d5373d4f2de80c02d48bb21",
+    "astra-review.log": "efe71fa2d15482c771feaad75f6591822c887073f1afd19ad2456546d635b28a"
+  }
+}

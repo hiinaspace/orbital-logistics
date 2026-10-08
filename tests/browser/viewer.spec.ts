@@ -1,4 +1,6 @@
 import {test, expect, type Page} from '@playwright/test';
+import {readFileSync} from 'node:fs';
+const returnFixture=JSON.parse(readFileSync('fixtures/model-sets/selene-return.json','utf8'));
 async function state(page: Page) { return JSON.parse(await page.locator('#state-json').textContent() ?? '{}'); }
 async function ready(page: Page) { await expect.poll(async () => (await state(page)).ready, {timeout: 20000}).toBe(true); }
 async function pause(page: Page) { if ((await state(page)).playing) await page.getByRole('button', {name:'Pause', exact:true}).click(); }
@@ -222,4 +224,21 @@ test('surface round trip brakes, lands and unloads; frame changes, rewind and li
  expect(end.stocks.find((s:{id:string})=>s.id==='Lantern').cargo).toBeCloseTo(.05,12);
  await seek(page,9.9);expect((await state(page)).ships.map(({screen,...s}:{screen:unknown})=>s)).toEqual(approach.ships.map(({screen,...s}:{screen:unknown})=>s));
  for(const set of ['orison-service','selene-return','selene-ascent','selene-return']){await page.getByLabel('Model set').selectOption(set);await ready(page);await pause(page);expect((await state(page)).set).toBe(set);await expect(page.locator('#load-status')).not.toContainText('failed');}
+});
+
+test('thrust whiskers point along exhaust and taper with capped force in inertial and rotating views',async({page})=>{
+ await page.getByLabel('Model set').selectOption('selene-return');await ready(page);await pause(page);await seek(page,9.6);
+ for(const frame of ['inertial','rotating']) {
+  await page.getByLabel('Reference frame').selectOption(frame);const s=await state(page),lengths:number[]=[];
+  for(const w of s.thrustWhiskers){
+   const arc=returnFixture.vessels[0].bundle.program.thrustArcs.find(a=>a.start<w.t&&a.end>w.t)!;
+   const angle=frame==='rotating'?returnFixture.rotating.phase+returnFixture.rotating.rate*w.t:0;
+   const dx=Math.cos(angle)*arc.direction[0]+Math.sin(angle)*arc.direction[1],dy=-Math.sin(angle)*arc.direction[0]+Math.cos(angle)*arc.direction[1];
+   const x=w.to[0]-w.from[0],y=w.to[1]-w.from[1],length=Math.hypot(x,y);lengths.push(length);
+   expect(x*dx-y*dy).toBeLessThan(0);expect(length).toBeGreaterThan(3);expect(length).toBeLessThanOrEqual(18.000001);
+   expect(length).toBeCloseTo(3+15*Math.sqrt(w.force/5),6);
+  }
+  expect(Math.max(...lengths)-Math.min(...lengths)).toBeGreaterThan(1);
+ }
+ await page.getByRole('button',{name:'Surface view',exact:true}).click();await page.screenshot({path:'docs/evidence/thrust-whiskers-scaled.png',fullPage:true});
 });

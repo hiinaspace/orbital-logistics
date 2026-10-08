@@ -1,6 +1,6 @@
 # Tactical plan — updated 2026-10-08
 
-Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic and finite airless surface round trip implemented**.
+Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic and continuous airless surface service implemented**.
 
 On 2026-10-08 the user chose fictional orbital buildups and traffic as the next
 product direction, authorized retiring the CoaDE editing UI, and requested implementation.
@@ -40,10 +40,15 @@ return slice is implemented after [Astra review](design/surface-landing/README.m
 **Selene · Surface round trip** retains the original outbound flight, refuels at
 Lantern, carries .05 freight home, brakes with eight finite arcs and lands at Cairn.
 [Evidence](evidence/surface-landing.md) covers paid residual capture, atomic failure,
-resources, independent replay and close-view accuracy. Continuous surface dispatch is
-the next separate slice; the finite scene does not imply sustained resource supply.
+resources, independent replay and close-view accuracy. The user accepted landing.
+**Selene · continuous surface service** now repeats these witnessed flights with
+finite global stocks, explicit external flows, rolling dense display coverage,
+shortage retries and paid fault history after [Astra review](design/surface-service/README.md).
+[Evidence](evidence/continuous-surface.md) records long-run conservation, independent
+late-window admission and production browser playback. Whiskers point along exhaust
+and scale with actual force.
 Lunar continuation, demand routing/rescue, persistence, staging/recovery,
-recurring launches and a 3D camera remain separate extensions. No general steering
+a 3D camera remain separate extensions. No general steering
 optimizer is claimed.
 
 The [recovered Fable consultation](design/orbital-model-set/README.md) and

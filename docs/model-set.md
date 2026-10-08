@@ -161,7 +161,7 @@ paid capture residual, unloading and dwell. Offline authoring fixes depot phase 
 no runtime steering or target relocation occurs. Dense launch samples belong only to
 presentation. Explicit close view, ship follow, orbit fit, slower rates and the scale
 indicator expose launch versus orbital motion. Stages, reusable recovery and
-continuous launch dispatch remain later work; future separation requires explicit
+general launch dispatch remain later work; future separation requires explicit
 child mass/fuel ownership and conserved momentum, not duplicated scalar cargo.
 
 ## Airless finite return — 2026-10-08
@@ -182,7 +182,23 @@ attachment backwards. **Surface view**, ship follow, Fit, frames and speed remai
 explicit controls. No camera/rate change is automatic at touchdown.
 
 See [review and authoring provenance](design/surface-landing/README.md) and
-[implementation evidence](evidence/surface-landing.md). Next is continuous surface
-service using finite committed episodes and shared resources; 3D presentation is
-deferred at the user's request. Stationkeeping, staging and atmosphere are later
-model changes with their own architecture and content gates.
+[implementation evidence](evidence/surface-landing.md). The user accepted landing.
+
+## Continuous surface service — 2026-10-08
+
+**Selene · continuous surface service** repeats Cairn ↔ Lantern with one Swift,
+unchanged fixed flight witnesses and actual serviced loadouts. Fleet resources and
+berths remain global; a private support prelude replays atomic launch in each finite
+Runner. Arrival identity and original local epochs are explicit. Stocks are finite
+with explicit clipped imports/exports; shortages wait for later windows.
+
+Dense disposable episode coverage supports close scrubbing across128 units of
+rolling history without raising the fleet drawing grid. Prediction reuse requires
+identical execution; divergent execution has separate committed coverage. Past faults
+retain last-known validity and paid usage. Pause/Play/Live retain the existing
+held-head semantics; Restart preserves the selected set. Exhaust-side whiskers use
+actual capped force with a bounded nonlinear length scale.
+
+See [review/contract](design/surface-service/README.md) and
+[evidence](evidence/continuous-surface.md). 3D presentation remains deferred;
+stationkeeping, staging and atmosphere need separate model/content gates.

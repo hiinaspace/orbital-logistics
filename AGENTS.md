@@ -51,7 +51,12 @@ docs/design/surface-landing/README.md and docs/evidence/surface-landing.md. Expl
 `land` preserves old initial-only surface `dock`; geometry bounds position capture
 and all residual velocity matching is paid. Landing conflicts reject statically.
 The full unchanged outbound prefix and fixed port phases are retained. Continuous
-surface service is next; this finite scene's Replay still rewinds resources.
+surface service is implemented as Selene · continuous surface service. Read
+docs/design/surface-service/README.md and docs/evidence/continuous-surface.md.
+Preserve the private support prelude, exact designated arrival/local epochs,
+shared resource ownership, and 65,536 dense-sample budget plus one held pending
+episode. Dense prediction reuse requires identical execution; divergent fault
+fixtures must retain actual prefixes. This finite scene's Replay still rewinds resources.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

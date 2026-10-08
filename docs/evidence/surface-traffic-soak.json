@@ -1,0 +1,2976 @@
+{
+  "duration": 1024,
+  "historyDuration": 128,
+  "wallSeconds": 26.755135925999994,
+  "cargoError": 5.440092820663267e-15,
+  "fuelError": 2.4424906541753444e-13,
+  "max": {
+    "renderSamples": 14161,
+    "frames": 2214,
+    "boundaries": 166,
+    "events": 303,
+    "episodes": 16,
+    "resourceAnchors": 17,
+    "runnerNodes": 2234,
+    "delivered": 2.8999999999999977,
+    "denseSamples": 58784,
+    "viewFrames": 2214,
+    "viewEpisodes": 16,
+    "viewDenseSamples": 58784
+  },
+  "maxPacketBytes": 3588703,
+  "maxCacheBytes": 29744090,
+  "maxViewMs": 112.11917100000028,
+  "maxHeldSamples": 54356,
+  "pendingPacketLimit": 16384,
+  "denseCacheLimit": 65536,
+  "byteAccounting": "UTF-8 JSON wire-equivalent bytes; JS objects/structured-clone transient heap measured separately in browser, not equated with these bytes.",
+  "rows": [
+    {
+      "t": 128,
+      "ships": [
+        {
+          "id": "swift",
+          "stage": "planned",
+          "cargo": 0.05,
+          "fuel": 1.1492926425505117,
+          "used": 17.351492406934508,
+          "routeIndex": 1,
+          "voyage": 15,
+          "eventAt": 131.2817110588686,
+          "portId": "Lantern",
+          "windowIndex": 14,
+          "episode": {
+            "id": "swift:15",
+            "departure": 131.2817110588686,
+            "nextFact": 0
+          },
+          "delivered": 0.39999999999999997
+        }
+      ],
+      "stats": {
+        "frames": 2214,
+        "boundaries": 166,
+        "events": 303,
+        "episodes": 16,
+        "resourceAnchors": 17,
+        "runnerNodes": 2234,
+        "delivered": 0.39999999999999997,
+        "denseSamples": 58784
+      },
+      "resources": {
+        "t": 128,
+        "stocks": [
+          {
+            "id": "Cairn",
+            "cargo": 0.49000000000000005,
+            "propellant": 2.869726382782639
+          },
+          {
+            "id": "Lantern",
+            "cargo": 0.24399999999999997,
+            "propellant": 2.219594125278181
+          }
+        ],
+        "cargoImported": 0.6400000000000001,
+        "cargoExported": 0.256,
+        "fuelImported": 18.390105557545844,
+        "fuelExported": 0
+      },
+      "current": {
+        "t": 128,
+        "ships": [
+          {
+            "t": 128,
+            "y": [
+              -0.10001057929120051,
+              -1.2459927303278453,
+              0,
+              0.8915598222347602,
+              -0.07156174520456227,
+              0
+            ],
+            "propellant": 1.1492926425505117,
+            "fuelUsed": 17.351492406934508,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "logistics": {
+              "operationCursor": 0,
+              "cargoMass": 0.05,
+              "fuelUsed": 17.351492406934508,
+              "ports": [],
+              "dockedPortId": "Lantern"
+            },
+            "activity": {
+              "kind": "waiting",
+              "nextDeparture": 131.2817110588686
+            }
+          }
+        ]
+      },
+      "stocks": [
+        {
+          "id": "Cairn",
+          "cargo": 0.49000000000000005,
+          "propellant": 2.869726382782639,
+          "occupied": 0
+        },
+        {
+          "id": "Lantern",
+          "cargo": 0.24399999999999997,
+          "propellant": 2.219594125278181,
+          "occupied": 1
+        }
+      ]
+    },
+    {
+      "t": 256,
+      "ships": [
+        {
+          "id": "swift",
+          "stage": "flying",
+          "cargo": 0.05,
+          "fuel": 1.1492926425505117,
+          "used": 33.469679325236626,
+          "routeIndex": 1,
+          "voyage": 29,
+          "eventAt": null,
+          "portId": "Lantern",
+          "windowIndex": 28,
+          "episode": {
+            "id": "swift:29",
+            "departure": 254.73355644878063,
+            "nextFact": 0
+          },
+          "delivered": 0.7500000000000001
+        }
+      ],
+      "stats": {
+        "frames": 2204,
+        "boundaries": 155,
+        "events": 281,
+        "episodes": 15,
+        "resourceAnchors": 15,
+        "runnerNodes": 2234,
+        "delivered": 0.7500000000000001,
+        "denseSamples": 55864
+      },
+      "resources": {
+        "t": 256,
+        "stocks": [
+          {
+            "id": "Cairn",
+            "cargo": 0.7799999999999998,
+            "propellant": 3
+          },
+          {
+            "id": "Lantern",
+            "cargo": 0.3379999999999998,
+            "propellant": 2.5834464940852193
+          }
+        ],
+        "cargoImported": 1.2800000000000002,
+        "cargoExported": 0.5120000000000002,
+        "fuelImported": 35.002418461872374,
+        "fuelExported": 0
+      },
+      "current": {
+        "t": 256,
+        "ships": [
+          {
+            "t": 256,
+            "y": [
+              -0.4902975347979074,
+              1.149829694942293,
+              0,
+              -0.8227511553404241,
+              -0.350828357442786,
+              0
+            ],
+            "propellant": 1.1492926425505117,
+            "fuelUsed": 33.469679325236626,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "logistics": {
+              "operationCursor": 0,
+              "cargoMass": 0.05,
+              "fuelUsed": 33.469679325236626,
+              "ports": [
+                {
+                  "id": "Cairn",
+                  "cargo": 0.2,
+                  "propellant": 1
+                },
+                {
+                  "id": "Lantern",
+                  "cargo": 0,
+                  "propellant": 1
+                }
+              ]
+            },
+            "activity": {
+              "kind": "flying"
+            }
+          }
+        ]
+      },
+      "stocks": [
+        {
+          "id": "Cairn",
+          "cargo": 0.7799999999999998,
+          "propellant": 3,
+          "occupied": 0
+        },
+        {
+          "id": "Lantern",
+          "cargo": 0.3379999999999998,
+          "propellant": 2.5834464940852193,
+          "occupied": 0
+        }
+      ]
+    },
+    {
+      "t": 384,
+      "ships": [
+        {
+          "id": "swift",
+          "stage": "planned",
+          "cargo": 0.1,
+          "fuel": 1.4,
+          "used": 50.65715888609247,
+          "routeIndex": 0,
+          "voyage": 44,
+          "eventAt": 388.29151408258065,
+          "portId": "Cairn",
+          "windowIndex": 44,
+          "episode": {
+            "id": "swift:44",
+            "departure": 388.29151408258065,
+            "nextFact": 0
+          },
+          "delivered": 1.1000000000000003
+        }
+      ],
+      "stats": {
+        "frames": 2213,
+        "boundaries": 164,
+        "events": 299,
+        "episodes": 16,
+        "resourceAnchors": 16,
+        "runnerNodes": 1485,
+        "delivered": 1.1000000000000003,
+        "denseSamples": 58784
+      },
+      "resources": {
+        "t": 384,
+        "stocks": [
+          {
+            "id": "Cairn",
+            "cargo": 0.9667879756759467,
+            "propellant": 2.0157595135157704
+          },
+          {
+            "id": "Lantern",
+            "cargo": 0.4319999999999996,
+            "propellant": 2.9472988628922563
+          }
+        ],
+        "cargoImported": 1.866787975675948,
+        "cargoExported": 0.7680000000000001,
+        "fuelImported": 51.82021726250046,
+        "fuelExported": 0
+      },
+      "current": {
+        "t": 384,
+        "ships": [
+          {
+            "t": 384,
+            "y": [
+              -0.9135800026494566,
+              0.4066615039071423,
+              0,
+              -0.0012199845117214269,
+              -0.0027407400079483696,
+              0
+            ],
+            "propellant": 1.4,
+            "fuelUsed": 50.65715888609247,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "logistics": {
+              "operationCursor": 0,
+              "cargoMass": 0.1,
+              "fuelUsed": 50.65715888609247,
+              "ports": [],
+              "dockedPortId": "Cairn"
+            },
+            "activity": {
+              "kind": "waiting",
+              "nextDeparture": 388.29151408258065
+            }
+          }
+        ]
+      },
+      "stocks": [
+        {
+          "id": "Cairn",
+          "cargo": 0.9667879756759467,
+          "propellant": 2.0157595135157704,
+          "occupied": 1
+        },
+        {
+          "id": "Lantern",
+          "cargo": 0.4319999999999996,
+          "propellant": 2.9472988628922563,
+          "occupied": 0
+        }
+      ]
+    },
+    {
+      "t": 512,
+      "ships": [
+        {
+          "id": "swift",
+          "stage": "flying",
+          "cargo": 0.1,
+          "fuel": 1.4,
+          "used": 66.77534580439462,
+          "routeIndex": 0,
+          "voyage": 58,
+          "eventAt": null,
+          "portId": "Cairn",
+          "windowIndex": 58,
+          "episode": {
+            "id": "swift:58",
+            "departure": 511.74335947249267,
+            "nextFact": 6
+          },
+          "delivered": 1.4500000000000006
+        }
+      ],
+      "stats": {
+        "frames": 2206,
+        "boundaries": 157,
+        "events": 286,
+        "episodes": 15,
+        "resourceAnchors": 15,
+        "runnerNodes": 1485,
+        "delivered": 1.4500000000000006,
+        "denseSamples": 54356
+      },
+      "resources": {
+        "t": 512,
+        "stocks": [
+          {
+            "id": "Cairn",
+            "cargo": 0.9895287487263865,
+            "propellant": 2.47057497452457
+          },
+          {
+            "id": "Lantern",
+            "cargo": 0.5259999999999996,
+            "propellant": 3
+          }
+        ],
+        "cargoImported": 2.2395287487263866,
+        "cargoExported": 1.0239999999999996,
+        "fuelImported": 68.44592077891913,
+        "fuelExported": 0
+      },
+      "current": {
+        "t": 512,
+        "ships": [
+          {
+            "t": 512,
+            "y": [
+              -1.0364741847730679,
+              0.03088901854832743,
+              0,
+              -0.3061686498187296,
+              -0.068317148164894,
+              0
+            ],
+            "propellant": 0.9722657874877845,
+            "fuelUsed": 67.20308001690684,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "logistics": {
+              "operationCursor": 2,
+              "cargoMass": 0.1,
+              "fuelUsed": 67.20308001690684,
+              "ports": [
+                {
+                  "id": "Cairn",
+                  "cargo": 0.2,
+                  "propellant": 1
+                },
+                {
+                  "id": "Lantern",
+                  "cargo": 0,
+                  "propellant": 1
+                }
+              ]
+            },
+            "thrust": {
+              "id": "swift:58:arc2",
+              "force": 5,
+              "acceleration": 2.412817906944996,
+              "direction": [
+                -0.9706478590913178,
+                -0.24050516344029177,
+                0
+              ]
+            },
+            "activity": {
+              "kind": "flying"
+            }
+          }
+        ]
+      },
+      "stocks": [
+        {
+          "id": "Cairn",
+          "cargo": 0.9895287487263865,
+          "propellant": 2.47057497452457,
+          "occupied": 0
+        },
+        {
+          "id": "Lantern",
+          "cargo": 0.5259999999999996,
+          "propellant": 3,
+          "occupied": 0
+        }
+      ]
+    },
+    {
+      "t": 640,
+      "ships": [
+        {
+          "id": "swift",
+          "stage": "planned",
+          "cargo": 0.05,
+          "fuel": 1.1492926425505117,
+          "used": 84.12683821132914,
+          "routeIndex": 1,
+          "voyage": 73,
+          "eventAt": 642.7250705313612,
+          "portId": "Lantern",
+          "windowIndex": 72,
+          "episode": {
+            "id": "swift:73",
+            "departure": 642.7250705313612,
+            "nextFact": 0
+          },
+          "delivered": 1.850000000000001
+        }
+      ],
+      "stats": {
+        "frames": 2211,
+        "boundaries": 162,
+        "events": 294,
+        "episodes": 16,
+        "resourceAnchors": 16,
+        "runnerNodes": 2234,
+        "delivered": 1.850000000000001,
+        "denseSamples": 58784
+      },
+      "resources": {
+        "t": 640,
+        "stocks": [
+          {
+            "id": "Cairn",
+            "cargo": 1,
+            "propellant": 2.9253904355333864
+          },
+          {
+            "id": "Lantern",
+            "cargo": 0.6700000000000003,
+            "propellant": 2.2641253674787736
+          }
+        ],
+        "cargoImported": 2.600000000000001,
+        "cargoExported": 1.2799999999999994,
+        "fuelImported": 85.26564665689175,
+        "fuelExported": 0
+      },
+      "current": {
+        "t": 640,
+        "ships": [
+          {
+            "t": 640,
+            "y": [
+              1.2007166772900484,
+              0.347533395341434,
+              0,
+              -0.24867465485912169,
+              0.8591629158842324,
+              0
+            ],
+            "propellant": 1.1492926425505117,
+            "fuelUsed": 84.12683821132914,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "logistics": {
+              "operationCursor": 0,
+              "cargoMass": 0.05,
+              "fuelUsed": 84.12683821132914,
+              "ports": [],
+              "dockedPortId": "Lantern"
+            },
+            "activity": {
+              "kind": "waiting",
+              "nextDeparture": 642.7250705313612
+            }
+          }
+        ]
+      },
+      "stocks": [
+        {
+          "id": "Cairn",
+          "cargo": 1,
+          "propellant": 2.9253904355333864,
+          "occupied": 0
+        },
+        {
+          "id": "Lantern",
+          "cargo": 0.6700000000000003,
+          "propellant": 2.2641253674787736,
+          "occupied": 1
+        }
+      ]
+    },
+    {
+      "t": 768,
+      "ships": [
+        {
+          "id": "swift",
+          "stage": "flying",
+          "cargo": 0.05,
+          "fuel": 1.1492926425505117,
+          "used": 100.2450251296313,
+          "routeIndex": 1,
+          "voyage": 87,
+          "eventAt": null,
+          "portId": "Lantern",
+          "windowIndex": 86,
+          "episode": {
+            "id": "swift:87",
+            "departure": 766.1769159212732,
+            "nextFact": 9
+          },
+          "delivered": 2.2
+        }
+      ],
+      "stats": {
+        "frames": 2209,
+        "boundaries": 160,
+        "events": 290,
+        "episodes": 15,
+        "resourceAnchors": 15,
+        "runnerNodes": 2234,
+        "delivered": 2.2,
+        "denseSamples": 55864
+      },
+      "resources": {
+        "t": 768,
+        "stocks": [
+          {
+            "id": "Cairn",
+            "cargo": 1,
+            "propellant": 3
+          },
+          {
+            "id": "Lantern",
+            "cargo": 0.7640000000000008,
+            "propellant": 2.6279777362858003
+          }
+        ],
+        "cargoImported": 2.9500000000000024,
+        "cargoExported": 1.5359999999999991,
+        "fuelImported": 101.82229550846753,
+        "fuelExported": 0
+      },
+      "current": {
+        "t": 768,
+        "ships": [
+          {
+            "t": 768,
+            "y": [
+              -0.8429909393825006,
+              -0.718651394002957,
+              0,
+              0.6526471241391706,
+              0.17987857706398144,
+              0
+            ],
+            "propellant": 0.5279658488072299,
+            "fuelUsed": 100.86635192337458,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "logistics": {
+              "operationCursor": 0,
+              "cargoMass": 0.05,
+              "fuelUsed": 100.86635192337458,
+              "ports": [
+                {
+                  "id": "Cairn",
+                  "cargo": 0.2,
+                  "propellant": 1
+                },
+                {
+                  "id": "Lantern",
+                  "cargo": 0,
+                  "propellant": 1
+                }
+              ]
+            },
+            "thrust": {
+              "id": "swift:87:arc4",
+              "force": 4.73389754642169,
+              "acceleration": 3,
+              "direction": [
+                -0.9983901616973587,
+                0.05671935318673926,
+                0
+              ]
+            },
+            "activity": {
+              "kind": "flying"
+            }
+          }
+        ]
+      },
+      "stocks": [
+        {
+          "id": "Cairn",
+          "cargo": 1,
+          "propellant": 3,
+          "occupied": 0
+        },
+        {
+          "id": "Lantern",
+          "cargo": 0.7640000000000008,
+          "propellant": 2.6279777362858003,
+          "occupied": 0
+        }
+      ]
+    },
+    {
+      "t": 896,
+      "ships": [
+        {
+          "id": "swift",
+          "stage": "planned",
+          "cargo": 0.1,
+          "fuel": 1.4,
+          "used": 117.43250469048726,
+          "routeIndex": 0,
+          "voyage": 102,
+          "eventAt": 899.7348735550732,
+          "portId": "Cairn",
+          "windowIndex": 102,
+          "episode": {
+            "id": "swift:102",
+            "departure": 899.7348735550732,
+            "nextFact": 0
+          },
+          "delivered": 2.549999999999999
+        }
+      ],
+      "stats": {
+        "frames": 2208,
+        "boundaries": 159,
+        "events": 290,
+        "episodes": 16,
+        "resourceAnchors": 16,
+        "runnerNodes": 1485,
+        "delivered": 2.549999999999999,
+        "denseSamples": 58784
+      },
+      "resources": {
+        "t": 896,
+        "stocks": [
+          {
+            "id": "Cairn",
+            "cargo": 0.9695711783134839,
+            "propellant": 2.071423566266518
+          },
+          {
+            "id": "Lantern",
+            "cargo": 0.8580000000000014,
+            "propellant": 2.9918301050928298
+          }
+        ],
+        "cargoImported": 3.319571178313488,
+        "cargoExported": 1.7919999999999987,
+        "fuelImported": 118.69575836184649,
+        "fuelExported": 0
+      },
+      "current": {
+        "t": 896,
+        "ships": [
+          {
+            "t": 896,
+            "y": [
+              -0.4381981527827241,
+              -0.8988795130042782,
+              0,
+              0.0026966385390128343,
+              -0.0013145944583481722,
+              0
+            ],
+            "propellant": 1.4,
+            "fuelUsed": 117.43250469048726,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "logistics": {
+              "operationCursor": 0,
+              "cargoMass": 0.1,
+              "fuelUsed": 117.43250469048726,
+              "ports": [],
+              "dockedPortId": "Cairn"
+            },
+            "activity": {
+              "kind": "waiting",
+              "nextDeparture": 899.7348735550732
+            }
+          }
+        ]
+      },
+      "stocks": [
+        {
+          "id": "Cairn",
+          "cargo": 0.9695711783134839,
+          "propellant": 2.071423566266518,
+          "occupied": 1
+        },
+        {
+          "id": "Lantern",
+          "cargo": 0.8580000000000014,
+          "propellant": 2.9918301050928298,
+          "occupied": 0
+        }
+      ]
+    },
+    {
+      "t": 1024,
+      "ships": [
+        {
+          "id": "swift",
+          "stage": "flying",
+          "cargo": 0.1,
+          "fuel": 1.4,
+          "used": 133.5506916087896,
+          "routeIndex": 0,
+          "voyage": 116,
+          "eventAt": null,
+          "portId": "Cairn",
+          "windowIndex": 116,
+          "episode": {
+            "id": "swift:116",
+            "departure": 1023.1867189449853,
+            "nextFact": 17
+          },
+          "delivered": 2.8999999999999977
+        }
+      ],
+      "stats": {
+        "frames": 2212,
+        "boundaries": 163,
+        "events": 297,
+        "episodes": 15,
+        "resourceAnchors": 15,
+        "runnerNodes": 1485,
+        "delivered": 2.8999999999999977,
+        "denseSamples": 54356
+      },
+      "resources": {
+        "t": 1024,
+        "stocks": [
+          {
+            "id": "Cairn",
+            "cargo": 0.9923119513639238,
+            "propellant": 2.5262390272752873
+          },
+          {
+            "id": "Lantern",
+            "cargo": 0.952000000000002,
+            "propellant": 3
+          }
+        ],
+        "cargoImported": 3.692311951363929,
+        "cargoExported": 2.0479999999999983,
+        "fuelImported": 135.27693063606466,
+        "fuelExported": 0
+      },
+      "current": {
+        "t": 1024,
+        "ships": [
+          {
+            "t": 1024,
+            "y": [
+              0.19965999573385487,
+              -1.2339513305245902,
+              0,
+              0.8829436979137331,
+              0.14286506331151308,
+              0
+            ],
+            "propellant": 0.16669451136776536,
+            "fuelUsed": 134.78399709742183,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "logistics": {
+              "operationCursor": 2,
+              "cargoMass": 0.1,
+              "fuelUsed": 134.78399709742183,
+              "ports": [
+                {
+                  "id": "Cairn",
+                  "cargo": 0.2,
+                  "propellant": 1
+                },
+                {
+                  "id": "Lantern",
+                  "cargo": 0,
+                  "propellant": 1
+                }
+              ]
+            },
+            "activity": {
+              "kind": "flying"
+            }
+          }
+        ]
+      },
+      "stocks": [
+        {
+          "id": "Cairn",
+          "cargo": 0.9923119513639238,
+          "propellant": 2.5262390272752873,
+          "occupied": 0
+        },
+        {
+          "id": "Lantern",
+          "cargo": 0.952000000000002,
+          "propellant": 3,
+          "occupied": 0
+        }
+      ]
+    }
+  ],
+  "services": [
+    {
+      "t": 0.3,
+      "kind": "transfer",
+      "id": "swift:0:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 1.2,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.3015,
+      "portCargoAfter": 0.20149999999999998,
+      "portPropellantBefore": 2.03,
+      "portPropellantAfter": 1.8299999999999998
+    },
+    {
+      "t": 2.0207514043249133,
+      "kind": "transfer",
+      "id": "swift:1:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764785,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.09595849719135018,
+      "portCargoAfter": 0.14595849719135018,
+      "portPropellantBefore": 2.1616601123459933,
+      "portPropellantAfter": 1.1790619811631295
+    },
+    {
+      "t": 10.286868695074585,
+      "kind": "transfer",
+      "id": "swift:2:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684186,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.2514343434753729,
+      "portCargoAfter": 0.20143434347537292,
+      "portPropellantBefore": 2.8286868695074583,
+      "portPropellantAfter": 1.5086868695043003
+    },
+    {
+      "t": 19.65672931716949,
+      "kind": "transfer",
+      "id": "swift:3:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764815,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.11068654136566104,
+      "portCargoAfter": 0.16068654136566105,
+      "portPropellantBefore": 2.5899402141906958,
+      "portPropellantAfter": 1.6073420830078322
+    },
+    {
+      "t": 27.92284660791916,
+      "kind": "transfer",
+      "id": "swift:4:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684189,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.28961423303959577,
+      "portCargoAfter": 0.23961423303959578,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.679999999996842
+    },
+    {
+      "t": 37.29270723001405,
+      "kind": "transfer",
+      "id": "swift:5:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764693,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.12541458553997192,
+      "portCargoAfter": 0.1754145855399719,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817135
+    },
+    {
+      "t": 45.55882452076373,
+      "kind": "transfer",
+      "id": "swift:6:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.0799999999968421,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.3277941226038186,
+      "portCargoAfter": 0.27779412260381864,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968422
+    },
+    {
+      "t": 54.928685142858626,
+      "kind": "transfer",
+      "id": "swift:7:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764743,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.14014262971428276,
+      "portCargoAfter": 0.19014262971428275,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817136
+    },
+    {
+      "t": 63.1948024336083,
+      "kind": "transfer",
+      "id": "swift:8:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684099,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.3659740121680415,
+      "portCargoAfter": 0.3159740121680415,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968411
+    },
+    {
+      "t": 72.5646630557032,
+      "kind": "transfer",
+      "id": "swift:9:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676476,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.1548706738885936,
+      "portCargoAfter": 0.2048706738885936,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817136
+    },
+    {
+      "t": 80.83078034645287,
+      "kind": "transfer",
+      "id": "swift:10:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684194,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.40415390173226434,
+      "portCargoAfter": 0.35415390173226435,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.679999999996842
+    },
+    {
+      "t": 90.20064096854777,
+      "kind": "transfer",
+      "id": "swift:11:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764776,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.16959871806290444,
+      "portCargoAfter": 0.21959871806290443,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817136
+    },
+    {
+      "t": 98.46675825929744,
+      "kind": "transfer",
+      "id": "swift:12:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684304,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.4423337912964872,
+      "portCargoAfter": 0.3923337912964872,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968431
+    },
+    {
+      "t": 107.83661888139235,
+      "kind": "transfer",
+      "id": "swift:13:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764885,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.18432676223721525,
+      "portCargoAfter": 0.23432676223721527,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817137
+    },
+    {
+      "t": 116.10273617214202,
+      "kind": "transfer",
+      "id": "swift:14:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684032,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.4805136808607101,
+      "portCargoAfter": 0.4305136808607101,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968405
+    },
+    {
+      "t": 125.47259679423694,
+      "kind": "transfer",
+      "id": "swift:15:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676478,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.1990548064115261,
+      "portCargoAfter": 0.2490548064115261,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817136
+    },
+    {
+      "t": 133.73871408498664,
+      "kind": "transfer",
+      "id": "swift:16:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.0799999999968457,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.5186935704249332,
+      "portCargoAfter": 0.46869357042493326,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968458
+    },
+    {
+      "t": 143.10857470708152,
+      "kind": "transfer",
+      "id": "swift:17:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764776,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.21378285058583696,
+      "portCargoAfter": 0.26378285058583695,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817136
+    },
+    {
+      "t": 151.3746919978312,
+      "kind": "transfer",
+      "id": "swift:18:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684503,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.556873459989156,
+      "portCargoAfter": 0.506873459989156,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968451
+    },
+    {
+      "t": 160.74455261992608,
+      "kind": "transfer",
+      "id": "swift:19:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764735,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.2285108947601478,
+      "portCargoAfter": 0.2785108947601478,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171356
+    },
+    {
+      "t": 169.01066991067577,
+      "kind": "transfer",
+      "id": "swift:20:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684491,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.5950533495533789,
+      "portCargoAfter": 0.5450533495533788,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.679999999996845
+    },
+    {
+      "t": 178.38053053277065,
+      "kind": "transfer",
+      "id": "swift:21:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764804,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.24323893893445864,
+      "portCargoAfter": 0.2932389389344586,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171365
+    },
+    {
+      "t": 186.64664782352034,
+      "kind": "transfer",
+      "id": "swift:22:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684958,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.6332332391176017,
+      "portCargoAfter": 0.5832332391176016,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968496
+    },
+    {
+      "t": 196.01650844561524,
+      "kind": "transfer",
+      "id": "swift:23:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764807,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.2579669831087694,
+      "portCargoAfter": 0.3079669831087694,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171365
+    },
+    {
+      "t": 204.28262573636493,
+      "kind": "transfer",
+      "id": "swift:24:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999685167,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.6714131286818246,
+      "portCargoAfter": 0.6214131286818245,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968518
+    },
+    {
+      "t": 213.6524863584598,
+      "kind": "transfer",
+      "id": "swift:25:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764807,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.27269502728308026,
+      "portCargoAfter": 0.32269502728308025,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171365
+    },
+    {
+      "t": 221.9186036492095,
+      "kind": "transfer",
+      "id": "swift:26:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684532,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.7095930182460474,
+      "portCargoAfter": 0.6595930182460473,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968454
+    },
+    {
+      "t": 231.28846427130438,
+      "kind": "transfer",
+      "id": "swift:27:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764807,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.2874230714573911,
+      "portCargoAfter": 0.3374230714573911,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171365
+    },
+    {
+      "t": 239.55458156205407,
+      "kind": "transfer",
+      "id": "swift:28:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684525,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.7477729078102702,
+      "portCargoAfter": 0.6977729078102701,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968454
+    },
+    {
+      "t": 248.92444218414897,
+      "kind": "transfer",
+      "id": "swift:29:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764843,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.3021511156317019,
+      "portCargoAfter": 0.35215111563170187,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817137
+    },
+    {
+      "t": 257.19055947489863,
+      "kind": "transfer",
+      "id": "swift:30:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684443,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.785952797374493,
+      "portCargoAfter": 0.7359527973744929,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968445
+    },
+    {
+      "t": 266.56042009699354,
+      "kind": "transfer",
+      "id": "swift:31:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764746,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.3168791598060127,
+      "portCargoAfter": 0.3668791598060127,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817136
+    },
+    {
+      "t": 274.8265373877432,
+      "kind": "transfer",
+      "id": "swift:32:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684317,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.8241326869387158,
+      "portCargoAfter": 0.7741326869387157,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968434
+    },
+    {
+      "t": 284.1963980098381,
+      "kind": "transfer",
+      "id": "swift:33:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764793,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.33160720398032356,
+      "portCargoAfter": 0.38160720398032355,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817136
+    },
+    {
+      "t": 292.46251530058777,
+      "kind": "transfer",
+      "id": "swift:34:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684504,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.8623125765029386,
+      "portCargoAfter": 0.8123125765029385,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968451
+    },
+    {
+      "t": 301.8323759226827,
+      "kind": "transfer",
+      "id": "swift:35:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764704,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.3463352481546344,
+      "portCargoAfter": 0.3963352481546344,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817135
+    },
+    {
+      "t": 310.09849321343233,
+      "kind": "transfer",
+      "id": "swift:36:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684446,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.9004924660671614,
+      "portCargoAfter": 0.8504924660671613,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968445
+    },
+    {
+      "t": 319.46835383552724,
+      "kind": "transfer",
+      "id": "swift:37:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.166694511367648,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.36106329232894524,
+      "portCargoAfter": 0.41106329232894523,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171365
+    },
+    {
+      "t": 327.7344711262769,
+      "kind": "transfer",
+      "id": "swift:38:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999684522,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.9386723556313842,
+      "portCargoAfter": 0.8886723556313841,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968454
+    },
+    {
+      "t": 337.1043317483718,
+      "kind": "transfer",
+      "id": "swift:39:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764793,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.3757913365032561,
+      "portCargoAfter": 0.42579133650325607,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817136
+    },
+    {
+      "t": 345.37044903912147,
+      "kind": "transfer",
+      "id": "swift:40:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.0799999999968449,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 0.976852245195607,
+      "portCargoAfter": 0.9268522451956069,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.679999999996845
+    },
+    {
+      "t": 354.7403096612164,
+      "kind": "transfer",
+      "id": "swift:41:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764707,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.3905193806775669,
+      "portCargoAfter": 0.4405193806775669,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817135
+    },
+    {
+      "t": 363.00642695196603,
+      "kind": "transfer",
+      "id": "swift:42:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.079999999996845,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968451
+    },
+    {
+      "t": 372.376287574061,
+      "kind": "transfer",
+      "id": "swift:43:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676477,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.40524742485187765,
+      "portCargoAfter": 0.45524742485187764,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817136
+    },
+    {
+      "t": 380.64240486481066,
+      "kind": "transfer",
+      "id": "swift:44:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683621,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968362
+    },
+    {
+      "t": 390.01226548690556,
+      "kind": "transfer",
+      "id": "swift:45:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764923,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.4199754690261885,
+      "portCargoAfter": 0.4699754690261885,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817138
+    },
+    {
+      "t": 398.2783827776552,
+      "kind": "transfer",
+      "id": "swift:46:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999685233,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968525
+    },
+    {
+      "t": 407.64824339975013,
+      "kind": "transfer",
+      "id": "swift:47:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764843,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.4347035132004993,
+      "portCargoAfter": 0.4847035132004993,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817137
+    },
+    {
+      "t": 415.9143606904998,
+      "kind": "transfer",
+      "id": "swift:48:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.0799999999968507,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968507
+    },
+    {
+      "t": 425.2842213125947,
+      "kind": "transfer",
+      "id": "swift:49:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.166694511367648,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.44943155737481016,
+      "portCargoAfter": 0.49943155737481015,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171365
+    },
+    {
+      "t": 433.55033860334436,
+      "kind": "transfer",
+      "id": "swift:50:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683852,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968387
+    },
+    {
+      "t": 442.92019922543926,
+      "kind": "transfer",
+      "id": "swift:51:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764796,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.464159601549121,
+      "portCargoAfter": 0.514159601549121,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817136
+    },
+    {
+      "t": 451.1863165161889,
+      "kind": "transfer",
+      "id": "swift:52:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999685113,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968511
+    },
+    {
+      "t": 460.55617713828383,
+      "kind": "transfer",
+      "id": "swift:53:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764676,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.47888764572343184,
+      "portCargoAfter": 0.5288876457234318,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817135
+    },
+    {
+      "t": 468.8222944290335,
+      "kind": "transfer",
+      "id": "swift:54:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683838,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968385
+    },
+    {
+      "t": 478.1921550511284,
+      "kind": "transfer",
+      "id": "swift:55:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764765,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.4936156898977427,
+      "portCargoAfter": 0.5436156898977427,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817136
+    },
+    {
+      "t": 486.45827234187806,
+      "kind": "transfer",
+      "id": "swift:56:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999685237,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968525
+    },
+    {
+      "t": 495.828132963973,
+      "kind": "transfer",
+      "id": "swift:57:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764837,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.5083437340720535,
+      "portCargoAfter": 0.5583437340720535,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817137
+    },
+    {
+      "t": 504.0942502547227,
+      "kind": "transfer",
+      "id": "swift:58:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683803,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.679999999996838
+    },
+    {
+      "t": 513.4641108768176,
+      "kind": "transfer",
+      "id": "swift:59:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764762,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.5230717782463644,
+      "portCargoAfter": 0.5730717782463645,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817136
+    },
+    {
+      "t": 521.7302281675671,
+      "kind": "transfer",
+      "id": "swift:60:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999685228,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968525
+    },
+    {
+      "t": 531.1000887896621,
+      "kind": "transfer",
+      "id": "swift:61:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764465,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.5377998224206755,
+      "portCargoAfter": 0.5877998224206755,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817133
+    },
+    {
+      "t": 539.3662060804118,
+      "kind": "transfer",
+      "id": "swift:62:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683845,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968385
+    },
+    {
+      "t": 548.7360667025066,
+      "kind": "transfer",
+      "id": "swift:63:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676414,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.5525278665949865,
+      "portCargoAfter": 0.6025278665949866,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.01740186881713
+    },
+    {
+      "t": 557.0021839932563,
+      "kind": "transfer",
+      "id": "swift:64:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683766,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968378
+    },
+    {
+      "t": 566.3720446153512,
+      "kind": "transfer",
+      "id": "swift:65:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764404,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.5672559107692974,
+      "portCargoAfter": 0.6172559107692974,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171325
+    },
+    {
+      "t": 574.6381619061009,
+      "kind": "transfer",
+      "id": "swift:66:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683768,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968378
+    },
+    {
+      "t": 584.0080225281959,
+      "kind": "transfer",
+      "id": "swift:67:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764687,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.5819839549436082,
+      "portCargoAfter": 0.6319839549436083,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817135
+    },
+    {
+      "t": 592.2741398189455,
+      "kind": "transfer",
+      "id": "swift:68:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.0799999999968521,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968522
+    },
+    {
+      "t": 601.6440004410404,
+      "kind": "transfer",
+      "id": "swift:69:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764613,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.5967119991179193,
+      "portCargoAfter": 0.6467119991179193,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171342
+    },
+    {
+      "t": 609.91011773179,
+      "kind": "transfer",
+      "id": "swift:70:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683842,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968385
+    },
+    {
+      "t": 619.279978353885,
+      "kind": "transfer",
+      "id": "swift:71:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764676,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.6114400432922301,
+      "portCargoAfter": 0.6614400432922302,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817135
+    },
+    {
+      "t": 627.5460956446346,
+      "kind": "transfer",
+      "id": "swift:72:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999685098,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968511
+    },
+    {
+      "t": 636.9159562667295,
+      "kind": "transfer",
+      "id": "swift:73:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676452,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.6261680874665412,
+      "portCargoAfter": 0.6761680874665412,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171333
+    },
+    {
+      "t": 645.1820735574792,
+      "kind": "transfer",
+      "id": "swift:74:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999685217,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968522
+    },
+    {
+      "t": 654.5519341795741,
+      "kind": "transfer",
+      "id": "swift:75:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764635,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.640896131640852,
+      "portCargoAfter": 0.6908961316408521,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171347
+    },
+    {
+      "t": 662.8180514703238,
+      "kind": "transfer",
+      "id": "swift:76:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999685165,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968518
+    },
+    {
+      "t": 672.1879120924186,
+      "kind": "transfer",
+      "id": "swift:77:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764324,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.6556241758151631,
+      "portCargoAfter": 0.7056241758151631,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171316
+    },
+    {
+      "t": 680.4540293831683,
+      "kind": "transfer",
+      "id": "swift:78:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999685228,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968525
+    },
+    {
+      "t": 689.8238900052633,
+      "kind": "transfer",
+      "id": "swift:79:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764732,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.6703522199894739,
+      "portCargoAfter": 0.720352219989474,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171356
+    },
+    {
+      "t": 698.0900072960129,
+      "kind": "transfer",
+      "id": "swift:80:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999685292,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.679999999996853
+    },
+    {
+      "t": 707.4598679181078,
+      "kind": "transfer",
+      "id": "swift:81:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676424,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.685080264163785,
+      "portCargoAfter": 0.735080264163785,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171307
+    },
+    {
+      "t": 715.7259852088574,
+      "kind": "transfer",
+      "id": "swift:82:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999685287,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.679999999996853
+    },
+    {
+      "t": 725.0958458309524,
+      "kind": "transfer",
+      "id": "swift:83:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764424,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.6998083083380958,
+      "portCargoAfter": 0.7498083083380959,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171325
+    },
+    {
+      "t": 733.361963121702,
+      "kind": "transfer",
+      "id": "swift:84:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.0799999999968369,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.679999999996837
+    },
+    {
+      "t": 742.731823743797,
+      "kind": "transfer",
+      "id": "swift:85:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136763958,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.7145363525124067,
+      "portCargoAfter": 0.7645363525124067,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817128
+    },
+    {
+      "t": 750.9979410345467,
+      "kind": "transfer",
+      "id": "swift:86:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683763,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968378
+    },
+    {
+      "t": 760.3678016566415,
+      "kind": "transfer",
+      "id": "swift:87:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136763372,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.7292643966867177,
+      "portCargoAfter": 0.7792643966867178,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817122
+    },
+    {
+      "t": 768.6339189473912,
+      "kind": "transfer",
+      "id": "swift:88:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683746,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968376
+    },
+    {
+      "t": 778.0037795694861,
+      "kind": "transfer",
+      "id": "swift:89:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676441,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.7439924408610286,
+      "portCargoAfter": 0.7939924408610286,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171325
+    },
+    {
+      "t": 786.2698968602358,
+      "kind": "transfer",
+      "id": "swift:90:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683839,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968385
+    },
+    {
+      "t": 795.6397574823307,
+      "kind": "transfer",
+      "id": "swift:91:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676393,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.7587204850353396,
+      "portCargoAfter": 0.8087204850353397,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171276
+    },
+    {
+      "t": 803.9058747730803,
+      "kind": "transfer",
+      "id": "swift:92:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683656,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968367
+    },
+    {
+      "t": 813.2757353951753,
+      "kind": "transfer",
+      "id": "swift:93:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136763438,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.7734485292096505,
+      "portCargoAfter": 0.8234485292096505,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171227
+    },
+    {
+      "t": 821.5418526859249,
+      "kind": "transfer",
+      "id": "swift:94:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683874,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.679999999996839
+    },
+    {
+      "t": 830.9117133080198,
+      "kind": "transfer",
+      "id": "swift:95:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136762659,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.7881765733839615,
+      "portCargoAfter": 0.8381765733839616,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171147
+    },
+    {
+      "t": 839.1778305987694,
+      "kind": "transfer",
+      "id": "swift:96:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683774,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968378
+    },
+    {
+      "t": 848.5476912208644,
+      "kind": "transfer",
+      "id": "swift:97:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764002,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.8029046175582724,
+      "portCargoAfter": 0.8529046175582724,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171285
+    },
+    {
+      "t": 856.8138085116141,
+      "kind": "transfer",
+      "id": "swift:98:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999680922,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968094
+    },
+    {
+      "t": 866.183669133709,
+      "kind": "transfer",
+      "id": "swift:99:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764718,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.8176326617325832,
+      "portCargoAfter": 0.8676326617325832,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171356
+    },
+    {
+      "t": 874.4497864244587,
+      "kind": "transfer",
+      "id": "swift:100:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683738,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968374
+    },
+    {
+      "t": 883.8196470465535,
+      "kind": "transfer",
+      "id": "swift:101:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676247,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.8323607059068943,
+      "portCargoAfter": 0.8823607059068943,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817113
+    },
+    {
+      "t": 892.0857643373032,
+      "kind": "transfer",
+      "id": "swift:102:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.0799999999968381,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968382
+    },
+    {
+      "t": 901.4556249593982,
+      "kind": "transfer",
+      "id": "swift:103:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136763858,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.8470887500812051,
+      "portCargoAfter": 0.8970887500812051,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817127
+    },
+    {
+      "t": 909.7217422501478,
+      "kind": "transfer",
+      "id": "swift:104:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683798,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.679999999996838
+    },
+    {
+      "t": 919.0916028722427,
+      "kind": "transfer",
+      "id": "swift:105:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136763397,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.8618167942555162,
+      "portCargoAfter": 0.9118167942555162,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171222
+    },
+    {
+      "t": 927.3577201629923,
+      "kind": "transfer",
+      "id": "swift:106:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.0799999999968381,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968382
+    },
+    {
+      "t": 936.7275807850873,
+      "kind": "transfer",
+      "id": "swift:107:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676443,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.876544838429827,
+      "portCargoAfter": 0.926544838429827,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171325
+    },
+    {
+      "t": 944.993698075837,
+      "kind": "transfer",
+      "id": "swift:108:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683875,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.679999999996839
+    },
+    {
+      "t": 954.3635586979318,
+      "kind": "transfer",
+      "id": "swift:109:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676389,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.8912728826041381,
+      "portCargoAfter": 0.9412728826041381,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.017401868817127
+    },
+    {
+      "t": 962.6296759886815,
+      "kind": "transfer",
+      "id": "swift:110:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.0799999999968373,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968374
+    },
+    {
+      "t": 971.9995366107764,
+      "kind": "transfer",
+      "id": "swift:111:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676339,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.9060009267784489,
+      "portCargoAfter": 0.956000926778449,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171222
+    },
+    {
+      "t": 980.2656539015261,
+      "kind": "transfer",
+      "id": "swift:112:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999683735,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968374
+    },
+    {
+      "t": 989.635514523621,
+      "kind": "transfer",
+      "id": "swift:113:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.16669451136764396,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.9207289709527597,
+      "portCargoAfter": 0.9707289709527598,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171325
+    },
+    {
+      "t": 997.9016318143707,
+      "kind": "transfer",
+      "id": "swift:114:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.07999999999680907,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968092
+    },
+    {
+      "t": 1007.2714924364656,
+      "kind": "transfer",
+      "id": "swift:115:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.1666945113676392,
+      "propellantAfter": 1.1492926425505117,
+      "portId": "Lantern",
+      "cargoBefore": 0.1,
+      "cargoAfter": 0.05,
+      "portCargoBefore": 0.9354570151270708,
+      "portCargoAfter": 0.9854570151270708,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 2.0174018688171276
+    },
+    {
+      "t": 1015.5376097272152,
+      "kind": "transfer",
+      "id": "swift:116:service",
+      "shipId": "swift",
+      "deltaV": 0,
+      "fuelUsed": 0,
+      "propellantBefore": 0.0799999999968095,
+      "propellantAfter": 1.4,
+      "portId": "Cairn",
+      "cargoBefore": 0.05,
+      "cargoAfter": 0.1,
+      "portCargoBefore": 1,
+      "portCargoAfter": 0.95,
+      "portPropellantBefore": 3,
+      "portPropellantAfter": 1.6799999999968096
+    }
+  ],
+  "final": {
+    "frontier": 1025,
+    "ships": [
+      {
+        "id": "swift",
+        "stage": "waiting",
+        "cargo": 0.1,
+        "fuel": 0.16669451136763264,
+        "used": 134.78399709742197,
+        "routeIndex": 1,
+        "voyage": 117,
+        "eventAt": 1039.534573570364,
+        "portId": "Lantern",
+        "reason": "Station resources unavailable",
+        "windowIndex": 117,
+        "delivered": 2.8999999999999977
+      }
+    ],
+    "resources": {
+      "t": 1025,
+      "stocks": [
+        {
+          "id": "Cairn",
+          "cargo": 0.9973119513639239,
+          "propellant": 2.626239027275287
+        },
+        {
+          "id": "Lantern",
+          "cargo": 0.9500000000000021,
+          "propellant": 3
+        }
+      ],
+      "cargoImported": 3.697311951363929,
+      "cargoExported": 2.049999999999998,
+      "fuelImported": 135.37693063606466,
+      "fuelExported": 0
+    },
+    "current": {
+      "t": 1025,
+      "ships": [
+        {
+          "t": 1025,
+          "y": [
+            0.9601956176078962,
+            -0.8003276678502318,
+            0,
+            0.5726678622678372,
+            0.687060055253968,
+            0
+          ],
+          "propellant": 0.16669451136763264,
+          "fuelUsed": 134.78399709742197,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 0,
+            "cargoMass": 0.1,
+            "fuelUsed": 134.78399709742197,
+            "ports": [],
+            "dockedPortId": "Lantern"
+          },
+          "activity": {
+            "kind": "waiting",
+            "reason": "Station resources unavailable",
+            "retryAt": 1039.534573570364
+          }
+        }
+      ]
+    }
+  },
+  "display": [
+    {
+      "case": "Cairn-Lantern:1",
+      "positionError": 1.0779184643911328e-7,
+      "pathError": 1.0779184643911328e-7,
+      "maxPixelError": 0.10779184643911327,
+      "checks": 8757
+    },
+    {
+      "case": "Cairn-Lantern:64",
+      "positionError": 1.0779184640006483e-7,
+      "pathError": 1.0779184640006483e-7,
+      "maxPixelError": 0.10779184640006483,
+      "checks": 8757
+    },
+    {
+      "case": "Cairn-Lantern:113404",
+      "positionError": 1.077918462722489e-7,
+      "pathError": 1.077918462722489e-7,
+      "maxPixelError": 0.1077918462722489,
+      "checks": 8757
+    },
+    {
+      "case": "Lantern-Cairn:1",
+      "positionError": 9.830721798313607e-8,
+      "pathError": 9.830721798313607e-8,
+      "maxPixelError": 0.09830721798313607,
+      "checks": 13281
+    },
+    {
+      "case": "Lantern-Cairn:64",
+      "positionError": 9.830721803220925e-8,
+      "pathError": 9.830721803220925e-8,
+      "maxPixelError": 0.09830721803220925,
+      "checks": 13281
+    },
+    {
+      "case": "Lantern-Cairn:113403",
+      "positionError": 9.830721795781918e-8,
+      "pathError": 9.830721795781918e-8,
+      "maxPixelError": 0.09830721795781917,
+      "checks": 13281
+    }
+  ]
+}

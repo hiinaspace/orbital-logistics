@@ -10,6 +10,7 @@ import orisonPowered from '../fixtures/model-sets/orison-powered.json';
 import surfaceAscent from '../fixtures/model-sets/selene-ascent.json';
 import surfaceReturn from '../fixtures/model-sets/selene-return.json';
 import trafficDefinition from '../fixtures/traffic/orison-service.json';
+import surfaceService from '../fixtures/traffic/selene-service.json';
 import {TrafficViewStore} from './traffic/view';
 import type {TrafficDefinition} from './traffic/planner';
 import type {TrafficDelta} from './traffic/engine';
@@ -19,12 +20,13 @@ import {displayPortState,portsOf, sampleVessel, setEvents, stockAt, type ModelSe
 import {transform,transformDirection} from './model-set/frames';
 
 const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn] as ModelSet[];
+const trafficSets=[trafficDefinition,surfaceService] as unknown as TrafficDefinition[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
 document.body.innerHTML = `
 <main>
-  <header><h1>Orbital Logistics</h1><select id="set" aria-label="Model set">${[...sets,trafficDefinition].map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><span id="load-status" role="status">Preparing scene…</span></header>
+  <header><h1>Orbital Logistics</h1><select id="set" aria-label="Model set">${[...sets,...trafficSets].map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><span id="load-status" role="status">Preparing scene…</span></header>
   <div class="workspace">
     <section class="scene" aria-label="Orbital viewer">
       <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><button id="fit" title="Fit the scene (F)">Fit</button><button id="launch-view" hidden>Surface view</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
@@ -44,7 +46,7 @@ let ready = false, width = 900, height = 600, scale = 100, center: [number, numb
 let lastFrame = performance.now(), lastPanel = 0, playbackRate = 1;
 let layers = {orbits: true, trails: true, plan: true, labels: true};
 let savedLayers = {...layers}, cleared = false;
-let thrustWhiskers:{vessel:string;t:number;from:[number,number];to:[number,number]}[]=[];
+let thrustWhiskers:{vessel:string;t:number;force:number;from:[number,number];to:[number,number]}[]=[];
 let hits: {id: string; name: string; x: number; y: number}[] = [];
 const labelLayout=new StableLabels();let placedLabels:PlacedLabel[]=[],hovered='';
 const colors = {body: '#7893a4', station: '#c7d5de'};
@@ -124,11 +126,16 @@ function buildTimeline() {
 }
 function fuelChart(v:VesselView):string {return `<div class="chart-key"><span>Fuel</span><span>Freight</span></div>${fuelGraph(v)}`;}
 function fuelGraph(v: VesselView): string {
+  const edges=new Map(v.boundaries.map(e=>[e.t,e.before]));
   const path = (get: (s: typeof v.samples[number]) => number, max: number) => {
-    const points = v.samples.filter((s, i) => i === 0 || i === v.samples.length - 1 || (v.continuousFuel && v.boundaries.some(e=>e.t===s.t)) || get(s) !== get(v.samples[i - 1]));
+    let last=-Infinity;
+    const points = v.samples.filter((s, i) => {
+      const keep=i===0 || i===v.samples.length-1 || edges.has(s.t) || (get(s)!==get(v.samples[i-1]) && (!v.continuousFuel || s.t-last>=(end()-start())/928));
+      if(keep)last=s.t;return keep;
+    });
     return points.map((s, i) => {
       const x = 4 + (s.t - start()) / (end() - start()) * 232, y = 64 - Math.min(1, get(s) / Math.max(max, 1e-12)) * 54;
-      const before=v.boundaries.find(e=>e.t===s.t)?.before;
+      const before=edges.get(s.t);
       if(i && v.continuousFuel && before){const left=64-Math.min(1,get(before)/Math.max(max,1e-12))*54;return `L${x},${left}V${y}`;}
       return i ? v.continuousFuel?`L${x},${y}`:`H${x}V${y}` : `M${x},${y}`;
     }).join(' ');
@@ -140,7 +147,8 @@ function updatePanels() {
   if (!run || !ready) return;
   $<HTMLButtonElement>('play').textContent = playing ? 'Pause' : 'Play';
   $<HTMLInputElement>('time').value = String(t);
-  $<HTMLInputElement>('time').min=String(start());$<HTMLInputElement>('time').max=String(cursorEnd());
+  // Keep the HTML range step anchored to millisecond values as history slides.
+  $<HTMLInputElement>('time').min=String(Math.floor(start()*1000)/1000);$<HTMLInputElement>('time').max=String(cursorEnd());
   $('clock').textContent=traffic?`${number(t)} · head ${number(traffic.frontier)}`:`${number(t)} / ${number(end())}`;
   $('live').textContent=liveMode?'Live':'Return to live';$('live').setAttribute('aria-pressed',String(liveMode));
   $('load-status').textContent = liveError || (traffic?.halt??(traffic?liveMode?'':playing?'Playing history':'History held':t===end()?'End of scene':''));
@@ -215,7 +223,7 @@ function publishState() {
     stocks: run ? stockAt(run, t) : [], events, thrustWhiskers, camera: {center, scale}, hits});
 }
 function loadSet(id: string) {
-  const continuous=id===trafficDefinition.id;
+  const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
   labelLayout.reset();placedLabels=[];hovered='';
   worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=true;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
@@ -223,9 +231,9 @@ function loadSet(id: string) {
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
   $('state-json').textContent = JSON.stringify({ready, revision});
   $('launch-view').hidden=true;
-  $('live').hidden=!continuous;document.querySelector<HTMLElement>('.replay')!.hidden=continuous;
+  $('live').hidden=!continuous;document.querySelector<HTMLElement>('.replay')!.hidden=!!continuous;
   $('restart').title=continuous?'Restart run':'Rewind';
-  if(continuous){loadTraffic();return;}
+  if(continuous){loadTraffic(continuous);return;}
   worker = new PrepareWorker({name:'scene-prepare'});
   const currentRevision = revision;
   worker.onmessage = (e: MessageEvent<{revision: number; run?: SceneView; error?: string}>) => {
@@ -246,8 +254,8 @@ function loadSet(id: string) {
   worker.postMessage({revision, set});
 }
 
-function loadTraffic(){
- traffic=new TrafficViewStore(trafficDefinition as unknown as TrafficDefinition);
+function loadTraffic(definition:TrafficDefinition){
+ traffic=new TrafficViewStore(definition);
  worker=new TrafficWorker({name:'continuous-traffic'});
  const generation=revision;pending=true;
  worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta;error?:string}>)=>{
@@ -258,19 +266,21 @@ function loadTraffic(){
   if(first){ready=true;selected=traffic!.definition.vessels[0].id;frame='inertial';t=0;playing=true;}
   else if(liveMode && playing)t=traffic!.frontier;
   refreshTraffic();
-  if(first){$('frame').innerHTML=`<option value="inertial">Inertial</option><option value="rotating">${esc(run!.rotating.name)}</option>`+[...run!.world.bodies.map(b=>[b.id,b.id]),...run!.stations.map(s=>[s.id,s.id]),...run!.vessels.map(v=>[v.id,v.name])].map(([id,name])=>`<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
+  if(first){$('launch-view').hidden=!run!.world.ports.some(p=>p.rail.kind==='surface');$('frame').innerHTML=`<option value="inertial">Inertial</option><option value="rotating">${esc(run!.rotating.name)}</option>`+[...run!.world.bodies.map(b=>[b.id,b.id]),...run!.stations.map(s=>[s.id,s.id]),...run!.vessels.map(v=>[v.id,v.name])].map(([id,name])=>`<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
    $('description').textContent=run!.description;$('provenance').textContent=run!.provenance;$('traffic-count').textContent=String(run!.vessels.length);$<HTMLButtonElement>('play').disabled=false;fit();}
   updatePanels();
  };
  worker.onerror=(event)=>{if(generation===revision){pending=false;liveError=`Simulation paused: ${event.message||'worker failed'}`;playing=false;$('load-status').textContent=liveError;updatePanels();}};
- worker.postMessage({generation,sequence,definition:trafficDefinition});
+ worker.postMessage({generation,sequence,definition});
 }
 
 function path(points: [number, number][], color: string, lineWidth = 1, alpha = 1, dash: number[] = []) {
   points=points.filter(p=>p.every(Number.isFinite));
   if (!points.length) return;
   ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = lineWidth; ctx.globalAlpha = alpha; ctx.setLineDash(dash);
-  points.forEach((p, i) => i ? ctx.lineTo(...p) : ctx.moveTo(...p)); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+  ctx.moveTo(...points[0]);let last=points[0];
+  for(let i=1;i<points.length;i++)if(i===points.length-1 || Math.hypot(points[i][0]-last[0],points[i][1]-last[1])>=.1){ctx.lineTo(...points[i]);last=points[i];}
+  ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
 }
 function draw() {
   ctx.clearRect(0, 0, width, height);
@@ -305,13 +315,16 @@ function draw() {
     const id = v.id, isSelected = id === selected;
     if (layers.trails) {
       const trailStart = Math.max(start(), t - (run.id === 'lunar-loop' ? 9 : 12));
-      let prev: [number, number] | undefined;
+      let prev: [number, number] | undefined,chunk:[number,number][]=[],shade=-1;
       for (const sample of v.samples) {
         if (sample.t < trailStart || sample.t > t || sample.activity?.kind==='fault') continue;
         const p = project(sample.y, sample.t);
-        if (prev) path([prev, p], v.color, isSelected ? 1.7 : 1.1, (isSelected ? 0.7 : 0.4) * Math.exp(-(t - sample.t) / 4));
+        const alpha=Math.round(32*(isSelected ? 0.7 : 0.4)*Math.exp(-(t-sample.t)/4));
+        if(alpha!==shade && chunk.length){path(chunk,v.color,isSelected?1.7:1.1,shade/32);chunk=prev?[prev]:[];}
+        chunk.push(p);shade=alpha;
         prev = p;
       }
+      if(chunk.length)path(chunk,v.color,isSelected?1.7:1.1,shade/32);
       if (prev && sampleVessel(v,t).activity?.kind!=='fault') path([prev, project(sampleVessel(v, t).y, t)], v.color, 1.5, 0.75);
     }
     if (layers.plan && isSelected && sampleVessel(v,t).activity?.kind!=='fault') {
@@ -329,11 +342,16 @@ function draw() {
       for(let i=0;i<count;i++) {
         const epoch=arc.start+(i+.5)/count*(arc.end-arc.start);
         if(epoch<t || epoch>stop)continue;
-        const point=project(sampleVessel(v,epoch).y,epoch),d=transformDirection(run,arc.direction,epoch,frame),n=Math.hypot(d[0],d[1]);
-        if(n<1e-10)continue;
-        const tip:[number,number]=[point[0]+d[0]/n*12,point[1]-d[1]/n*12];
+        const sample=sampleVessel(v,epoch),force=sample.thrust?.force??0;
+        const point=project(sample.y,epoch),d=transformDirection(run,arc.direction,epoch,frame),n=Math.hypot(d[0],d[1]);
+        if(n<1e-10 || force<=0)continue;
+        // Exhaust-side whiskers share the ship's burn schematic convention.
+        // A visibility floor and square-root scale show small burns without
+        // letting large engines dominate the drawing. Force includes cap taper.
+        const pixels=3+15*Math.sqrt(Math.min(1,force/v.ship.engine!.maxThrust));
+        const tip:[number,number]=[point[0]-d[0]/n*pixels,point[1]+d[1]/n*pixels];
         path([point,tip],'#f0cf8f',1,.75);
-        thrustWhiskers.push({vessel:id,t:epoch,from:point,to:tip});
+        thrustWhiskers.push({vessel:id,t:epoch,force,from:point,to:tip});
       }
     }
   }
@@ -399,7 +417,7 @@ $('launch-view').onclick=()=>{
 };
 $('play').onclick=()=>{if(!ready)return;if(!traffic && t>=end())t=start();playing=!playing;if(traffic && !playing)liveMode=false;lastFrame=performance.now();updatePanels();};
 $('live').onclick=goLive;
-$('restart').onclick=()=>{if(ready){if(traffic)loadSet(trafficDefinition.id);else seek(start());}};
+$('restart').onclick=()=>{if(ready){if(traffic)loadSet(traffic.definition.id);else seek(start());}};
 $<HTMLInputElement>('time').oninput = e => seek(Number((e.target as HTMLInputElement).value));
 for (const key of Object.keys(layers) as (keyof typeof layers)[]) {
   $<HTMLInputElement>(`layer-${key}`).onchange = e => { layers[key] = (e.target as HTMLInputElement).checked; cleared = false; $('clear-view').setAttribute('aria-pressed', 'false'); updatePanels(); };

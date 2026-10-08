@@ -1,0 +1,367 @@
+[
+  {
+    "leg": "ascent",
+    "index": 0,
+    "departure": 0.3,
+    "epoch": -0.0009765625,
+    "duration": 1.4207514043249134,
+    "capture": {
+      "t": 1.4207514043249134,
+      "kind": "dock",
+      "id": "capture",
+      "portId": "Lantern",
+      "positionError": 3.200665344700201e-13,
+      "deltaV": 2.7829373950235456e-13,
+      "fuelUsed": 1.1750438412520896e-13,
+      "propellantBefore": 0.16669451136776536,
+      "propellantAfter": 0.16669451136764785
+    },
+    "terminalFuel": 0.16669451136764785,
+    "initialEvents": [
+      {
+        "t": -0.0009765625,
+        "kind": "dock",
+        "id": "support",
+        "portId": "Cairn",
+        "positionError": 0,
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      },
+      {
+        "t": 0,
+        "kind": "launch",
+        "id": "launch",
+        "portId": "Cairn",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      },
+      {
+        "t": 0,
+        "kind": "thrust-start",
+        "id": "arc0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      }
+    ],
+    "nodes": 1485
+  },
+  {
+    "leg": "ascent",
+    "index": 1,
+    "departure": 9.117988956422288,
+    "epoch": -0.0009765625,
+    "duration": 1.4207514043249134,
+    "capture": {
+      "t": 1.4207514043249134,
+      "kind": "dock",
+      "id": "capture",
+      "portId": "Lantern",
+      "positionError": 3.176885871025525e-13,
+      "deltaV": 2.7724583089751693e-13,
+      "fuelUsed": 1.170619240991547e-13,
+      "propellantBefore": 0.16669451136776536,
+      "propellantAfter": 0.1666945113676483
+    },
+    "terminalFuel": 0.1666945113676483,
+    "initialEvents": [
+      {
+        "t": -0.0009765625,
+        "kind": "dock",
+        "id": "support",
+        "portId": "Cairn",
+        "positionError": 0,
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      },
+      {
+        "t": 0,
+        "kind": "launch",
+        "id": "launch",
+        "portId": "Cairn",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      },
+      {
+        "t": 0,
+        "kind": "thrust-start",
+        "id": "arc0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      }
+    ],
+    "nodes": 1485
+  },
+  {
+    "leg": "ascent",
+    "index": 64,
+    "departure": 564.6512932110263,
+    "epoch": -0.0009765625,
+    "duration": 1.4207514043249134,
+    "capture": {
+      "t": 1.4207514043249134,
+      "kind": "dock",
+      "id": "capture",
+      "portId": "Lantern",
+      "positionError": 4.258875866534231e-13,
+      "deltaV": 2.872969107306196e-13,
+      "fuelUsed": 1.213058066517911e-13,
+      "propellantBefore": 0.16669451136776536,
+      "propellantAfter": 0.16669451136764404
+    },
+    "terminalFuel": 0.16669451136764404,
+    "initialEvents": [
+      {
+        "t": -0.0009765625,
+        "kind": "dock",
+        "id": "support",
+        "portId": "Cairn",
+        "positionError": 0,
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      },
+      {
+        "t": 0,
+        "kind": "launch",
+        "id": "launch",
+        "portId": "Cairn",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      },
+      {
+        "t": 0,
+        "kind": "thrust-start",
+        "id": "arc0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      }
+    ],
+    "nodes": 1485
+  },
+  {
+    "leg": "ascent",
+    "index": 10000,
+    "departure": 88180.18956422288,
+    "epoch": -0.0009765625,
+    "duration": 1.4207514043249134,
+    "capture": {
+      "t": 1.4207514043249134,
+      "kind": "dock",
+      "id": "capture",
+      "portId": "Lantern",
+      "positionError": 2.314187051443447e-12,
+      "deltaV": 1.9061909002983134e-12,
+      "fuelUsed": 8.048538503420954e-13,
+      "propellantBefore": 0.16669451136776536,
+      "propellantAfter": 0.1666945113669605
+    },
+    "terminalFuel": 0.1666945113669605,
+    "initialEvents": [
+      {
+        "t": -0.0009765625,
+        "kind": "dock",
+        "id": "support",
+        "portId": "Cairn",
+        "positionError": 0,
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      },
+      {
+        "t": 0,
+        "kind": "launch",
+        "id": "launch",
+        "portId": "Cairn",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      },
+      {
+        "t": 0,
+        "kind": "thrust-start",
+        "id": "arc0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      }
+    ],
+    "nodes": 1485
+  },
+  {
+    "leg": "ascent",
+    "index": 100000,
+    "departure": 881799.1956422287,
+    "epoch": -0.0009765625,
+    "duration": 1.4207514043249134,
+    "capture": {
+      "t": 1.4207514043249134,
+      "kind": "dock",
+      "id": "capture",
+      "portId": "Lantern",
+      "positionError": 1.5318551593980018e-11,
+      "deltaV": 1.0733369529922147e-11,
+      "fuelUsed": 4.531966757336692e-12,
+      "propellantBefore": 0.16669451136776536,
+      "propellantAfter": 0.1666945113632334
+    },
+    "terminalFuel": 0.1666945113632334,
+    "initialEvents": [
+      {
+        "t": -0.0009765625,
+        "kind": "dock",
+        "id": "support",
+        "portId": "Cairn",
+        "positionError": 0,
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      },
+      {
+        "t": 0,
+        "kind": "launch",
+        "id": "launch",
+        "portId": "Cairn",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      },
+      {
+        "t": 0,
+        "kind": "thrust-start",
+        "id": "arc0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 1.4,
+        "propellantAfter": 1.4
+      }
+    ],
+    "nodes": 1485
+  },
+  {
+    "leg": "descent",
+    "index": 0,
+    "departure": 7.829865668956577,
+    "epoch": 0,
+    "duration": 2.157003026118007,
+    "capture": {
+      "t": 2.157003026118007,
+      "kind": "land",
+      "id": "capture",
+      "portId": "Cairn",
+      "positionError": 3.4055313849893303e-12,
+      "deltaV": 8.384025868891681e-12,
+      "fuelUsed": 3.15798307727812e-12,
+      "propellantBefore": 0.07999999999999985,
+      "propellantAfter": 0.07999999999684186
+    },
+    "terminalFuel": 0.07999999999684186,
+    "initialEvents": [],
+    "nodes": 2234
+  },
+  {
+    "leg": "descent",
+    "index": 1,
+    "departure": 16.647854625378862,
+    "epoch": 0,
+    "duration": 2.157003026118007,
+    "capture": {
+      "t": 2.157003026118007,
+      "kind": "land",
+      "id": "capture",
+      "portId": "Cairn",
+      "positionError": 3.4068803345227127e-12,
+      "deltaV": 8.381360471659624e-12,
+      "fuelUsed": 3.1569791109873815e-12,
+      "propellantBefore": 0.07999999999999985,
+      "propellantAfter": 0.07999999999684287
+    },
+    "terminalFuel": 0.07999999999684287,
+    "initialEvents": [],
+    "nodes": 2234
+  },
+  {
+    "leg": "descent",
+    "index": 64,
+    "departure": 572.181158879983,
+    "epoch": 0,
+    "duration": 2.157003026118007,
+    "capture": {
+      "t": 2.157003026118007,
+      "kind": "land",
+      "id": "capture",
+      "portId": "Cairn",
+      "positionError": 3.362293235163243e-12,
+      "deltaV": 8.386586641945552e-12,
+      "fuelUsed": 3.1589476351284088e-12,
+      "propellantBefore": 0.07999999999999985,
+      "propellantAfter": 0.0799999999968409
+    },
+    "terminalFuel": 0.0799999999968409,
+    "initialEvents": [],
+    "nodes": 2234
+  },
+  {
+    "leg": "descent",
+    "index": 10000,
+    "departure": 88187.71942989183,
+    "epoch": 0,
+    "duration": 2.157003026118007,
+    "capture": {
+      "t": 2.157003026118007,
+      "kind": "land",
+      "id": "capture",
+      "portId": "Cairn",
+      "positionError": 3.4925493403312148e-12,
+      "deltaV": 7.862093601123931e-12,
+      "fuelUsed": 2.9613885897528e-12,
+      "propellantBefore": 0.07999999999999985,
+      "propellantAfter": 0.07999999999703845
+    },
+    "terminalFuel": 0.07999999999703845,
+    "initialEvents": [],
+    "nodes": 2234
+  },
+  {
+    "leg": "descent",
+    "index": 100000,
+    "departure": 881806.7255078976,
+    "epoch": 0,
+    "duration": 2.157003026118007,
+    "capture": {
+      "t": 2.157003026118007,
+      "kind": "land",
+      "id": "capture",
+      "portId": "Cairn",
+      "positionError": 7.587566441974279e-11,
+      "deltaV": 6.982428640986014e-11,
+      "fuelUsed": 2.630048121407458e-11,
+      "propellantBefore": 0.07999999999999985,
+      "propellantAfter": 0.07999999997369937
+    },
+    "terminalFuel": 0.07999999997369937,
+    "initialEvents": [],
+    "nodes": 2234
+  }
+]

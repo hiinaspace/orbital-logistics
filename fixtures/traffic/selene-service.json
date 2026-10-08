@@ -1,0 +1,393 @@
+{
+  "schemaVersion": 1,
+  "domain": "airless-surface-v1",
+  "id": "selene-service",
+  "name": "Selene · continuous surface service",
+  "extent": 1.55,
+  "description": "Swift carries supplies up to Lantern and brings return freight to Cairn.",
+  "provenance": "Fictional airless world. Finite powered launch/descent, rotating supported pad, explicit external cargo/fuel flows and rolling history. Fixed witnessed loadouts and windows; no atmosphere or runtime steering optimizer.",
+  "rotating": {
+    "name": "Surface rotating",
+    "rate": 0.003,
+    "phase": 0
+  },
+  "world": {
+    "scenario": {
+      "schemaVersion": 3,
+      "modelVersion": "rk4-canonical-v3",
+      "id": "selene-return",
+      "units": {
+        "length": "Selene radius",
+        "time": "√(R³/μ)",
+        "mass": "mass unit"
+      },
+      "epoch": 0,
+      "duration": 11,
+      "policy": {
+        "step": 0.0009765625,
+        "maxNodes": 65536,
+        "maxSubdivision": 20
+      },
+      "bodies": [
+        {
+          "id": "Selene",
+          "mu": 1,
+          "radius": 1,
+          "rail": {
+            "kind": "fixed",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ship": {
+        "id": "swift",
+        "state": [
+          6.123240118970762e-17,
+          1.000001,
+          0,
+          -0.003000003,
+          1.8369720356912284e-19,
+          0
+        ],
+        "dryMass": 1,
+        "cargoMass": 0,
+        "propellant": 1.2,
+        "tankCapacity": 1.4,
+        "exhaustVelocity": 3,
+        "engine": {
+          "maxThrust": 5,
+          "maxAcceleration": 3
+        }
+      },
+      "logistics": {
+        "modelVersion": "surface-ports-v3",
+        "ports": [
+          {
+            "id": "Cairn",
+            "rail": {
+              "kind": "surface",
+              "bodyId": "Selene",
+              "centerHeight": 0.000001,
+              "center": [
+                0,
+                0,
+                0
+              ],
+              "u": [
+                1,
+                0,
+                0
+              ],
+              "v": [
+                0,
+                1,
+                0
+              ],
+              "radius": 1.000001,
+              "rate": 0.003,
+              "phase": 1.5707963267948966
+            },
+            "cargo": 0.2,
+            "cargoCapacity": 1,
+            "propellant": 1,
+            "tankCapacity": 2,
+            "serviceDuration": 0.3
+          },
+          {
+            "id": "Lantern",
+            "rail": {
+              "kind": "circular",
+              "center": [
+                0,
+                0,
+                0
+              ],
+              "u": [
+                1,
+                0,
+                0
+              ],
+              "v": [
+                0,
+                1,
+                0
+              ],
+              "radius": 1.25,
+              "rate": 0.7155417527999327,
+              "phase": 1.007544851824315
+            },
+            "cargo": 0,
+            "cargoCapacity": 1,
+            "propellant": 1,
+            "tankCapacity": 2,
+            "serviceDuration": 0.3
+          }
+        ],
+        "cargoCapacity": 0.1,
+        "capture": {
+          "position": 1e-7,
+          "velocity": 1e-7
+        },
+        "objective": {
+          "destinationId": "Lantern",
+          "quota": 0.05,
+          "returnPortId": "Cairn",
+          "minPropellant": 0.05,
+          "hardwareCost": 1
+        }
+      }
+    },
+    "program": {
+      "schemaVersion": 3,
+      "id": "surface-service-world",
+      "burns": []
+    }
+  },
+  "historyDuration": 128,
+  "sampleStep": 0.0625,
+  "forecastDuration": 12,
+  "stations": [
+    {
+      "id": "Cairn",
+      "role": "Surface supply terminal",
+      "berths": 1,
+      "cargo": 0.3,
+      "cargoCapacity": 1,
+      "propellant": 2,
+      "tankCapacity": 3,
+      "cargoRate": 0.005,
+      "propellantRate": 0.1
+    },
+    {
+      "id": "Lantern",
+      "role": "Orbital freight depot",
+      "berths": 1,
+      "cargo": 0.1,
+      "cargoCapacity": 1,
+      "propellant": 2,
+      "tankCapacity": 3,
+      "cargoRate": -0.002,
+      "propellantRate": 0.08
+    }
+  ],
+  "templates": [
+    {
+      "id": "Cairn-Lantern",
+      "source": "Cairn",
+      "destination": "Lantern",
+      "referenceDeparture": 0.3,
+      "duration": 1.4207514043249134,
+      "cargo": 0.1,
+      "propellant": 1.4,
+      "arcs": [
+        {
+          "id": "pitch-1",
+          "start": 0,
+          "end": 0.09680185791057666,
+          "direction": [
+            -0.0008999998784998446,
+            0.9999995950000273,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "pitch-2",
+          "start": 0.09680185791057666,
+          "end": 0.19360371582115332,
+          "direction": [
+            -0.167424306107578,
+            0.985884933308343,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "pitch-3",
+          "start": 0.19360371582115332,
+          "end": 0.29040557373173,
+          "direction": [
+            -0.2757333124127533,
+            0.9612341756439432,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "pitch-4",
+          "start": 0.29040557373173,
+          "end": 0.3872074316423067,
+          "direction": [
+            -0.3782385459078324,
+            0.9257081626460515,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "pitch-5",
+          "start": 0.3872074316423067,
+          "end": 0.4840092895528833,
+          "direction": [
+            -0.6844539220809281,
+            0.729056121672423,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "pitch-6",
+          "start": 0.4840092895528833,
+          "end": 0.5808111474634599,
+          "direction": [
+            -0.9469564882292419,
+            -0.32136180451407353,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "pitch-7",
+          "start": 0.5808111474634599,
+          "end": 0.6776130053740366,
+          "direction": [
+            -0.610935811570013,
+            -0.7916801337290772,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "pitch-8",
+          "start": 0.6776130053740366,
+          "end": 0.7744148632846133,
+          "direction": [
+            -0.22818164656269535,
+            -0.9736185783826935,
+            0
+          ],
+          "throttle": 1
+        }
+      ],
+      "provenance": "Unchanged paid finite surface round-trip witness, rotated at integer synodic windows and independently revalidated. Fixed loadout/hardware."
+    },
+    {
+      "id": "Lantern-Cairn",
+      "source": "Lantern",
+      "destination": "Cairn",
+      "referenceDeparture": 7.829865668956577,
+      "duration": 2.157003026118007,
+      "cargo": 0.05,
+      "propellant": 1.1492926425505117,
+      "arcs": [
+        {
+          "id": "descent-1",
+          "start": 1.448819449545958,
+          "end": 1.5373423966174649,
+          "direction": [
+            -0.02076052471801151,
+            -0.9997844770816523,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "descent-2",
+          "start": 1.5373423966174649,
+          "end": 1.6258653436889698,
+          "direction": [
+            0.5319872503965613,
+            -0.8467523636905341,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "descent-3",
+          "start": 1.6258653436889698,
+          "end": 1.7143882907604766,
+          "direction": [
+            0.8165424245334855,
+            -0.5772854310797884,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "descent-4",
+          "start": 1.7143882907604766,
+          "end": 1.8029112378319834,
+          "direction": [
+            0.9854199520158323,
+            -0.1701397019190836,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "descent-5",
+          "start": 1.8029112378319834,
+          "end": 1.8914341849034884,
+          "direction": [
+            0.6896420500998351,
+            0.7241504282496121,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "descent-6",
+          "start": 1.8914341849034884,
+          "end": 1.9799571319749951,
+          "direction": [
+            0.23131518615355304,
+            0.9728788643272847,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "descent-7",
+          "start": 1.9799571319749951,
+          "end": 2.0684800790465,
+          "direction": [
+            0.3024159179922145,
+            0.9531760658686967,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "descent-8",
+          "start": 2.0684800790465,
+          "end": 2.157003026118007,
+          "direction": [
+            -0.029956123990386985,
+            0.9995512146135748,
+            0
+          ],
+          "throttle": 1
+        }
+      ],
+      "provenance": "Unchanged paid finite surface round-trip witness, rotated at integer synodic windows and independently revalidated. Fixed loadout/hardware."
+    }
+  ],
+  "vessels": [
+    {
+      "id": "swift",
+      "name": "Swift",
+      "color": "#f2bd72",
+      "cargo": "Freight",
+      "portId": "Cairn",
+      "propellant": 1.2,
+      "route": [
+        "Cairn-Lantern",
+        "Lantern-Cairn"
+      ]
+    }
+  ]
+}

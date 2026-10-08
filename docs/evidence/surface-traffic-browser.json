@@ -1,0 +1,25 @@
+{
+  "frontier": 160.77840000038165,
+  "stats": {
+    "frames": 2214,
+    "boundaries": 165,
+    "events": 300,
+    "episodes": 16,
+    "resourceAnchors": 16,
+    "runnerNodes": 2234,
+    "delivered": 0.49999999999999994,
+    "denseSamples": 58784,
+    "viewFrames": 2218,
+    "viewEpisodes": 16
+  },
+  "medianFrameMs": 16.69999999999891,
+  "p95FrameMs": 16.799999999999272,
+  "memory": {
+    "usedJSHeapSize": 56523777,
+    "totalJSHeapSize": 144287121,
+    "jsHeapSizeLimit": 4395630592
+  },
+  "peakMainHeapBytes": 100314658,
+  "readings": 56,
+  "note": "Headless installed Chrome, production build. Main-window heap sampled every 250ms includes rendering and incoming packets; excludes worker heap and may miss shorter transient peaks."
+}

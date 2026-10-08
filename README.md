@@ -19,6 +19,8 @@ station buffers and explicit supply/export flows. Pause/scrub holds history; Pla
 catches up, Live resumes the head, and Restart run starts a fresh session. The speed slider adjusts smoothly from 2^-12× to 16×. **Selene · Surface freight**
 adds an airless ascent from Cairn to Lantern. **Selene · Surface round trip** adds
 orbital refueling, return freight, finite braking, touchdown and unloading at Cairn.
+**Selene · continuous surface service** repeats the flights with finite shared stocks
+and explicit supply/export flows.
 **Surface view** shows the close scale; choose a slower rate for launch or landing,
 then Fit or a ship frame to follow the orbit. Playback starts
 immediately. Click a ship or station to inspect it; overlapping objects open a chooser.
@@ -43,9 +45,14 @@ npm run evidence:propulsion
 npm run evidence:traffic
 npm run evidence:surface
 npm run evidence:landing
+npm run evidence:surface-traffic
 npx tsx scripts/model-set-fixtures.ts --check
 uv run --project spikes/numerics --group dev --group plots pre-commit run --config spikes/numerics/.pre-commit-config.yaml --all-files
 ```
+
+[Continuous surface evidence](docs/evidence/continuous-surface.md) and its
+[reviewed contract](docs/design/surface-service/README.md) cover recurring launch/landing,
+shared resources, rolling close-view history and measured bounds.
 
 [Surface ascent evidence](docs/evidence/surface-ascent.md) and its
 [Astra-reviewed contract](docs/design/surface-ascent/README.md) cover supported pads,

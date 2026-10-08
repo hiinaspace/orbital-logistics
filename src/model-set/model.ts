@@ -17,6 +17,9 @@ export interface VesselView {
  id:string;name:string;color:string;cargo:string;ship:Scenario['ship'];ports:Port[];cargoCapacity:number;
  arcs:ThrustArc[];continuousFuel:boolean;portSamples:PortSamples;samples:ViewSample[];
  ledger:ViewerEvent[];boundaries:EventBoundary[];
+ // Disposable dense coverage can be queried without expanding the entire
+ // rolling history into every render list. Never a physics restart provider.
+ trajectories?:{start:number;end:number;through:number;samples:ViewSample[];boundaries:EventBoundary[];arcs?:ThrustArc[]}[];
 }
 export interface VesselRun extends Vessel,VesselView {}
 export interface SceneView {
@@ -132,6 +135,8 @@ export function prepareSet(value: ModelSet): SetRun {
 }
 
 export function sampleVessel(v: VesselView, t: number): ViewSample {
+  const dense=v.trajectories?.find(p=>t>=p.start && t<p.end && t<=p.through);
+  if(dense)return sampleVessel({...v,trajectories:undefined,samples:dense.samples,boundaries:dense.boundaries,arcs:dense.arcs??v.arcs},t);
   const [a,b] = bracket(v, t),sample={...structuredClone(a),t,y:a.activity?.kind==='fault'?[...a.y] as State:stateAt(v,t)};
   if(a.fuelUsed!==undefined && a!==b && a.t!==t) {
     const endpoint=v.boundaries.find(e=>e.t===b.t)?.before??b,u=(t-a.t)/(b.t-a.t);
@@ -161,6 +166,8 @@ function bracket(v: VesselView, t: number): [ViewSample, ViewSample] {
   return [a, b];
 }
 export function stateAt(v: VesselView, t: number): State {
+  const dense=v.trajectories?.find(p=>t>=p.start && t<p.end && t<=p.through);
+  if(dense)return stateAt({...v,trajectories:undefined,samples:dense.samples,boundaries:dense.boundaries},t);
   const [a, b] = bracket(v, t);
   if(a.activity?.kind==='fault' && t>(a.activity.knownEpoch??a.t))throw new Error('Reference vessel has no state at this epoch');
   if (a.t === t || a === b) return [...a.y];
