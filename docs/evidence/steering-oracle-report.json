@@ -1,0 +1,201 @@
+{
+  "coarseRefinementRatios": [
+    17.362964060913313,
+    17.68102789716252,
+    18.41717184366573
+  ],
+  "checks": [
+    {
+      "step": 0.03125,
+      "position": 3.836260915088793e-09,
+      "velocity": 7.925978713899648e-10,
+      "fuel": 4.382462170937629e-10,
+      "usage": 4.382462170937629e-10,
+      "heading": 2.498001805406602e-16,
+      "refinement": 9.328442777268376e-13,
+      "capturePosition": 3.5981718140416816e-09,
+      "captureSpeed": 7.807265245569203e-10,
+      "nodes": 775,
+      "certifiedIntervals": 453,
+      "capEpochs": [
+        13.744810249711104
+      ]
+    },
+    {
+      "step": 0.015625,
+      "position": 2.209450472644128e-10,
+      "velocity": 4.510394905542697e-11,
+      "fuel": 2.4860669078918818e-11,
+      "usage": 2.4860669078918818e-11,
+      "heading": 2.498001805406602e-16,
+      "refinement": 9.328442777268376e-13,
+      "capturePosition": 2.043358202661114e-10,
+      "captureSpeed": 4.43437636278432e-11,
+      "nodes": 1543,
+      "certifiedIntervals": 901,
+      "capEpochs": [
+        13.744810249711104
+      ]
+    },
+    {
+      "step": 0.0078125,
+      "position": 1.249616529929634e-11,
+      "velocity": 2.505107049020662e-12,
+      "fuel": 1.3580248037214915e-12,
+      "usage": 1.3579692925702602e-12,
+      "heading": 2.498001805406602e-16,
+      "refinement": 9.328442777268376e-13,
+      "capturePosition": 1.1333018100808085e-11,
+      "captureSpeed": 2.4773793920451868e-12,
+      "nodes": 3079,
+      "certifiedIntervals": 1797,
+      "capEpochs": [
+        13.744810249711104
+      ]
+    },
+    {
+      "step": 0.00390625,
+      "position": 6.785062009178234e-13,
+      "velocity": 1.2510591947040197e-13,
+      "fuel": 5.0737192225369654e-14,
+      "usage": 5.079270337660091e-14,
+      "heading": 2.498001805406602e-16,
+      "refinement": 9.328442777268376e-13,
+      "capturePosition": 6.2190309327347e-13,
+      "captureSpeed": 1.487759541190137e-13,
+      "nodes": 6151,
+      "certifiedIntervals": 3589,
+      "capEpochs": [
+        13.744810249711104
+      ]
+    },
+    {
+      "step": 0.001953125,
+      "position": 1.0953347844232931e-13,
+      "velocity": 3.737566265855681e-14,
+      "fuel": 2.1094237467877974e-14,
+      "usage": 2.1094237467877974e-14,
+      "heading": 2.498001805406602e-16,
+      "refinement": 9.328442777268376e-13,
+      "capturePosition": 2.967443837375284e-14,
+      "captureSpeed": 2.072068512695149e-14,
+      "nodes": 12295,
+      "certifiedIntervals": 7173,
+      "capEpochs": [
+        13.744810249711104
+      ]
+    },
+    {
+      "step": 0.0009765625,
+      "position": 1.0293118076084568e-13,
+      "velocity": 3.577765830478288e-14,
+      "fuel": 2.298161660974074e-14,
+      "usage": 2.3037127760971998e-14,
+      "heading": 2.498001805406602e-16,
+      "refinement": 9.328442777268376e-13,
+      "capturePosition": 4.09367826583451e-14,
+      "captureSpeed": 1.7328461832756616e-14,
+      "nodes": 24583,
+      "certifiedIntervals": 14341,
+      "capEpochs": [
+        13.744810249711104
+      ]
+    },
+    {
+      "step": 0.00048828125,
+      "position": 9.484068409806659e-14,
+      "velocity": 3.712008103083863e-14,
+      "fuel": 2.2648549702353193e-14,
+      "usage": 2.2593038551121936e-14,
+      "heading": 2.498001805406602e-16,
+      "refinement": 9.328442777268376e-13,
+      "capturePosition": 5.411401433016302e-14,
+      "captureSpeed": 1.8092633288156223e-14,
+      "nodes": 49159,
+      "certifiedIntervals": 28677,
+      "capEpochs": [
+        13.744810249711104
+      ]
+    }
+  ],
+  "final": {
+    "t": 24,
+    "status": "horizon",
+    "fuel": 0.6341196655069749,
+    "fuelUsed": 0.26588033449302517,
+    "cargo": 0.0,
+    "stocks": {
+      "Equator": [
+        0,
+        0
+      ],
+      "Incline": [
+        0.05,
+        0
+      ]
+    },
+    "captures": [
+      {
+        "t": 0,
+        "position": 0.0,
+        "velocity": 0.0
+      },
+      {
+        "t": 15,
+        "position": 5.4628823589978734e-14,
+        "velocity": 3.640161466151369e-14
+      }
+    ],
+    "trace": [
+      [
+        0,
+        "dock",
+        "initial-dock"
+      ],
+      [
+        1,
+        "undock",
+        "depart"
+      ],
+      [
+        1,
+        "thrust-start",
+        "inclined-departure"
+      ],
+      [
+        2.5555909267821737,
+        "thrust-end",
+        "inclined-departure"
+      ],
+      [
+        13.328972605064703,
+        "thrust-start",
+        "inclined-braking"
+      ],
+      [
+        15,
+        "thrust-end",
+        "inclined-braking"
+      ],
+      [
+        15,
+        "dock",
+        "capture"
+      ],
+      [
+        15,
+        "transfer-start",
+        "unload"
+      ],
+      [
+        15.3,
+        "transfer",
+        "unload"
+      ]
+    ],
+    "complete": false,
+    "completedAt": null
+  },
+  "independentPreCapturePosition": 5.4628823589978734e-14,
+  "independentPreCaptureSpeed": 3.640161466151369e-14
+}

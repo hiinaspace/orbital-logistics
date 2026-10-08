@@ -30,6 +30,7 @@
     "evidence:traffic": "tsx scripts/traffic-evidence.ts && uv run --project spikes/numerics python spikes/numerics/traffic_oracle.py",
     "evidence:surface": "tsx scripts/surface-evidence.ts && uv run --project spikes/numerics python spikes/numerics/surface_oracle.py",
     "evidence:landing": "tsx scripts/landing-evidence.ts && uv run --project spikes/numerics python spikes/numerics/landing_oracle.py",
+    "evidence:steering": "tsx scripts/steering-evidence.ts && uv run --project spikes/numerics python spikes/numerics/steering_oracle.py",
     "evidence:spatial-viewer": "tsx scripts/spatial-viewer-evidence.ts && uv run --project spikes/numerics python spikes/numerics/spatial_viewer_oracle.py",
     "evidence:surface-traffic": "tsx scripts/surface-traffic-evidence.ts && uv run --project spikes/numerics python spikes/numerics/surface_traffic_oracle.py"
   },

@@ -22,6 +22,8 @@ orbital refueling, return freight, finite braking, touchdown and unloading at Ca
 **Selene · continuous surface service** repeats the flights with finite shared stocks
 and explicit supply/export flows. **Orison · crossing planes** adds two ships making
 paid changes between inclined circular orbits around different node axes.
+**Orison · inclined transfer** delivers freight to a 35° depot with smooth finite-thrust
+departure and braking, an acceleration cap and paid fuel.
 **Surface view** shows the close scale; choose a slower rate for launch or landing,
 then Fit or a ship frame to follow the orbit. Playback starts
 immediately. Click a ship or station to inspect it; overlapping objects open a chooser.
@@ -30,7 +32,7 @@ Front or Side. In 3D, drag to orbit and Shift-drag (or right/middle-drag) to pan
 Orbit/Pan button changes the default gesture. Top drags pan. Scroll zooms at the
 pointer. Frame or View from here changes the physical reference frame while keeping
 the camera orientation. Space pauses; F fits; T returns overhead. Focus the canvas
-and use arrow keys to orbit, Shift-arrows to pan. Layers includes a clear view. Replay explicitly rewinds the finite set.
+and use arrow keys to orbit, Shift-arrows to pan. Layers includes a clear view and optional See-through bodies; occlusion starts on. Replay explicitly rewinds the finite set.
 
 Cargo, propellant, docking and burns come from the simulation ledger. The model details
 are available under About this set. These scenes use normalized fictional systems,
@@ -51,10 +53,16 @@ npm run evidence:surface
 npm run evidence:landing
 npm run evidence:surface-traffic
 npm run evidence:spatial-viewer
+npm run evidence:steering
+npx tsx scripts/steering-fixture.ts --check
 npx tsx scripts/spatial-viewer-fixture.ts --check
 npx tsx scripts/model-set-fixtures.ts --check
 uv run --project spikes/numerics --group dev --group plots pre-commit run --config spikes/numerics/.pre-commit-config.yaml --all-files
 ```
+
+[Smooth steering evidence](docs/evidence/smooth-steering.md) and its
+[command/authoring contract](docs/design/smooth-steering/README.md) cover continuous
+physical heading, finite spatial transfer and optional see-through bodies.
 
 [3D viewer evidence](docs/evidence/spatial-viewer.md) and its
 [camera contract](docs/design/spatial-viewer.md) cover orthographic controls, body

@@ -1,0 +1,7 @@
+{
+  "maxInterpolation": 0.000004181842797995678,
+  "maxPixelsAt500": 0.002090921398997839,
+  "maxHeading": 0,
+  "samples": 2055,
+  "note": "Full3D norm bounds orthographic position error; drawing direction uses the physical steering law at cursor time."
+}

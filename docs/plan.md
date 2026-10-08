@@ -1,6 +1,6 @@
 # Tactical plan — updated 2026-10-08
 
-Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic, continuous airless surface service and orthographic 3D viewer implemented**.
+Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic, continuous airless surface service and orthographic 3D viewer and smooth finite steering implemented**.
 
 On 2026-10-08 the user chose fictional orbital buildups and traffic as the next
 product direction, authorized retiring the CoaDE editing UI, and requested implementation.
@@ -51,9 +51,15 @@ stationkeeping. [Camera contract](design/spatial-viewer.md) and
 [evidence](evidence/spatial-viewer.md) cover separate orthographic orbit/pan/zoom,
 Top/Front/Side presets, spherical occlusion and unchanged physical frames/history.
 **Orison · crossing planes** supplies two independently validated paid inclination
-changes around different node axes. Human control/readability review remains.
+changes around different node axes. The user accepted the 3D controls, then requested
+optional see-through bodies and smooth finite steering. **Orison · inclined transfer**
+is implemented with a paid one-way delivery to a 35° depot, two C1 steered finite arcs
+and an acceleration cap. Program schema 4 protects the new heading semantics; scenario/
+snapshot v3 and old fixed programs retain their contracts. See
+[contract](design/smooth-steering/README.md) and [evidence](evidence/smooth-steering.md).
+Human steered-scene review remains.
 Lunar continuation, demand routing/rescue, persistence, staging/recovery, maintained
-stations and variable steering/smoothing remain separate extensions. No general
+stations, attitude dynamics and retargeting of existing surface steering remain separate extensions. No general
 steering optimizer is claimed.
 
 The [recovered Fable consultation](design/orbital-model-set/README.md) and

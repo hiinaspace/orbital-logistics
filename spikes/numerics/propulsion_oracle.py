@@ -8,6 +8,7 @@ from pathlib import Path
 
 import numpy as np
 from scipy.integrate import solve_ivp
+from steering_law import direction_at
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -26,6 +27,10 @@ def replay(bundle, tight):
     events = [(b["t"], 3, "burn", b) for b in program["burns"]]
     for arc in program["thrustArcs"]:
         events.extend([(arc["start"], 6, "thrust-start", arc), (arc["end"], 0, "thrust-end", arc)])
+        events.extend(
+            (arc["start"] + k["offset"], 3, "steering-knot", arc)
+            for k in arc.get("steering", {}).get("keys", [])[1:-1]
+        )
     order = {"launch": 2, "undock": 2, "dock": 4, "land": 4, "transfer": 5}
     for op in program["operations"]:
         events.append((op["t"], order[op["kind"]], op["kind"], op))
@@ -122,7 +127,7 @@ def replay(bundle, tight):
         )
         if active is not None:
             acceleration += (
-                force / (ship["dryMass"] + cargo + state[6]) * np.array(active["direction"])
+                force / (ship["dryMass"] + cargo + state[6]) * direction_at(active, epoch)
             )
         return np.concatenate((state[3:6], acceleration, [-force / ship["exhaustVelocity"]]))
 
@@ -160,6 +165,8 @@ def replay(bundle, tight):
             t = epoch
         if kind == "end":
             break
+        if kind == "steering-knot":
+            continue
         if kind in ("thrust-start", "thrust-end"):
             assert docked is None
             active = op if kind == "thrust-start" else None
@@ -246,7 +253,7 @@ def replay(bundle, tight):
                 )
                 primary = next(b for b in s["bodies"] if b["id"] == rail["bodyId"])
                 radial = (
-                    force / mass * np.dot(arc["direction"], normal)
+                    force / mass * np.dot(direction_at(arc, epoch), normal)
                     - primary["mu"] / radius**2
                     + rail["rate"] ** 2 * radius
                 )

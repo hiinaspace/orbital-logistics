@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 1,
+  "id": "orison-steered",
+  "name": "Orison · inclined transfer",
+  "extent": 3.5,
+  "description": "Tern delivers freight from an equatorial station to a depot in a 35° inclined orbit.",
+  "provenance": "Finite departure/braking with continuous inertial steering, bounded force/acceleration and paid fuel/capture. Fictional normalized primary; no authored impulses. Offline targeted program. Example physical scale: radius 1,000km, gravity parameter 1,000km³/s², time unit 1,000s and mass unit 1,000kg. Engine 250N, acceleration cap 0.14m/s², exhaust 3km/s; no real mission or engine model.",
+  "stations": [
+    {
+      "id": "Equator",
+      "role": "Departure",
+      "berths": 1
+    },
+    {
+      "id": "Incline",
+      "role": "Inclined depot",
+      "berths": 1
+    }
+  ],
+  "rotating": {
+    "name": "Equator rotating",
+    "rate": 0.3535533905932738,
+    "phase": -0.3535533905932738
+  },
+  "vessels": [
+    {
+      "name": "Tern",
+      "color": "#efbf7c",
+      "cargo": "Supplies",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "inclined-finite-transfer",
+          "units": {
+            "length": "Orison radius",
+            "time": "√(R³/μ)",
+            "mass": "mass unit"
+          },
+          "epoch": 0,
+          "duration": 24,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 20
+          },
+          "bodies": [
+            {
+              "id": "Orison",
+              "mu": 1,
+              "radius": 1,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "ship": {
+            "id": "Tern",
+            "state": [
+              1.97859169295691,
+              0.29184741314925033,
+              0,
+              -0.10318364245479344,
+              0.6995378016446012,
+              0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0.05,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3,
+            "engine": {
+              "maxThrust": 0.25,
+              "maxAcceleration": 0.14
+            }
+          },
+          "logistics": {
+            "modelVersion": "kinematic-ports-v1",
+            "ports": [
+              {
+                "id": "Equator",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    0.8775825618903728,
+                    0.479425538604203,
+                    0
+                  ],
+                  "v": [
+                    -0.479425538604203,
+                    0.8775825618903728,
+                    0
+                  ],
+                  "radius": 2,
+                  "rate": 0.3535533905932738,
+                  "phase": -0.3535533905932738
+                },
+                "cargo": 0,
+                "cargoCapacity": 1,
+                "propellant": 0,
+                "tankCapacity": 1,
+                "serviceDuration": 0.3
+              },
+              {
+                "id": "Incline",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    0.8775825618903728,
+                    0.479425538604203,
+                    0
+                  ],
+                  "v": [
+                    -0.3927224100319838,
+                    0.7188735496048695,
+                    0.573576436351046
+                  ],
+                  "radius": 3,
+                  "rate": 0.19245008972987526,
+                  "phase": 0.254841307641664
+                },
+                "cargo": 0,
+                "cargoCapacity": 1,
+                "propellant": 0,
+                "tankCapacity": 1,
+                "serviceDuration": 0.3
+              }
+            ],
+            "cargoCapacity": 0.1,
+            "capture": {
+              "position": 1e-7,
+              "velocity": 1e-7
+            },
+            "objective": {
+              "destinationId": "Incline",
+              "quota": 0.05,
+              "returnPortId": "Equator",
+              "minPropellant": 0.2,
+              "hardwareCost": 0
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 4,
+          "id": "tern-steered-delivery",
+          "burns": [],
+          "thrustArcs": [
+            {
+              "id": "inclined-departure",
+              "start": 1,
+              "end": 2.5555909267821737,
+              "direction": [
+                0.10565118943147583,
+                0.440398999238672,
+                0.8915641018128145
+              ],
+              "throttle": 1,
+              "steering": {
+                "kind": "spherical-smoothstep-v1",
+                "keys": [
+                  {
+                    "offset": 0,
+                    "direction": [
+                      0.10565118943147583,
+                      0.440398999238672,
+                      0.8915641018128145
+                    ]
+                  },
+                  {
+                    "offset": 0.7777954633910868,
+                    "direction": [
+                      0.34464756242896527,
+                      0.520776360548565,
+                      0.7810313950191525
+                    ]
+                  },
+                  {
+                    "offset": 1.5555909267821737,
+                    "direction": [
+                      0.031190383159158643,
+                      0.38387491001751534,
+                      0.9228581762423895
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "inclined-braking",
+              "start": 13.328972605064703,
+              "end": 15,
+              "direction": [
+                -0.03633443326221584,
+                0.1902460985316942,
+                -0.981063826136191
+              ],
+              "throttle": 1,
+              "steering": {
+                "kind": "spherical-smoothstep-v1",
+                "keys": [
+                  {
+                    "offset": 0,
+                    "direction": [
+                      -0.03633443326221584,
+                      0.1902460985316942,
+                      -0.981063826136191
+                    ]
+                  },
+                  {
+                    "offset": 0.8355136974676487,
+                    "direction": [
+                      -0.422834605759579,
+                      -0.014905415570633249,
+                      -0.9060842812668191
+                    ]
+                  },
+                  {
+                    "offset": 1.6710273949352974,
+                    "direction": [
+                      -0.32625414709967393,
+                      -0.21827379488318446,
+                      -0.9197362567429631
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "operations": [
+            {
+              "id": "initial-dock",
+              "t": 0,
+              "portId": "Equator",
+              "kind": "dock"
+            },
+            {
+              "id": "depart",
+              "t": 1,
+              "portId": "Equator",
+              "kind": "undock"
+            },
+            {
+              "id": "capture",
+              "t": 15,
+              "portId": "Incline",
+              "kind": "dock"
+            },
+            {
+              "id": "unload",
+              "t": 15,
+              "portId": "Incline",
+              "kind": "transfer",
+              "cargo": -0.05,
+              "propellant": 0
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

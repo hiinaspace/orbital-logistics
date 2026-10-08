@@ -61,8 +61,16 @@ Preserve the private support prelude, exact designated arrival/local epochs,
 shared resource ownership, and 65,536 dense-sample budget plus one held pending
 episode. Dense prediction reuse requires identical execution; divergent fault
 fixtures must retain actual prefixes. Finite Replay still rewinds resources. The user accepted continuous service and
-selected 3D viewer/controls before stationkeeping. Variable steering/whisker smoothing,
-atmosphere, staging and arbitrary ground latitude/spin axes remain deferred.
+selected and accepted 3D viewer/controls before stationkeeping. Smooth inertial
+steering is now implemented; read docs/design/smooth-steering/README.md and
+ docs/evidence/smooth-steering.md. New steered programs require schema4 so older
+readers reject them; scenario/snapshot v3 and old fixed headings retain their contract.
+Orison · inclined transfer is a paid one-way finite delivery with an acceleration cap,
+not continuous guidance or an optimized mission. Keys split canonical intervals and
+use C1 spherical easing; display evaluates the same law. See-through bodies is a
+session display preference, off by default. Existing surface/continuous programs
+are not retargeted. Atmosphere, staging, attitude/slew limits, stationkeeping and
+arbitrary ground latitude/spin axes remain deferred.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

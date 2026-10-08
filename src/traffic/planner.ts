@@ -32,7 +32,7 @@ export function validateTraffic(value:TrafficDefinition):TrafficDefinition {
   if(!source || !ports.some(p=>p.id===t.destination) || t.source===t.destination || !Number.isFinite(t.referenceDeparture) || t.duration<=0 || t.duration>8 || !Number.isFinite(t.duration) || ![t.cargo,t.propellant].every(Number.isFinite) || t.cargo<0 || t.cargo>s.logistics!.cargoCapacity || t.propellant<0 || t.propellant>s.ship.tankCapacity ||
    t.arcs.length!==(surface?8:2) || (source.rail.kind==='surface' || !surface) && t.arcs[0].start!==0 || (!surface && t.arcs.at(-1)!.end!==t.duration))throw new Error('Invalid transfer template');
   // Validate the authored arc domain before any service can debit fleet stocks.
-  validateBundle({...d.world,scenario:{...s,epoch:0,duration:Math.ceil(t.duration/s.policy.step)*s.policy.step},program:{schemaVersion:3,id:'template-validation',burns:[],thrustArcs:t.arcs}});
+  validateBundle({...d.world,scenario:{...s,epoch:0,duration:Math.ceil(t.duration/s.policy.step)*s.policy.step},program:{schemaVersion:t.arcs.some(a=>a.steering)?4:3,id:'template-validation',burns:[],thrustArcs:t.arcs}});
  }
  for(const v of d.vessels) {
   if(!v.name || !/^#[0-9a-f]{6}$/i.test(v.color) || !ports.some(p=>p.id===v.portId) || !Number.isFinite(v.propellant) || v.propellant<0 || v.propellant>s.ship.tankCapacity || v.route.length<2 || v.route.length>8)throw new Error('Invalid traffic vessel');
@@ -65,14 +65,15 @@ export function admitEpisode(d:TrafficDefinition,t:TransferTemplate,shipId:strin
  ports.forEach(p=>{if(p.rail.kind!=='ballistic')p.rail.phase=phase(p.rail.phase+p.rail.rate*w.departure);});
  s.ship.state=portState(source,s.epoch);
  const id=`${shipId}:${voyage}`,arrivalOperationId=`${id}:capture`;
- const arcs=t.arcs.map((a,i)=>({...a,id:`${id}:arc${i}`,direction:[c*a.direction[0]-sn*a.direction[1],sn*a.direction[0]+c*a.direction[1],a.direction[2]] as Vec3}));
- b.program={schemaVersion:3,id,burns:[],thrustArcs:arcs,operations:[
+ const rotate=(v:Vec3):Vec3=>[c*v[0]-sn*v[1],sn*v[0]+c*v[1],v[2]];
+ const arcs=t.arcs.map((a,i)=>({...a,...(a.steering?{steering:{...a.steering,keys:a.steering.keys.map(k=>({...k,direction:rotate(k.direction)}))}}:{}),id:`${id}:arc${i}`,direction:rotate(a.direction)}));
+ b.program={schemaVersion:arcs.some(a=>a.steering)?4:3,id,burns:[],thrustArcs:arcs,operations:[
   ...(source.rail.kind==='surface'?[{id:`${id}:support`,t:s.epoch,kind:'dock' as const,portId:t.source},{id:`${id}:launch`,t:0,kind:'launch' as const,portId:t.source,thrustArcId:arcs[0].id}]:[]),
   {id:arrivalOperationId,t:t.duration,kind:destination.rail.kind==='surface'?'land':'dock',portId:t.destination}]};
  const runner=new Runner(b),terminal=runner.advanceTo(s.epoch+s.duration),arrival=runner.ledger.find(e=>e.id===arrivalOperationId);
  if(terminal.status!=='horizon' || !arrival || arrival.t!==t.duration || arrival.kind!==(destination.rail.kind==='surface'?'land':'dock') || arrival.portId!==t.destination || arrival.positionError!+1e-8>=Math.min(1e-7,s.logistics!.capture.position,destination.rail.kind==='surface'?destination.rail.centerHeight/4:Infinity) || arrival.deltaV+1e-8>=Math.min(1e-7,s.logistics!.capture.velocity) || runner.sample(t.duration).propellant<.05)throw new Error('Powered transfer admission failed');
  const capEpochs=arcs.flatMap(a=>{const at=runner.sample(a.start),cap=massLaw(s.ship.engine!,a,s.ship.dryMass+cargo,at.propellant,s.ship.exhaustVelocity).capEpoch;return cap!==undefined && cap>a.start && cap<a.end?[cap]:[];});
- const localEpochs=[...new Set([0,t.duration,...arcs.flatMap(a=>[a.start,a.end]),...capEpochs])].sort((a,b)=>a-b);
+ const localEpochs=[...new Set([0,t.duration,...arcs.flatMap(a=>[a.start,a.end,...(a.steering?.keys.map(k=>a.start+k.offset)??[])]),...capEpochs])].sort((a,b)=>a-b);
  return {id,shipId,voyage,templateId:t.id,admittedAt,departure:w.departure,arrival:w.departure+t.duration,captureLocalEpoch:t.duration,arrivalOperationId,localEpochs,windowIndex:w.index,bundle:runner.bundle,runner,execution:runner,facts:runner.ledger.filter(e=>e.t>=0 && e.t<=t.duration),nextFact:0};
 }
 export function localAt(e:EpisodeSource,t:number):number {

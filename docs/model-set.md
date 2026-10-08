@@ -223,5 +223,22 @@ continuous sets also support the camera and projected exhaust whiskers.
 
 See [camera contract](design/spatial-viewer.md) and [evidence](evidence/spatial-viewer.md).
 Ground pads still spin in the authored XY plane; camera changes do not add physical
-latitude, arbitrary spin axes, attitude or maintained stations. Steering keyframes/
-whisker smoothing remain deferred. Human control/readability feedback is next.
+latitude, arbitrary spin axes, attitude or maintained stations. The user accepted the 3D controls and requested a see-through toggle plus smooth
+steering. Layers now offers See-through bodies, with occlusion enabled by default.
+
+## Smooth steering and inclined finite delivery — 2026-10-08
+
+**Orison · inclined transfer** delivers .05 supplies from radius 2 to a 35° depot at
+radius 3 using two finite steered burns. Force/acceleration limits, actual fuel and
+pre-capture position/velocity matching are independently checked. Its physical
+steering keyframes use C1 spherical easing and are evaluated at every RK stage and
+cursor/whisker time. New steering programs use schema4; scenario/snapshot v3 and
+historical fixed-heading programs retain their contracts. See
+[command/authoring contract](design/smooth-steering/README.md) and
+[evidence](evidence/smooth-steering.md).
+
+See-through bodies is a session preference under Layers, initially off. Enabling it
+keeps rear paths/markers visible and selectable while preserving the overlap chooser
+and physical state. Existing launch/landing/continuous witnesses keep their original
+headings; retargeting those flights, attitude/gimbal dynamics, state-feedback guidance
+and stationkeeping remain separate work. Human viewing of the steered set is next.

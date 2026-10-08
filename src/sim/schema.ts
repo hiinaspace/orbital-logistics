@@ -7,7 +7,8 @@ export type Rail =
   | { kind: 'circular'; center: Vec3; u: Vec3; v: Vec3; radius: number; rate: number; phase: number };
 export interface Body { id: string; mu: number; radius: number; rail: Rail }
 export interface Engine { maxThrust: number; maxAcceleration?: number }
-export interface ThrustArc { id: string; start: number; end: number; direction: Vec3; throttle: number }
+export interface Steering {kind:'spherical-smoothstep-v1';keys:{offset:number;direction:Vec3}[]}
+export interface ThrustArc { id: string; start: number; end: number; direction: Vec3; throttle: number; steering?:Steering }
 export interface BallisticRail {kind:'ballistic'; epoch:number; validUntil:number; state:State; policy:Scenario['policy']; minClearance:number; provenance:string}
 // Physical support geometry. Circular fields are derived by validation, never trusted.
 export interface SurfaceRail {kind:'surface';bodyId:string;centerHeight:number;center:Vec3;u:Vec3;v:Vec3;radius:number;rate:number;phase:number}
@@ -50,7 +51,7 @@ interface BurnBase {
 }
 export type ReferenceBurn = BurnBase & {basis: 'radial-transverse-normal-v2'; radial: number; transverse: number; normal: number; orientationAxis: Vec3};
 export type Burn = ReferenceBurn | (BurnBase & {basis: 'inertial-cartesian-v2'; deltaVelocity: Vec3});
-export interface Program { schemaVersion: 3; id: string; burns: Burn[]; operations?: Operation[]; thrustArcs?: ThrustArc[] }
+export interface Program { schemaVersion: 3|4; id: string; burns: Burn[]; operations?: Operation[]; thrustArcs?: ThrustArc[] }
 export interface Bundle { scenario: Scenario; program: Program }
 
 function object(value: unknown): Record<string, unknown> {
@@ -76,17 +77,19 @@ function integer(value: unknown, label: string, min: number, max: number): numbe
 }
 
 // This boundary converts propulsion-free v1 planar and v2 spatial data. Original JSON
-// stays durable; canonical runtime objects and newly saved programs are v3.
+// stays durable. Scenario/snapshot v3 retain their contracts; steering programs
+// use v4 so older readers reject them rather than silently dropping the heading law.
 type LegacyStateWire = [number,number,number,number];
 function upgradeWire(value: unknown): unknown {
   const input = object(value), rawScenario = object(input.scenario), rawProgram = object(input.program);
   const result = structuredClone(input), s = object(result.scenario), p = object(result.program);
-  if ((rawScenario.schemaVersion!==3 || rawProgram.schemaVersion!==3) &&
+  if ((rawScenario.schemaVersion!==3 || ![3,4].includes(rawProgram.schemaVersion as number)) &&
       (object(rawScenario.logistics??{}).modelVersion==='surface-ports-v3' ||
        (Array.isArray(object(rawScenario.logistics??{}).ports) && (object(rawScenario.logistics??{}).ports as unknown[]).some(p=>object(object(p).rail).kind==='surface')) ||
        (Array.isArray(rawProgram.operations) && rawProgram.operations.some(o=>object(o).kind==='launch'||object(o).kind==='land'))))throw new Error('Surface features require schema3');
   if ((rawScenario.schemaVersion !== 3 && (object(rawScenario.ship).engine !== undefined || rawScenario.engine !== undefined)) ||
-      (rawProgram.schemaVersion !== 3 && rawProgram.thrustArcs !== undefined)) throw new Error('Propulsion fields require schema3');
+      (![3,4].includes(rawProgram.schemaVersion as number) && rawProgram.thrustArcs !== undefined)) throw new Error('Propulsion fields require schema3 scenario and program3 or4');
+  if(rawProgram.schemaVersion!==4 && Array.isArray(rawProgram.thrustArcs) && rawProgram.thrustArcs.some(a=>object(a).steering!==undefined))throw new Error('Steering fields require program schema4');
   if (rawScenario.schemaVersion === 2) {
     if (rawScenario.modelVersion !== 'rk4-canonical-v2') throw new Error('Unsupported schema/model version');
     s.schemaVersion=3;s.modelVersion=MODEL;
@@ -124,7 +127,7 @@ function circularRail(value: Record<string, unknown>, minRadius = 0): Extract<Ra
 // Reconstruct rather than casting JSON; failed imports cannot mutate an existing run.
 export function validateBundle(value: unknown): Bundle {
   const bundle = object(upgradeWire(value)), s = object(bundle.scenario), p = object(bundle.program);
-  if (s.schemaVersion !== 3 || p.schemaVersion !== 3 || s.modelVersion !== MODEL) throw new Error('Unsupported schema/model version');
+  if (s.schemaVersion !== 3 || ![3,4].includes(p.schemaVersion as number) || s.modelVersion !== MODEL) throw new Error('Unsupported schema/model version');
   const units = object(s.units), policy = object(s.policy), ship = object(s.ship);
   const epoch = finite(s.epoch, 'epoch'), duration = finite(s.duration, 'duration', Number.MIN_VALUE);
   const step = finite(policy.step, 'step', 1 / 65536);
@@ -261,7 +264,7 @@ export function validateBundle(value: unknown): Bundle {
        !Number.isFinite(scenario.ship.engine.maxThrust/scenario.ship.dryMass))throw new Error('Unsupported engine scale');
   }
   if (new Set(burns.map(b => b.id)).size !== burns.length) throw new Error('Duplicate burn ID');
-  const program: Program = { schemaVersion: 3, id: name(p.id), burns };
+  const program: Program = { schemaVersion: p.schemaVersion as 3|4, id: name(p.id), burns };
   if(p.thrustArcs!==undefined) {
     if(!scenario.ship.engine || !Array.isArray(p.thrustArcs) || p.thrustArcs.length>128)throw new Error('Invalid thrust program');
     let end=epoch;
@@ -270,7 +273,21 @@ export function validateBundle(value: unknown): Bundle {
       if(start<end || stop<=start || stop>epoch+duration || throttle>1 || Math.abs(norm(direction)-1)>1e-12 ||
         burns.some(b=>b.t>=start && b.t<=stop && norm(b.basis==='inertial-cartesian-v2'?b.deltaVelocity:[b.radial,b.transverse,b.normal])>0))throw new Error('Overlapping/invalid thrust interval or impulse');
       if(throttle>0 && scenario.ship.engine!.maxThrust*throttle/scenario.ship.exhaustVelocity===0)throw new Error('Unsupported throttle scale');
-      end=stop;return {id:name(a.id),start,end:stop,direction,throttle};
+      let steering:Steering|undefined;
+      if(a.steering!==undefined) {
+        const steer=object(a.steering);
+        if(steer.kind!=='spherical-smoothstep-v1' || !Array.isArray(steer.keys) || steer.keys.length<2 || steer.keys.length>64)throw new Error('Invalid steering keys');
+        let previous=-Infinity,previousEpoch=-Infinity;
+        const keys=steer.keys.map(value=>{
+          const k=object(value),offset=finite(k.offset,'steering offset',0),d=vector(k.direction,3) as Vec3;
+          if(offset<=previous || start+offset<=previousEpoch || offset>stop-start || Math.abs(norm(d)-1)>1e-12)throw new Error('Invalid steering key');
+          previous=offset;previousEpoch=start+offset;return {offset,direction:d};
+        });
+        if(keys[0].offset!==0 || keys.at(-1)!.offset!==stop-start || Math.hypot(...keys[0].direction.map((x,i)=>x-direction[i]))>1e-12)throw new Error('Steering must cover the arc and match its initial direction');
+        for(let i=1;i<keys.length;i++)if(keys[i].direction.reduce((v,x,j)=>v+x*keys[i-1].direction[j],0)<-.5)throw new Error('Steering turns must be at most120 degrees; add an intermediate key');
+        steering={kind:'spherical-smoothstep-v1',keys};
+      }
+      end=stop;return {id:name(a.id),start,end:stop,direction,throttle,...(steering?{steering}:{})};
     });
   }
   if (p.operations !== undefined) {

@@ -1,3 +1,4 @@
+import {directionAt} from './steering';
 import {resolveBurn} from './burns';
 import {distance, relativeSpeed, norm, dot} from './vectors';
 import { bodyState, certifiedCoast, derivative } from './dynamics';
@@ -187,7 +188,7 @@ export class Runner {
         const surface=port.rail;
         const force=thrustAt(law,n.t),body=s.bodies.find(b=>b.id===surface.bodyId)!;
         const b=bodyState(body,n.t),r=distance(n.y,b),normal=n.y.slice(0,3).map((x,i)=>(x-b[i])/r);
-        const gravity=derivative(s,n.t,n.y).slice(3),outward=force/massAt(law,n.t)*dot(arc.direction,normal as [number,number,number]);
+        const gravity=derivative(s,n.t,n.y).slice(3),outward=force/massAt(law,n.t)*dot(directionAt(arc,0),normal as [number,number,number]);
         const radial=outward+dot(gravity as [number,number,number],normal as [number,number,number])+port.rail.rate**2*r;
         // Relative radial-distance acceleration, not an extra inertial force.
         const margin=1e-12*Math.max(1,body.mu/r**2,outward);
@@ -278,6 +279,7 @@ export class Runner {
       const active=n.activeThrust,arc=this.#bundle.program.thrustArcs?.[n.thrustCursor??0];
       const end = Math.min(grid, burn?.t ?? Infinity, operation?.t ?? Infinity, n.logistics?.service?.end ?? Infinity, s.epoch + s.duration,
         arc?.start??Infinity,active?this.#bundle.program.thrustArcs![active.index].end:Infinity,
+        ...(active?.law.steering?.keys.map(k=>active.law.epoch+k.offset).filter(epoch=>epoch>n.t)??[]),
         active?.law.depletionEpoch??Infinity,(active?.law.capEpoch??-Infinity)>n.t?active!.law.capEpoch!:Infinity);
       if (!this.#coast(end)) break;
       if (end === grid) this.#last().nextGridIndex++;
@@ -307,7 +309,7 @@ export class Runner {
     if(logistics && n.activeThrust)logistics.fuelUsed+=propagated.fuelUsed!-n.fuelUsed!;
     const active=n.activeThrust,arc=active?this.#bundle.program.thrustArcs![active.index]:undefined;
     return { t, ...propagated,y, burnCursor: n.burnCursor, status: n.status, detail: n.detail, ...(logistics ? {logistics} : {}),
-      ...(active && n.status==='running'?{thrust:{id:arc!.id,force:thrustAt(active.law,t),acceleration:thrustAt(active.law,t)/massAt(active.law,t)*norm(active.law.direction),direction:[...active.law.direction] as [number,number,number]}}:{}) };
+      ...(active && n.status==='running'?{thrust:{id:arc!.id,force:thrustAt(active.law,t),acceleration:thrustAt(active.law,t)/massAt(active.law,t)*norm(directionAt(active.law,t-active.law.epoch)),direction:directionAt(active.law,t-active.law.epoch)}}:{}) };
   }
   advanceTo(t: number): Sample { const result = this.sample(t); this.#requestedEpoch = t; return result; }
   advance(dt: number): Sample {

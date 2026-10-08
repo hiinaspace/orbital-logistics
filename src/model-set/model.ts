@@ -1,3 +1,4 @@
+import {directionAt} from '../sim/steering';
 import { Runner, type LedgerEntry, type Sample, type EventBoundary } from '../sim/runner';
 import {resourcesAt,type ResourceAnchor,type Depot} from '../traffic/resources';
 import {portState} from '../sim/logistics';
@@ -110,7 +111,7 @@ export function prepareSet(value: ModelSet): SetRun {
         if(count>16384)throw new Error('Surface display flight exceeds sample budget');
         return Array.from({length:count+1},(_,i)=>departure.t+(e.t-departure.t)*i/count);
       }) : [];
-    const epochs = [...new Set([...flightTimes,...launchTimes,...Array.from({length: 2049}, (_, i) => s.epoch + s.duration * i / 2048), ...ledger.map(e => e.t)])].sort((a, b) => a - b);
+    const epochs = [...new Set([...flightTimes,...launchTimes,...Array.from({length: 2049}, (_, i) => s.epoch + s.duration * i / 2048), ...ledger.map(e => e.t),...(v.bundle.program.thrustArcs??[]).flatMap(a=>a.steering?.keys.map(k=>a.start+k.offset)??[])])].sort((a, b) => a - b);
     if(epochs.length>32768)throw new Error('Surface display sample budget exceeded');
     return {...v,id:s.ship.id,ship:s.ship,ports:s.logistics?.ports??[],cargoCapacity:s.logistics?.cargoCapacity??s.ship.cargoMass,arcs:v.bundle.program.thrustArcs??[],continuousFuel:v.bundle.program.thrustArcs!==undefined, portSamples:{} as PortSamples, samples: epochs.map(t => runner.sample(t)), ledger, boundaries:runner.eventBoundaries};
   });
@@ -144,13 +145,14 @@ export function sampleVessel(v: VesselView, t: number): ViewSample {
     sample.fuelUsed=a.fuelUsed+u*(endpoint.fuelUsed!-a.fuelUsed);
     if(sample.logistics)sample.logistics.fuelUsed=a.logistics!.fuelUsed+u*(endpoint.logistics!.fuelUsed-a.logistics!.fuelUsed);
   }
-  // Throttle/heading are piecewise constant; mass and therefore force/acceleration
-  // vary smoothly. These are drawing values, never a target or propagation origin.
+  // Throttle is fixed per arc; steering uses the same physical direction law.
+  // Mass and therefore force/acceleration vary smoothly. These are drawing values, never a target or propagation origin.
   if(sample.thrust) {
     const engine=v.ship.engine!,arc=v.arcs.find(a=>a.id===sample.thrust!.id)!;
     const mass=v.ship.dryMass+(sample.logistics?.cargoMass??v.ship.cargoMass)+sample.propellant;
     sample.thrust.force=Math.min(engine.maxThrust*arc.throttle,(engine.maxAcceleration??Infinity)*mass);
-    sample.thrust.acceleration=sample.thrust.force/mass*Math.hypot(...arc.direction);
+    sample.thrust.direction=directionAt(arc,t-arc.start);
+    sample.thrust.acceleration=sample.thrust.force/mass*Math.hypot(...sample.thrust.direction);
   }
   return sample;
 }

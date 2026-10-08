@@ -11,7 +11,9 @@ import surfaceAscent from '../fixtures/model-sets/selene-ascent.json';
 import surfaceReturn from '../fixtures/model-sets/selene-return.json';
 import trafficDefinition from '../fixtures/traffic/orison-service.json';
 import surfaceService from '../fixtures/traffic/selene-service.json';
+import steered from '../fixtures/model-sets/orison-steered.json';
 import crossingPlanes from '../fixtures/model-sets/crossing-planes.json';
+import {directionAt} from './sim/steering';
 import {cameraPoint,cameraVector,orient,orbit,pan,zoom,occluder,visibleSegment,type Camera,type CameraPreset,type ScreenPoint,type Sphere} from './model-set/camera';
 import {TrafficViewStore} from './traffic/view';
 import type {TrafficDefinition} from './traffic/planner';
@@ -21,7 +23,7 @@ import type {State} from './sim/schema';
 import {displayPortState,portsOf, sampleVessel, setEvents, stockAt, type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
-const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,crossingPlanes] as ModelSet[];
+const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,crossingPlanes,steered] as ModelSet[];
 const trafficSets=[trafficDefinition,surfaceService] as unknown as TrafficDefinition[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
@@ -31,7 +33,7 @@ document.body.innerHTML = `
   <header><h1>Orbital Logistics</h1><select id="set" aria-label="Model set">${[...sets,...trafficSets].map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><span id="load-status" role="status">Preparing scene…</span></header>
   <div class="workspace">
     <section class="scene" aria-label="Orbital viewer">
-      <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><label>View <select id="camera-view" aria-label="Camera view"><option value="top">Top</option><option value="oblique">3D</option><option value="front">Front</option><option value="side">Side</option><option value="custom" hidden>Custom</option></select></label><button id="drag-mode" title="Drag to orbit · Shift-drag to pan" aria-pressed="false">Orbit</button><button id="fit" title="Fit the scene (F)">Fit</button><button id="launch-view" hidden>Surface view</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
+      <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><label>View <select id="camera-view" aria-label="Camera view"><option value="top">Top</option><option value="oblique">3D</option><option value="front">Front</option><option value="side">Side</option><option value="custom" hidden>Custom</option></select></label><button id="drag-mode" title="Drag to orbit · Shift-drag to pan" aria-pressed="false">Orbit</button><button id="fit" title="Fit the scene (F)">Fit</button><button id="launch-view" hidden>Surface view</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<label><input type="checkbox" id="see-through">See-through bodies</label><button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
       <div class="viewport"><canvas id="space" tabindex="0" aria-label="Orbital traffic. Drag to pan, scroll to zoom, click a ship or station to inspect."></canvas></div>
       <div id="timelines" aria-label="Ship activity timelines"></div>
       <div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><label class="speed-control"><input id="speed" type="range" min="-12" max="4" step="0.01" value="0" aria-label="Playback speed" aria-valuetext="1×"><output id="speed-value">1×</output></label><input id="time" type="range" min="0" max="64" value="0" step="0.001" aria-label="Simulation time"><output id="clock">0.00</output><button id="live" hidden>Live</button><label class="replay"><input type="checkbox" id="replay" title="Rewind the prepared scene at the end">Replay</label></div>
@@ -46,7 +48,7 @@ let traffic:TrafficViewStore|undefined,pending=false,sequence=0,requestedTarget=
 let events: SetEvent[] = [], selected = '', frame = 'inertial', t = 0, playing = false;
 let ready = false, width = 900, height = 600;
 const camera:Camera={yaw:0,pitch:Math.PI/2,center:[0,0,0],scale:100};
-let cameraPreset:CameraPreset|'custom'='top',panMode=false,spheres:Sphere[]=[];
+let cameraPreset:CameraPreset|'custom'='top',panMode=false,spheres:Sphere[]=[],seeThroughBodies=false;
 let lastFrame = performance.now(), lastPanel = 0, playbackRate = 1;
 let layers = {orbits: true, trails: true, plan: true, labels: true};
 let savedLayers = {...layers}, cleared = false;
@@ -233,12 +235,12 @@ function publishState() {
   $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, frame, selected, layers, traffic:traffic?{frontier:traffic.frontier,oldest:traffic.oldest,pending,sequence,live:liveMode,stats:run?.traffic?.stats,halt:traffic.halt,error:liveError}:undefined,
     ships: run?.vessels.map(v => ({id: v.id, ...sampleVessel(v, t), screen: project(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),occludedBy:occluder(project3(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),spheres)?.id})),
     labels:placedLabels.map(({id,anchor,alpha,left,top})=>({id,anchor,alpha,left,top})),
-    stocks: run ? stockAt(run, t) : [], events, thrustWhiskers, camera: {...camera,preset:cameraPreset,panMode}, hits});
+    stocks: run ? stockAt(run, t) : [], events, thrustWhiskers, camera: {...camera,preset:cameraPreset,panMode}, seeThroughBodies, hits});
 }
 function loadSet(id: string) {
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
-  labelLayout.reset();placedLabels=[];hovered='';cameraPreset=id==='crossing-planes'?'oblique':'top';orient(camera,cameraPreset);panMode=false;cameraControls();
+  labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered'].includes(id)?'oblique':'top';orient(camera,cameraPreset);panMode=false;cameraControls();
   worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=true;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
   $('load-status').textContent = 'Preparing scene…';
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
@@ -321,10 +323,10 @@ function draw() {
   hits = [];thrustWhiskers=[];
   const scenario = run.world;
   const labelRequests:Label[]=[];
-  spheres=scenario.bodies.map(body=>({id:body.id,point:project3(bodyState(body,t),t),radius:Math.max(7,body.radius*camera.scale)}));
+  spheres=seeThroughBodies?[]:scenario.bodies.map(body=>({id:body.id,point:project3(bodyState(body,t),t),radius:Math.max(7,body.radius*camera.scale)}));
   for (const body of [...scenario.bodies].sort((a,b)=>project3(bodyState(a,t),t)[2]-project3(bodyState(b,t),t)[2])) {
     const p = project(bodyState(body, t), t), r = Math.max(7, body.radius * camera.scale);
-    ctx.beginPath(); ctx.arc(...p, r, 0, Math.PI * 2); ctx.fillStyle = '#192a37'; ctx.fill(); ctx.strokeStyle = '#445c6e'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.beginPath(); ctx.arc(...p, r, 0, Math.PI * 2); ctx.fillStyle = '#192a37';ctx.globalAlpha=seeThroughBodies?.18:1;ctx.fill();ctx.globalAlpha=seeThroughBodies?.45:1;ctx.strokeStyle = '#445c6e'; ctx.lineWidth = 1; ctx.stroke();ctx.globalAlpha=1;
     if (selected === body.id) { ctx.beginPath(); ctx.arc(...p, r + 5, 0, Math.PI * 2); ctx.strokeStyle = '#b2c6d2'; ctx.stroke(); }
     if(!occluder(project3(bodyState(body,t),t),spheres.filter(s=>s.id!==body.id)))label(body.id, body.id === 'primary' ? 'Planet' : body.id === 'moon' ? 'Selene' : body.id, p[0] + r, p[1], colors.body);
     hits.push({id:body.id,name:body.id,x:p[0],y:p[1],depth:project3(bodyState(body,t),t)[2],radius:r});
@@ -378,7 +380,7 @@ function draw() {
         const epoch=arc.start+(i+.5)/count*(arc.end-arc.start);
         if(epoch<t || epoch>stop)continue;
         const sample=sampleVessel(v,epoch),force=sample.thrust?.force??0;
-        const point=project3(sample.y,epoch),d=cameraVector(camera,transformDirection(run,arc.direction,epoch,frame)),n=Math.hypot(d[0],d[1]);
+        const point=project3(sample.y,epoch),d=cameraVector(camera,transformDirection(run,directionAt(arc,epoch-arc.start),epoch,frame)),n=Math.hypot(d[0],d[1]);
         if(n<1e-10 || force<=0)continue;
         // Exhaust-side whiskers share the ship's burn schematic convention.
         // A visibility floor and square-root scale show small burns without
@@ -465,6 +467,7 @@ $<HTMLInputElement>('time').oninput = e => seek(Number((e.target as HTMLInputEle
 for (const key of Object.keys(layers) as (keyof typeof layers)[]) {
   $<HTMLInputElement>(`layer-${key}`).onchange = e => { layers[key] = (e.target as HTMLInputElement).checked; cleared = false; $('clear-view').setAttribute('aria-pressed', 'false'); updatePanels(); };
 }
+$<HTMLInputElement>('see-through').onchange=e=>{seeThroughBodies=(e.target as HTMLInputElement).checked;draw();updatePanels();};
 $('clear-view').onclick = () => {
   if (!cleared) {savedLayers = {...layers}; layers = {orbits: false, trails: false, plan: false, labels: false};}
   else layers = {...savedLayers};
