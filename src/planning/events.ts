@@ -1,3 +1,6 @@
+import {burnMagnitude} from '../sim/burns';
+import {distance, relativeSpeed, position, velocity, subtract, dot} from '../sim/vectors';
+import {validateBundle} from '../sim/schema';
 import { bodyState, rk4 } from '../sim/dynamics';
 import { Runner, type CoastSegment } from '../sim/runner';
 import type { Bundle, State } from '../sim/schema';
@@ -8,17 +11,18 @@ export interface Encounter {
 }
 export interface Diagnostics { apsides: Encounter[]; closest: Encounter; apsidesUnique: boolean }
 export function inspectEvents(bundle: Bundle, runner: Runner, bodyId: string, horizon: number, segments = runner.coastSegments(horizon)): Diagnostics {
+  bundle=validateBundle(bundle);
   const scenario = bundle.scenario, body = scenario.bodies.find(b => b.id === bodyId);
-  const impulses = bundle.program.burns.filter(b => Math.hypot(b.radial, b.transverse) > 0);
+  const impulses = bundle.program.burns.filter(b => burnMagnitude(b) > 0);
   if (!body) throw new Error('Unknown encounter body');
   function inspect(t: number, y: State, kind: Encounter['kind']): Encounter {
-    const b = bodyState(body!, t), distance = Math.hypot(y[0] - b[0], y[1] - b[1]);
-    return { bodyId, kind, t, distance, altitude: distance - body!.radius,
-      relativeSpeed: Math.hypot(y[2] - b[2], y[3] - b[3]) };
+    const b = bodyState(body!, t), separation = distance(y,b);
+    return { bodyId, kind, t, distance:separation, altitude: separation - body!.radius,
+      relativeSpeed: relativeSpeed(y,b) };
   }
   function radialSpeed(t: number, y: State): number {
-    const b = bodyState(body!, t), dx = y[0] - b[0], dy = y[1] - b[1];
-    return (dx * (y[2] - b[2]) + dy * (y[3] - b[3])) / Math.hypot(dx, dy);
+    const b=bodyState(body!,t), r=subtract(position(y),position(b));
+    return dot(r,subtract(velocity(y),velocity(b)))/distance(y,b);
   }
   function root(segment: CoastSegment, g0: number): number {
     let lo = segment.t0, hi = segment.t1;

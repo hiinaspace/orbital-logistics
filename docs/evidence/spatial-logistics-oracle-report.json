@@ -1,0 +1,128 @@
+[
+  {
+    "case": "inclined-paid-round-trip",
+    "terminal": {
+      "t": 24,
+      "status": "horizon",
+      "fuel": 0.168596415275475,
+      "fuelUsed": 0.131403584724525,
+      "cargo": 0.0,
+      "stocks": {
+        "Home": [
+          0.8,
+          0.4
+        ],
+        "Depot": [
+          0.2,
+          0.15
+        ]
+      },
+      "captures": [
+        {
+          "t": 0,
+          "position": 0.0,
+          "velocity": 0.0
+        },
+        {
+          "t": 4.629730790872742,
+          "position": 7.886444854236953e-14,
+          "velocity": 6.246662380706478e-14
+        },
+        {
+          "t": 19.626757036464838,
+          "position": 2.759395619242019e-14,
+          "velocity": 1.485486730486213e-14
+        }
+      ],
+      "trace": [
+        [
+          0,
+          "dock",
+          "dock-home"
+        ],
+        [
+          0,
+          "transfer-start",
+          "load"
+        ],
+        [
+          0.25,
+          "transfer",
+          "load"
+        ],
+        [
+          0.5,
+          "undock",
+          "leave-home"
+        ],
+        [
+          0.5,
+          "burn",
+          "outbound"
+        ],
+        [
+          4.629730790872742,
+          "burn",
+          "arrival"
+        ],
+        [
+          4.629730790872742,
+          "dock",
+          "dock-depot"
+        ],
+        [
+          4.629730790872742,
+          "transfer-start",
+          "unload-refuel"
+        ],
+        [
+          4.879730790872742,
+          "transfer",
+          "unload-refuel"
+        ],
+        [
+          15.497026245592098,
+          "undock",
+          "leave-depot"
+        ],
+        [
+          15.497026245592098,
+          "burn",
+          "return"
+        ],
+        [
+          19.626757036464838,
+          "burn",
+          "home-arrival"
+        ],
+        [
+          19.626757036464838,
+          "dock",
+          "return-home"
+        ]
+      ],
+      "complete": true,
+      "completedAt": 19.626757036464838
+    },
+    "checks": [
+      {
+        "step": 0.001953125,
+        "position": 1.4939929774978412e-12,
+        "velocity": 8.053486752613626e-13,
+        "oracleRefinement": 6.726796208853863e-12
+      },
+      {
+        "step": 0.0009765625,
+        "position": 1.448474861217095e-13,
+        "velocity": 9.484369354798861e-14,
+        "oracleRefinement": 6.726796208853863e-12
+      },
+      {
+        "step": 0.00048828125,
+        "position": 7.470646102560724e-14,
+        "velocity": 5.927448002901353e-14,
+        "oracleRefinement": 6.726796208853863e-12
+      }
+    ]
+  }
+]

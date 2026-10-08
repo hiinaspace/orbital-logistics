@@ -1,3 +1,5 @@
+import {resolveBurn} from './burns';
+import {distance, relativeSpeed, norm} from './vectors';
 import { bodyState, certifiedCoast, rk4 } from './dynamics';
 import { portState, logisticsResult, copyLogistics, type LogisticsState } from './logistics';
 import { MODEL, parseBundle, validateBundle, type Bundle, type State } from './schema';
@@ -7,15 +9,16 @@ export interface LedgerEntry {
   t: number; kind: 'burn' | 'burn-rejected' | 'collision' | 'unsupported-approach' | 'work-limit' | 'dock' | 'undock' | 'transfer-start' | 'transfer' | 'operation-rejected';
   id: string; deltaV: number; fuelUsed: number; propellantBefore: number; propellantAfter: number;
   portId?: string; cargoBefore?: number; cargoAfter?: number; portCargoBefore?: number; portCargoAfter?: number;
-  portPropellantBefore?: number; portPropellantAfter?: number; detail?: string;
+  portPropellantBefore?: number; portPropellantAfter?: number; detail?: string; positionError?: number;
 }
 export interface Sample {
   t: number; y: State; propellant: number; burnCursor: number; status: Status; detail: string; logistics?: LogisticsState;
 }
+export interface EventBoundary {t: number; before: Sample; after: Sample}
 export interface CoastSegment { t0: number; y0: State; t1: number; y1: State }
 interface Node extends Sample { nextGridIndex: number }
 export interface Snapshot {
-  schemaVersion: 1; modelVersion: typeof MODEL; requestedEpoch: number;
+  schemaVersion: 2; modelVersion: typeof MODEL; requestedEpoch: number;
   anchor: Node; ledger: LedgerEntry[];
 }
 const clone = <T>(value: T): T => structuredClone(value);
@@ -29,8 +32,9 @@ export class Runner {
   readonly #bundle: Bundle;
   #nodes: Node[] = [];
   #ledger: LedgerEntry[] = [];
+  #boundaries: EventBoundary[] = [];
   #requestedEpoch: number;
-  constructor(value: Bundle) {
+  constructor(value: unknown) {
     this.#bundle = validateBundle(value);
     const s = this.#bundle.scenario;
     this.#requestedEpoch = s.epoch;
@@ -39,13 +43,14 @@ export class Runner {
       ...(s.logistics ? {logistics: {operationCursor: 0, cargoMass: s.ship.cargoMass, fuelUsed: 0, ports: s.logistics.ports.map(p => ({id: p.id, cargo: p.cargo, propellant: p.propellant}))}} : {}) });
     for (const body of s.bodies) {
       const b = bodyState(body, s.epoch), y = s.ship.state;
-      if (Math.hypot(y[0] - b[0], y[1] - b[1]) <= body.radius) {
+      if (distance(y,b) <= body.radius) {
         this.#stop('collision', body.id); break;
       }
     }
     this.#applyEvents();
   }
   get bundle(): Bundle { return clone(this.#bundle); }
+  get eventBoundaries(): EventBoundary[] { return clone(this.#boundaries.filter(e=>e.t<=this.current.t)); }
   get retainedNodes(): number { return this.#nodes.length; }
   get ledger(): LedgerEntry[] { return clone(this.#ledger.filter(e => e.t <= this.current.t)); }
   get current(): Sample { return this.sample(this.#requestedEpoch); }
@@ -60,20 +65,23 @@ export class Runner {
     if (n.status !== 'running' || !b || b.t !== n.t) return;
     if (n.logistics?.dockedPortId) { this.#rejectOperation(b.id, 'Undock before a burn'); return; }
     const ref = bodyState(s.bodies.find(body => body.id === b.referenceBodyId)!, n.t);
-    const dx = n.y[0] - ref[0], dy = n.y[1] - ref[1], r = Math.hypot(dx, dy);
-    const deltaV = Math.hypot(b.radial, b.transverse);
+    let dv: [number,number,number];
+    try {dv=resolveBurn(b,n.y,ref);} catch(error) {
+      n.status='burn-rejected'; n.detail=`${b.id}: ${(error as Error).message}`;
+      this.#ledger.push({t:n.t,kind:'burn-rejected',id:b.id,deltaV:0,fuelUsed:0,propellantBefore:n.propellant,propellantAfter:n.propellant});return;
+    }
+    const deltaV = norm(dv);
     const mass = s.ship.dryMass + (n.logistics?.cargoMass ?? s.ship.cargoMass) + n.propellant;
     const used = mass * -Math.expm1(-deltaV / s.ship.exhaustVelocity);
     const before = n.propellant;
-    const vx = n.y[2] + (b.radial * dx - b.transverse * dy) / r;
-    const vy = n.y[3] + (b.radial * dy + b.transverse * dx) / r;
-    if (!Number.isFinite(used + vx + vy) || used > before) {
+    const v = [n.y[3]+dv[0],n.y[4]+dv[1],n.y[5]+dv[2]];
+    if (!Number.isFinite(used) || !v.every(Number.isFinite) || used > before) {
       n.status = 'burn-rejected'; n.detail = b.id;
       this.#ledger.push({ t: n.t, kind: 'burn-rejected', id: b.id, deltaV, fuelUsed: 0,
         propellantBefore: before, propellantAfter: before });
       return;
     }
-    n.y = [n.y[0], n.y[1], vx, vy]; n.propellant -= used; n.burnCursor++;
+    n.y = [n.y[0], n.y[1], n.y[2], v[0],v[1],v[2]]; n.propellant -= used; n.burnCursor++;
     if (n.logistics) n.logistics.fuelUsed += used;
     this.#ledger.push({ t: n.t, kind: 'burn', id: b.id, deltaV, fuelUsed: used,
       propellantBefore: before, propellantAfter: n.propellant });
@@ -83,6 +91,17 @@ export class Runner {
     this.#ledger.push({t: n.t, kind: 'operation-rejected', id, deltaV: 0, fuelUsed: 0, propellantBefore: n.propellant, propellantAfter: n.propellant, detail});
   }
   #applyEvents(): void {
+    const n=this.#last();
+    if(this.#bundle.program.burns[n.burnCursor]?.t!==n.t &&
+      this.#bundle.program.operations?.[n.logistics?.operationCursor??0]?.t!==n.t && n.logistics?.service?.end!==n.t)return;
+    const before=clone(n), cursor=this.#ledger.length;
+    this.#performEvents();
+    if(this.#ledger.length!==cursor) {
+      const sample = ({nextGridIndex: _grid, ...s}: Node): Sample => s;
+      this.#boundaries.push({t:n.t,before:sample(before),after:sample(clone(n))});
+    }
+  }
+  #performEvents(): void {
     const n = this.#last(), s = this.#bundle.scenario, l = n.logistics, spec = s.logistics;
     if (n.status !== 'running') return;
     if (!l || !spec) { this.#applyBurn(); return; }
@@ -102,9 +121,9 @@ export class Runner {
       if (l.service) { this.#rejectOperation(op.id, `Service ${l.service.id} finishes at t ${l.service.end.toFixed(3)}`); return; }
       if (op.kind === 'dock') {
         if (l.dockedPortId) { this.#rejectOperation(op.id, `Already docked at ${l.dockedPortId}`); return; }
-        const y = portState(port, n.t), distance = Math.hypot(n.y[0] - y[0], n.y[1] - y[1]), speed = Math.hypot(n.y[2] - y[2], n.y[3] - y[3]);
-        if (distance > spec.capture.position || speed > spec.capture.velocity) {
-          this.#rejectOperation(op.id, `Capture ${port.id}: miss ${distance.toExponential(2)}, speed ${speed.toExponential(2)}`); return;
+        const y = portState(port, n.t), miss = distance(n.y,y), speed = relativeSpeed(n.y,y);
+        if (miss > spec.capture.position || speed > spec.capture.velocity) {
+          this.#rejectOperation(op.id, `Capture ${port.id}: miss ${miss.toExponential(2)}, speed ${speed.toExponential(2)}`); return;
         }
         const used = (s.ship.dryMass + l.cargoMass + n.propellant) * -Math.expm1(-speed / s.ship.exhaustVelocity);
         if (used > n.propellant || !Number.isFinite(used)) { this.#rejectOperation(op.id, 'Not enough fuel for capture residual'); return; }
@@ -112,7 +131,7 @@ export class Runner {
         // Explicit constrained-port interface: bounded position attachment and a
         // fully charged residual velocity impulse. There is no free capture burn.
         n.y = y; l.dockedPortId = port.id;
-        this.#ledger.push({t: n.t, kind: 'dock', id: op.id, portId: port.id, deltaV: speed, fuelUsed: used, propellantBefore: before, propellantAfter: n.propellant});
+        this.#ledger.push({t: n.t, kind: 'dock', id: op.id, portId: port.id, positionError:miss, deltaV: speed, fuelUsed: used, propellantBefore: before, propellantAfter: n.propellant});
       } else if (l.dockedPortId !== port.id) { this.#rejectOperation(op.id, `Dock at ${port.id} first`); return; }
       else if (op.kind === 'undock') {
         delete l.dockedPortId;
@@ -209,13 +228,14 @@ export class Runner {
   reset(): Sample { this.#requestedEpoch = this.#bundle.scenario.epoch; return this.current; }
   snapshot(): Snapshot {
     const current = this.current, anchor = this.#nodes[this.#index(current.t)];
-    return clone({ schemaVersion: 1, modelVersion: MODEL, requestedEpoch: this.#requestedEpoch,
+    return clone({ schemaVersion: 2, modelVersion: MODEL, requestedEpoch: this.#requestedEpoch,
       anchor, ledger: this.#ledger.filter(e => e.t <= anchor.t) });
   }
   // Saved programs are durable. M0 reload validates a snapshot by forward replay;
   // it never trusts a supplied state, cursor or ledger as authoritative physics.
   static restore(bundle: Bundle, value: unknown): Runner {
     if (!value || typeof value !== 'object') throw new Error('Invalid snapshot');
+    if ((value as Snapshot).schemaVersion !== 2 || (value as Snapshot).modelVersion !== MODEL) throw new Error('Unsupported snapshot version; recover the scenario/program and replay without the old snapshot');
     const snapshot = value as Snapshot, runner = new Runner(bundle);
     runner.advanceTo(snapshot.requestedEpoch);
     if (orderedJSON(runner.snapshot()) !== orderedJSON(value)) throw new Error('Snapshot does not match deterministic replay');

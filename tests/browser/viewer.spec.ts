@@ -97,3 +97,19 @@ test('narrow layout keeps the scene and transport usable without horizontal over
   expect(dimensions.scroll).toBeLessThanOrEqual(dimensions.width);
   await page.screenshot({path:'test-results/model-set-narrow.png',fullPage:true});
 });
+
+
+test('labels retain anchors through scrub, reversal, frames, pause and selection',async({page})=>{
+  await seek(page,6);const initial=await state(page),anchors=new Map(initial.labels.map((l:{id:string;anchor:number})=>[l.id,l.anchor]));
+  for(const t of [6.01,6.2,6.1,6,8,4,6]) {
+    await seek(page,t);
+    for(const l of (await state(page)).labels)if(anchors.has(l.id))expect(l.anchor).toBe(anchors.get(l.id));
+  }
+  await page.getByLabel('Reference frame').selectOption('rotating');
+  await expect.poll(async()=> (await state(page)).frame).toBe('rotating');
+  for(const l of (await state(page)).labels)if(anchors.has(l.id))expect(l.anchor).toBe(anchors.get(l.id));
+  await page.locator('#fleet [data-object="Tern"]').click();
+  await expect.poll(async()=> (await state(page)).labels.find((l:{id:string})=>l.id==='Tern')?.alpha).toBe(1);
+  const before=(await state(page)).labels.map((l:{id:string;anchor:number;left:number;top:number})=>[l.id,l.anchor,l.left,l.top]);
+  await expect.poll(async()=> (await state(page)).labels.map((l:{id:string;anchor:number;left:number;top:number})=>[l.id,l.anchor,l.left,l.top])).toEqual(before);
+});

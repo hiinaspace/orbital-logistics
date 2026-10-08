@@ -1,0 +1,118 @@
+[
+  {
+    "case": "inclined-analytic",
+    "checks": [
+      {
+        "step": 0.0078125,
+        "position": 5.707034213055055e-10,
+        "velocity": 5.503121532964387e-10,
+        "oracleTightening": 4.401464487694335e-12,
+        "fuel": 0.0,
+        "eventLeftState": 0.0
+      },
+      {
+        "step": 0.00390625,
+        "position": 3.510279268811359e-11,
+        "velocity": 3.374261679877497e-11,
+        "oracleTightening": 4.401464487694335e-12,
+        "fuel": 0.0,
+        "eventLeftState": 0.0
+      },
+      {
+        "step": 0.001953125,
+        "position": 2.2112177894252914e-12,
+        "velocity": 2.1244244495753543e-12,
+        "oracleTightening": 4.401464487694335e-12,
+        "fuel": 0.0,
+        "eventLeftState": 0.0
+      }
+    ]
+  },
+  {
+    "case": "noncoplanar-moving-sources",
+    "checks": [
+      {
+        "step": 0.0078125,
+        "position": 2.254222937634088e-09,
+        "velocity": 9.062448670947094e-10,
+        "oracleTightening": 6.913058158933303e-12,
+        "fuel": 0.0,
+        "eventLeftState": 0.0
+      },
+      {
+        "step": 0.00390625,
+        "position": 1.397005453350824e-10,
+        "velocity": 5.658131949484079e-11,
+        "oracleTightening": 6.913058158933303e-12,
+        "fuel": 0.0,
+        "eventLeftState": 0.0
+      },
+      {
+        "step": 0.001953125,
+        "position": 8.627559294085959e-12,
+        "velocity": 3.5182625525547565e-12,
+        "oracleTightening": 6.913058158933303e-12,
+        "fuel": 0.0,
+        "eventLeftState": 0.0
+      }
+    ]
+  },
+  {
+    "case": "spatial-reference-burn",
+    "checks": [
+      {
+        "step": 0.0078125,
+        "position": 1.998534028111793e-09,
+        "velocity": 8.451005369685656e-10,
+        "oracleTightening": 6.0870828392694855e-12,
+        "fuel": 0.0,
+        "eventLeftState": 1.7167865579485799e-12
+      },
+      {
+        "step": 0.00390625,
+        "position": 1.24511529893905e-10,
+        "velocity": 5.278632232176945e-11,
+        "oracleTightening": 6.0870828392694855e-12,
+        "fuel": 0.0,
+        "eventLeftState": 1.1168633941491664e-13
+      },
+      {
+        "step": 0.001953125,
+        "position": 7.713971227898498e-12,
+        "velocity": 3.2831891951458124e-12,
+        "oracleTightening": 6.0870828392694855e-12,
+        "fuel": 0.0,
+        "eventLeftState": 1.0821400260343667e-14
+      }
+    ]
+  },
+  {
+    "case": "cartesian-burn",
+    "checks": [
+      {
+        "step": 0.0078125,
+        "position": 6.194001076959051e-09,
+        "velocity": 2.1753551389300163e-09,
+        "oracleTightening": 1.2454418937345183e-11,
+        "fuel": 0.0,
+        "eventLeftState": 3.808153067862101e-12
+      },
+      {
+        "step": 0.00390625,
+        "position": 3.783114529592872e-10,
+        "velocity": 1.3510950169483229e-10,
+        "oracleTightening": 1.2454418937345183e-11,
+        "fuel": 0.0,
+        "eventLeftState": 2.4225638801604514e-13
+      },
+      {
+        "step": 0.001953125,
+        "position": 2.3245807856563932e-11,
+        "velocity": 8.392133350088567e-12,
+        "oracleTightening": 1.2454418937345183e-11,
+        "fuel": 0.0,
+        "eventLeftState": 1.7014416881008125e-14
+      }
+    ]
+  }
+]

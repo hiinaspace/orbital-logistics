@@ -30,7 +30,7 @@ test('bounded shooting recovers an independently analytic Hohmann rendezvous and
   const runner = new Runner({ scenario: bundle.scenario, program: p.program }), target = new Runner(targetBundle(bundle));
   const a = runner.sample(spec.arrivalEpoch), b = target.sample(spec.arrivalEpoch);
   assert.ok(Math.hypot(a.y[0] - b.y[0], a.y[1] - b.y[1]) < 1e-7);
-  assert.ok(Math.hypot(a.y[2] - b.y[2], a.y[3] - b.y[3]) < 1e-12);
+  assert.ok(Math.hypot(a.y[3] - b.y[3], a.y[4] - b.y[4]) < 1e-12);
   runner.advanceTo(bundle.scenario.duration); assert.equal(runner.ledger.length, 2);
   const ship = bundle.scenario.ship, analyticFuel = (ship.dryMass + ship.cargoMass + ship.propellant) * -Math.expm1(-p.totalDv / ship.exhaustVelocity);
   assert.ok(Math.abs(p.propellantUsed - analyticFuel) < 1e-14);

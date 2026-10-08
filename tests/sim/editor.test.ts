@@ -39,15 +39,15 @@ test('editing and duplicate-epoch validation are atomic', () => {
 
 test('canonical event brackets exclude burn velocity jumps and circular sign noise', () => {
   const bundle = structuredClone(orbit);
-  bundle.program.burns.push({ id: 'burn', t: 1.137, referenceBodyId: 'primary', basis: 'radial-transverse-ccw-v1', radial: 0, transverse: 0.1 });
+  bundle.program.burns.push({ id: 'burn', t: 1.137, referenceBodyId: 'primary', basis: 'radial-transverse-normal-v2', orientationAxis: [0,0,1], normal:0, radial: 0, transverse: 0.1 });
   const run = new Runner(bundle), result = inspectEvents(bundle, run, 'primary', 8);
   assert.equal(result.apsides.length, 1); assert.equal(result.apsides[0].kind, 'apoapsis');
   assert.ok(result.apsides[0].t > 1.137);
   const circular = inspectEvents(orbit, new Runner(orbit), 'primary', 8);
   assert.deepEqual(circular.apsides, []); assert.equal(circular.apsidesUnique, false);
   const segment = run.coastSegments(8).find(s => s.t1 === 1.137)!;
-  assert.ok(Math.abs(Math.hypot(segment.y1[2], segment.y1[3]) - 1) < 1e-10);
-  assert.ok(Math.abs(Math.hypot(run.sample(1.137).y[2], run.sample(1.137).y[3]) - 1.1) < 1e-10);
+  assert.ok(Math.abs(Math.hypot(segment.y1[3], segment.y1[4]) - 1) < 1e-10);
+  assert.ok(Math.abs(Math.hypot(run.sample(1.137).y[3], run.sample(1.137).y[4]) - 1.1) < 1e-10);
 });
 
 test('apsis time, radius and speed converge against independent analytic orbit', () => {
@@ -76,8 +76,8 @@ test('snap keeps an explicit epoch and reports upstream changes, missing and amb
   assert.equal(editor.draft.burns.find(b => b.id === second)!.t, epoch);
   assert.throws(() => editor.execute(), /Re-snap/);
   editor.updateBurn(first, { transverse: 0 }); assert.equal(editor.snapState(second), 'missing');
-  const b = fixture(); b.program.burns = [{ id: 'a', t: 0, referenceBodyId: 'primary', basis: 'radial-transverse-ccw-v1', radial: 0, transverse: 0.1 },
-    { id: 'b', t: 15, referenceBodyId: 'primary', basis: 'radial-transverse-ccw-v1', radial: 0, transverse: 0 }];
+  const b = fixture(); b.program.burns = [{ id: 'a', t: 0, referenceBodyId: 'primary', basis: 'radial-transverse-normal-v2', orientationAxis: [0,0,1], normal:0, radial: 0, transverse: 0.1 },
+    { id: 'b', t: 15, referenceBodyId: 'primary', basis: 'radial-transverse-normal-v2', orientationAxis: [0,0,1], normal:0, radial: 0, transverse: 0 }];
   const multiple = new EditorSession(b), firstApo = multiple.snapCandidates('b').find(e => e.kind === 'apoapsis')!;
   multiple.snap('b', firstApo, [0, 16]);
   // The selected burn is excluded from its own prefix; two reference apsides qualify.
@@ -120,7 +120,7 @@ test('a zero impulse does not erase a continuous apsis and a radial jump does no
   const result = predict(editor.bundle, 0);
   assert.ok(result.diagnostics.primary.apsides.some(e => e.kind === 'apoapsis' && Math.abs(e.t - event.t) < 1e-7));
   const bundle = fixture(analytic(0, 0.6));
-  bundle.program.burns = [{ id: 'radial-jump', t: 2, referenceBodyId: 'primary', basis: 'radial-transverse-ccw-v1', radial: -1, transverse: 0 }];
+  bundle.program.burns = [{ id: 'radial-jump', t: 2, referenceBodyId: 'primary', basis: 'radial-transverse-normal-v2', orientationAxis: [0,0,1], normal:0, radial: -1, transverse: 0 }];
   const diagnostics = inspectEvents(bundle, new Runner(bundle), 'primary', 6);
   assert.ok(diagnostics.apsides.every(e => Math.abs(e.t - 2) > 1e-5));
 });
@@ -130,8 +130,8 @@ test('sample-time frame transformations are independent of view epoch and burn a
   const moon = bodyState(binary.scenario.bodies[1], t);
   const relative = frameState(binary.scenario, y, t, 'moon', y);
   assert.deepEqual(relative, y.map((v, i) => v - moon[i]));
-  assert.deepEqual(frameState(binary.scenario, moon, t, 'moon', y), [0, 0, 0, 0]);
-  assert.deepEqual(frameState(binary.scenario, y, t, 'ship', y), [0, 0, 0, 0]);
+  assert.deepEqual(frameState(binary.scenario, moon, t, 'moon', y), [0, 0, 0, 0, 0, 0]);
+  assert.deepEqual(frameState(binary.scenario, y, t, 'ship', y), [0, 0, 0, 0, 0, 0]);
   assert.equal(run.serialize(), before);
   const camera = { center: [0.2, 0.3] as [number, number], scale: 500 };
   assert.ok(error(unproject(project([1, 2], camera), camera), [1, 2]) < 1e-14);

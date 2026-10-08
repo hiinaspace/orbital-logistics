@@ -37,7 +37,7 @@ content/model directions, not implemented capabilities or current prototype task
 ## Execution and presentation
 
 Each vessel retains a versioned scenario/program JSON. A worker runs every complete
-program through the unchanged canonical Runner and rejects truncated/failed runs.
+program through the canonical Runner and rejects truncated/failed runs.
 The logistics schema now admits two to eight circular ports around a fixed primary.
 The viewer set contains ship identity/color/cargo label, station roles/berth counts,
 and a chosen rotating frame. All vessels must have identical world/port data and
@@ -83,8 +83,10 @@ Dynamic flight commands and a periodic programming language are not prerequisite
 
 ## A coherent 3D migration
 
-Keep this initial viewer and validated physics planar. A meaningful early 3D engine
-slice would migrate the whole physical contract together, while retaining a 2D view:
+Implemented 2026-10-08 after user-requested Astra review. The engine now uses a
+canonical six-state contract with explicit legacy conversion; the viewer keeps its
+schematic XY projection. See [spatial evidence](evidence/spatial-foundation.md). The
+validated migration covers:
 
 1. Versioned six-component state with an explicit v1 planar conversion; 3D source and
    port rails with plane/orientation; full-distance force and surface-clearance checks.

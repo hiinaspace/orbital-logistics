@@ -1,0 +1,10 @@
+{
+  "cli": "0.153.4",
+  "model": "gpt-6-astra",
+  "reasoningEffort": "xhigh",
+  "sessionId": "01a11a6c-4078-7612-b11a-934ca727d05a",
+  "exitCode": 0,
+  "originalLogSha256": "15ddfbcb2a000a2da373ae7fd83a2c23b28990690dc051e29344d41715db88be",
+  "reviewSha256": "ca04903a38b9599ef5780dab0bec290400485e4239ca0cb16f55c921b17c834b",
+  "rawLogLifetime": "Removed after transport verification and synthesis; original Codex CLI session journal retained by CLI."
+}

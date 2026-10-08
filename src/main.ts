@@ -1,4 +1,5 @@
 import './style.css';
+import {StableLabels,type Label,type PlacedLabel} from './view/labels';
 import freight from '../fixtures/model-sets/orison-freight.json';
 import lunar from '../fixtures/model-sets/lunar-loop.json';
 import {bodyState} from './sim/dynamics';
@@ -33,6 +34,7 @@ let lastFrame = performance.now(), lastPanel = 0;
 let layers = {orbits: true, trails: true, plan: true, labels: true};
 let savedLayers = {...layers}, cleared = false;
 let hits: {id: string; name: string; x: number; y: number}[] = [];
+const labelLayout=new StableLabels();let placedLabels:PlacedLabel[]=[],hovered='';
 const colors = {body: '#7893a4', station: '#c7d5de'};
 function html(id: string, value: string) { if ($(id).innerHTML !== value) $(id).innerHTML = value; }
 const end = () => {const s = run!.vessels[0].bundle.scenario; return s.epoch + s.duration;};
@@ -126,6 +128,8 @@ function updatePanels() {
     $('object-status').textContent = status(v);
     const used = v.ledger.filter(e => e.t <= t).reduce((sum, e) => sum + e.fuelUsed, 0);
     $('readouts').innerHTML = `<div><dt>${esc(v.cargo)}</dt><dd>${number(cargo)} / ${number(v.bundle.scenario.logistics?.cargoCapacity ?? cargo)}</dd></div><div><dt>Propellant</dt><dd>${number(s.propellant)} / ${number(v.bundle.scenario.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${number(used)}</dd></div>`;
+    const local=transform(run,s.y,t,frame);
+    if(Math.abs(local[2])+Math.abs(local[5])>1e-9)$('readouts').innerHTML+=`<div><dt>Depth</dt><dd>${number(local[2])}</dd></div><div><dt>Vertical velocity</dt><dd>${number(local[5])}</dd></div>`;
     const cursor = document.querySelector<SVGPathElement>('.budget-cursor');
     cursor?.setAttribute('transform', `translate(${4 + (t - start()) / (end() - start()) * 232},0)`);
     upcoming = events.find(e => e.vessel === selected && e.t > t + 1e-9 && e.kind !== 'burn');
@@ -155,10 +159,12 @@ function updatePanels() {
 function publishState() {
   $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, frame, selected, layers,
     ships: run?.vessels.map(v => ({id: v.bundle.scenario.ship.id, ...sampleVessel(v, t), screen: project(sampleVessel(v, t).y, t)})),
+    labels:placedLabels.map(({id,anchor,alpha,left,top})=>({id,anchor,alpha,left,top})),
     stocks: run ? stockAt(run, t) : [], events, camera: {center, scale}, hits});
 }
 function loadSet(id: string) {
   const set = sets.find(s => s.id === id)!;
+  labelLayout.reset();placedLabels=[];hovered='';
   worker?.terminate(); revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
   $('load-status').textContent = 'Preparing scene…';
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
@@ -197,7 +203,7 @@ function draw() {
   if (!run || !ready) return;
   hits = [];
   const scenario = run.vessels[0].bundle.scenario;
-  const labelBoxes: {x: number; y: number; w: number}[] = [];
+  const labelRequests:Label[]=[];
   if (layers.orbits) {
     const orbitEpochs = (period: number) => {
       const duration = Math.min(period, end() - start());
@@ -231,37 +237,36 @@ function draw() {
       path([project(sampleVessel(v, t).y, t), ...v.samples.filter(s => s.t > t && s.t <= stop).map(s => project(s.y, s.t))], '#b5bdc7', 1, 0.28, [3, 5]);
     }
   }
-  function label(text: string, x: number, y: number, color: string) {
+  function label(id: string, text: string, x: number, y: number, color: string) {
     if (!layers.labels) return;
-    ctx.font = '11px ui-sans-serif, system-ui';
-    const w = ctx.measureText(text).width;
-    const offsets = [[13, -10], [13, 19], [-w - 13, -10], [-w - 13, 19], [13, -28], [13, 36]];
-    const offset = offsets.find(([dx, dy]) => labelBoxes.every(b =>
-      x + dx + w + 3 < b.x || x + dx > b.x + b.w + 3 || y + dy < b.y - 14 || y + dy - 12 > b.y + 3)) ?? offsets[0];
-    const lx = x + offset[0], ly = y + offset[1];
-    labelBoxes.push({x: lx, y: ly, w}); ctx.fillStyle = color; ctx.fillText(text, lx, ly);
+    ctx.font='11px ui-sans-serif, system-ui';
+    labelRequests.push({id,text,x,y,color,width:ctx.measureText(text).width,priority:id===selected?100:id===hovered?90:0});
   }
   for (const body of scenario.bodies) {
     const p = project(bodyState(body, t), t), r = Math.max(7, body.radius * scale);
     ctx.beginPath(); ctx.arc(...p, r, 0, Math.PI * 2); ctx.fillStyle = '#192a37'; ctx.fill(); ctx.strokeStyle = '#445c6e'; ctx.lineWidth = 1; ctx.stroke();
     if (selected === body.id) { ctx.beginPath(); ctx.arc(...p, r + 5, 0, Math.PI * 2); ctx.strokeStyle = '#b2c6d2'; ctx.stroke(); }
-    label(body.id === 'primary' ? 'Planet' : body.id === 'moon' ? 'Selene' : body.id, p[0] + r, p[1], colors.body);
+    label(body.id, body.id === 'primary' ? 'Planet' : body.id === 'moon' ? 'Selene' : body.id, p[0] + r, p[1], colors.body);
     hits.push({id: body.id, name: body.id, x: p[0], y: p[1]});
   }
   for (const port of portsOf(run)) {
     const p = project(portState(port, t), t);
     ctx.save(); ctx.translate(...p); ctx.rotate(Math.PI / 4); ctx.strokeStyle = colors.station; ctx.lineWidth = 1.2; ctx.strokeRect(-4, -4, 8, 8); ctx.restore();
     if (selected === port.id) { ctx.beginPath(); ctx.arc(...p, 10, 0, Math.PI * 2); ctx.strokeStyle = '#c7d5de'; ctx.stroke(); }
-    label(port.id, ...p, '#a7bac7'); hits.push({id: port.id, name: port.id, x: p[0], y: p[1]});
+    label(port.id, port.id, ...p, '#a7bac7'); hits.push({id: port.id, name: port.id, x: p[0], y: p[1]});
   }
   for (const v of run.vessels) {
     const state = sampleVessel(v, t), p = project(state.y, t), transformed = transform(run, state.y, t, frame);
-    const angle = Math.atan2(-transformed[3], transformed[2]);
+    const angle = Math.hypot(transformed[3],transformed[4]) > 1e-10 ? Math.atan2(-transformed[4], transformed[3]) : 0;
     ctx.save(); ctx.translate(...p); ctx.rotate(angle); ctx.beginPath(); ctx.moveTo(6, 0); ctx.lineTo(-4, -3.5); ctx.lineTo(-2, 0); ctx.lineTo(-4, 3.5); ctx.closePath(); ctx.fillStyle = v.color; ctx.fill(); ctx.restore();
     if (selected === v.bundle.scenario.ship.id) { ctx.beginPath(); ctx.arc(...p, 11, 0, Math.PI * 2); ctx.strokeStyle = v.color; ctx.globalAlpha = 0.65; ctx.stroke(); ctx.globalAlpha = 1; }
-    if (!state.logistics?.dockedPortId) label(v.name, ...p, v.color);
+    if (!state.logistics?.dockedPortId || selected===v.bundle.scenario.ship.id) label(v.bundle.scenario.ship.id, v.name, ...p, v.color);
     hits.push({id: v.bundle.scenario.ship.id, name: v.name, x: p[0], y: p[1]});
   }
+  placedLabels=labelLayout.layout(labelRequests,performance.now());
+  ctx.font='11px ui-sans-serif, system-ui';
+  for(const l of placedLabels){ctx.globalAlpha=l.alpha;ctx.fillStyle=l.color;ctx.fillText(l.text,l.left,l.top);}
+  ctx.globalAlpha=1;
   ctx.fillStyle = '#4c6477'; ctx.font = '10px ui-monospace, monospace';
   const unit = 10 ** Math.floor(Math.log10(80 / scale));
   const bar = unit * scale; ctx.fillRect(20, height - 22, bar, 1); ctx.fillText(`${unit} u`, 20, height - 29);
@@ -290,7 +295,10 @@ new ResizeObserver(() => {
 let drag: {x: number; y: number; center: [number, number]; moved: boolean} | undefined;
 canvas.onpointerdown = e => { canvas.focus(); canvas.setPointerCapture(e.pointerId); drag = {x: e.clientX, y: e.clientY, center: [...center], moved: false}; $('hit-menu').hidden = true; };
 canvas.onpointermove = e => {
-  if (!drag) return;
+  if (!drag) {
+    const rect=canvas.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;
+    hovered=hits.find(h=>Math.hypot(h.x-x,h.y-y)<14)?.id??'';return;
+  }
   const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
   drag.moved ||= Math.hypot(dx, dy) > 4;
   if (drag.moved) center = [drag.center[0] - dx / scale, drag.center[1] + dy / scale];
@@ -309,6 +317,7 @@ canvas.onpointerup = e => {
     menu.querySelectorAll<HTMLButtonElement>('[data-hit]').forEach(b => b.onclick = () => select(b.dataset.hit!));
   }
 };
+canvas.onpointerleave=()=>{hovered='';};
 canvas.onpointercancel = () => {drag = undefined;};
 canvas.addEventListener('wheel', e => {
   e.preventDefault();

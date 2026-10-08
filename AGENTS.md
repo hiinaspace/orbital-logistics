@@ -10,8 +10,11 @@ DRO, with shared scrubbing, reference frames, stock/ship inspection and timeline
 See docs/evidence/model-set.md for limits and validation. Watching is sufficient;
 do not reintroduce a puzzle/courier-optimization gate or mandatory authoring.
 
-The first viewer remains 2D. Multi-system content, ground launches, production/upkeep,
-continuous propulsion and a coherent 3D engine migration are future work. Prepared
+The viewer retains an XY projection. The simulation is now canonical six-state v2,
+with explicit v1 fixture/program conversion, spatial rails/burns/capture/safety, and
+planar guards on historical aiming tools. See docs/evidence/spatial-foundation.md and
+docs/design/spatial-foundation/disposition.md. Multi-system content, ground launches,
+production/upkeep and continuous propulsion remain future work. Prepared
 multi-ship overlays are admitted only after shared-stock/berth checks; they are not a
 joint fleet scheduler. Current burns/operations remain static; route intent is deferred.
 Prior periodic/topology studies and the recovered Fable consultation are preserved in

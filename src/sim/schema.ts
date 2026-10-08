@@ -1,9 +1,10 @@
 // Versioned, structured-cloneable data. The simulation has no browser dependencies.
-export const MODEL = 'rk4-canonical-v1' as const;
-export type State = [number, number, number, number];
+import {dot, norm, type State, type Vec3} from './vectors';
+export type {State, Vec3} from './vectors';
+export const MODEL = 'rk4-canonical-v2' as const;
 export type Rail =
-  | { kind: 'fixed'; position: [number, number] }
-  | { kind: 'circular'; center: [number, number]; radius: number; rate: number; phase: number };
+  | { kind: 'fixed'; position: Vec3 }
+  | { kind: 'circular'; center: Vec3; u: Vec3; v: Vec3; radius: number; rate: number; phase: number };
 export interface Body { id: string; mu: number; radius: number; rail: Rail }
 export interface Port {
   id: string; rail: Extract<Rail, {kind: 'circular'}>;
@@ -27,7 +28,7 @@ export interface Rendezvous {
   tolerance: { position: number; velocity: number };
 }
 export interface Scenario {
-  schemaVersion: 1; modelVersion: typeof MODEL; id: string;
+  schemaVersion: 2; modelVersion: typeof MODEL; id: string;
   units: { length: string; time: string; mass: string };
   epoch: number; duration: number;
   policy: { step: number; maxNodes: number; maxSubdivision: number };
@@ -37,13 +38,14 @@ export interface Scenario {
   ship: { id: string; state: State; dryMass: number; cargoMass: number;
     propellant: number; tankCapacity: number; exhaustVelocity: number };
 }
-export interface Burn {
+interface BurnBase {
   id: string; t: number; referenceBodyId: string;
-  basis: 'radial-transverse-ccw-v1'; radial: number; transverse: number;
   snap?: { bodyId: string; kind: 'periapsis' | 'apoapsis'; window: [number, number]; resolvedEpoch: number };
   assist?: { kind: 'match-orbit' | 'intercept'; targetId: string; targetEpoch: number };
 }
-export interface Program { schemaVersion: 1; id: string; burns: Burn[]; operations?: Operation[] }
+export type ReferenceBurn = BurnBase & {basis: 'radial-transverse-normal-v2'; radial: number; transverse: number; normal: number; orientationAxis: Vec3};
+export type Burn = ReferenceBurn | (BurnBase & {basis: 'inertial-cartesian-v2'; deltaVelocity: Vec3});
+export interface Program { schemaVersion: 2; id: string; burns: Burn[]; operations?: Operation[] }
 export interface Bundle { scenario: Scenario; program: Program }
 
 function object(value: unknown): Record<string, unknown> {
@@ -68,10 +70,45 @@ function integer(value: unknown, label: string, min: number, max: number): numbe
   return n;
 }
 
+// Only this boundary knows the v1 four-component wire format. Original JSON
+// stays durable; canonical runtime objects and newly saved programs are v2.
+type LegacyStateWire = [number,number,number,number];
+function upgradeWire(value: unknown): unknown {
+  const input = object(value), rawScenario = object(input.scenario), rawProgram = object(input.program);
+  const result = structuredClone(input), s = object(result.scenario), p = object(result.program);
+  if (rawScenario.schemaVersion === 1) {
+    if (rawScenario.modelVersion !== 'rk4-canonical-v1') throw new Error('Unsupported schema/model version');
+    const lift = (v: unknown) => [...vector(v,2),0];
+    const liftState = (v: unknown) => {const a=vector(v,4) as LegacyStateWire;return [a[0],a[1],0,a[2],a[3],0];};
+    const rail = (value: unknown) => {const r=object(value);return r.kind==='fixed' ? {...r,position:lift(r.position)} :
+      {...r,center:lift(r.center),u:[1,0,0],v:[0,1,0]};};
+    if (!Array.isArray(s.bodies)) throw new Error('Invalid bodies');
+    s.bodies=s.bodies.map(b=>({...object(b),rail:rail(object(b).rail)}));
+    s.ship={...object(s.ship),state:liftState(object(s.ship).state)};
+    if (s.rendezvous) {const r=object(s.rendezvous),t=object(r.target);s.rendezvous={...r,target:{...t,state:liftState(t.state)}};}
+    if (s.logistics) {const l=object(s.logistics);if (!Array.isArray(l.ports)) throw new Error('Invalid ports');
+      s.logistics={...l,ports:l.ports.map(p=>({...object(p),rail:rail(object(p).rail)}))};}
+    s.schemaVersion=2;s.modelVersion=MODEL;
+  }
+  if (rawProgram.schemaVersion === 1) {
+    if (!Array.isArray(p.burns)) throw new Error('Invalid burns');
+    p.burns=p.burns.map(value=>{const b=object(value);if(b.basis!=='radial-transverse-ccw-v1')throw new Error('Unsupported legacy burn');
+      return {...b,basis:'radial-transverse-normal-v2',orientationAxis:[0,0,1],normal:0};});p.schemaVersion=2;
+  }
+  return result;
+}
+export function validatePlane(u: Vec3, v: Vec3): void {
+  if (Math.abs(norm(u)-1)>1e-12 || Math.abs(norm(v)-1)>1e-12 || Math.abs(dot(u,v))>1e-12) throw new Error('Invalid rail plane');
+}
+function circularRail(value: Record<string, unknown>, minRadius = 0): Extract<Rail,{kind:'circular'}> {
+  const u=vector(value.u,3) as Vec3,v=vector(value.v,3) as Vec3;validatePlane(u,v);
+  return {kind:'circular',center:vector(value.center,3) as Vec3,u,v,radius:finite(value.radius,'rail radius',minRadius),
+    rate:finite(value.rate,'rate'),phase:finite(value.phase,'phase')};
+}
 // Reconstruct rather than casting JSON; failed imports cannot mutate an existing run.
 export function validateBundle(value: unknown): Bundle {
-  const bundle = object(value), s = object(bundle.scenario), p = object(bundle.program);
-  if (s.schemaVersion !== 1 || p.schemaVersion !== 1 || s.modelVersion !== MODEL) throw new Error('Unsupported schema/model version');
+  const bundle = object(upgradeWire(value)), s = object(bundle.scenario), p = object(bundle.program);
+  if (s.schemaVersion !== 2 || p.schemaVersion !== 2 || s.modelVersion !== MODEL) throw new Error('Unsupported schema/model version');
   const units = object(s.units), policy = object(s.policy), ship = object(s.ship);
   const epoch = finite(s.epoch, 'epoch'), duration = finite(s.duration, 'duration', Number.MIN_VALUE);
   const step = finite(policy.step, 'step', 1 / 65536);
@@ -85,18 +122,17 @@ export function validateBundle(value: unknown): Bundle {
   const bodies: Body[] = s.bodies.map(value => {
     const b = object(value), r = object(b.rail);
     let rail: Rail;
-    if (r.kind === 'fixed') rail = { kind: 'fixed', position: vector(r.position, 2) as [number, number] };
-    else if (r.kind === 'circular') rail = { kind: 'circular', center: vector(r.center, 2) as [number, number],
-      radius: finite(r.radius, 'rail radius', 0), rate: finite(r.rate, 'rate'), phase: finite(r.phase, 'phase') };
+    if (r.kind === 'fixed') rail = { kind: 'fixed', position: vector(r.position, 3) as Vec3 };
+    else if (r.kind === 'circular') rail = circularRail(r);
     else throw new Error('Unsupported ephemeris');
     return { id: name(b.id), mu: finite(b.mu, 'mu', Number.MIN_VALUE),
       radius: finite(b.radius, 'surface radius', Number.MIN_VALUE), rail };
   });
   if (new Set(bodies.map(b => b.id)).size !== bodies.length) throw new Error('Duplicate body ID');
-  const scenario: Scenario = { schemaVersion: 1, modelVersion: MODEL, id: name(s.id),
+  const scenario: Scenario = { schemaVersion: 2, modelVersion: MODEL, id: name(s.id),
     units: { length: name(units.length), time: name(units.time), mass: name(units.mass) },
     epoch, duration, policy: { step, maxNodes, maxSubdivision }, bodies,
-    ship: { id: name(ship.id), state: vector(ship.state, 4) as State,
+    ship: { id: name(ship.id), state: vector(ship.state, 6) as State,
       dryMass: finite(ship.dryMass, 'dry mass', Number.MIN_VALUE), cargoMass: finite(ship.cargoMass, 'cargo mass', 0),
       propellant: finite(ship.propellant, 'propellant', 0), tankCapacity: finite(ship.tankCapacity, 'tank capacity', 0),
       exhaustVelocity: finite(ship.exhaustVelocity, 'exhaust velocity', Number.MIN_VALUE) } };
@@ -110,7 +146,7 @@ export function validateBundle(value: unknown): Bundle {
     if (bodies.length !== 1 || bodies[0].rail.kind !== 'fixed' || referenceBodyId !== bodies[0].id ||
         branch.direction !== 'ccw' || branch.revolutions !== 0 || arrivalEpoch <= departureEpoch || arrivalEpoch >= epoch + duration ||
         radial[0] >= radial[1] || transverse[0] >= transverse[1] || targetId === scenario.ship.id || bodies.some(b => b.id === targetId)) throw new Error('Unsupported rendezvous domain');
-    scenario.rendezvous = { target: { id: targetId, state: vector(target.state, 4) as State }, referenceBodyId, departureEpoch, arrivalEpoch,
+    scenario.rendezvous = { target: { id: targetId, state: vector(target.state, 6) as State }, referenceBodyId, departureEpoch, arrivalEpoch,
       bounds: { radial, transverse }, branch: { direction: 'ccw', revolutions: 0, minClearance: finite(branch.minClearance, 'clearance', 0) },
       tolerance: { position: finite(tolerance.position, 'position tolerance', Number.MIN_VALUE), velocity: finite(tolerance.velocity, 'velocity tolerance', Number.MIN_VALUE) } };
   }
@@ -121,8 +157,7 @@ export function validateBundle(value: unknown): Bundle {
     const primary = bodies[0], center = (primary.rail as Extract<Rail, {kind: 'fixed'}>).position;
     const ports: Port[] = l.ports.map(value => {
       const port = object(value), r = object(port.rail), radius = finite(r.radius, 'port radius', primary.radius);
-      const rail: Port['rail'] = {kind: 'circular', center: vector(r.center, 2) as [number, number], radius,
-        rate: finite(r.rate, 'port rate'), phase: finite(r.phase, 'port phase')};
+      const rail: Port['rail'] = circularRail(r, primary.radius);
       const expectedRate = Math.sqrt(primary.mu / radius ** 3);
       if (r.kind !== 'circular' || radius <= primary.radius || rail.center.some((v, i) => v !== center[i]) ||
           !Number.isFinite(expectedRate) || expectedRate <= 0 || !Number.isFinite(radius * rail.rate) ||
@@ -152,10 +187,16 @@ export function validateBundle(value: unknown): Bundle {
   let previous = -Infinity;
   const burns: Burn[] = p.burns.map(value => {
     const b = object(value), t = finite(b.t, 'burn epoch', epoch), referenceBodyId = name(b.referenceBodyId);
-    if (t <= previous || t > epoch + duration || !bodies.some(body => body.id === referenceBodyId) || b.basis !== 'radial-transverse-ccw-v1') throw new Error('Invalid burn order, reference or basis');
+    if (t <= previous || t > epoch + duration || !bodies.some(body => body.id === referenceBodyId)) throw new Error('Invalid burn order, reference or basis');
     previous = t;
-    const burn: Burn = { id: name(b.id), t, referenceBodyId, basis: 'radial-transverse-ccw-v1',
-      radial: finite(b.radial, 'radial impulse'), transverse: finite(b.transverse, 'transverse impulse') };
+    const common = {id:name(b.id),t,referenceBodyId};
+    let burn: Burn;
+    if (b.basis==='inertial-cartesian-v2') burn={...common,basis:b.basis,deltaVelocity:vector(b.deltaVelocity,3) as Vec3};
+    else if (b.basis==='radial-transverse-normal-v2') {
+      const orientationAxis=vector(b.orientationAxis,3) as Vec3;
+      if(Math.abs(norm(orientationAxis)-1)>1e-12)throw new Error('Invalid burn orientation axis');
+      burn={...common,basis:b.basis,orientationAxis,radial:finite(b.radial,'radial impulse'),transverse:finite(b.transverse,'transverse impulse'),normal:finite(b.normal,'normal impulse')};
+    } else throw new Error('Unsupported burn basis');
     if (b.snap !== undefined) {
       const snap = object(b.snap), window = vector(snap.window, 2) as [number, number];
       if ((snap.kind !== 'periapsis' && snap.kind !== 'apoapsis') || snap.bodyId !== referenceBodyId ||
@@ -173,7 +214,7 @@ export function validateBundle(value: unknown): Bundle {
     return burn;
   });
   if (new Set(burns.map(b => b.id)).size !== burns.length) throw new Error('Duplicate burn ID');
-  const program: Program = { schemaVersion: 1, id: name(p.id), burns };
+  const program: Program = { schemaVersion: 2, id: name(p.id), burns };
   if (p.operations !== undefined) {
     if (!scenario.logistics || !Array.isArray(p.operations) || p.operations.length > 128) throw new Error('Invalid operations');
     const operations: Operation[] = p.operations.map(value => {

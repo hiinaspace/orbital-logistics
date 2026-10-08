@@ -3,7 +3,7 @@ import type { Scenario, State } from '../sim/schema';
 export type Frame = 'inertial' | string;
 export interface Camera { center: [number, number]; scale: number }
 export function frameState(scenario: Scenario, y: State, t: number, frame: Frame, referenceShip: State): State {
-  const origin: State = frame === 'inertial' ? [0, 0, 0, 0] : frame === 'ship' ? referenceShip :
+  const origin: State = frame === 'inertial' ? [0, 0, 0, 0, 0, 0] : frame === 'ship' ? referenceShip :
     bodyState(scenario.bodies.find(b => b.id === frame)!, t);
   return y.map((value, i) => value - origin[i]) as State;
 }

@@ -63,7 +63,7 @@ test('delivery alone, depleted return fuel and cargo left onboard do not satisfy
   l.ports[1].cargo=0; assert.equal(logisticsResult(low.scenario.logistics!,l,0.4).delivered,0);
 });
 test('capture residual is charged and tightening the interface preserves the known solution', () => {
-  const b=fixture(); b.scenario.ship.state[2]=1e-6;
+  const b=fixture(); b.scenario.ship.state[3]=1e-6;
   const runner=new Runner(b), first=runner.current, dock=runner.ledger[0];
   assert.equal(dock.kind,'dock'); assert.equal(dock.deltaV,1e-6); assert.ok(dock.fuelUsed>0);
   assert.ok(first.propellant<b.scenario.ship.propellant);
@@ -98,7 +98,7 @@ test('a missing arrival impulse cannot be supplied by docking, and capture fuel 
   const b=fixture();b.program.burns=b.program.burns.filter(b=>b.id!=='arrival');
   const failed=new Runner(b).sample(24);assert.equal(failed.status,'operation-rejected');assert.match(failed.detail,/Capture Depot.*speed/);
   assert.equal(failed.logistics!.ports[1].cargo,0);
-  const empty=fixture();empty.scenario.ship.propellant=0;empty.scenario.ship.state[2]=1e-6;
+  const empty=fixture();empty.scenario.ship.propellant=0;empty.scenario.ship.state[3]=1e-6;
   const runner=new Runner(empty), stop=runner.current;assert.equal(stop.status,'operation-rejected');assert.match(stop.detail,/fuel for capture/);
   assert.deepEqual(stop.y,empty.scenario.ship.state);assert.equal(stop.propellant,0);assert.equal(stop.logistics!.dockedPortId,undefined);
 });

@@ -43,22 +43,22 @@ test('display interpolation does not anticipate cargo operations or impulses and
   assert.equal(sampleVessel(v, transfer.t - 1e-8).logistics!.cargoMass, 0);
   assert.equal(sampleVessel(v, transfer.t).logistics!.cargoMass, 0.16);
   const runner = new Runner(v.bundle), before = sampleVessel(v, burn.t - 1e-9);
-  assert.ok(error(before.y.slice(2), runner.sample(burn.t - 1e-9).y.slice(2)) < 1e-7);
+  assert.ok(error(before.y.slice(3), runner.sample(burn.t - 1e-9).y.slice(3)) < 1e-7);
   const sample = sampleVessel(v, 4); sample.y[0] = 999; sample.logistics!.ports[0].cargo = -99;
   assert.notEqual(sampleVessel(v, 4).y[0], 999);
   assert.ok(sampleVessel(v, 4).logistics!.ports[0].cargo >= 0);
   assert.throws(() => sampleVessel(v, -1), /Display epoch outside/);
   let positionError = 0;
-  for (let t = 0.017; t < 64; t += 0.137) positionError = Math.max(positionError, error(sampleVessel(v, t).y.slice(0, 2), runner.sample(t).y.slice(0, 2)));
+  for (let t = 0.017; t < 64; t += 0.137) positionError = Math.max(positionError, error(sampleVessel(v, t).y.slice(0, 3), runner.sample(t).y.slice(0, 3)));
   assert.ok(positionError < 0.0003); // <0.15 px at 500 px/unit, excluding zoom magnification.
 });
 
 test('rotating frame includes omega cross r and transforms every epoch independently', () => {
   const anchor = run.vessels[0].bundle.scenario.logistics!.ports.find(p => p.id === 'Anchor')!;
   for (const t of [0, 1.7, 17, 63.2]) {
-    assert.ok(error(transform(run, portState(anchor, t), t, 'rotating'), [anchor.rail.radius, 0, 0, 0]) < 1e-14);
+    assert.ok(error(transform(run, portState(anchor, t), t, 'rotating'), [anchor.rail.radius, 0, 0, 0, 0, 0]) < 1e-14);
     const y = sampleVessel(run.vessels[0], t).y;
-    assert.ok(error(transform(run, y, t, run.vessels[0].name), [0, 0, 0, 0]) < 1e-14);
+    assert.ok(error(transform(run, y, t, run.vessels[0].name), [0, 0, 0, 0, 0, 0]) < 1e-14);
     assert.equal(error(transform(run, y, t, 'inertial'), y), 0);
   }
 });
@@ -70,5 +70,5 @@ test('lunar rotating-frame loop closes in the current runner; view changes canno
   for (const frame of ['inertial', 'rotating', 'primary', 'moon', 'Lark']) transform(r, sampleVessel(v, 8).y, 8, frame);
   assert.equal(JSON.stringify(v.bundle), original);
   const moon = v.bundle.scenario.bodies.find(b => b.id === 'moon')!;
-  assert.ok(error(transform(r, bodyState(moon, 4), 4, 'rotating'), [0.98, 0, 0, 0]) < 1e-14);
+  assert.ok(error(transform(r, bodyState(moon, 4), 4, 'rotating'), [0.98, 0, 0, 0, 0, 0]) < 1e-14);
 });

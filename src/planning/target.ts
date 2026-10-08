@@ -7,5 +7,5 @@ export function targetBundle(bundle: Bundle, target = bundle.scenario.rendezvous
   delete scenario.rendezvous;
   delete scenario.logistics;
   scenario.ship.id = target.id; scenario.ship.state = [...target.state];
-  return validateBundle({ scenario, program: { schemaVersion: 1, id: 'target-coast-v1', burns: [] } });
+  return validateBundle({ scenario, program: { schemaVersion: 2, id: 'target-coast-v1', burns: [] } });
 }

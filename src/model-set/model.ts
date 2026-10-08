@@ -1,4 +1,4 @@
-import { Runner, type LedgerEntry, type Sample } from '../sim/runner';
+import { Runner, type LedgerEntry, type Sample, type EventBoundary } from '../sim/runner';
 import { bodyState } from '../sim/dynamics';
 import { validateBundle, type Bundle, type Port, type Scenario, type State } from '../sim/schema';
 
@@ -9,7 +9,7 @@ export interface ModelSet {
   description: string; provenance: string; stations: Station[]; vessels: Vessel[];
   rotating: { name: string; rate: number; phase: number };
 }
-export interface VesselRun extends Vessel { samples: Sample[]; ledger: LedgerEntry[] }
+export interface VesselRun extends Vessel { samples: Sample[]; ledger: LedgerEntry[]; boundaries: EventBoundary[] }
 export interface SetRun extends Omit<ModelSet, 'vessels'> { vessels: VesselRun[] }
 export interface Stock { id: string; cargo: number; propellant: number; occupied: number }
 export interface SetEvent extends LedgerEntry { vessel: string; color: string }
@@ -71,7 +71,7 @@ export function prepareSet(value: ModelSet): SetRun {
     // Dense disposable drawing samples plus exact events. The canonical Runner
     // owns physics; interpolation below is only for display, never a restart state.
     const epochs = [...new Set([...Array.from({length: 2049}, (_, i) => s.epoch + s.duration * i / 2048), ...ledger.map(e => e.t)])].sort((a, b) => a - b);
-    return {...v, samples: epochs.map(t => runner.sample(t)), ledger};
+    return {...v, samples: epochs.map(t => runner.sample(t)), ledger, boundaries:runner.eventBoundaries};
   });
   const run: SetRun = {...set, vessels};
   const ports = vessels[0].bundle.scenario.logistics?.ports ?? [];
@@ -111,16 +111,9 @@ export function stateAt(v: VesselRun, t: number): State {
     return bodyState({id: port.id, mu: 0, radius: 0, rail: port.rail}, t);
   }
   const u = (t - a.t) / (b.t - a.t);
-  const endpoint = [...b.y] as State;
-  const burn = v.bundle.program.burns.find(burn => burn.t === b.t);
-  if (burn) {
-    // Interpolate the coast's pre-burn endpoint; do not smear the next impulse
-    // backwards into displayed velocity. Exact event samples remain post-burn.
-    const reference = v.bundle.scenario.bodies.find(body => body.id === burn.referenceBodyId)!;
-    const ref = bodyState(reference, b.t), dx = b.y[0] - ref[0], dy = b.y[1] - ref[1], r = Math.hypot(dx, dy);
-    endpoint[2] -= (burn.radial * dx - burn.transverse * dy) / r;
-    endpoint[3] -= (burn.radial * dy + burn.transverse * dx) / r;
-  }
+  // Every instantaneous event supplies its physical left state. No inverse burn
+  // or docking reconstruction is owned by the renderer.
+  const endpoint = v.boundaries.find(e=>e.t===b.t)?.before.y ?? b.y;
   return a.y.map((x, i) => x + u * (endpoint[i] - x)) as State;
 }
 

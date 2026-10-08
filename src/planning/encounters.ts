@@ -1,3 +1,5 @@
+import {planarUnavailable} from './domain';
+import {burnMagnitude} from '../sim/burns';
 import { bodyState, rk4 } from '../sim/dynamics';
 import { Runner, type CoastSegment } from '../sim/runner';
 import { validateBundle, type Bundle, type Burn, type Program, type State } from '../sim/schema';
@@ -18,14 +20,16 @@ export type EncounterResult = { status: 'proposed'; proposal: EncounterProposal 
 // selects physics events. Geometric matching currently supports a circular target
 // about the fixed primary; simultaneous intercepts also work for other target coasts.
 export function discoverEncounters(bundle: Bundle, runner = new Runner(bundle), horizon = bundle.scenario.epoch + bundle.scenario.duration): Opportunity[] {
+  bundle=validateBundle(bundle);
+  if(planarUnavailable(bundle))return [];
   const s = bundle.scenario, spec = s.rendezvous;
   if (!spec) return [];
   const tolerance = spec.tolerance;
   const target = new Runner(targetBundle(bundle)), rows: Opportunity[] = [];
   const coasts = runner.coastSegments(horizon), body = s.bodies[0], center = bodyState(body, s.epoch);
   const v = spec.target.state, dx = v[0] - center[0], dy = v[1] - center[1], radius = Math.hypot(dx, dy);
-  const rate = (dx * v[3] - dy * v[2]) / (radius * radius), phase = Math.atan2(dy, dx);
-  const circular = Math.abs(dx * v[2] + dy * v[3]) < 1e-9 && Math.abs(Math.hypot(v[2], v[3]) - Math.sqrt(body.mu / radius)) < 1e-9;
+  const rate = (dx * v[4] - dy * v[3]) / (radius * radius), phase = Math.atan2(dy, dx);
+  const circular = Math.abs(dx * v[3] + dy * v[4]) < 1e-9 && Math.abs(Math.hypot(v[3], v[4]) - Math.sqrt(body.mu / radius)) < 1e-9;
   const geometryTolerance = Math.min(1e-7, spec.tolerance.position / 100);
   const radiusError = (y: State) => Math.hypot(y[0] - center[0], y[1] - center[1]) - radius;
   function preState(segment: CoastSegment, t: number): State {
@@ -43,7 +47,7 @@ export function discoverEncounters(bundle: Bundle, runner = new Runner(bundle), 
     if (t <= s.epoch + 1e-6 || t >= horizon - 1e-6 || targetEpoch < s.epoch || targetEpoch > horizon) return;
     const other = target.sample(targetEpoch); if (other.t !== targetEpoch) return;
     const positionError = Math.hypot(y[0] - other.y[0], y[1] - other.y[1]);
-    const relativeSpeed = Math.hypot(y[2] - other.y[2], y[3] - other.y[3]);
+    const relativeSpeed = Math.hypot(y[3] - other.y[3], y[4] - other.y[4]);
     if (positionError > (kind === 'intercept' ? tolerance.position : geometryTolerance) || relativeSpeed < 1e-8) return;
     if (rows.some(e => e.kind === kind && Math.abs(e.t - t) < 1e-5)) return;
     rows.push({ id: `${kind}:${t.toFixed(8)}`, kind, t, targetEpoch, y: [...y], target: [...other.y], positionError, relativeSpeed });
@@ -60,7 +64,7 @@ export function discoverEncounters(bundle: Bundle, runner = new Runner(bundle), 
     occurrences.sort((a, b) => Math.abs(a - t) - Math.abs(b - t));
     if (occurrences.length) add('match-orbit', t, y, occurrences[0]);
   }
-  const approachRate = (t: number, y: State) => { const b = target.sample(t).y; return (y[0] - b[0]) * (y[2] - b[2]) + (y[1] - b[1]) * (y[3] - b[3]); };
+  const approachRate = (t: number, y: State) => { const b = target.sample(t).y; return (y[0] - b[0]) * (y[3] - b[3]) + (y[1] - b[1]) * (y[4] - b[4]); };
   for (const coast of coasts) {
     if (circular) {
       const a = radiusError(coast.y0), b = radiusError(coast.y1);
@@ -87,6 +91,7 @@ export function proposeEncounter(input: Bundle, opportunityId: string): Encounte
   try {
     const bundle = validateBundle(input), s = bundle.scenario, spec = s.rendezvous;
     if (!spec) return fail('No rendezvous target');
+    const domain=planarUnavailable(bundle);if(domain)return fail(domain);
     const event = discoverEncounters(bundle).find(e => e.id === opportunityId);
     if (!event) return fail('Encounter changed; select its current marker');
     const existing = bundle.program.burns.find(b => Math.abs(b.t - event.t) < 1e-9);
@@ -99,16 +104,16 @@ export function proposeEncounter(input: Bundle, opportunityId: string): Encounte
     const error = Math.hypot(y[0] - target.y[0], y[1] - target.y[1]);
     if (error > (event.kind === 'intercept' ? spec.tolerance.position : Math.min(1e-7, spec.tolerance.position / 100))) return fail('Encounter no longer meets the position tolerance');
     const ref = bodyState(s.bodies[0], t), dx = y[0] - ref[0], dy = y[1] - ref[1], r = Math.hypot(dx, dy);
-    const dvx = target.y[2] - y[2], dvy = target.y[3] - y[3];
+    const dvx = target.y[3] - y[3], dvy = target.y[4] - y[4];
     let id = existing?.id ?? 'encounter-burn'; while (!existing && program.burns.some(b => b.id === id)) id += '-new';
-    const arrival: Burn = { id, t, referenceBodyId: spec.referenceBodyId, basis: 'radial-transverse-ccw-v1',
+    const arrival: Burn = { id, t, referenceBodyId: spec.referenceBodyId, basis: 'radial-transverse-normal-v2', orientationAxis: [0,0,1], normal:0,
       radial: (dvx * dx + dvy * dy) / r, transverse: (-dvx * dy + dvy * dx) / r,
       assist: { kind: event.kind, targetId: spec.target.id, targetEpoch } };
     program.burns.push(arrival); program.burns.sort((a, b) => a.t - b.t);
     const proposed = validateBundle({ scenario: s, program }), runner = new Runner(proposed), end = s.epoch + s.duration;
     const terminal = runner.sample(end);
     if (terminal.status !== 'horizon') return fail(terminal.status === 'burn-rejected' ? 'Not enough fuel for correction' : 'Correction trajectory is unresolved');
-    const matched = runner.sample(t), relativeSpeed = Math.hypot(matched.y[2] - target.y[2], matched.y[3] - target.y[3]);
+    const matched = runner.sample(t), relativeSpeed = Math.hypot(matched.y[3] - target.y[3], matched.y[4] - target.y[4]);
     if (relativeSpeed >= spec.tolerance.velocity) return fail('Velocity matching is unresolved');
     const refined = structuredClone(proposed); refined.scenario.policy.step /= 2;
     refined.scenario.policy.maxNodes = Math.min(65536, Math.max(s.policy.maxNodes, Math.ceil(s.duration / refined.scenario.policy.step) + 1024));
@@ -119,10 +124,10 @@ export function proposeEncounter(input: Bundle, opportunityId: string): Encounte
     for (const epoch of [t, targetEpoch, ...Array.from({ length: 81 }, (_, i) => s.epoch + s.duration * i / 80)]) {
       const a = runner.sample(epoch).y, b = fine.sample(epoch).y, c = originalTarget.sample(epoch).y, d = fineTarget.sample(epoch).y;
       position = Math.max(position, Math.hypot(a[0] - b[0], a[1] - b[1]), Math.hypot(c[0] - d[0], c[1] - d[1]));
-      velocity = Math.max(velocity, Math.hypot(a[2] - b[2], a[3] - b[3]), Math.hypot(c[2] - d[2], c[3] - d[3]));
+      velocity = Math.max(velocity, Math.hypot(a[3] - b[3], a[4] - b[4]), Math.hypot(c[3] - d[3], c[4] - d[4]));
     }
     if (position >= spec.tolerance.position / 100 || velocity >= spec.tolerance.velocity / 100) return fail('Correction accuracy is unresolved');
-    const cost = (p: Program) => p.burns.reduce((sum, b) => sum + Math.hypot(b.radial, b.transverse), 0), totalDv = cost(program);
+    const cost = (p: Program) => p.burns.reduce((sum, b) => sum + burnMagnitude(b), 0), totalDv = cost(program);
     return { status: 'proposed', proposal: { kind: event.kind, program, arrival, positionError: error, relativeSpeed, totalDv,
       addedDv: totalDv - cost(bundle.program), propellantUsed: s.ship.propellant - terminal.propellant, refinement: { position, velocity } } };
   } catch (error) { return fail((error as Error).message); }

@@ -4,13 +4,19 @@ from __future__ import annotations
 
 import argparse
 import json
-from math import cos, expm1, hypot, sin
+from math import cos, expm1, sin
 from pathlib import Path
 
 import numpy as np
 from scipy.integrate import solve_ivp
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def lift_state(value):
+    return np.array(
+        value if len(value) == 6 else [value[0], value[1], 0, value[2], value[3], 0], dtype=float
+    )
 
 
 def replay(bundle, tight):
@@ -27,7 +33,7 @@ def replay(bundle, tight):
     events.append((s["epoch"] + s["duration"], 5, "end", {}))
     events.sort(key=lambda e: (e[0], e[1]))
     y, fuel, cargo, docked, service = (
-        np.array(ship["state"]),
+        lift_state(ship["state"]),
         ship["propellant"],
         ship["cargoMass"],
         None,
@@ -36,6 +42,7 @@ def replay(bundle, tight):
     t, pieces, used_total, trace = s["epoch"], [], 0.0, []
     failed = False
     completed_at = None
+    captures = []
 
     def completion(epoch):
         nonlocal completed_at
@@ -55,15 +62,21 @@ def replay(bundle, tight):
     def port_state(port_id, epoch):
         rail = ports[port_id]["rail"]
         theta = rail["phase"] + rail["rate"] * epoch
-        x, yy = rail["radius"] * cos(theta), rail["radius"] * sin(theta)
-        return np.array(
-            [rail["center"][0] + x, rail["center"][1] + yy, -rail["rate"] * yy, rail["rate"] * x]
+        u = np.array(rail.get("u", [1, 0, 0]))
+        v = np.array(rail.get("v", [0, 1, 0]))
+        center = np.array(rail["center"] if len(rail["center"]) == 3 else [*rail["center"], 0])
+        return np.concatenate(
+            (
+                center + rail["radius"] * (u * cos(theta) + v * sin(theta)),
+                rail["radius"] * rail["rate"] * (-u * sin(theta) + v * cos(theta)),
+            )
         )
 
     def rhs(_t, state):
-        dx, dy = state[:2] - np.array(s["bodies"][0]["rail"]["position"])
-        scale = -s["bodies"][0]["mu"] / hypot(dx, dy) ** 3
-        return [state[2], state[3], dx * scale, dy * scale]
+        center = s["bodies"][0]["rail"]["position"]
+        displacement = state[:3] - np.array(center if len(center) == 3 else [*center, 0])
+        acceleration = -s["bodies"][0]["mu"] * displacement / np.linalg.norm(displacement) ** 3
+        return np.concatenate((state[3:], acceleration))
 
     def impulse(dv):
         nonlocal fuel, used_total
@@ -107,12 +120,23 @@ def replay(bundle, tight):
             continue
         if kind == "burn":
             assert docked is None
-            displacement = y[:2] - np.array(s["bodies"][0]["rail"]["position"])
+            center = s["bodies"][0]["rail"]["position"]
+            displacement = y[:3] - np.array(center if len(center) == 3 else [*center, 0])
             radial = displacement / np.linalg.norm(displacement)
-            dv = radial * op["radial"] + np.array([-radial[1], radial[0]]) * op["transverse"]
+            if op["basis"] == "inertial-cartesian-v2":
+                dv = np.array(op["deltaVelocity"])
+            else:
+                transverse = np.cross(op.get("orientationAxis", [0, 0, 1]), radial)
+                transverse /= np.linalg.norm(transverse)
+                normal = np.cross(radial, transverse)
+                dv = (
+                    radial * op["radial"]
+                    + transverse * op["transverse"]
+                    + normal * op.get("normal", 0)
+                )
             impulse(float(np.linalg.norm(dv)))
             y = y.copy()
-            y[2:] += dv
+            y[3:] += dv
         else:
             port = ports[op["portId"]]
             if service is not None:
@@ -122,11 +146,18 @@ def replay(bundle, tight):
                 delta = other - y
                 failed = (
                     docked is not None
-                    or np.linalg.norm(delta[:2]) > spec["capture"]["position"]
-                    or np.linalg.norm(delta[2:]) > spec["capture"]["velocity"]
+                    or np.linalg.norm(delta[:3]) > spec["capture"]["position"]
+                    or np.linalg.norm(delta[3:]) > spec["capture"]["velocity"]
+                )
+                captures.append(
+                    {
+                        "t": epoch,
+                        "position": float(np.linalg.norm(delta[:3])),
+                        "velocity": float(np.linalg.norm(delta[3:])),
+                    }
                 )
                 if not failed:
-                    impulse(float(np.linalg.norm(delta[2:])))
+                    impulse(float(np.linalg.norm(delta[3:])))
                     y, docked = other, op["portId"]
             elif docked != op["portId"]:
                 failed = True
@@ -166,6 +197,7 @@ def replay(bundle, tight):
         "fuelUsed": used_total,
         "cargo": cargo,
         "stocks": stocks,
+        "captures": captures,
         "trace": trace,
         "complete": not failed and completed_at is not None,
         "completedAt": completed_at if not failed else None,
@@ -182,7 +214,9 @@ def evaluate(pieces, t):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--milestone", choices=["m3", "m4", "model-set"], default="m3")
+    parser.add_argument(
+        "--milestone", choices=["m3", "m4", "model-set", "spatial-logistics"], default="m3"
+    )
     milestone = parser.parse_args().milestone
     request = json.loads((ROOT / f"docs/evidence/{milestone}-oracle-input.json").read_text())
     rows = []
@@ -194,9 +228,9 @@ def main():
             position, velocity, refinement = [], [], []
             for sample in step["samples"]:
                 oracle, fuel, cargo, stocks = evaluate(pieces, sample["t"])
-                delta = np.array(sample["y"]) - oracle
-                position.append(float(np.linalg.norm(delta[:2])))
-                velocity.append(float(np.linalg.norm(delta[2:])))
+                delta = lift_state(sample["y"]) - oracle
+                position.append(float(np.linalg.norm(delta[:3])))
+                velocity.append(float(np.linalg.norm(delta[3:])))
                 refinement.append(float(np.linalg.norm(evaluate(regular, sample["t"])[0] - oracle)))
                 assert abs(sample["propellant"] - fuel) < 1e-11
                 assert sample["logistics"]["cargoMass"] == cargo
@@ -204,6 +238,19 @@ def main():
                     [p["cargo"], p["propellant"]] == stocks[p["id"]]
                     for p in sample["logistics"]["ports"]
                 )
+            if milestone == "spatial-logistics":
+                docks = [entry for entry in step["ledger"] if entry["kind"] == "dock"]
+                for dock, capture in zip(docks, result["captures"], strict=True):
+                    assert abs(dock["positionError"] - capture["position"]) < 1e-8
+                    assert abs(dock["deltaV"] - capture["velocity"]) < 1e-8
+                    assert (
+                        capture["position"] + 2e-8
+                        < case["bundle"]["scenario"]["logistics"]["capture"]["position"]
+                    )
+                    assert (
+                        capture["velocity"] + 2e-8
+                        < case["bundle"]["scenario"]["logistics"]["capture"]["velocity"]
+                    )
             assert max(position) < 1e-9 and max(velocity) < 1e-9 and max(refinement) < 1e-9
             assert (
                 step["terminal"]["t"] == result["t"]

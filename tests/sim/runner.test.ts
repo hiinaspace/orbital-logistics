@@ -33,9 +33,9 @@ test('off-grid impulse has analytic axes, exact accounting, and no early leakage
   const coast = new Runner(fixture()), run = new Runner(b), burn = impulse.burns[0];
   assert.equal(run.sample(burn.t - 1e-8).propellant, 0.6);
   const after = run.advanceTo(burn.t), expected = analytic(burn.t, 0);
-  expected[2] += -Math.sin(burn.t) * burn.transverse; expected[3] += Math.cos(burn.t) * burn.transverse;
+  expected[3] += -Math.sin(burn.t) * burn.transverse; expected[4] += Math.cos(burn.t) * burn.transverse;
   assert.ok(error(after.y, expected) < 1e-10);
-  assert.ok(error(after.y.slice(0, 2), coast.sample(burn.t).y.slice(0, 2)) < 1e-10);
+  assert.ok(error(after.y.slice(0, 3), coast.sample(burn.t).y.slice(0, 3)) < 1e-10);
   const used = 1.8 * -Math.expm1(-0.12 / 3);
   assert.equal(after.propellant, 0.6 - used);
   assert.equal(after.burnCursor, 1); assert.equal(run.ledger.length, 1);
@@ -58,10 +58,10 @@ test('prepared burn follows an independent post-impulse Kepler ellipse over the 
   const a = 1 / (2 - speed ** 2), e = 1 - 1 / a, rate = a ** -1.5;
   for (let i = 0; i <= 100; i++) {
     const t = t0 + (16 - t0) * i / 100, local = analytic((t - t0) * rate, e);
-    local[0] *= a; local[1] *= a; local[2] /= Math.sqrt(a); local[3] /= Math.sqrt(a);
+    local[0] *= a; local[1] *= a; local[3] /= Math.sqrt(a); local[4] /= Math.sqrt(a);
     const c = Math.cos(t0), s = Math.sin(t0);
-    const expected: State = [c * local[0] - s * local[1], s * local[0] + c * local[1],
-      c * local[2] - s * local[3], s * local[2] + c * local[3]];
+    const expected: State = [c * local[0] - s * local[1], s * local[0] + c * local[1], 0,
+      c * local[3] - s * local[4], s * local[3] + c * local[4], 0];
     assert.ok(error(run.advanceTo(t).y, expected) < 1e-9);
   }
 });
@@ -70,7 +70,7 @@ test('basis is CCW transverse, not velocity aligned, even on clockwise eccentric
   const b = fixture([1, 0, 0.3, -0.8]); b.program = structuredClone(impulse);
   b.program.burns[0].t = 0; b.program.burns[0].radial = 0.04;
   const sample = new Runner(b).current;
-  assert.deepEqual(sample.y, [1, 0, 0.3 + 0.04, -0.8 + 0.12]);
+  assert.deepEqual(sample.y, [1, 0, 0, 0.3 + 0.04, -0.8 + 0.12, 0]);
 });
 
 test('unaffordable burn is atomic and blocks all later events', () => {
@@ -155,7 +155,7 @@ for (const step of [1 / 32, 1 / 64, 1 / 128]) test(`high-speed surface approach 
 test('moving surfaces enter the clearance bound', () => {
   const b = fixture([1, 0, 0, 0], 1 / 32);
   b.scenario.bodies = [{ id: 'primary', mu: 0.001, radius: 0.1,
-    rail: { kind: 'circular', center: [0, 0], radius: 1, rate: 100, phase: Math.PI } }];
+    rail: { kind: 'circular', center: [0, 0, 0], u:[1,0,0],v:[0,1,0], radius: 1, rate: 100, phase: Math.PI } }];
   const run = new Runner(b), end = run.advanceTo(1);
   assert.equal(end.status, 'unsupported-approach');
   const body = bodyState(b.scenario.bodies[0], end.t);

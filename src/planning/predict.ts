@@ -1,3 +1,5 @@
+import {validateBundle} from '../sim/schema';
+import {distance, relativeSpeed} from '../sim/vectors';
 import { Runner, type Sample } from '../sim/runner';
 import type { Bundle } from '../sim/schema';
 import { inspectEvents, type Diagnostics } from './events';
@@ -15,6 +17,7 @@ export interface Prediction {
   accuracy?: { status: 'converged' | 'unresolved'; position: number; velocity: number; eventTime: number; classificationStable: boolean };
 }
 export function predict(bundle: Bundle, revision: number, horizon = bundle.scenario.epoch + bundle.scenario.duration, verify = false): Prediction {
+  bundle=validateBundle(bundle);
   const runner = new Runner(bundle), samples: Sample[] = [], start = bundle.scenario.epoch;
   // Display sampling is disposable; canonical coast brackets drive events.
   const eventEpochs = [...bundle.program.burns.map(b => b.t), ...(bundle.program.operations ?? []).flatMap(o => [o.t, ...(o.kind === 'transfer' ? [o.t + bundle.scenario.logistics!.ports.find(p => p.id === o.portId)!.serviceDuration] : [])])];
@@ -37,7 +40,7 @@ export function predict(bundle: Bundle, revision: number, horizon = bundle.scena
     const assistBurn = bundle.program.burns.filter(b => b.assist).at(-1);
     const t = assistBurn?.t ?? bundle.scenario.rendezvous.arrivalEpoch, targetEpoch = assistBurn?.assist?.targetEpoch ?? t;
     const ship = runner.sample(t), target = new Runner(targetBundle(bundle)).sample(targetEpoch);
-    if (ship.t === t && target.t === targetEpoch) result.rendezvous = { t, kind: assistBurn?.assist?.kind, targetEpoch, positionError: Math.hypot(ship.y[0] - target.y[0], ship.y[1] - target.y[1]), relativeSpeed: Math.hypot(ship.y[2] - target.y[2], ship.y[3] - target.y[3]) };
+    if (ship.t === t && target.t === targetEpoch) result.rendezvous = { t, kind: assistBurn?.assist?.kind, targetEpoch, positionError: distance(ship.y,target.y), relativeSpeed: relativeSpeed(ship.y,target.y) };
   }
   if (verify) {
     const refined = structuredClone(bundle); refined.scenario.policy.step /= 2;
@@ -55,8 +58,8 @@ export function predict(bundle: Bundle, revision: number, horizon = bundle.scena
       for (const sample of samples) {
         if (sample.t > Math.min(terminal.t, fineTerminal.t)) continue;
         const other = fine.sample(sample.t);
-        position = Math.max(position, Math.hypot(sample.y[0] - other.y[0], sample.y[1] - other.y[1]));
-        velocity = Math.max(velocity, Math.hypot(sample.y[2] - other.y[2], sample.y[3] - other.y[3]));
+        position = Math.max(position, distance(sample.y,other.y));
+        velocity = Math.max(velocity, relativeSpeed(sample.y,other.y));
       }
       const refinedCoasts = fine.coastSegments(horizon);
       for (const body of bundle.scenario.bodies) {

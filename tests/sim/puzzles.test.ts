@@ -48,7 +48,7 @@ test('only fixed rules and completed actual runs qualify; persisted scores are i
 });
 test('port targeting preserves player epochs/prefix, proposes paid docking, and charges gross consumed fuel',()=>{
   const b=structuredClone(puzzles[0].bundle);
-  b.program.burns.push({id:'return',t:15.5,referenceBodyId:'primary',basis:'radial-transverse-ccw-v1',radial:0,transverse:0});
+  b.program.burns.push({id:'return',t:15.5,referenceBodyId:'primary',basis:'radial-transverse-normal-v2',orientationAxis:[0,0,1],normal:0,radial:0,transverse:0});
   const before=structuredClone(b),solved=solveRendezvous(b,'return',96,{portId:'Home',arrivalEpoch:19.5});
   assert.deepEqual(b,before);assert.equal(solved.status,'proposed');if(solved.status!=='proposed')return;
   const p=solved.proposal;assert.equal(p.departure.t,15.5);assert.equal(p.arrival.t,19.5);
@@ -60,7 +60,7 @@ test('port targeting preserves player epochs/prefix, proposes paid docking, and 
 });
 test('port solver rejects service, invalid arrival, work exhaustion, prefix failures and stale itinerary actions without mutation',()=>{
   for(const [epoch,arrival,work] of [[4.7,19.5,96],[15.5,24,96],[15.5,19.5,1]] as const){
-    const b=structuredClone(puzzles[0].bundle);b.program.burns.push({id:'return',t:epoch,referenceBodyId:'primary',basis:'radial-transverse-ccw-v1',radial:0,transverse:0});
+    const b=structuredClone(puzzles[0].bundle);b.program.burns.push({id:'return',t:epoch,referenceBodyId:'primary',basis:'radial-transverse-normal-v2',orientationAxis:[0,0,1],normal:0,radial:0,transverse:0});
     const before=structuredClone(b),result=solveRendezvous(b,'return',work,{portId:'Home',arrivalEpoch:arrival});assert.equal(result.status,'failed');assert.deepEqual(b,before);
   }
   const failed=fixture('express');failed.program.operations![1].kind='undock';

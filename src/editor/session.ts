@@ -37,7 +37,7 @@ export class EditorSession {
     let index = 1; while (this.#draft.burns.some(b => b.id === `burn-${index}`)) index++;
     const id = `burn-${index}`;
     const program = this.draft;
-    program.burns.push({ id, t, referenceBodyId, basis: 'radial-transverse-ccw-v1', radial: 0, transverse: 0 });
+    program.burns.push({ id, t, referenceBodyId, basis: 'radial-transverse-normal-v2', orientationAxis: [0,0,1], normal:0, radial: 0, transverse: 0 });
     program.burns.sort((a, b) => a.t - b.t); this.change(program); return id;
   }
   updateBurn(id: string, edit: Partial<Burn>): void {
@@ -45,7 +45,7 @@ export class EditorSession {
     if (!burn) throw new Error('Unknown maneuver');
     Object.assign(burn, edit);
     if (edit.t !== undefined || edit.referenceBodyId !== undefined) delete burn.snap;
-    if (edit.t !== undefined || edit.referenceBodyId !== undefined || edit.radial !== undefined || edit.transverse !== undefined) delete burn.assist;
+    if (edit.t !== undefined || edit.referenceBodyId !== undefined || 'radial' in edit || 'transverse' in edit || 'normal' in edit || 'deltaVelocity' in edit) delete burn.assist;
     program.burns.sort((a, b) => a.t - b.t); this.change(program);
   }
   removeBurn(id: string): void { const program = this.draft; program.burns = program.burns.filter(b => b.id !== id); this.change(program); }
