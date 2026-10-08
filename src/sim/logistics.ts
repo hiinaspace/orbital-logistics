@@ -11,8 +11,8 @@ export function copyLogistics(state: LogisticsState): LogisticsState {
   return {...state, ports: state.ports.map(p => ({...p})), ...(state.service ? {service: {...state.service}} : {})};
 }
 export function portState(port: Port, t: number): State {
-  if(port.rail.kind!=='circular')throw new Error('Ballistic port requires a canonical ephemeris');
-  return bodyState({id: port.id, mu: 0, radius: 0, rail: port.rail}, t);
+  if(port.rail.kind==='ballistic')throw new Error('Ballistic port requires a canonical ephemeris');
+  return bodyState({id: port.id, mu: 0, radius: 0, rail: {...port.rail,kind:'circular'}}, t);
 }
 export function logisticsResult(spec: Logistics, state: LogisticsState, propellant: number, t = state.completedAt ?? Infinity) {
   const goal = spec.objective, destination = state.ports.find(p => p.id === goal.destinationId)!;

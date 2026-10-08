@@ -1,0 +1,56 @@
+[
+  {
+    "height": 0,
+    "force": 1,
+    "status": "collision",
+    "t": 0,
+    "altitude": 0,
+    "fuelUsed": 0,
+    "nodes": 1
+  },
+  {
+    "height": 0,
+    "force": 5,
+    "status": "collision",
+    "t": 0,
+    "altitude": 0,
+    "fuelUsed": 0,
+    "nodes": 1
+  },
+  {
+    "height": 0.000001,
+    "force": 1,
+    "status": "unsupported-approach",
+    "t": 0.0018257983028888702,
+    "altitude": 1.0053735621795568e-11,
+    "fuelUsed": 0.000608599434296142,
+    "nodes": 98
+  },
+  {
+    "height": 0.000001,
+    "force": 5,
+    "status": "horizon",
+    "t": 0.5,
+    "altitude": 0.16418066629243278,
+    "fuelUsed": 0.8333333333333333,
+    "nodes": 4098
+  },
+  {
+    "height": 0.000002,
+    "force": 1,
+    "status": "unsupported-approach",
+    "t": 0.002582106739282608,
+    "altitude": 1.1604495142591986e-11,
+    "fuelUsed": 0.000860702246427536,
+    "nodes": 80
+  },
+  {
+    "height": 0.000002,
+    "force": 5,
+    "status": "horizon",
+    "t": 0.5,
+    "altitude": 0.16418190874396021,
+    "fuelUsed": 0.8333333333333333,
+    "nodes": 4098
+  }
+]

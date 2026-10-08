@@ -1,0 +1,34 @@
+{
+  "displayPositionError": 1.0779184648697266e-7,
+  "maxZoom": 1000000,
+  "maxPixelError": 0.10779184648697267,
+  "samples": 6156,
+  "initialStocks": [
+    {
+      "id": "Cairn",
+      "cargo": 0.2,
+      "propellant": 1,
+      "occupied": 1
+    },
+    {
+      "id": "Lantern",
+      "cargo": 0,
+      "propellant": 1,
+      "occupied": 0
+    }
+  ],
+  "finalStocks": [
+    {
+      "id": "Cairn",
+      "cargo": 0.1,
+      "propellant": 0.8,
+      "occupied": 0
+    },
+    {
+      "id": "Lantern",
+      "cargo": 0.1,
+      "propellant": 1,
+      "occupied": 1
+    }
+  ]
+}

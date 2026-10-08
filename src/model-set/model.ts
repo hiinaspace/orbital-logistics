@@ -1,6 +1,6 @@
 import { Runner, type LedgerEntry, type Sample, type EventBoundary } from '../sim/runner';
 import {resourcesAt,type ResourceAnchor,type Depot} from '../traffic/resources';
-import { bodyState } from '../sim/dynamics';
+import {portState} from '../sim/logistics';
 import { validateBundle, type Bundle, type Port, type Scenario, type State, type ThrustArc } from '../sim/schema';
 
 export interface Station { id: string; role: string; berths: number }
@@ -58,7 +58,7 @@ export function setEvents(run: SceneView): SetEvent[] {
 }
 function eventOrder(e: ViewerEvent): number {
   // A berth can be handed over at the same epoch: departure precedes arrival.
-  return e.kind === 'undock' ? 0 : e.kind === 'dock' ? 1 : 2;
+  return (e.kind === 'undock' || e.kind==='launch') ? 0 : e.kind === 'dock' ? 1 : 2;
 }
 export function stockAt(run: SceneView, t: number): Stock[] {
   const ports=portsOf(run);
@@ -73,7 +73,7 @@ export function stockAt(run: SceneView, t: number): Stock[] {
     const p = stocks.find(p => p.id === e.portId);
     if (!p) continue;
     if (e.kind === 'dock') p.occupied++;
-    if (e.kind === 'undock') p.occupied--;
+    if (e.kind === 'undock' || e.kind==='launch') p.occupied--;
     if (e.kind === 'transfer') {
       p.cargo -= e.cargoAfter! - e.cargoBefore!;
       p.propellant -= e.propellantAfter - e.propellantBefore;
@@ -93,7 +93,11 @@ export function prepareSet(value: ModelSet): SetRun {
     const ledger = runner.ledger;
     // Dense disposable drawing samples plus exact events. The canonical Runner
     // owns physics; interpolation below is only for display, never a restart state.
-    const epochs = [...new Set([...Array.from({length: 2049}, (_, i) => s.epoch + s.duration * i / 2048), ...ledger.map(e => e.t)])].sort((a, b) => a - b);
+    // Surface scenes need sub-pixel drawing accuracy even at close zoom. These
+    // extra drawing queries cannot create canonical checkpoints.
+    const launchTimes=(v.bundle.program.operations??[]).filter(o=>o.kind==='launch').flatMap(o=>
+      Array.from({length:4097},(_,i)=>o.t+Math.min(2,end-o.t)*i/4096));
+    const epochs = [...new Set([...launchTimes,...Array.from({length: 2049}, (_, i) => s.epoch + s.duration * i / 2048), ...ledger.map(e => e.t)])].sort((a, b) => a - b);
     return {...v,id:s.ship.id,ship:s.ship,ports:s.logistics?.ports??[],cargoCapacity:s.logistics?.cargoCapacity??s.ship.cargoMass,arcs:v.bundle.program.thrustArcs??[],continuousFuel:v.bundle.program.thrustArcs!==undefined, portSamples:{} as PortSamples, samples: epochs.map(t => runner.sample(t)), ledger, boundaries:runner.eventBoundaries};
   });
   const epochs=[...new Set(vessels.flatMap(v=>v.samples.map(s=>s.t)))].sort((a,b)=>a-b);
@@ -164,7 +168,7 @@ export function portsOf(run: SceneView): Port[] { return run.world.ports; }
 
 // Finite, disposable station drawing data. Physical docking uses Runner.portState.
 export function displayPortState(port:Port,samples:PortSamples,t:number):State {
-  if(port.rail.kind==='circular')return bodyState({id:port.id,mu:0,radius:0,rail:port.rail},t);
+  if(port.rail.kind!=='ballistic')return portState(port,t);
   const points=samples[port.id];
   if(!points || !Number.isFinite(t) || t<points[0].t || t>points.at(-1)!.t)throw new Error('Display target epoch outside validity');
   let lo=0,hi=points.length-1;while(lo<hi){const mid=Math.ceil((lo+hi)/2);if(points[mid].t<=t)lo=mid;else hi=mid-1;}

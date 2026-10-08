@@ -26,7 +26,7 @@ def replay(bundle, tight):
     events = [(b["t"], 3, "burn", b) for b in program["burns"]]
     for arc in program["thrustArcs"]:
         events.extend([(arc["start"], 6, "thrust-start", arc), (arc["end"], 0, "thrust-end", arc)])
-    order = {"undock": 2, "dock": 4, "transfer": 5}
+    order = {"launch": 2, "undock": 2, "dock": 4, "transfer": 5}
     for op in program["operations"]:
         events.append((op["t"], order[op["kind"]], op["kind"], op))
         if op["kind"] == "transfer":
@@ -213,12 +213,38 @@ def replay(bundle, tight):
                         "velocity": float(np.linalg.norm(delta[3:])),
                     }
                 )
+                if port["rail"]["kind"] == "surface":
+                    assert epoch == s["epoch"] and np.linalg.norm(delta) < 1e-14
                 if not failed:
                     impulse(float(np.linalg.norm(delta[3:])))
                     y, docked = other, op["portId"]
             elif docked != op["portId"]:
                 failed = True
+            elif kind == "launch":
+                rail = port["rail"]
+                arc = next(a for a in program["thrustArcs"] if a["id"] == op["thrustArcId"])
+                assert rail["kind"] == "surface" and arc["start"] == epoch
+                radius = np.linalg.norm(y[:3] - np.array(rail["center"]))
+                normal = (y[:3] - np.array(rail["center"])) / radius
+                mass = ship["dryMass"] + cargo + fuel
+                force = min(
+                    ship["engine"]["maxThrust"] * arc["throttle"],
+                    ship["engine"].get("maxAcceleration", float("inf")) * mass,
+                )
+                primary = next(b for b in s["bodies"] if b["id"] == rail["bodyId"])
+                radial = (
+                    force / mass * np.dot(arc["direction"], normal)
+                    - primary["mu"] / radius**2
+                    + rail["rate"] ** 2 * radius
+                )
+                assert (
+                    fuel > 0
+                    and force > 0
+                    and radial > 1e-12 * max(1, primary["mu"] / radius**2, force / mass)
+                )
+                docked = None
             elif kind == "undock":
+                assert port["rail"]["kind"] != "surface"
                 docked = None
             elif kind == "transfer":
                 pc, pf = stocks[op["portId"]]

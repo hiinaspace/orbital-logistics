@@ -1,13 +1,13 @@
 import {resolveBurn} from './burns';
-import {distance, relativeSpeed, norm} from './vectors';
-import { bodyState, certifiedCoast } from './dynamics';
+import {distance, relativeSpeed, norm, dot} from './vectors';
+import { bodyState, certifiedCoast, derivative } from './dynamics';
 import { portState, logisticsResult, copyLogistics, type LogisticsState } from './logistics';
 import { MODEL, parseBundle, validateBundle, type Bundle, type State } from './schema';
 import {intervalStep,massLaw,massAt,thrustAt,thrustBound,propulsiveDeltaV,type MassLaw} from './propulsion';
 
 export type Status = 'running' | 'horizon' | 'collision' | 'unsupported-approach' | 'burn-rejected' | 'work-limit' | 'operation-rejected' | 'fuel-depleted';
 export interface LedgerEntry {
-  t: number; kind: 'burn' | 'burn-rejected' | 'collision' | 'unsupported-approach' | 'work-limit' | 'dock' | 'undock' | 'transfer-start' | 'transfer' | 'operation-rejected' | 'thrust-start' | 'thrust-end' | 'fuel-depleted';
+  t: number; kind: 'burn' | 'burn-rejected' | 'collision' | 'unsupported-approach' | 'work-limit' | 'dock' | 'undock' | 'launch' | 'transfer-start' | 'transfer' | 'operation-rejected' | 'thrust-start' | 'thrust-end' | 'fuel-depleted';
   id: string; deltaV: number; fuelUsed: number; propellantBefore: number; propellantAfter: number;
   portId?: string; cargoBefore?: number; cargoAfter?: number; portCargoBefore?: number; portCargoAfter?: number;
   portPropellantBefore?: number; portPropellantAfter?: number; detail?: string; positionError?: number;
@@ -155,6 +155,9 @@ export class Runner {
       if (op.kind === 'dock') {
         if (l.dockedPortId) { this.#rejectOperation(op.id, `Already docked at ${l.dockedPortId}`); return; }
         const y = this.portState(port.id, n.t), miss = distance(n.y,y), speed = relativeSpeed(n.y,y);
+        if(port.rail.kind==='surface' && (n.t!==s.epoch || n.y.some((v,i)=>v!==y[i]))) {
+          this.#rejectOperation(op.id,'Surface attachment requires exact initial pad state; landing is not supported');return;
+        }
         if (miss > spec.capture.position || speed > spec.capture.velocity) {
           this.#rejectOperation(op.id, `Capture ${port.id}: miss ${miss.toExponential(2)}, speed ${speed.toExponential(2)}`); return;
         }
@@ -167,7 +170,30 @@ export class Runner {
         n.y = y; l.dockedPortId = port.id;
         this.#ledger.push({t: n.t, kind: 'dock', id: op.id, portId: port.id, positionError:miss, deltaV: speed, fuelUsed: used, propellantBefore: before, propellantAfter: n.propellant});
       } else if (l.dockedPortId !== port.id) { this.#rejectOperation(op.id, `Dock at ${port.id} first`); return; }
+      else if(op.kind==='launch') {
+        const index=n.thrustCursor??0,arc=this.#bundle.program.thrustArcs?.[index];
+        if(port.rail.kind!=='surface' || !arc || arc.id!==op.thrustArcId || arc.start!==n.t || n.activeThrust) {
+          this.#rejectOperation(op.id,'Launch requires its next powered arc and surface support');return;
+        }
+        const law=massLaw(s.ship.engine!,arc,s.ship.dryMass+l.cargoMass,n.propellant,s.ship.exhaustVelocity);
+        const surface=port.rail;
+        const force=thrustAt(law,n.t),body=s.bodies.find(b=>b.id===surface.bodyId)!;
+        const b=bodyState(body,n.t),r=distance(n.y,b),normal=n.y.slice(0,3).map((x,i)=>(x-b[i])/r);
+        const gravity=derivative(s,n.t,n.y).slice(3),outward=force/massAt(law,n.t)*dot(arc.direction,normal as [number,number,number]);
+        const radial=outward+dot(gravity as [number,number,number],normal as [number,number,number])+port.rail.rate**2*r;
+        // Relative radial-distance acceleration, not an extra inertial force.
+        const margin=1e-12*Math.max(1,body.mu/r**2,outward);
+        if(n.propellant<=0 || force<=0 || !Number.isFinite(radial) || radial<=margin) {
+          this.#rejectOperation(op.id,'Insufficient outward acceleration to leave support');return;
+        }
+        // All checks precede this atomic release + first mass-law activation.
+        delete l.dockedPortId;
+        n.activeThrust={index,law,fuelBefore:n.propellant,usageBefore:n.fuelUsed??0};n.thrustCursor=index+1;
+        this.#ledger.push({t:n.t,kind:'launch',id:op.id,portId:port.id,deltaV:0,fuelUsed:0,propellantBefore:n.propellant,propellantAfter:n.propellant});
+        this.#ledger.push({t:n.t,kind:'thrust-start',id:arc.id,deltaV:0,fuelUsed:0,propellantBefore:n.propellant,propellantAfter:n.propellant});
+      }
       else if (op.kind === 'undock') {
+        if(port.rail.kind==='surface'){this.#rejectOperation(op.id,'Use powered launch to leave surface support');return;}
         delete l.dockedPortId;
         this.#ledger.push({t: n.t, kind: 'undock', id: op.id, portId: port.id, deltaV: 0, fuelUsed: 0, propellantBefore: n.propellant, propellantAfter: n.propellant});
       } else {
@@ -181,7 +207,7 @@ export class Runner {
       }
       l.operationCursor++;
     };
-    while (operations[l.operationCursor]?.t === n.t && operations[l.operationCursor].kind === 'undock' && n.status === 'running') operate();
+    while (operations[l.operationCursor]?.t === n.t && (operations[l.operationCursor].kind === 'undock' || operations[l.operationCursor].kind==='launch') && n.status === 'running') operate();
     this.#applyBurn();
     while (operations[l.operationCursor]?.t === n.t && n.status === 'running') operate();
     this.#startThrust();

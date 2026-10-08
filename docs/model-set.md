@@ -145,3 +145,21 @@ paid prefixes. Historical aiming tools reject powered programs. See
 The user accepted stable labels and the original lunar set. Powered choreography is
 the current viewing gate. Continuous operations/rolling history and 3D presentation
 are follow-up choices; finite Replay still rewinds stocks.
+
+
+## Airless ascent extension — 2026-10-08
+
+[Reviewed surface contract](design/surface-ascent/README.md) adds `surface-ports-v3`
+without changing canonical physics/snapshot v3. Surface ports use analytical physical
+spin and positive supported COM height. Exact initial attachment and an atomic
+`launch` bound to its first finite arc preserve identity, mass and inherited rotation;
+free-flight surface guards remain unchanged. Legacy snapshots retained before the
+change replay exactly. Launch is a departure for shared berths.
+
+The first finite set is Cairn → Lantern, with real loading, paid ascent/insertion,
+paid capture residual, unloading and dwell. Offline authoring fixes depot phase once;
+no runtime steering or target relocation occurs. Dense launch samples belong only to
+presentation. Explicit close view, ship follow, orbit fit, slower rates and the scale
+indicator expose launch versus orbital motion. Landing, stages, reusable recovery and
+continuous launch dispatch remain later work; future separation requires explicit
+child mass/fuel ownership and conserved momentum, not duplicated scalar cargo.

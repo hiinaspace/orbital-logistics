@@ -1,6 +1,6 @@
 # Tactical plan — updated 2026-10-08
 
-Status: **model-set viewer accepted; coherent 3D engine, lunar freight and bounded propulsion and continuous analytical traffic implemented**.
+Status: **model-set viewer accepted; coherent 3D engine, lunar freight and bounded propulsion and continuous analytical traffic implemented; airless ascent added**.
 
 On 2026-10-08 the user chose fictional orbital buildups and traffic as the next
 product direction, authorized retiring the CoaDE editing UI, and requested implementation.
@@ -13,7 +13,7 @@ round trips now serve a ballistic lunar depot; burns, captures and refueling are
 See [spatial evidence](evidence/spatial-foundation.md) and
 [lunar freight evidence](evidence/lunar-freight.md). The viewer retains its 2D projection.
 Synchronized analytical views are deferred for taste feedback. Multi-system content,
-ground launch/landing, upkeep/production, general demand scheduling and 3D presentation remain follow-up work.
+surface landing, upkeep/production, general demand scheduling and 3D presentation remain follow-up work.
 
 The user accepted stable labels and lunar freight, then authorized bounded propulsion
 and an Astra senior review. [Reviewed contract](design/bounded-propulsion/README.md)
@@ -25,9 +25,17 @@ The requested Astra storage/playback review is complete;
 [contract and disposition](design/continuous-traffic/README.md) and
 [evidence](evidence/continuous-traffic.md) cover repeated powered service, finite shared
 stocks/external flows, rolling history, held-head playback and fault isolation.
-Current gate: watch **Orison · continuous service** and try Pause/Play/Live/Restart.
-Lunar continuation, demand routing/rescue, persistence, ground launch and a3D camera
-remain separate extensions. No general steering optimizer is claimed.
+The user accepted continuous service and thrust whiskers, then authorized an airless,
+in-plane surface ascent after Astra senior review. [Reviewed contract](design/surface-ascent/README.md)
+and [evidence](evidence/surface-ascent.md) cover a supported pad, atomic powered release,
+eight finite burns, circular insertion, cargo unloading and attached dwell.
+**Selene · Surface freight** provides an explicit close Launch view, finer zoom/speed,
+and denser disposable drawing samples. [Worker lifecycle follow-up](evidence/worker-lifecycle.md)
+reproduces and fixes a rebuild-related set-switch failure; the exact original error
+was not captured. Current gate: watch the ascent at close and orbital scales.
+Lunar continuation, demand routing/rescue, persistence, landing, staging/recovery,
+recurring launches and a 3D camera remain separate extensions. No general steering
+optimizer is claimed.
 
 The [recovered Fable consultation](design/orbital-model-set/README.md) and
 [synthesis](design/orbital-model-set/synthesis.md) informed this direction. Watching

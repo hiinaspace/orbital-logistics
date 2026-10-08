@@ -16,7 +16,9 @@ The sets are **Orison · orbital freight** (four stations, four freighters),
 and **Orison · powered transfer** add finite-thrust departure and braking with continuous
 fuel use. **Orison · continuous service** runs two freighters repeatedly with finite
 station buffers and explicit supply/export flows. Pause/scrub holds history; Play
-catches up, Live resumes the head, and Restart run starts a fresh session. The speed slider adjusts smoothly from about0.05× to16×. Playback starts
+catches up, Live resumes the head, and Restart run starts a fresh session. The speed slider adjusts smoothly from 2^-12× to 16×. **Selene · Surface freight**
+adds an airless ascent from Cairn to Lantern, with an explicit Launch view for the close
+scale. Choose a slower playback rate for launch, then Fit or a ship frame to follow it. Playback starts
 immediately. Click a ship or station to inspect it; overlapping objects open a chooser.
 Use the shared time slider or a ship's activity lane to scrub. Drag the view to pan,
 scroll to zoom, and use Frame or View from here to change reference frames. Space
@@ -37,9 +39,14 @@ npm run evidence:spatial
 npm run evidence:lunar
 npm run evidence:propulsion
 npm run evidence:traffic
+npm run evidence:surface
 npx tsx scripts/model-set-fixtures.ts --check
 uv run --project spikes/numerics --group dev --group plots pre-commit run --config spikes/numerics/.pre-commit-config.yaml --all-files
 ```
+
+[Surface ascent evidence](docs/evidence/surface-ascent.md) and its
+[Astra-reviewed contract](docs/design/surface-ascent/README.md) cover supported pads,
+atomic powered launch, finite-thrust insertion and orbital cargo handoff.
 
 [Continuous traffic evidence](docs/evidence/continuous-traffic.md) and its
 [Astra-reviewed architecture](docs/design/continuous-traffic/README.md) cover the rolling runtime.

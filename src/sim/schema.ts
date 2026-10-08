@@ -9,19 +9,21 @@ export interface Body { id: string; mu: number; radius: number; rail: Rail }
 export interface Engine { maxThrust: number; maxAcceleration?: number }
 export interface ThrustArc { id: string; start: number; end: number; direction: Vec3; throttle: number }
 export interface BallisticRail {kind:'ballistic'; epoch:number; validUntil:number; state:State; policy:Scenario['policy']; minClearance:number; provenance:string}
+// Physical support geometry. Circular fields are derived by validation, never trusted.
+export interface SurfaceRail {kind:'surface';bodyId:string;centerHeight:number;center:Vec3;u:Vec3;v:Vec3;radius:number;rate:number;phase:number}
 export interface Port {
-  id: string; rail: Extract<Rail, {kind: 'circular'}> | BallisticRail;
+  id: string; rail: Extract<Rail, {kind: 'circular'}> | BallisticRail | SurfaceRail;
   cargo: number; cargoCapacity: number; propellant: number; tankCapacity: number;
   serviceDuration: number;
 }
 export interface Logistics {
-  modelVersion: 'kinematic-ports-v1' | 'ballistic-ports-v2'; ports: Port[]; cargoCapacity: number;
+  modelVersion: 'kinematic-ports-v1' | 'ballistic-ports-v2' | 'surface-ports-v3'; ports: Port[]; cargoCapacity: number;
   capture: {position: number; velocity: number};
   objective: {destinationId: string; quota: number; returnPortId: string; minPropellant: number; hardwareCost: number; deadline?: number};
 }
 export type Operation = {id: string; t: number; portId: string} & (
-  {kind: 'dock'} | {kind: 'undock'} | {kind: 'transfer'; cargo: number; propellant: number});
-export const operationOrder = (o: Operation) => ({undock: 0, dock: 1, transfer: 2})[o.kind];
+  {kind: 'dock'} | {kind: 'undock'} | {kind:'launch';thrustArcId:string} | {kind: 'transfer'; cargo: number; propellant: number});
+export const operationOrder = (o: Operation) => ({undock: 0, launch:0, dock: 1, transfer: 2})[o.kind];
 export const compareOperations = (a: Operation, b: Operation) => a.t - b.t || operationOrder(a) - operationOrder(b);
 export interface Rendezvous {
   target: { id: string; state: State };
@@ -79,6 +81,10 @@ type LegacyStateWire = [number,number,number,number];
 function upgradeWire(value: unknown): unknown {
   const input = object(value), rawScenario = object(input.scenario), rawProgram = object(input.program);
   const result = structuredClone(input), s = object(result.scenario), p = object(result.program);
+  if ((rawScenario.schemaVersion!==3 || rawProgram.schemaVersion!==3) &&
+      (object(rawScenario.logistics??{}).modelVersion==='surface-ports-v3' ||
+       (Array.isArray(object(rawScenario.logistics??{}).ports) && (object(rawScenario.logistics??{}).ports as unknown[]).some(p=>object(object(p).rail).kind==='surface')) ||
+       (Array.isArray(rawProgram.operations) && rawProgram.operations.some(o=>object(o).kind==='launch'))))throw new Error('Surface features require schema3');
   if ((rawScenario.schemaVersion !== 3 && (object(rawScenario.ship).engine !== undefined || rawScenario.engine !== undefined)) ||
       (rawProgram.schemaVersion !== 3 && rawProgram.thrustArcs !== undefined)) throw new Error('Propulsion fields require schema3');
   if (rawScenario.schemaVersion === 2) {
@@ -162,15 +168,21 @@ export function validateBundle(value: unknown): Bundle {
   }
   if (s.logistics !== undefined) {
     const l = object(s.logistics), capture = object(l.capture), goal = object(l.objective);
-    if ((l.modelVersion !== 'kinematic-ports-v1' && l.modelVersion !== 'ballistic-ports-v2') || scenario.rendezvous ||
-        (l.modelVersion === 'kinematic-ports-v1' && (bodies.length !== 1 || bodies[0].rail.kind !== 'fixed')) ||
+    if ((l.modelVersion !== 'kinematic-ports-v1' && l.modelVersion !== 'ballistic-ports-v2' && l.modelVersion !== 'surface-ports-v3') || scenario.rendezvous ||
+        (l.modelVersion !== 'ballistic-ports-v2' && (bodies.length !== 1 || bodies[0].rail.kind !== 'fixed')) ||
         !Array.isArray(l.ports) || l.ports.length < 2 || l.ports.length > 8) throw new Error('Unsupported logistics domain');
     const primary = bodies[0];
     const center = primary.rail.kind==='fixed' ? primary.rail.position : undefined;
     const ports: Port[] = l.ports.map(value => {
       const port = object(value), r = object(port.rail);
       let rail: Port['rail'];
-      if(l.modelVersion==='ballistic-ports-v2') {
+      if(l.modelVersion==='surface-ports-v3' && r.kind==='surface') {
+        const centerHeight=finite(r.centerHeight,'supported COM height',Number.MIN_VALUE),radius=primary.radius+centerHeight;
+        const rate=finite(r.rate,'physical spin'),phase=finite(r.phase,'pad longitude');
+        if(r.bodyId!==primary.id || !center || radius<=primary.radius || !Number.isFinite(radius) ||
+          Math.abs(rate)>=Math.sqrt(primary.mu/radius**3) || !center.every(x=>Number.isFinite(x+radius)&&Number.isFinite(x-radius)))throw new Error('Unsupported surface support');
+        rail={kind:'surface',bodyId:primary.id,centerHeight,center:[...center],u:[1,0,0],v:[0,1,0],radius,rate,phase};
+      } else if(l.modelVersion==='ballistic-ports-v2') {
         const p=object(r.policy), targetEpoch=finite(r.epoch,'target epoch'),validUntil=finite(r.validUntil,'target validity');
         if(r.kind!=='ballistic' || targetEpoch!==epoch || validUntil!==epoch+duration)throw new Error('Ballistic port must cover the complete scenario');
         const targetStep=finite(p.step,'target step',1/65536), targetNodes=integer(p.maxNodes,'target nodes',2,65536);
@@ -194,6 +206,8 @@ export function validateBundle(value: unknown): Bundle {
       if (result.cargo > result.cargoCapacity || result.propellant > result.tankCapacity || result.serviceDuration > duration) throw new Error('Invalid port capacity/duration');
       return result;
     });
+    const pads=ports.filter(p=>p.rail.kind==='surface');
+    if(new Set(pads.map(p=>p.rail.kind==='surface'?p.rail.rate:0)).size>1)throw new Error('Inconsistent body spin');
     const ids = [...bodies.map(b => b.id), scenario.ship.id, ...ports.map(p => p.id)];
     if (new Set(ids).size !== ids.length) throw new Error('Duplicate port ID');
     const cargoCapacity = finite(l.cargoCapacity, 'cargo capacity', 0);
@@ -265,6 +279,12 @@ export function validateBundle(value: unknown): Bundle {
       const op = object(value), id = name(op.id), portId = name(op.portId), t = finite(op.t, 'operation epoch', epoch);
       const port = scenario.logistics!.ports.find(p => p.id === portId);
       if (!port || t > epoch + duration) throw new Error('Invalid operation port/epoch');
+      if(op.kind==='launch') {
+        const thrustArcId=name(op.thrustArcId),arc=program.thrustArcs?.find(a=>a.id===thrustArcId);
+        if(scenario.logistics!.modelVersion!=='surface-ports-v3' || port.rail.kind!=='surface' || t<=epoch || !arc || arc.start!==t ||
+          burns.some(b=>b.t===t))throw new Error('Invalid launch/first thrust arc');
+        return {id,t,portId,kind:'launch',thrustArcId};
+      }
       if (op.kind === 'dock' || op.kind === 'undock') return {id, t, portId, kind: op.kind};
       if (op.kind !== 'transfer' || t + port.serviceDuration === t || t + port.serviceDuration > epoch + duration) throw new Error('Invalid transfer/duration');
       const cargo = finite(op.cargo, 'transfer cargo'), propellant = finite(op.propellant, 'transfer propellant', 0);
@@ -274,6 +294,9 @@ export function validateBundle(value: unknown): Bundle {
     if (new Set([...burns.map(b => b.id), ...operations.map(o => o.id)]).size !== burns.length + operations.length ||
         operations.some((o, i) => i > 0 && compareOperations(operations[i - 1], o) >= 0)) throw new Error('Invalid operation order/ID');
     program.operations = operations;
+  }
+  for(const launch of program.operations?.filter(o=>o.kind==='launch')??[]) {
+    if(program.operations!.some(o=>o!==launch && o.t===launch.t))throw new Error('Conflicting launch operations');
   }
   const ids=[...burns.map(b=>b.id),...(program.operations??[]).map(o=>o.id),...(program.thrustArcs??[]).map(a=>a.id)];
   if(new Set(ids).size!==ids.length)throw new Error('Duplicate program ID');

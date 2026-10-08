@@ -1,0 +1,18 @@
+{
+  "model": "gpt-6-astra",
+  "reasoningEffort": "xhigh",
+  "cliVersion": "0.153.4",
+  "sessionId": "01a11ce4-98b6-78b2-8c08-3c333eba0628",
+  "exitCode": 0,
+  "verifiedFrom": "CLI transport header and exec completion before reading final report",
+  "sha256": {
+    "brief.md": "cc07b2bf806021cc2961ded073bc59027cce4b2e620542e682c82a15338f61f2",
+    "astra-review.md": "2d0959c8cc07d5de3fb1e3aaddf52023b3a3e3f8ffded6bad2f4666f365d04b4",
+    "astra-review.log": "c47c7cda6f759e9c44bb22c33efdf64ffe2aa395eb3c3613914b2ca57bb6fdd6"
+  },
+  "tokensUsed": "116,963",
+  "retainedLogSha256": "be60cb3572144f39f7ff4b08a752a7630d2a568b66dcd95185f2608c3c690229",
+  "logRetention": "Header and completion summary retained; sha256.astra-review.log is original complete transcript.",
+  "normalizedReportSha256": "93b3476b4f661cab4d1bcaf0ac0f2313ffc1341a5966bbd750cbf0e925943169",
+  "reportNormalization": "Only trailing blank lines removed; received hash retained in sha256.astra-review.md."
+}

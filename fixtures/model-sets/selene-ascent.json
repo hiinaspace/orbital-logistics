@@ -1,0 +1,295 @@
+{
+  "schemaVersion": 1,
+  "id": "selene-ascent",
+  "name": "Selene · Surface freight",
+  "extent": 1.55,
+  "description": "Swift carries freight from Cairn to the orbital depot Lantern.",
+  "provenance": "Fictional airless world. Eight fixed-heading finite burns; offline circular-insertion witness. Surface support holds a point COM 0.000001 body radii above the sphere; no hull or landing model.",
+  "stations": [
+    {
+      "id": "Cairn",
+      "role": "Surface launch pad",
+      "berths": 1
+    },
+    {
+      "id": "Lantern",
+      "role": "Orbital freight depot",
+      "berths": 1
+    }
+  ],
+  "rotating": {
+    "name": "Surface rotating",
+    "rate": 0.003,
+    "phase": 0
+  },
+  "vessels": [
+    {
+      "name": "Swift",
+      "color": "#f2bd72",
+      "cargo": "Freight",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "selene-ascent",
+          "units": {
+            "length": "Selene radius",
+            "time": "√(R³/μ)",
+            "mass": "mass unit"
+          },
+          "epoch": 0,
+          "duration": 6,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 20
+          },
+          "bodies": [
+            {
+              "id": "Selene",
+              "mu": 1,
+              "radius": 1,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "ship": {
+            "id": "swift",
+            "state": [
+              6.123240118970762e-17,
+              1.000001,
+              0,
+              -0.003000003,
+              1.8369720356912284e-19,
+              0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 1.2,
+            "tankCapacity": 1.4,
+            "exhaustVelocity": 3,
+            "engine": {
+              "maxThrust": 5,
+              "maxAcceleration": 3
+            }
+          },
+          "logistics": {
+            "modelVersion": "surface-ports-v3",
+            "ports": [
+              {
+                "id": "Cairn",
+                "rail": {
+                  "kind": "surface",
+                  "bodyId": "Selene",
+                  "centerHeight": 0.000001,
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 1.000001,
+                  "rate": 0.003,
+                  "phase": 1.5707963267948966
+                },
+                "cargo": 0.2,
+                "cargoCapacity": 1,
+                "propellant": 1,
+                "tankCapacity": 2,
+                "serviceDuration": 0.3
+              },
+              {
+                "id": "Lantern",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 1.25,
+                  "rate": 0.7155417527999327,
+                  "phase": 1.007544851824315
+                },
+                "cargo": 0,
+                "cargoCapacity": 1,
+                "propellant": 1,
+                "tankCapacity": 2,
+                "serviceDuration": 0.3
+              }
+            ],
+            "cargoCapacity": 0.1,
+            "capture": {
+              "position": 1e-7,
+              "velocity": 1e-7
+            },
+            "objective": {
+              "destinationId": "Lantern",
+              "quota": 0.1,
+              "returnPortId": "Cairn",
+              "minPropellant": 0,
+              "hardwareCost": 1
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 3,
+          "id": "swift-ascent-v1",
+          "burns": [],
+          "thrustArcs": [
+            {
+              "id": "pitch-1",
+              "start": 0.3,
+              "end": 0.39680185791057665,
+              "direction": [
+                -0.0008999998784998446,
+                0.9999995950000273,
+                0
+              ],
+              "throttle": 1
+            },
+            {
+              "id": "pitch-2",
+              "start": 0.39680185791057665,
+              "end": 0.4936037158211533,
+              "direction": [
+                -0.167424306107578,
+                0.985884933308343,
+                0
+              ],
+              "throttle": 1
+            },
+            {
+              "id": "pitch-3",
+              "start": 0.4936037158211533,
+              "end": 0.59040557373173,
+              "direction": [
+                -0.2757333124127533,
+                0.9612341756439432,
+                0
+              ],
+              "throttle": 1
+            },
+            {
+              "id": "pitch-4",
+              "start": 0.59040557373173,
+              "end": 0.6872074316423067,
+              "direction": [
+                -0.3782385459078324,
+                0.9257081626460515,
+                0
+              ],
+              "throttle": 1
+            },
+            {
+              "id": "pitch-5",
+              "start": 0.6872074316423067,
+              "end": 0.7840092895528833,
+              "direction": [
+                -0.6844539220809281,
+                0.729056121672423,
+                0
+              ],
+              "throttle": 1
+            },
+            {
+              "id": "pitch-6",
+              "start": 0.7840092895528833,
+              "end": 0.8808111474634599,
+              "direction": [
+                -0.9469564882292419,
+                -0.32136180451407353,
+                0
+              ],
+              "throttle": 1
+            },
+            {
+              "id": "pitch-7",
+              "start": 0.8808111474634599,
+              "end": 0.9776130053740366,
+              "direction": [
+                -0.610935811570013,
+                -0.7916801337290772,
+                0
+              ],
+              "throttle": 1
+            },
+            {
+              "id": "pitch-8",
+              "start": 0.9776130053740366,
+              "end": 1.0744148632846133,
+              "direction": [
+                -0.22818164656269535,
+                -0.9736185783826935,
+                0
+              ],
+              "throttle": 1
+            }
+          ],
+          "operations": [
+            {
+              "id": "on-pad",
+              "t": 0,
+              "portId": "Cairn",
+              "kind": "dock"
+            },
+            {
+              "id": "load",
+              "t": 0,
+              "portId": "Cairn",
+              "kind": "transfer",
+              "cargo": 0.1,
+              "propellant": 0.2
+            },
+            {
+              "id": "lift-off",
+              "t": 0.3,
+              "portId": "Cairn",
+              "kind": "launch",
+              "thrustArcId": "pitch-1"
+            },
+            {
+              "id": "arrival",
+              "t": 1.7207514043249135,
+              "portId": "Lantern",
+              "kind": "dock"
+            },
+            {
+              "id": "unload",
+              "t": 1.7207514043249135,
+              "portId": "Lantern",
+              "kind": "transfer",
+              "cargo": -0.1,
+              "propellant": 0
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
