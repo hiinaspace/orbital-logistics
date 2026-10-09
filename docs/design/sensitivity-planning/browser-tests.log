@@ -1,0 +1,71 @@
+[WebServer] (node:2750365) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 35 tests using 1 worker
+
+(node:2750445) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/browser/camera.spec.ts:9:1 › spatial camera orbits, pans, anchors zoom and returns overhead without editing the maneuver (4.1s)
+  ✓   2 tests/browser/camera.spec.ts:32:1 › rear ships and reference beacons are occluded and cannot be selected through a body (2.0s)
+  ✓   3 tests/browser/camera.spec.ts:40:1 › camera-projected exhaust whiskers and continuous surface history share unchanged physics (9.3s)
+  ✓   4 tests/browser/flexible-service.spec.ts:5:1 › flexible service delivers relay fuel, rides loaded maintenance, preserves scrubbing and switches workers (44.4s)
+  -   5 tests/browser/maintained-profile.spec.ts:3:1 › diagnostic maintained service CPU and long tasks
+  ✓   6 tests/browser/maintained-service.spec.ts:5:1 › online maintained service visits repeatedly, holds history, separates corrections and survives worker changes (19.7s)
+  -   7 tests/browser/planning-throughput.spec.ts:3:1 › measure committed playback across route windows
+  ✓   8 tests/browser/planning-throughput.spec.ts:29:1 › set-specific speed range clamps a carried rate and restores prepared range (4.3s)
+  ✓   9 tests/browser/responsive-service.spec.ts:4:1 › timeline selection survives live worker updates (10.9s)
+  ✘  10 tests/browser/responsive-service.spec.ts:25:1 › worker errors drain acknowledged playback, stop at its head and preserve scrubbing (8.9s)
+(node:2751563) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  11 tests/browser/responsive-service.spec.ts:49:1 › one-times playback continues through retry and route planning with committed history (1.3m)
+  ✓  12 tests/browser/responsive-service.spec.ts:78:1 › retained adaptive history catches up across admissions at fast speed (1.2m)
+  ✓  13 tests/browser/stationkeeping.spec.ts:6:1 › maintained relay exposes paid correction history and matches the visitor through dwell/release across camera and physical frames (4.2s)
+  ✓  14 tests/browser/steering.spec.ts:13:1 › see-through bodies is optional, preserves truth and permits rear marker selection (2.0s)
+  ✓  15 tests/browser/steering.spec.ts:24:1 › inclined finite transfer shows genuinely continuous steered thrust and paid docking across frames (1.8s)
+  ✓  16 tests/browser/tracking.spec.ts:6:1 › follow holds the selected ship at close zoom without changing inertial trajectories; chase and rewind are deterministic (1.8s)
+  ✓  17 tests/browser/tracking.spec.ts:18:1 › orbit gestures rotate about the selected object while preserving its projected position (1.7s)
+  ✓  18 tests/browser/traffic.spec.ts:6:1 › continuous service holds history, returns live, restarts and cancels stale workers (5.1s)
+  ✓  19 tests/browser/traffic.spec.ts:23:1 › pause during a delayed reply acknowledges the head without moving the cursor or queuing more work (2.5s)
+  ✓  20 tests/browser/traffic.spec.ts:47:1 › an already-open viewer can switch sets after old worker assets are retired (7.4s)
+  ✓  21 tests/browser/traffic.spec.ts:60:1 › repeated lunar freight and live round trips reset their worker generations (16.7s)
+  ✓  22 tests/browser/traffic.spec.ts:70:1 › continuous surface service lands, rewinds retained history, stays live and restarts the selected set (15.9s)
+  ✓  23 tests/browser/viewer.spec.ts:17:1 › freight scene is immediately watchable; shared resources and all ships rewind together (1.5s)
+  ✓  24 tests/browser/viewer.spec.ts:40:1 › frames and layers change presentation without changing the fleet, stocks or events (1.5s)
+  ✓  25 tests/browser/viewer.spec.ts:57:1 › overlapping docked objects open a chooser; panning and zooming preserve selection and time (1.6s)
+  ✓  26 tests/browser/viewer.spec.ts:76:1 › lunar set supports rotating exploration, finite playback and explicit replay (2.2s)
+  ✓  27 tests/browser/viewer.spec.ts:94:1 › narrow layout keeps the scene and transport usable without horizontal overflow (1.4s)
+  ✓  28 tests/browser/viewer.spec.ts:104:1 › labels retain anchors through scrub, reversal, frames, pause and selection (1.4s)
+  ✓  29 tests/browser/viewer.spec.ts:119:1 › lunar freight exposes three finite round trips, depot stocks and shared rotating frames (4.7s)
+  ✓  30 tests/browser/viewer.spec.ts:136:1 › continuous playback speed supports intermediate rates without changing physics or pause (1.7s)
+  ✓  31 tests/browser/viewer.spec.ts:150:1 › powered freight shows finite acceleration, continuous resources and both completed returns (3.8s)
+  ✓  32 tests/browser/viewer.spec.ts:168:1 › future thrust whiskers follow the plan layer and never mark flown history (4.8s)
+  ✓  33 tests/browser/viewer.spec.ts:187:1 › surface freight is readable at launch and orbital scales; frames and replay preserve the flight (6.3s)
+  ✓  34 tests/browser/viewer.spec.ts:205:1 › surface round trip brakes, lands and unloads; frame changes, rewind and live-set switches preserve it (4.6s)
+  ✓  35 tests/browser/viewer.spec.ts:229:1 › thrust whiskers point along exhaust and taper with capped force in inertial and rotating views (2.3s)
+
+
+  1) tests/browser/responsive-service.spec.ts:25:1 › worker errors drain acknowledged playback, stop at its head and preserve scrubbing
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      41 |  await page.getByLabel('Playback speed').fill('2');
+      42 |  await expect.poll(async()=>(await state(page)).traffic.error).toContain('injected planner failure');
+    > 43 |  await expect.poll(async()=>(await state(page)).playing).toBe(false);
+         |                                                          ^
+      44 |  const stopped=await state(page);expect(stopped.t).toBe(stopped.traffic.frontier);expect(stopped.traffic.pending).toBe(false);
+      45 |  await page.getByLabel('Simulation time').fill('1');expect((await state(page)).t).toBe(1);
+      46 |  await page.getByRole('button',{name:'Play',exact:true}).click();await expect.poll(async()=>(await state(page)).playing).toBe(false);
+        at /home/s/code/orbital-logistics/tests/browser/responsive-service.spec.ts:43:58
+
+    Error Context: test-results/responsive-service-worker--1502c-head-and-preserve-scrubbing/error-context.md
+
+  1 failed
+    tests/browser/responsive-service.spec.ts:25:1 › worker errors drain acknowledged playback, stop at its head and preserve scrubbing
+  2 skipped
+  32 passed (5.9m)

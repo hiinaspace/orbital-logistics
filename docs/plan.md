@@ -79,8 +79,15 @@ The [responsive playback follow-up](design/responsive-service/README.md) removes
 redundant canonical work and adds bounded committed-history playback after Astra
 review. [Evidence](evidence/responsive-service.md) records route/control/event parity,
 normal-speed timing and stable timeline controls. A [stationkeeping literature pass](../reports/Efficient%20orbital%20stationkeeping.md)
-identifies sensitivity propagation and element/deadband policies as later experiments;
-the current dynamics/controller policy remain. Multi-visitor/demand routing stays separate.
+identified sensitivity propagation and element/deadband policies as later experiments.
+The user accepted1× playback/focus and authorized faster planning with a measured
+speed envelope. [Sensitivity shooting](design/sensitivity-planning/README.md) is now
+implemented for the adaptive set, retaining the physical controller/capture policy.
+The final32-unit reserve and set-specific4× cap sustained3.998× through512 in the
+production browser without buffer exhaustion; other sets retain16×. See
+[numerical and playback evidence](evidence/sensitivity-planning.md). A separate
+element/deadband policy remains optional future work; multiple visitors/demand
+routing stays separate. Human viewing of this4× follow-up remains open.
 Lunar continuation, demand routing/rescue, persistence, staging/recovery,
 attitude dynamics and retargeting of existing surface steering remain separate extensions. No general
 steering optimizer is claimed.

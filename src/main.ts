@@ -1,7 +1,7 @@
 import './style.css';
 import PrepareWorker from './model-set/prepare.worker?worker&inline';
 import TrafficWorker from './traffic/traffic.worker?worker&inline';
-import {adaptivePlaybackLead,bufferedEdge} from './traffic/playback';
+import {adaptivePlaybackLead,bufferedEdge,maximumPlaybackRate} from './traffic/playback';
 import {StableLabels,type Label,type PlacedLabel} from './view/labels';
 import freight from '../fixtures/model-sets/orison-freight.json';
 import lunar from '../fixtures/model-sets/lunar-loop.json';
@@ -304,6 +304,7 @@ function publishState() {
     stocks: run ? stockAt(run, t) : [], events, thrustWhiskers, camera: {...camera,preset:cameraPreset,panMode,tracking,trackingOffset}, seeThroughBodies, hits});
 }
 function loadSet(id: string) {
+  const speed=$<HTMLInputElement>('speed');speed.max=String(Math.log2(maximumPlaybackRate(id)));playbackRate=Math.min(playbackRate,maximumPlaybackRate(id));speed.value=String(Math.log2(playbackRate));showSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
   tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service','orison-flexible-service'].includes(id)?'oblique':'top';orient(camera,cameraPreset);panMode=false;cameraControls();
@@ -607,11 +608,13 @@ document.addEventListener('keydown', e => {
   }
   if (e.key === 'Escape') $('hit-menu').hidden = true;
 });
-$<HTMLInputElement>('speed').oninput = () => {
-  playbackRate = 2 ** Number($<HTMLInputElement>('speed').value);
+function showSpeed(){
   const text = `${playbackRate < .01 ? Number(playbackRate.toPrecision(3)) : playbackRate<1 ? playbackRate.toFixed(2) : Number(playbackRate.toFixed(2))}×`;
   $('speed-value').textContent = text;
   $('speed').setAttribute('aria-valuetext', text);
+}
+$<HTMLInputElement>('speed').oninput = () => {
+  playbackRate = Math.min(maximumPlaybackRate(run?.id??''),2 ** Number($<HTMLInputElement>('speed').value));showSpeed();
   if (ready) updatePanels();
 };
 function animate(now: number) {

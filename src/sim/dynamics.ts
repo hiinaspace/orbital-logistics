@@ -8,12 +8,14 @@ export function bodyState(body: Body, t: number): State {
   return [...rail.center.map((x,i)=>x+rail.radius*(rail.u[i]*c+rail.v[i]*s)),
     ...rail.u.map((u,i)=>rail.radius*rail.rate*(-u*s+rail.v[i]*c))] as State;
 }
-export function derivative(scenario: Scenario, t: number, y: State): State {
+export function derivative(scenario: Scenario, t: number, y: State, gravityJacobian?:number[]): State {
   const acceleration = [0,0,0];
+  gravityJacobian?.fill(0);
   for (const body of scenario.bodies) {
     const b = bodyState(body, t), r = distance(b,y);
     if (r <= body.radius) throw new Error('Derivative requested inside a surface');
     for(let i=0;i<3;i++) acceleration[i] += body.mu*(b[i]-y[i])/r**3;
+    if(gravityJacobian){const factor=body.mu/r**3,q=3*factor/(r*r);for(let i=0;i<3;i++)for(let j=0;j<3;j++)gravityJacobian[3*i+j]+=q*(b[i]-y[i])*(b[j]-y[j])-(i===j?factor:0);}
   }
   return [...velocity(y), ...acceleration] as State;
 }

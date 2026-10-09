@@ -1,4 +1,5 @@
 import {directionAt} from './steering';
+import {forceSensitivityStep} from './sensitivity';
 import {paidCapture,CaptureFailure} from './capture';
 import {resolveBurn} from './burns';
 import {distance, relativeSpeed, norm, dot} from './vectors';
@@ -337,6 +338,21 @@ export class Runner {
         y1: this.#interval(a,end).y,...(a.activeThrust?{massLaw:clone(a.activeThrust.law)}:{}) });
     }
     return segments;
+  }
+  // Candidate guidance only: differentiate the actual retained RK4 grid and
+  // safety subdivisions. This never creates or replaces a physical checkpoint.
+  terminalForceJacobian():number[][]|undefined {
+    const s=this.#bundle.scenario,arcs=this.#bundle.program.thrustArcs;
+    if(this.#last().status!=='horizon'||!arcs||arcs.length!==2||arcs.some(a=>a.steering)||this.#bundle.program.burns.length||s.logistics)return;
+    for(const n of this.#nodes){const law=n.activeThrust?.law;if(law&&((law.capEpoch??Infinity)<=arcs[n.activeThrust!.index].end||(law.depletionEpoch??Infinity)<=arcs[n.activeThrust!.index].end))return;}
+    let tangent=Array(36).fill(0),massGradient=Array(6).fill(0),anchorGradient=massGradient,pulse=-1;
+    for(let i=1;i<this.#nodes.length;i++){
+      const a=this.#nodes[i-1],b=this.#nodes[i],active=a.activeThrust,law=active?.law;
+      if(active&&pulse!==active.index){pulse=active.index;anchorGradient=[...massGradient];}
+      tangent=forceSensitivityStep(s,a.t,a.y,b.t-a.t,law,pulse,anchorGradient,tangent);
+      if(law)massGradient=anchorGradient.map((v,j)=>v-(Math.floor(j/3)===pulse?(b.t-law.epoch)*law.direction[j%3]*(law.force?1:0)/law.exhaustVelocity:0));
+    }
+    return Array.from({length:6},(_,i)=>tangent.slice(i*6,i*6+6));
   }
   reset(): Sample { this.#requestedEpoch = this.#bundle.scenario.epoch; return this.current; }
   snapshot(): Snapshot {

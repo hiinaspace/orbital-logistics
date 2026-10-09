@@ -34,7 +34,7 @@ export class AdaptiveWorld {
    if(frozen){const control=frozen.find(c=>c.t===t);if(!control)throw Error('Incomplete frozen station stream');arcs=copy(control.arcs);check=copy(control.check);}
    else if(before.position>.001||before.velocity>.0003){try{
     const coast=new Runner({scenario:s,program:{schemaVersion:3,id:'loaded-coast-seed',burns:[]}}),p=coast.sample(t+4).y,r=this.definition.reference,a=Math.atan2(p[1],p[0]),c=Math.cos(a),sn=Math.sin(a),target=[3*c,3*sn,0,-3*r.rate*sn,3*r.rate*c,0] as State;
-    const shot=yield* shootForcesJob({...s,duration:4},[{start:t,end:t+1.9},{start:t+2.1,end:t+4}],target,undefined,64,'sphere',this.work);
+    const shot=yield* shootForcesJob({...s,duration:4},[{start:t,end:t+1.9},{start:t+2.1,end:t+4}],target,undefined,64,'sphere',this.work,'sensitivity');
     const at=shot.runner.sample(t+4),err=orbitError(at.y,r);if(at.propellant<.1||err.position>Math.max(.001,before.position)||err.velocity>Math.max(.0003,before.velocity))throw new PlanningFailure('Loaded maintenance reserve/quality gate failed',shot.evaluations);
     arcs=shot.arcs.map((a,i)=>({...a,id:`adaptive-maintain-${t}-${i}`}));check={t,outcome:'correct',before:[before.position,before.velocity],after:[err.position,err.velocity],evaluations:shot.evaluations};
    }catch(error){if(!(error instanceof PlanningFailure))throw error;check={t,outcome:'failed',before:[before.position,before.velocity],evaluations:error.evaluations,detail:error.message};}}

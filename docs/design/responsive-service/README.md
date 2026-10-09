@@ -1,5 +1,9 @@
 # Responsive continuous viewing
 
+The subsequent [sensitivity-planning slice](../sensitivity-planning/README.md)
+supersedes this slice's16-unit lead with32 and caps flexible service at4×. The
+review and measurements below retain their original16-unit configuration.
+
 The user accepted the flexible routes but found planning pauses disruptive even at
 1x, requested another stationkeeping literature pass and reported timeline flapping.
 

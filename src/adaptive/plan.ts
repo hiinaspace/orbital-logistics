@@ -90,7 +90,7 @@ export function* buildPlanJob(d:AdaptiveDefinition,base:Anchor,prefix:Control[],
  // Immutable controls already committed at the head must match this candidate.
  for(const control of prefix)if(key(pre.controls.find(c=>c.t===control.t))!==key(control))throw Error('Candidate changed committed owner prefix');
  const outScenario=legScenario(d,s.departure,s.relayArrival-s.departure,pre.sample(d.origin.id,s.departure).y,fuel),outTarget=pre.sample(d.relay.id,s.relayArrival).y;
- const out=yield* shootForcesJob(outScenario,[{start:s.departure,end:s.departure+1.6},{start:s.relayArrival-1.8,end:s.relayArrival}],outTarget,economicalSeed(outScenario.ship.state,outTarget,outScenario.duration,1.05+fuel),96,'sphere',work?.visitor);
+ const out=yield* shootForcesJob(outScenario,[{start:s.departure,end:s.departure+1.6},{start:s.relayArrival-1.8,end:s.relayArrival}],outTarget,economicalSeed(outScenario.ship.state,outTarget,outScenario.duration,1.05+fuel),96,'sphere',work?.visitor,'sensitivity');
  const capture=paid(d,out.runner,outTarget,s.relayArrival,d.relay.id),delivery=Math.max(0,d.relay.ship.tankCapacity-pre.sample(d.relay.id,s.relayArrival+.5).propellant),remaining=capture.propellantAfter-delivery;
  if(remaining<.05)throw new PlanningFailure('Donor cannot fund station top-up');
  const owner=new AdaptiveWorld(d,base,work?.controller),events:Ownership[]=[{t:s.relayArrival,kind:'capture',visitorId:d.world.scenario.ship.id,fuel:capture.propellantAfter},{t:s.relayArrival+.5,kind:'transfer',visitorId:d.world.scenario.ship.id,amount:delivery},{t:s.release,kind:'release',visitorId:d.world.scenario.ship.id}];
@@ -102,7 +102,7 @@ export function* buildPlanJob(d:AdaptiveDefinition,base:Anchor,prefix:Control[],
  if(Math.hypot(...owner.sample(d.relay.id,s.relayArrival).y.map((x,i)=>x-outTarget[i]))>1e-12)throw Error('Docking changed its proven incoming target');
  pre.chunks=[]; // Incoming proof/amount are now immutable scalar facts.
  const returnScenario=legScenario(d,s.release,s.homeArrival-s.release,owner.sample(d.relay.id,s.release).y,remaining),homeTarget=owner.sample(d.origin.id,s.homeArrival).y;
- const back=yield* shootForcesJob(returnScenario,[{start:s.release,end:s.release+1.6},{start:s.homeArrival-1.8,end:s.homeArrival}],homeTarget,economicalSeed(returnScenario.ship.state,homeTarget,returnScenario.duration,1.05+remaining),96,'sphere',work?.visitor);
+ const back=yield* shootForcesJob(returnScenario,[{start:s.release,end:s.release+1.6},{start:s.homeArrival-1.8,end:s.homeArrival}],homeTarget,economicalSeed(returnScenario.ship.state,homeTarget,returnScenario.duration,1.05+remaining),96,'sphere',work?.visitor,'sensitivity');
  const outBundle=out.runner.bundle,backBundle=back.runner.bundle;outBundle.program.id=`${id}:out`;backBundle.program.id=`${id}:back`;outBundle.program.thrustArcs!.forEach((a,i)=>a.id=`${id}:out:${i}`);backBundle.program.thrustArcs!.forEach((a,i)=>a.id=`${id}:back:${i}`);
  const plan:CoupledPlan={schemaVersion:1,modelVersion:'coupled-service-v1',id,knownAt:base.t,end,base:copy(base),controls:owner.controls,schedule:copy(s),visitorId:d.world.scenario.ship.id,fuel,delivery,outbound:outBundle,inbound:backBundle,evaluations:out.evaluations+back.evaluations};yield;
  const trip=new CoupledTrip(d,plan);

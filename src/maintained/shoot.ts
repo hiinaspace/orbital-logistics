@@ -1,6 +1,7 @@
 import {Runner} from '../sim/runner';
 import type {Scenario,State,ThrustArc,Vec3} from '../sim/schema';
 
+// Physical trajectories and sensitivity sweeps both consume bounded work.
 export interface PropagationBudget {used:number;limit:number}
 export interface Pulse {start:number;end:number}
 export interface Shot {runner:Runner;arcs:ThrustArc[];evaluations:number;residual:number}
@@ -17,8 +18,8 @@ function linear(a:number[][],b:number[]):number[] {
  return m.map(row=>row[6]);
 }
 // A fixed two-pulse family, full six-state terminal target and a hard propagation
-// count. Trials use the canonical dynamics; display and wall-clock time are absent.
-export function* shootForcesJob(scenario:Scenario,pulses:[Pulse,Pulse],target:State,seed:number[]=Array(6).fill(0),budget=64,domain:'cube'|'sphere'='cube',work?:PropagationBudget):Generator<void,Shot> {
+// work count. Trials use canonical dynamics; display and wall-clock time are absent.
+export function* shootForcesJob(scenario:Scenario,pulses:[Pulse,Pulse],target:State,seed:number[]=Array(6).fill(0),budget=64,domain:'cube'|'sphere'='cube',work?:PropagationBudget,method:'finite-difference'|'sensitivity'='finite-difference'):Generator<void,Shot> {
  const engine=scenario.ship.engine!;if(!engine || budget<1)throw new PlanningFailure('Invalid shooting domain');
  if(!['cube','sphere'].includes(domain))throw new PlanningFailure('Invalid force search domain');
  const bound=domain==='sphere'?engine.maxThrust:engine.maxThrust/Math.sqrt(3),inside=(v:number[],tolerance=0)=>v.every(Number.isFinite)&&(domain==='sphere'?[0,3].every(i=>Math.hypot(...v.slice(i,i+3))<=bound+tolerance):v.every(a=>Math.abs(a)<=bound+tolerance)),duration=scenario.duration,scale=duration/4;
@@ -39,13 +40,20 @@ export function* shootForcesJob(scenario:Scenario,pulses:[Pulse,Pulse],target:St
   let at=yield* evaluate(x,step),converged=false;
   for(let iteration=0;iteration<7;iteration++) {
    if(at.norm<2e-11){converged=true;break;}
-   const columns:number[][]=[];for(let j=0;j<6;j++){const y=[...x],edge=domain==='sphere'&&Math.hypot(...x.slice(Math.floor(j/3)*3,Math.floor(j/3)*3+3))>=bound-2e-5,h=1e-5*(edge?(x[j]>=0?-1:1):x[j]>=bound-1e-5?-1:1);y[j]+=h;
+   let jacobian:number[][]|undefined;
+   if(method==='sensitivity'){
+    yield;
+    if(work){if(work.used>=work.limit)throw new PlanningFailure('Shared propagation budget exhausted');work.used++;}
+    if(evaluations>=budget)throw new PlanningFailure('Shooting evaluation budget exhausted');evaluations++;
+    jacobian=at.runner.terminalForceJacobian()?.map((row,i)=>row.map(v=>v*(i<3?1:scale)));
+   }
+   const columns:number[][]=[];if(!jacobian)for(let j=0;j<6;j++){const y=[...x],edge=domain==='sphere'&&Math.hypot(...x.slice(Math.floor(j/3)*3,Math.floor(j/3)*3+3))>=bound-2e-5,h=1e-5*(edge?(x[j]>=0?-1:1):x[j]>=bound-1e-5?-1:1);y[j]+=h;
     // At the sphere boundary an orthogonal coordinate probe needs a tiny
     // inward normal correction. Its O(h^2) offset preserves the one-sided
     // derivative while keeping the actual finite-force trial feasible.
     if(domain==='sphere'){const base=Math.floor(j/3)*3,n=Math.hypot(...y.slice(base,base+3));if(n>bound)for(let k=base;k<base+3;k++)y[k]*=(bound-h*h/bound)/n;}
     const r=yield* evaluate(y,step);columns.push(r.residual.map((a,i)=>(a-at.residual[i])/h));}
-   const dx=linear(Array.from({length:6},(_,i)=>columns.map(c=>c[i])),at.residual.map(a=>-a));
+   const dx=linear(jacobian??Array.from({length:6},(_,i)=>columns.map(c=>c[i])),at.residual.map(a=>-a));
    let accepted=false;
    for(const fraction of [1,.5,.25,.125]) {
     const y=x.map((a,i)=>a+fraction*dx[i]);if(!inside(y,domain==='sphere'?1e-12:0))continue;

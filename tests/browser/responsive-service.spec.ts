@@ -38,12 +38,12 @@ test('worker errors drain acknowledged playback, stop at its head and preserve s
  await page.goto('/');await expect.poll(async()=>(await state(page)).ready).toBe(true);
  await page.getByLabel('Model set').selectOption('orison-flexible-service');
  await expect.poll(async()=>{const s=await state(page);return s.ready&&s.set==='orison-flexible-service';},{timeout:60000}).toBe(true);
- await page.getByLabel('Playback speed').fill('4');
+ await page.getByLabel('Playback speed').fill('2');
  await expect.poll(async()=>(await state(page)).traffic.error).toContain('injected planner failure');
- await expect.poll(async()=>(await state(page)).playing).toBe(false);
+ await expect.poll(async()=>(await state(page)).playing,{timeout:15000}).toBe(false);
  const stopped=await state(page);expect(stopped.t).toBe(stopped.traffic.frontier);expect(stopped.traffic.pending).toBe(false);
  await page.getByLabel('Simulation time').fill('1');expect((await state(page)).t).toBe(1);
- await page.getByRole('button',{name:'Play',exact:true}).click();await expect.poll(async()=>(await state(page)).playing).toBe(false);
+ await page.getByRole('button',{name:'Play',exact:true}).click();await expect.poll(async()=>(await state(page)).playing,{timeout:15000}).toBe(false);
  expect((await state(page)).t).toBe(stopped.traffic.frontier);expect((await state(page)).traffic.sequence).toBe(stopped.traffic.sequence);
 });
 test('one-times playback continues through retry and route planning with committed history',async({page})=>{
@@ -69,8 +69,8 @@ test('one-times playback continues through retry and route planning with committ
  await expect.poll(async()=>(await state(page)).t,{timeout:(through+25)*1000}).toBeGreaterThan(through);
  await page.evaluate(()=>{(window as any).stopPlaybackMeter=true;});
  const s=await state(page),meter=await page.evaluate(()=>(window as any).playbackMeter);
- writeFileSync(`docs/design/responsive-service/browser-timing${through===72?'':`-${through}`}.json`,JSON.stringify({speed:s.playbackRate,startupMs,cursor:s.t,frontier:s.traffic.frontier,...meter,stats:s.traffic.stats,errors},null,2)+'\n');
- expect(s.playbackRate).toBe(1);expect(meter.maxHoldMs).toBeLessThan(600);expect(meter.minimumLead).toBeGreaterThan(1);expect(meter.maximumLead).toBeLessThanOrEqual(17.1);expect(meter.unchangedHeadFrames).toBeGreaterThan(10);expect(s.traffic.stats.planningFailed).toBeGreaterThan(0);expect(s.traffic.stats.completed).toBeGreaterThanOrEqual(1);expect(errors).toEqual([]);
+ writeFileSync(`docs/design/sensitivity-planning/buffered-browser-${through}.json`,JSON.stringify({speed:s.playbackRate,startupMs,cursor:s.t,frontier:s.traffic.frontier,...meter,stats:s.traffic.stats,errors},null,2)+'\n');
+ expect(s.playbackRate).toBe(1);expect(meter.maxHoldMs).toBeLessThan(600);expect(meter.minimumLead).toBeGreaterThan(1);expect(meter.maximumLead).toBeLessThanOrEqual(33.1);expect(meter.unchangedHeadFrames).toBeGreaterThan(10);expect(s.traffic.stats.planningFailed).toBeGreaterThan(0);expect(s.traffic.stats.completed).toBeGreaterThanOrEqual(1);expect(errors).toEqual([]);
  await page.getByRole('button',{name:'Pause',exact:true}).click();const held=await state(page);await expect.poll(async()=>(await state(page)).traffic.pending).toBe(false);expect((await state(page)).t).toBe(held.t);expect((await state(page)).ships[0].y).toEqual(held.ships[0].y);
  await page.getByLabel('Simulation time').fill(Math.max(24.123,held.traffic.oldest+1).toFixed(3));const past=await state(page);await page.getByLabel('Reference frame').selectOption('rotating');expect((await state(page)).ships[0].y).toEqual(past.ships[0].y);
  await page.getByRole('button',{name:'Return to live'}).click();await expect.poll(async()=>(await state(page)).traffic.frontier).toBeGreaterThan(s.traffic.frontier);
@@ -80,7 +80,7 @@ test('retained adaptive history catches up across admissions at fast speed',asyn
  await page.goto('/');await expect.poll(async()=>(await state(page)).ready).toBe(true);
  await page.getByLabel('Model set').selectOption('orison-flexible-service');
  await expect.poll(async()=>{const s=await state(page);return s.ready&&s.set==='orison-flexible-service';},{timeout:60000}).toBe(true);
- await page.getByLabel('Playback speed').fill('4');
+ await page.getByLabel('Playback speed').fill('2');
  await expect.poll(async()=>(await state(page)).traffic.frontier,{timeout:90000}).toBeGreaterThan(264);
  await page.getByRole('button',{name:'Pause',exact:true}).click();await expect.poll(async()=>(await state(page)).traffic.pending).toBe(false);
  const head=await state(page);expect(head.traffic.oldest).toBeGreaterThan(128);

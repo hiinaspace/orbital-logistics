@@ -1,5 +1,6 @@
 """Original-anchor independent replay of a funded online coupled control stream."""
 
+import argparse
 import json
 from pathlib import Path
 
@@ -7,7 +8,15 @@ import numpy as np
 from flexible_service_oracle import at, replay
 
 ROOT = Path(__file__).resolve().parents[2]
-request = json.loads((ROOT / "docs/design/flexible-service/online-oracle-input.json").read_text())
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--input", type=Path, default=ROOT / "docs/design/flexible-service/online-oracle-input.json"
+)
+parser.add_argument(
+    "--output", type=Path, default=ROOT / "docs/design/flexible-service/online-oracle.json"
+)
+args = parser.parse_args()
+request = json.loads(args.input.read_text())
 pieces, captures, ownership = replay(request)
 ordinary, _, _ = replay(request, False)
 errors = dict(
@@ -60,7 +69,5 @@ report = dict(
     ownership=ownership,
     replayedDepartures=[v["plan"]["schedule"]["departure"] for v in request["replay"]],
 )
-(ROOT / "docs/design/flexible-service/online-oracle.json").write_text(
-    json.dumps(report, indent=2) + "\n"
-)
+args.output.write_text(json.dumps(report, indent=2) + "\n")
 print(json.dumps(report, indent=2))

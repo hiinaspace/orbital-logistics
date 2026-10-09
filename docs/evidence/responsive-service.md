@@ -1,5 +1,8 @@
 # Responsive adaptive playback — 2026-10-09
 
+Historical16-unit configuration; see the subsequent
+[sensitivity/32-unit/4× measurements](sensitivity-planning.md) for current behavior.
+
 User accepted the economical routes, then reported multi-second simulation holds
 at1x and timeline highlight flapping. Physical fidelity was retained for this fix.
 
