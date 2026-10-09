@@ -500,7 +500,7 @@ function draw() {
     ctx.save(); ctx.translate(...p); ctx.rotate(Math.PI / 4); ctx.strokeStyle = colors.station; ctx.lineWidth = 1.2; ctx.strokeRect(-4, -4, 8, 8); ctx.restore();
     }
     const thrust=known?.thrust;
-    if(thrust && thrust.force>0){const d=cameraVector(camera,transformDirection(run!,thrust.direction,t,frame));path([[p[0]-d[0]*5,p[1]+d[1]*5],[p[0]-d[0]*15,p[1]+d[1]*15]],'#ffe0a0',2,.9);}
+    if(selected===port.id && thrust && thrust.force>0){const d=cameraVector(camera,transformDirection(run!,thrust.direction,t,frame));path([[p[0]-d[0]*5,p[1]+d[1]*5],[p[0]-d[0]*15,p[1]+d[1]*15]],'#ffe0a0',2,.9);}
     if (selected === port.id) { ctx.beginPath(); ctx.arc(...p, 10, 0, Math.PI * 2); ctx.strokeStyle = '#c7d5de'; ctx.stroke(); }
     if(known?.activity?.kind==='fault'){path([[p[0]-5,p[1]-5],[p[0]+5,p[1]+5]],'#ef8a81',2);path([[p[0]-5,p[1]+5],[p[0]+5,p[1]-5]],'#ef8a81',2);}
     label(port.id, port.id+(known?.activity?.kind==='fault'?' · fault':''), ...p, '#a7bac7'); hits.push({id: port.id, name: port.id, x: p[0], y: p[1],depth:p3[2]});
