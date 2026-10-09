@@ -97,3 +97,11 @@ faults preserve their paid prefix, while attached failures halt before unsupport
 maintenance. The current fixture has one visitor, fixed ballast and no relay exchange;
 maintenance with docked mass/refueling, multiple visitors, adaptive timing, noncoplanar
 online targeting and demand scheduling remain separate extensions.
+
+## Scheduling/performance follow-up
+
+The user subsequently reported long waits and playback hitches. The
+[2026-10-09 follow-up](maintained-service-follow-up.md) extends the observed rollout
+to1536, separates rigid transfer-family failures from later station fuel limits,
+and records shipped display-performance fixes. It leaves live physical planning
+unchanged and proposes flexible timing/dwell plus attached-mass ownership next.

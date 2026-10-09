@@ -1,0 +1,98 @@
+[
+  {
+    "departure": 6,
+    "fuel": 0.2906828226028638,
+    "dv": 0.4842695812429512,
+    "minRadius": 1.7643478037305107,
+    "maxRadius": 3.1306497868697765,
+    "evaluations": 103
+  },
+  {
+    "departure": 14,
+    "error": "Unsafe shooting candidate: unsupported-approach"
+  },
+  {
+    "departure": 22,
+    "error": "Force bound exceeded"
+  },
+  {
+    "departure": 30,
+    "error": "No bounded shooting improvement"
+  },
+  {
+    "departure": 38,
+    "error": "No bounded shooting improvement"
+  },
+  {
+    "departure": 46,
+    "fuel": 0.28243566914475915,
+    "dv": 0.46939588586592,
+    "minRadius": 1.850909247648037,
+    "maxRadius": 3.0978341309950257,
+    "evaluations": 96
+  },
+  {
+    "departure": 54,
+    "error": "Force bound exceeded"
+  },
+  {
+    "departure": 62,
+    "error": "Force bound exceeded"
+  },
+  {
+    "departure": 70,
+    "error": "No bounded shooting improvement"
+  },
+  {
+    "departure": 78,
+    "error": "No bounded shooting improvement"
+  },
+  {
+    "departure": 86,
+    "fuel": 0.2792663303827284,
+    "dv": 0.463699558491078,
+    "minRadius": 1.9798737960372506,
+    "maxRadius": 3.1468810632734963,
+    "evaluations": 96
+  },
+  {
+    "departure": 94,
+    "error": "Force bound exceeded"
+  },
+  {
+    "departure": 102,
+    "error": "Force bound exceeded"
+  },
+  {
+    "departure": 110,
+    "error": "No bounded shooting improvement"
+  },
+  {
+    "departure": 118,
+    "error": "No bounded shooting improvement"
+  },
+  {
+    "departure": 126,
+    "fuel": 0.30419238173006746,
+    "dv": 0.5087944664427171,
+    "minRadius": 2.00159296989485,
+    "maxRadius": 3.1997857431233045,
+    "evaluations": 95
+  },
+  {
+    "departure": 134,
+    "error": "Force bound exceeded"
+  },
+  {
+    "departure": 142,
+    "error": "Force bound exceeded"
+  },
+  {
+    "departure": 150,
+    "error": "No bounded shooting improvement"
+  },
+  {
+    "departure": 158,
+    "error": "Shooting did not converge (0.0023795428910323136)"
+  }
+]

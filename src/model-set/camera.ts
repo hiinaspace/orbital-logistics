@@ -50,8 +50,12 @@ function roots(a:number,b:number,c:number):number[] {
 // tied to camera distance; this is disposable drawing geometry, not collision.
 export function visibleSegment(a:ScreenPoint,b:ScreenPoint,spheres:Sphere[]):[ScreenPoint,ScreenPoint][] {
  if(!a.every(Number.isFinite)||!b.every(Number.isFinite))return [];
+ // Most projected segments miss every body. Avoid root solving and temporary
+ // geometry for that common case; crossings still use the exact clipping below.
+ const shadows=spheres.filter(s=>Math.max(a[0],b[0])>=s.point[0]-s.radius && Math.min(a[0],b[0])<=s.point[0]+s.radius && Math.max(a[1],b[1])>=s.point[1]-s.radius && Math.min(a[1],b[1])<=s.point[1]+s.radius);
+ if(!shadows.length)return [[a,b]];
  const d=b.map((x,i)=>x-a[i]),cuts=[0,1];
- for(const sphere of spheres) {
+ for(const sphere of shadows) {
   const q=a.map((x,i)=>x-sphere.point[i]);
   const projA=d[0]**2+d[1]**2,projB=2*(q[0]*d[0]+q[1]*d[1]),projC=q[0]**2+q[1]**2-sphere.radius**2;
   // Quickly reject shadows whose projected bounding box misses this segment.

@@ -36,3 +36,17 @@ test('Lambert seed recovers normalized circular quarter and three-quarter coasts
   const force=transferSeed([1,0,0,0,1,0],[...to],time,1);assert.ok(Math.hypot(...force)<1e-12);
  }
 });
+test('cached live drawing streams preserve plan knowledge, paid captures and event-side samples after duplicate replies and rewind',async()=>{
+ const {sampleVessel}=await import('../../src/model-set/model');
+ const e=new MaintainedEngine(definition);advance(e,80);const p=e.delta(),store=new MaintainedViewStore(definition);store.ingest(p);
+ const baseline=store.view(64);store.ingest(structuredClone(p));assert.deepEqual(store.view(64),baseline);
+ assert.equal(store.view(63).vessels[0].arcs.some(a=>a.id.startsWith('trip-1-')),false);
+ const known=store.view(64),trip=p.visits.find(v=>v.departure===70)!;assert.ok(known.vessels[0].arcs.some(a=>a.id.startsWith('trip-1-')));
+ for(const epoch of [70,71,71.6,82.2,84,86,98.2,100,102]){
+  const actual=sampleVessel(known.vessels[0],epoch),expected=trip.samples.find(s=>s.t===epoch)!;
+  assert.ok(Math.hypot(...actual.y.map((x,i)=>x-expected.y[i]))<1e-12);
+  assert.ok(Math.abs(actual.propellant-expected.propellant)<1e-12);
+  assert.equal(actual.logistics?.dockedPortId,expected.logistics?.dockedPortId);
+ }
+ assert.deepEqual(store.view(64),baseline);store.view(80);assert.deepEqual(store.view(64),baseline);
+});

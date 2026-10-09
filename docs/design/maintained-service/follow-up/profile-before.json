@@ -1,0 +1,1987 @@
+{
+  "state": {
+    "ready": true,
+    "revision": 2,
+    "set": "orison-maintained-service",
+    "t": 524.6656000000003,
+    "playing": false,
+    "playbackRate": 16,
+    "frame": "inertial",
+    "selected": "Tern",
+    "layers": {
+      "orbits": true,
+      "trails": true,
+      "plan": true,
+      "labels": true
+    },
+    "traffic": {
+      "frontier": 524.9328000000003,
+      "oldest": 396.66560000000027,
+      "pending": false,
+      "sequence": 1489,
+      "live": false,
+      "stats": {
+        "frames": 2062,
+        "chunks": 21,
+        "physicalChunks": 5,
+        "visits": 4,
+        "runnerNodes": 55524,
+        "completed": 9,
+        "planningFailed": 17,
+        "controllerChecks": 70,
+        "controllerCorrected": 54,
+        "controllerFailed": 0,
+        "controllerEvaluations": 927,
+        "maxVisitEvaluations": 102,
+        "planningPending": 0,
+        "stationFuel": 0.2677246768288244,
+        "stationFuelUsed": 0.3322753231711756,
+        "shipFuelUsed": 4.265454839802176,
+        "packetBytes": 2964,
+        "viewBytes": 5520521
+      },
+      "error": ""
+    },
+    "ships": [
+      {
+        "id": "Tern",
+        "t": 524.6656000000003,
+        "y": [
+          2.0200417437488887,
+          -0.3524896875125185,
+          0,
+          -0.13212143033768037,
+          0.7145591796730183,
+          0
+        ],
+        "propellant": 0.5937753000625168,
+        "fuelUsed": 4.265454839802176,
+        "burnCursor": 0,
+        "status": "running",
+        "detail": "",
+        "logistics": {
+          "operationCursor": 2,
+          "cargoMass": 0.05,
+          "fuelUsed": 4.265454839802176,
+          "ports": [
+            {
+              "id": "Equator",
+              "cargo": 0,
+              "propellant": 0
+            },
+            {
+              "id": "Meridian",
+              "cargo": 0,
+              "propellant": 0
+            }
+          ]
+        },
+        "activity": {
+          "kind": "flying"
+        },
+        "screen": [
+          529.5664453187574,
+          191.89957606772626
+        ]
+      }
+    ],
+    "labels": [
+      {
+        "id": "Tern",
+        "anchor": 0,
+        "alpha": 1,
+        "left": 542.5664453187574,
+        "top": 181.89957606772626
+      },
+      {
+        "id": "Equator",
+        "anchor": 1,
+        "alpha": 0,
+        "left": 485.7304358095833,
+        "top": 191.92774407677774
+      },
+      {
+        "id": "Meridian",
+        "anchor": 0,
+        "alpha": 0,
+        "left": 573.8809011894256,
+        "top": 179.22830134418632
+      },
+      {
+        "id": "Mote",
+        "anchor": 0,
+        "alpha": 1,
+        "left": 614.0976047633292,
+        "top": 282.87610153435105
+      },
+      {
+        "id": "Orison",
+        "anchor": 0,
+        "alpha": 0.8107142857142857,
+        "left": 516.1538461538462,
+        "top": 199
+      }
+    ],
+    "maintenance": {
+      "Meridian": {
+        "t": 524.6656000000003,
+        "y": [
+          2.884386724692176,
+          -0.8247467015101781,
+          0,
+          0.15867845629339344,
+          0.555030774440033,
+          0
+        ],
+        "propellant": 0.2677246768288244,
+        "fuelUsed": 0.3322753231711756,
+        "burnCursor": 0,
+        "status": "running",
+        "detail": "",
+        "error": {
+          "position": 0.00001768351338791707,
+          "velocity": 0.00008576921866083588
+        }
+      }
+    },
+    "stocks": [
+      {
+        "id": "Equator",
+        "cargo": 0,
+        "propellant": 4,
+        "occupied": 0
+      },
+      {
+        "id": "Meridian",
+        "cargo": 0,
+        "propellant": 0,
+        "occupied": 0
+      }
+    ],
+    "events": [
+      {
+        "t": 392,
+        "kind": "thrust-start",
+        "id": "maintain-392-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.35485941974153956,
+        "propellantAfter": 0.35485941974153956,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 393.9,
+        "kind": "thrust-end",
+        "id": "maintain-392-0",
+        "deltaV": 0.002494834473974905,
+        "fuelUsed": 0.003620045692135143,
+        "propellantBefore": 0.35485941974153956,
+        "propellantAfter": 0.3512393740494044,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 394.1,
+        "kind": "thrust-start",
+        "id": "maintain-392-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3512393740494044,
+        "propellantAfter": 0.3512393740494044,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 396,
+        "kind": "thrust-end",
+        "id": "maintain-392-1",
+        "deltaV": 0.003287885748771373,
+        "fuelUsed": 0.004766180389312424,
+        "propellantBefore": 0.3512393740494044,
+        "propellantAfter": 0.346473193660092,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 398,
+        "kind": "undock",
+        "id": "Tern:6:release",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.6105296091978377,
+        "propellantAfter": 0.6105296091978377,
+        "portId": "Meridian",
+        "episodeId": "Tern:6",
+        "localEpoch": 16,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 399.6,
+        "kind": "thrust-end",
+        "id": "trip-6-398-0",
+        "shipId": "Tern",
+        "deltaV": 0.10628121705089551,
+        "fuelUsed": 0.05779785330080134,
+        "propellantBefore": 0.6105296091978377,
+        "propellantAfter": 0.5527317558970364,
+        "detail": "completed",
+        "episodeId": "Tern:6",
+        "localEpoch": 17.600000000000023,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 408,
+        "kind": "thrust-start",
+        "id": "maintain-408-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.346473193660092,
+        "propellantAfter": 0.346473193660092,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 409.9,
+        "kind": "thrust-end",
+        "id": "maintain-408-0",
+        "deltaV": 0.005451817422579528,
+        "fuelUsed": 0.007891553371488946,
+        "propellantBefore": 0.346473193660092,
+        "propellantAfter": 0.33858164028860305,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 410.1,
+        "kind": "thrust-start",
+        "id": "maintain-408-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.33858164028860305,
+        "propellantAfter": 0.33858164028860305,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 412,
+        "kind": "dock",
+        "id": "Tern:6:home",
+        "shipId": "Tern",
+        "deltaV": 9.268866325458891e-15,
+        "fuelUsed": 4.642962771725755e-15,
+        "propellantBefore": 0.45276072888425034,
+        "propellantAfter": 0.4527607288842457,
+        "portId": "Equator",
+        "positionError": 3.202372833989377e-14,
+        "episodeId": "Tern:6",
+        "localEpoch": 30,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 412,
+        "kind": "thrust-end",
+        "id": "maintain-408-1",
+        "deltaV": 0.003230012767241294,
+        "fuelUsed": 0.004668710912969054,
+        "propellantBefore": 0.33858164028860305,
+        "propellantAfter": 0.333912929375634,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 412,
+        "kind": "thrust-end",
+        "id": "trip-6-398-1",
+        "shipId": "Tern",
+        "deltaV": 0.1932168552256711,
+        "fuelUsed": 0.09997102701278604,
+        "propellantBefore": 0.5527317558970364,
+        "propellantAfter": 0.45276072888425034,
+        "detail": "completed",
+        "episodeId": "Tern:6",
+        "localEpoch": 30,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 412,
+        "kind": "transfer-start",
+        "id": "Tern:6:refuel-start",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.4527607288842457,
+        "propellantAfter": 0.4527607288842457,
+        "portId": "Equator",
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 414,
+        "kind": "transfer",
+        "id": "refuel-414",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.4527607288842457,
+        "propellantAfter": 0.9,
+        "portId": "Equator",
+        "cargoBefore": 0.05,
+        "cargoAfter": 0.05,
+        "portCargoBefore": 0,
+        "portCargoAfter": 0,
+        "portPropellantBefore": 4,
+        "portPropellantAfter": 3.5527607288842455,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 416,
+        "kind": "thrust-start",
+        "id": "maintain-416-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.333912929375634,
+        "propellantAfter": 0.333912929375634,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 417.9,
+        "kind": "thrust-end",
+        "id": "maintain-416-0",
+        "deltaV": 0.003853901886373551,
+        "fuelUsed": 0.005563917174313815,
+        "propellantBefore": 0.333912929375634,
+        "propellantAfter": 0.3283490122013202,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 418.1,
+        "kind": "thrust-start",
+        "id": "maintain-416-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3283490122013202,
+        "propellantAfter": 0.3283490122013202,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 420,
+        "kind": "thrust-end",
+        "id": "maintain-416-1",
+        "deltaV": 0.005533691971283627,
+        "fuelUsed": 0.007976557828611064,
+        "propellantBefore": 0.3283490122013202,
+        "propellantAfter": 0.3203724543727091,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 422,
+        "kind": "undock",
+        "id": "Tern:7:departure",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.9,
+        "propellantAfter": 0.9,
+        "portId": "Equator",
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 423.6,
+        "kind": "thrust-end",
+        "id": "trip-7-422-0",
+        "shipId": "Tern",
+        "deltaV": 0.3055531672308655,
+        "fuelUsed": 0.1888300776355195,
+        "propellantBefore": 0.9,
+        "propellantAfter": 0.7111699223644805,
+        "detail": "completed",
+        "episodeId": "Tern:7",
+        "localEpoch": 1.6000000000000227,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 424,
+        "kind": "thrust-start",
+        "id": "maintain-424-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3203724543727091,
+        "propellantAfter": 0.3203724543727091,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 425.9,
+        "kind": "thrust-end",
+        "id": "maintain-424-0",
+        "deltaV": 0.0014516643100195065,
+        "fuelUsed": 0.0020900711116125237,
+        "propellantBefore": 0.3203724543727091,
+        "propellantAfter": 0.3182823832610966,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 426.1,
+        "kind": "thrust-start",
+        "id": "maintain-424-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3182823832610966,
+        "propellantAfter": 0.3182823832610966,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 428,
+        "kind": "thrust-end",
+        "id": "maintain-424-1",
+        "deltaV": 0.0004761580658124543,
+        "fuelUsed": 0.0006853406058997535,
+        "propellantBefore": 0.3182823832610966,
+        "propellantAfter": 0.31759704265519684,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 432,
+        "kind": "thrust-start",
+        "id": "maintain-432-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.31759704265519684,
+        "propellantAfter": 0.31759704265519684,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 433.9,
+        "kind": "thrust-end",
+        "id": "maintain-432-0",
+        "deltaV": 0.0009249044763804965,
+        "fuelUsed": 0.0013309164383494831,
+        "propellantBefore": 0.31759704265519684,
+        "propellantAfter": 0.31626612621684735,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 434.1,
+        "kind": "thrust-start",
+        "id": "maintain-432-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.31626612621684735,
+        "propellantAfter": 0.31626612621684735,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 436,
+        "kind": "dock",
+        "id": "Tern:7:relay",
+        "shipId": "Tern",
+        "deltaV": 4.316896925853651e-14,
+        "fuelUsed": 2.4174671140197876e-14,
+        "propellantBefore": 0.6300033604289217,
+        "propellantAfter": 0.6300033604288975,
+        "portId": "Meridian",
+        "positionError": 1.9667390147680026e-13,
+        "episodeId": "Tern:7",
+        "localEpoch": 14,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 436,
+        "kind": "thrust-end",
+        "id": "maintain-432-1",
+        "deltaV": 0.0006034049601528484,
+        "fuelUsed": 0.0008680648279364434,
+        "propellantBefore": 0.31626612621684735,
+        "propellantAfter": 0.3153980613889109,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 436,
+        "kind": "thrust-end",
+        "id": "trip-7-422-1",
+        "shipId": "Tern",
+        "deltaV": 0.14154756949066824,
+        "fuelUsed": 0.08116656193555882,
+        "propellantBefore": 0.7111699223644805,
+        "propellantAfter": 0.6300033604289217,
+        "detail": "completed",
+        "episodeId": "Tern:7",
+        "localEpoch": 14,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 438,
+        "kind": "undock",
+        "id": "Tern:7:release",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.6300033604288975,
+        "propellantAfter": 0.6300033604288975,
+        "portId": "Meridian",
+        "episodeId": "Tern:7",
+        "localEpoch": 16,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 439.6,
+        "kind": "thrust-end",
+        "id": "trip-7-438-0",
+        "shipId": "Tern",
+        "deltaV": 0.11201931423179701,
+        "fuelUsed": 0.061574204064810845,
+        "propellantBefore": 0.6300033604288975,
+        "propellantAfter": 0.5684291563640866,
+        "detail": "completed",
+        "episodeId": "Tern:7",
+        "localEpoch": 17.600000000000023,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 448,
+        "kind": "thrust-start",
+        "id": "maintain-448-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3153980613889109,
+        "propellantAfter": 0.3153980613889109,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 449.9,
+        "kind": "thrust-end",
+        "id": "maintain-448-0",
+        "deltaV": 0.000830814289874395,
+        "fuelUsed": 0.0011949326564746343,
+        "propellantBefore": 0.3153980613889109,
+        "propellantAfter": 0.3142031287324363,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 450.1,
+        "kind": "thrust-start",
+        "id": "maintain-448-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3142031287324363,
+        "propellantAfter": 0.3142031287324363,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 452,
+        "kind": "dock",
+        "id": "Tern:7:home",
+        "shipId": "Tern",
+        "deltaV": 2.8550923655211964e-14,
+        "fuelUsed": 1.435526891405693e-14,
+        "propellantBefore": 0.4583857623047285,
+        "propellantAfter": 0.4583857623047141,
+        "portId": "Equator",
+        "positionError": 8.923631228316514e-14,
+        "episodeId": "Tern:7",
+        "localEpoch": 30,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 452,
+        "kind": "thrust-end",
+        "id": "maintain-448-1",
+        "deltaV": 0.0017057343328250407,
+        "fuelUsed": 0.0024522642472026845,
+        "propellantBefore": 0.3142031287324363,
+        "propellantAfter": 0.3117508644852336,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 452,
+        "kind": "thrust-end",
+        "id": "trip-7-438-1",
+        "shipId": "Tern",
+        "deltaV": 0.2112479245174102,
+        "fuelUsed": 0.11004339405935815,
+        "propellantBefore": 0.5684291563640866,
+        "propellantAfter": 0.4583857623047285,
+        "detail": "completed",
+        "episodeId": "Tern:7",
+        "localEpoch": 30,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 452,
+        "kind": "transfer-start",
+        "id": "Tern:7:refuel-start",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.4583857623047141,
+        "propellantAfter": 0.4583857623047141,
+        "portId": "Equator",
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 454,
+        "kind": "transfer",
+        "id": "refuel-454",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.4583857623047141,
+        "propellantAfter": 0.9,
+        "portId": "Equator",
+        "cargoBefore": 0.05,
+        "cargoAfter": 0.05,
+        "portCargoBefore": 0,
+        "portCargoAfter": 0,
+        "portPropellantBefore": 4,
+        "portPropellantAfter": 3.558385762304714,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 456,
+        "kind": "thrust-start",
+        "id": "maintain-456-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3117508644852336,
+        "propellantAfter": 0.3117508644852336,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 457.9,
+        "kind": "thrust-end",
+        "id": "maintain-456-0",
+        "deltaV": 0.0009601387046164213,
+        "fuelUsed": 0.001379738827999688,
+        "propellantBefore": 0.3117508644852336,
+        "propellantAfter": 0.3103711256572339,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 458.1,
+        "kind": "thrust-start",
+        "id": "maintain-456-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3103711256572339,
+        "propellantAfter": 0.3103711256572339,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 460,
+        "kind": "thrust-end",
+        "id": "maintain-456-1",
+        "deltaV": 0.0009979879100916337,
+        "fuelUsed": 0.0014336609478675655,
+        "propellantBefore": 0.3103711256572339,
+        "propellantAfter": 0.30893746470936634,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 462,
+        "kind": "undock",
+        "id": "Tern:8:departure",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.9,
+        "propellantAfter": 0.9,
+        "portId": "Equator",
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 463.6,
+        "kind": "thrust-end",
+        "id": "trip-8-462-0",
+        "shipId": "Tern",
+        "deltaV": 0.28250776539220956,
+        "fuelUsed": 0.17524902476118853,
+        "propellantBefore": 0.9,
+        "propellantAfter": 0.7247509752388115,
+        "detail": "completed",
+        "episodeId": "Tern:8",
+        "localEpoch": 1.6000000000000227,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 464,
+        "kind": "thrust-start",
+        "id": "maintain-464-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.30893746470936634,
+        "propellantAfter": 0.30893746470936634,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 465.9,
+        "kind": "thrust-end",
+        "id": "maintain-464-0",
+        "deltaV": 0.005293484768935276,
+        "fuelUsed": 0.007596394409316254,
+        "propellantBefore": 0.30893746470936634,
+        "propellantAfter": 0.3013410703000501,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 466.1,
+        "kind": "thrust-start",
+        "id": "maintain-464-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3013410703000501,
+        "propellantAfter": 0.3013410703000501,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 468,
+        "kind": "thrust-end",
+        "id": "maintain-464-1",
+        "deltaV": 0.005103836475035385,
+        "fuelUsed": 0.0073115592180998945,
+        "propellantBefore": 0.3013410703000501,
+        "propellantAfter": 0.2940295110819502,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 472,
+        "kind": "thrust-start",
+        "id": "maintain-472-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2940295110819502,
+        "propellantAfter": 0.2940295110819502,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 473.9,
+        "kind": "thrust-end",
+        "id": "maintain-472-0",
+        "deltaV": 0.0012363817490961616,
+        "fuelUsed": 0.0017693219545886762,
+        "propellantBefore": 0.2940295110819502,
+        "propellantAfter": 0.2922601891273615,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 474.1,
+        "kind": "thrust-start",
+        "id": "maintain-472-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2922601891273615,
+        "propellantAfter": 0.2922601891273615,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 476,
+        "kind": "dock",
+        "id": "Tern:8:relay",
+        "shipId": "Tern",
+        "deltaV": 2.1973232200523036e-14,
+        "fuelUsed": 1.242687352595224e-14,
+        "propellantBefore": 0.6466379928834254,
+        "propellantAfter": 0.646637992883413,
+        "portId": "Meridian",
+        "positionError": 3.480810349269212e-14,
+        "episodeId": "Tern:8",
+        "localEpoch": 14,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 476,
+        "kind": "thrust-end",
+        "id": "maintain-472-1",
+        "deltaV": 0.0007602500702436612,
+        "fuelUsed": 0.001087592557222905,
+        "propellantBefore": 0.2922601891273615,
+        "propellantAfter": 0.2911725965701386,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 476,
+        "kind": "thrust-end",
+        "id": "trip-8-462-1",
+        "shipId": "Tern",
+        "deltaV": 0.1350344272863394,
+        "fuelUsed": 0.0781129823553861,
+        "propellantBefore": 0.7247509752388115,
+        "propellantAfter": 0.6466379928834254,
+        "detail": "completed",
+        "episodeId": "Tern:8",
+        "localEpoch": 14,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 478,
+        "kind": "undock",
+        "id": "Tern:8:release",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.646637992883413,
+        "propellantAfter": 0.646637992883413,
+        "portId": "Meridian",
+        "episodeId": "Tern:8",
+        "localEpoch": 16,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 479.6,
+        "kind": "thrust-end",
+        "id": "trip-8-478-0",
+        "shipId": "Tern",
+        "deltaV": 0.11799113747365797,
+        "fuelUsed": 0.0654342048300276,
+        "propellantBefore": 0.646637992883413,
+        "propellantAfter": 0.5812037880533854,
+        "detail": "completed",
+        "episodeId": "Tern:8",
+        "localEpoch": 17.600000000000023,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 480,
+        "kind": "thrust-start",
+        "id": "maintain-480-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2911725965701386,
+        "propellantAfter": 0.2911725965701386,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 481.9,
+        "kind": "thrust-end",
+        "id": "maintain-480-0",
+        "deltaV": 0.0010935955382447076,
+        "fuelUsed": 0.00156398399017732,
+        "propellantBefore": 0.2911725965701386,
+        "propellantAfter": 0.2896086125799613,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 482.1,
+        "kind": "thrust-start",
+        "id": "maintain-480-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2896086125799613,
+        "propellantAfter": 0.2896086125799613,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 484,
+        "kind": "thrust-end",
+        "id": "maintain-480-1",
+        "deltaV": 0.0006120078689292591,
+        "fuelUsed": 0.000875002154106852,
+        "propellantBefore": 0.2896086125799613,
+        "propellantAfter": 0.28873361042585444,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 492,
+        "kind": "dock",
+        "id": "Tern:8:home",
+        "shipId": "Tern",
+        "deltaV": 6.867472058782229e-15,
+        "fuelUsed": 3.463505914284684e-15,
+        "propellantBefore": 0.4630047350635391,
+        "propellantAfter": 0.4630047350635357,
+        "portId": "Equator",
+        "positionError": 2.1483604430181457e-14,
+        "episodeId": "Tern:8",
+        "localEpoch": 30,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 492,
+        "kind": "thrust-end",
+        "id": "trip-8-478-1",
+        "shipId": "Tern",
+        "deltaV": 0.22566209441292906,
+        "fuelUsed": 0.11819905298984623,
+        "propellantBefore": 0.5812037880533854,
+        "propellantAfter": 0.4630047350635391,
+        "detail": "completed",
+        "episodeId": "Tern:8",
+        "localEpoch": 30,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 492,
+        "kind": "transfer-start",
+        "id": "Tern:8:refuel-start",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.4630047350635357,
+        "propellantAfter": 0.4630047350635357,
+        "portId": "Equator",
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 494,
+        "kind": "transfer",
+        "id": "refuel-494",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.4630047350635357,
+        "propellantAfter": 0.9,
+        "portId": "Equator",
+        "cargoBefore": 0.05,
+        "cargoAfter": 0.05,
+        "portCargoBefore": 0,
+        "portCargoAfter": 0,
+        "portPropellantBefore": 4,
+        "portPropellantAfter": 3.5630047350635357,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 496,
+        "kind": "thrust-start",
+        "id": "maintain-496-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.28873361042585444,
+        "propellantAfter": 0.28873361042585444,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 497.9,
+        "kind": "thrust-end",
+        "id": "maintain-496-0",
+        "deltaV": 0.0015955329148755564,
+        "fuelUsed": 0.002280332101617155,
+        "propellantBefore": 0.28873361042585444,
+        "propellantAfter": 0.2864532783242373,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 498.1,
+        "kind": "thrust-start",
+        "id": "maintain-496-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2864532783242373,
+        "propellantAfter": 0.2864532783242373,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 500,
+        "kind": "thrust-end",
+        "id": "maintain-496-1",
+        "deltaV": 0.002402217610842358,
+        "fuelUsed": 0.0034309573500639345,
+        "propellantBefore": 0.2864532783242373,
+        "propellantAfter": 0.28302232097417335,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 502,
+        "kind": "undock",
+        "id": "Tern:9:departure",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.9,
+        "propellantAfter": 0.9,
+        "portId": "Equator",
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 503.6,
+        "kind": "thrust-end",
+        "id": "trip-9-502-0",
+        "shipId": "Tern",
+        "deltaV": 0.2612122169678005,
+        "fuelUsed": 0.1626061064249752,
+        "propellantBefore": 0.9,
+        "propellantAfter": 0.7373938935750248,
+        "detail": "completed",
+        "episodeId": "Tern:9",
+        "localEpoch": 1.6000000000000227,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 504,
+        "kind": "thrust-start",
+        "id": "maintain-504-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.28302232097417335,
+        "propellantAfter": 0.28302232097417335,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 505.9,
+        "kind": "thrust-end",
+        "id": "maintain-504-0",
+        "deltaV": 0.0004442623428084385,
+        "fuelUsed": 0.0006342148827478411,
+        "propellantBefore": 0.28302232097417335,
+        "propellantAfter": 0.2823881060914255,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 506.1,
+        "kind": "thrust-start",
+        "id": "maintain-504-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2823881060914255,
+        "propellantAfter": 0.2823881060914255,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 508,
+        "kind": "thrust-end",
+        "id": "maintain-504-1",
+        "deltaV": 0.0009623193042438267,
+        "fuelUsed": 0.0013734546188262087,
+        "propellantBefore": 0.2823881060914255,
+        "propellantAfter": 0.2810146514725993,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 512,
+        "kind": "thrust-start",
+        "id": "maintain-512-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2810146514725993,
+        "propellantAfter": 0.2810146514725993,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 513.9,
+        "kind": "thrust-end",
+        "id": "maintain-512-0",
+        "deltaV": 0.003998155890277125,
+        "fuelUsed": 0.005701587831652866,
+        "propellantBefore": 0.2810146514725993,
+        "propellantAfter": 0.27531306364094643,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 514.1,
+        "kind": "thrust-start",
+        "id": "maintain-512-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.27531306364094643,
+        "propellantAfter": 0.27531306364094643,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 516,
+        "kind": "dock",
+        "id": "Tern:9:relay",
+        "shipId": "Tern",
+        "deltaV": 1.9102309882400926e-14,
+        "fuelUsed": 1.0903496009085286e-14,
+        "propellantBefore": 0.6623839069008262,
+        "propellantAfter": 0.6623839069008153,
+        "portId": "Meridian",
+        "positionError": 1.0928023981346438e-13,
+        "episodeId": "Tern:9",
+        "localEpoch": 14,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 516,
+        "kind": "thrust-end",
+        "id": "maintain-512-1",
+        "deltaV": 0.0020250351261374595,
+        "fuelUsed": 0.002884912591939681,
+        "propellantBefore": 0.27531306364094643,
+        "propellantAfter": 0.27242815104900675,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 516,
+        "kind": "thrust-end",
+        "id": "trip-9-502-1",
+        "shipId": "Tern",
+        "deltaV": 0.128616408962573,
+        "fuelUsed": 0.07500998667419867,
+        "propellantBefore": 0.7373938935750248,
+        "propellantAfter": 0.6623839069008262,
+        "detail": "completed",
+        "episodeId": "Tern:9",
+        "localEpoch": 14,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 518,
+        "kind": "undock",
+        "id": "Tern:9:release",
+        "shipId": "Tern",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.6623839069008153,
+        "propellantAfter": 0.6623839069008153,
+        "portId": "Meridian",
+        "episodeId": "Tern:9",
+        "localEpoch": 16,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 519.6,
+        "kind": "thrust-end",
+        "id": "trip-9-518-0",
+        "shipId": "Tern",
+        "deltaV": 0.12267266630107126,
+        "fuelUsed": 0.0686086068382985,
+        "propellantBefore": 0.6623839069008153,
+        "propellantAfter": 0.5937753000625168,
+        "detail": "completed",
+        "episodeId": "Tern:9",
+        "localEpoch": 17.600000000000023,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 520,
+        "kind": "thrust-start",
+        "id": "maintain-520-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.27242815104900675,
+        "propellantAfter": 0.27242815104900675,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 521.9,
+        "kind": "thrust-end",
+        "id": "maintain-520-0",
+        "deltaV": 0.0006617283344613717,
+        "fuelUsed": 0.0009422916608308185,
+        "propellantBefore": 0.27242815104900675,
+        "propellantAfter": 0.27148585938817593,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 522.1,
+        "kind": "thrust-start",
+        "id": "maintain-520-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.27148585938817593,
+        "propellantAfter": 0.27148585938817593,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 524,
+        "kind": "thrust-end",
+        "id": "maintain-520-1",
+        "deltaV": 0.002642761496484384,
+        "fuelUsed": 0.003761182559351539,
+        "propellantBefore": 0.27148585938817593,
+        "propellantAfter": 0.2677246768288244,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 528,
+        "kind": "thrust-start",
+        "id": "maintain-528-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2677246768288244,
+        "propellantAfter": 0.2677246768288244,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 529.9,
+        "kind": "thrust-end",
+        "id": "maintain-528-0",
+        "deltaV": 0.00128621529333807,
+        "fuelUsed": 0.0018293453990043673,
+        "propellantBefore": 0.2677246768288244,
+        "propellantAfter": 0.26589533142982,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 530.1,
+        "kind": "thrust-start",
+        "id": "maintain-528-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.26589533142982,
+        "propellantAfter": 0.26589533142982,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 530.2,
+        "kind": "thrust-start",
+        "id": "trip-9-518-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.5937753000625168,
+        "propellantAfter": 0.5937753000625168,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 532,
+        "kind": "dock",
+        "id": "Tern:9:home",
+        "portId": "Equator",
+        "positionError": 6.232307925667345e-14,
+        "deltaV": 1.6643720655220574e-14,
+        "fuelUsed": 8.411404386570437e-15,
+        "propellantBefore": 0.4661401517392243,
+        "propellantAfter": 0.46614015173921586,
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 532,
+        "kind": "thrust-end",
+        "id": "maintain-528-1",
+        "deltaV": 0.000591870038055911,
+        "fuelUsed": 0.0008415355280444459,
+        "propellantBefore": 0.26589533142982,
+        "propellantAfter": 0.2650537959017756,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 532,
+        "kind": "thrust-end",
+        "id": "trip-9-518-1",
+        "deltaV": 0.242483631523836,
+        "fuelUsed": 0.12763514832329248,
+        "propellantBefore": 0.5937753000625168,
+        "propellantAfter": 0.4661401517392243,
+        "detail": "completed",
+        "vessel": "Tern",
+        "color": "#efbf7c"
+      },
+      {
+        "t": 544,
+        "kind": "thrust-start",
+        "id": "maintain-544-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.2650537959017756,
+        "propellantAfter": 0.2650537959017756,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 545.9,
+        "kind": "thrust-end",
+        "id": "maintain-544-0",
+        "deltaV": 0.0023937815252055047,
+        "fuelUsed": 0.0034018449341273183,
+        "propellantBefore": 0.2650537959017756,
+        "propellantAfter": 0.26165195096764826,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 546.1,
+        "kind": "thrust-start",
+        "id": "maintain-544-1",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.26165195096764826,
+        "propellantAfter": 0.26165195096764826,
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      },
+      {
+        "t": 548,
+        "kind": "thrust-end",
+        "id": "maintain-544-1",
+        "deltaV": 0.0031855623493597354,
+        "fuelUsed": 0.00452285093810989,
+        "propellantBefore": 0.26165195096764826,
+        "propellantAfter": 0.25712910002953837,
+        "detail": "completed",
+        "portId": "Meridian",
+        "vessel": "Meridian",
+        "color": "#85c9c0"
+      }
+    ],
+    "thrustWhiskers": [
+      {
+        "vessel": "Tern",
+        "t": 530.5,
+        "force": 0.21272524720549302,
+        "from": [
+          417.9402948227182,
+          223.9625894581784
+        ],
+        "to": [
+          409.44158623160735,
+          227.66564737061435
+        ]
+      },
+      {
+        "vessel": "Tern",
+        "t": 531.1,
+        "force": 0.21272524720549302,
+        "from": [
+          422.7072060155345,
+          231.54711304671787
+        ],
+        "to": [
+          414.2084974244236,
+          235.25017095915382
+        ]
+      },
+      {
+        "vessel": "Tern",
+        "t": 531.7,
+        "force": 0.21272524720549302,
+        "from": [
+          431.06880702971483,
+          237.50196682248406
+        ],
+        "to": [
+          422.57009843860396,
+          241.20502473492002
+        ]
+      }
+    ],
+    "camera": {
+      "yaw": -0.65,
+      "pitch": 0.6,
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "scale": 32.15384615384615,
+      "preset": "oblique",
+      "panMode": false,
+      "tracking": "off",
+      "trackingOffset": [
+        0,
+        0,
+        0
+      ]
+    },
+    "seeThroughBodies": false,
+    "hits": [
+      {
+        "id": "Orison",
+        "name": "Orison",
+        "x": 471,
+        "y": 209,
+        "depth": 0,
+        "radius": 32.15384615384615
+      },
+      {
+        "id": "Mote",
+        "name": "Mote",
+        "x": 594.0976047633292,
+        "y": 292.87610153435105,
+        "depth": 122.60135766947235,
+        "radius": 7
+      },
+      {
+        "id": "Equator",
+        "name": "Equator",
+        "x": 472.7304358095833,
+        "y": 172.92774407677774,
+        "depth": -52.72667028493805
+      },
+      {
+        "id": "Meridian",
+        "name": "Meridian",
+        "x": 560.8809011894256,
+        "y": 189.22830134418632,
+        "depth": -28.900211792052406
+      },
+      {
+        "id": "Tern",
+        "name": "Tern",
+        "x": 529.5664453187574,
+        "y": 191.89957606772626,
+        "depth": -24.995620355121897
+      }
+    ]
+  },
+  "meter": {
+    "tasks": [
+      99
+    ],
+    "heap": [
+      5054679,
+      14713444,
+      11333700,
+      25537663,
+      36785108,
+      31721939,
+      24262820,
+      20249754,
+      34036231,
+      33961693,
+      23043726,
+      39824535,
+      38273060,
+      37233660,
+      49967111,
+      48710843,
+      30804679,
+      36528582,
+      46984103,
+      21980712,
+      57433403,
+      52415219,
+      40184589,
+      39512997,
+      49217140,
+      26589577,
+      54464101,
+      47554719,
+      30782721,
+      50304858,
+      40079837,
+      45163829,
+      33943219,
+      64139069,
+      21054026,
+      30609206,
+      41987080,
+      48331126,
+      57089454,
+      43857257,
+      38622604,
+      49058490,
+      29244829,
+      36198955,
+      57385600,
+      36386895,
+      64253350,
+      79218326,
+      44354345,
+      35350419,
+      26462509,
+      30748907,
+      61159464,
+      37072695,
+      53842410,
+      77733588,
+      30952085,
+      60273148,
+      66900518,
+      79294866,
+      41076177,
+      40199769,
+      64430980,
+      58445791,
+      67770465,
+      72168629,
+      38893418,
+      56629095,
+      38464213,
+      63032919,
+      103067271,
+      59596537,
+      73970412,
+      53276510,
+      50991253,
+      42187087,
+      34152779,
+      63594131,
+      64280691,
+      46926049,
+      79431118,
+      20786668,
+      41202766,
+      45663920,
+      51510407,
+      66957880,
+      36977518,
+      77922917,
+      64367457,
+      73190704,
+      45870129,
+      58435961,
+      59094664
+    ]
+  },
+  "hot": [
+    {
+      "us": 6958793,
+      "frame": {
+        "functionName": "(idle)",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      }
+    },
+    {
+      "us": 4839742,
+      "frame": {
+        "functionName": "visibleSegment",
+        "scriptId": "26",
+        "url": "http://127.0.0.1:4179/src/model-set/camera.ts",
+        "lineNumber": 79,
+        "columnNumber": 30
+      }
+    },
+    {
+      "us": 4828139,
+      "frame": {
+        "functionName": "sampleVessel",
+        "scriptId": "29",
+        "url": "http://127.0.0.1:4179/src/model-set/model.ts",
+        "lineNumber": 230,
+        "columnNumber": 28
+      }
+    },
+    {
+      "us": 4802377,
+      "frame": {
+        "functionName": "(program)",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      }
+    },
+    {
+      "us": 2221238,
+      "frame": {
+        "functionName": "worldPath",
+        "scriptId": "5",
+        "url": "http://127.0.0.1:4179/src/main.ts",
+        "lineNumber": 663,
+        "columnNumber": 18
+      }
+    },
+    {
+      "us": 1611347,
+      "frame": {
+        "functionName": "merge",
+        "scriptId": "20",
+        "url": "http://127.0.0.1:4179/src/maintained/view.ts",
+        "lineNumber": 1,
+        "columnNumber": 14
+      }
+    },
+    {
+      "us": 1167375,
+      "frame": {
+        "functionName": "(garbage collector)",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      }
+    },
+    {
+      "us": 1060315,
+      "frame": {
+        "functionName": "structuredClone",
+        "scriptId": "0",
+        "url": "",
+        "lineNumber": -1,
+        "columnNumber": -1
+      }
+    },
+    {
+      "us": 1027563,
+      "frame": {
+        "functionName": "view",
+        "scriptId": "20",
+        "url": "http://127.0.0.1:4179/src/maintained/view.ts",
+        "lineNumber": 98,
+        "columnNumber": 5
+      }
+    },
+    {
+      "us": 1013057,
+      "frame": {
+        "functionName": "draw",
+        "scriptId": "5",
+        "url": "http://127.0.0.1:4179/src/main.ts",
+        "lineNumber": 688,
+        "columnNumber": 13
+      }
+    },
+    {
+      "us": 863648,
+      "frame": {
+        "functionName": "ingest",
+        "scriptId": "20",
+        "url": "http://127.0.0.1:4179/src/maintained/view.ts",
+        "lineNumber": 22,
+        "columnNumber": 7
+      }
+    },
+    {
+      "us": 764938,
+      "frame": {
+        "functionName": "",
+        "scriptId": "5",
+        "url": "http://127.0.0.1:4179/src/main.ts",
+        "lineNumber": 321,
+        "columnNumber": 34
+      }
+    },
+    {
+      "us": 673641,
+      "frame": {
+        "functionName": "label",
+        "scriptId": "5",
+        "url": "http://127.0.0.1:4179/src/main.ts",
+        "lineNumber": 844,
+        "columnNumber": 15
+      }
+    },
+    {
+      "us": 623320,
+      "frame": {
+        "functionName": "",
+        "scriptId": "5",
+        "url": "http://127.0.0.1:4179/src/main.ts",
+        "lineNumber": 336,
+        "columnNumber": 275
+      }
+    },
+    {
+      "us": 553193,
+      "frame": {
+        "functionName": "sampleVessel",
+        "scriptId": "29",
+        "url": "http://127.0.0.1:4179/src/model-set/model.ts",
+        "lineNumber": 230,
+        "columnNumber": 28
+      }
+    },
+    {
+      "us": 550118,
+      "frame": {
+        "functionName": "at",
+        "scriptId": "26",
+        "url": "http://127.0.0.1:4179/src/model-set/camera.ts",
+        "lineNumber": 89,
+        "columnNumber": 95
+      }
+    },
+    {
+      "us": 502098,
+      "frame": {
+        "functionName": "buildTimeline",
+        "scriptId": "5",
+        "url": "http://127.0.0.1:4179/src/main.ts",
+        "lineNumber": 292,
+        "columnNumber": 22
+      }
+    },
+    {
+      "us": 424919,
+      "frame": {
+        "functionName": "sorted",
+        "scriptId": "20",
+        "url": "http://127.0.0.1:4179/src/maintained/view.ts",
+        "lineNumber": 2,
+        "columnNumber": 15
+      }
+    },
+    {
+      "us": 404150,
+      "frame": {
+        "functionName": "animate",
+        "scriptId": "5",
+        "url": "http://127.0.0.1:4179/src/main.ts",
+        "lineNumber": 1204,
+        "columnNumber": 16
+      }
+    },
+    {
+      "us": 388006,
+      "frame": {
+        "functionName": "",
+        "scriptId": "20",
+        "url": "http://127.0.0.1:4179/src/maintained/view.ts",
+        "lineNumber": 2,
+        "columnNumber": 58
+      }
+    },
+    {
+      "us": 385569,
+      "frame": {
+        "functionName": "worker.onmessage",
+        "scriptId": "5",
+        "url": "http://127.0.0.1:4179/src/main.ts",
+        "lineNumber": 594,
+        "columnNumber": 20
+      }
+    },
+    {
+      "us": 325873,
+      "frame": {
+        "functionName": "refreshTraffic",
+        "scriptId": "5",
+        "url": "http://127.0.0.1:4179/src/main.ts",
+        "lineNumber": 112,
+        "columnNumber": 23
+      }
+    },
+    {
+      "us": 292572,
+      "frame": {
+        "functionName": "updatePanels",
+        "scriptId": "5",
+        "url": "http://127.0.0.1:4179/src/main.ts",
+        "lineNumber": 339,
+        "columnNumber": 21
+      }
+    },
+    {
+      "us": 266751,
+      "frame": {
+        "functionName": "merge",
+        "scriptId": "20",
+        "url": "http://127.0.0.1:4179/src/maintained/view.ts",
+        "lineNumber": 1,
+        "columnNumber": 14
+      }
+    },
+    {
+      "us": 236342,
+      "frame": {
+        "functionName": "",
+        "scriptId": "20",
+        "url": "http://127.0.0.1:4179/src/maintained/view.ts",
+        "lineNumber": 2,
+        "columnNumber": 41
+      }
+    },
+    {
+      "us": 232894,
+      "frame": {
+        "functionName": "",
+        "scriptId": "5",
+        "url": "http://127.0.0.1:4179/src/main.ts",
+        "lineNumber": 802,
+        "columnNumber": 69
+      }
+    },
+    {
+      "us": 227777,
+      "frame": {
+        "functionName": "displayPortState",
+        "scriptId": "29",
+        "url": "http://127.0.0.1:4179/src/model-set/model.ts",
+        "lineNumber": 298,
+        "columnNumber": 32
+      }
+    },
+    {
+      "us": 192720,
+      "frame": {
+        "functionName": "sampleVessel",
+        "scriptId": "29",
+        "url": "http://127.0.0.1:4179/src/model-set/model.ts",
+        "lineNumber": 230,
+        "columnNumber": 28
+      }
+    },
+    {
+      "us": 185597,
+      "frame": {
+        "functionName": "",
+        "scriptId": "26",
+        "url": "http://127.0.0.1:4179/src/model-set/camera.ts",
+        "lineNumber": 83,
+        "columnNumber": 18
+      }
+    },
+    {
+      "us": 171960,
+      "frame": {
+        "functionName": "",
+        "scriptId": "20",
+        "url": "http://127.0.0.1:4179/src/maintained/view.ts",
+        "lineNumber": 71,
+        "columnNumber": 22
+      }
+    }
+  ]
+}

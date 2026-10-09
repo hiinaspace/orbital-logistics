@@ -25,7 +25,7 @@ import type {TrafficDefinition} from './traffic/planner';
 import type {TrafficDelta} from './traffic/engine';
 import {bodyState} from './sim/dynamics';
 import type {State,Vec3} from './sim/schema';
-import {orbitError,displayPortState,portsOf, sampleVessel, setEvents, stockAt, type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
+import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVessel, setEvents, stockAt, type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
 const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,crossingPlanes,steered,maintainedSet] as ModelSet[];
@@ -49,7 +49,7 @@ document.body.innerHTML = `
 
 const canvas = $<HTMLCanvasElement>('space'), ctx = canvas.getContext('2d')!;
 let run: SceneView | undefined, worker: Worker | undefined, revision = 0;
-let traffic:TrafficViewStore|MaintainedViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='';
+let traffic:TrafficViewStore|MaintainedViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='',trafficDirty=false;
 let events: SetEvent[] = [], selected = '', frame = 'inertial', t = 0, playing = false;
 let ready = false, width = 900, height = 600;
 const camera:Camera={yaw:0,pitch:Math.PI/2,center:[0,0,0],scale:100};
@@ -62,11 +62,19 @@ let thrustWhiskers:{vessel:string;t:number;force:number;from:[number,number];to:
 let hits: {id: string; name: string; x: number; y: number;depth:number;radius?:number}[] = [];
 const labelLayout=new StableLabels();let placedLabels:PlacedLabel[]=[],hovered='';
 const colors = {body: '#7893a4', station: '#c7d5de'};
+// Scene descriptors are immutable between replies. Cache drawing queries only;
+// propagation, target providers, and worker execution never use this cache.
+const drawingSamples=new WeakMap<VesselView,Map<number,ReturnType<typeof uncachedSampleVessel>>>();
+function sampleVessel(v:VesselView,epoch:number){
+ let samples=drawingSamples.get(v);if(!samples){samples=new Map();drawingSamples.set(v,samples);}
+ const known=samples.get(epoch);if(known)return known;
+ const result=uncachedSampleVessel(v,epoch);if(samples.size>=256)samples.clear();samples.set(epoch,result);return result;
+}
 function html(id: string, value: string) { if ($(id).innerHTML !== value) $(id).innerHTML = value; }
 const end = () => run!.window.end;
 const start = () => run!.window.start;
 const cursorEnd=()=>traffic?.frontier??end();
-function refreshTraffic(){if(!traffic)return;run=traffic.view(t);events=setEvents(run);const v=vessel(),chart=document.querySelector('.budget-chart');if(v && chart)chart.outerHTML=fuelGraph(v);buildTimeline();}
+function refreshTraffic(){if(!traffic)return;trafficDirty=false;run=traffic.view(t);events=setEvents(run);const v=vessel(),chart=document.querySelector('.budget-chart');if(v && chart)chart.outerHTML=fuelGraph(v);buildTimeline();}
 function requestTraffic(target:number){
  if(!traffic || !worker || pending || liveError || traffic.halt || !playing || !liveMode || document.hidden)return;
  pending=true;requestedTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,target));
@@ -277,7 +285,7 @@ function loadSet(id: string) {
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
   tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service'].includes(id)?'oblique':'top';orient(camera,cameraPreset);panMode=false;cameraControls();
-  worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=true;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
+  worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=true;trafficDirty=false;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
   $('load-status').textContent = 'Preparing scene…';
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
   $('state-json').textContent = JSON.stringify({ready, revision});
@@ -313,13 +321,17 @@ function loadTraffic(definition:TrafficDefinition|MaintainedDefinition){
   if(generation!==revision || e.data.generation!==revision || e.data.sequence!==sequence)return;
   pending=false;
   if(e.data.error){liveError=`Simulation paused: ${e.data.error}`;playing=false;$('load-status').textContent=liveError;updatePanels();return;}
-  const first=!ready;if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
+  const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
   if(first){ready=true;selected=traffic!.definition.vessels[0].id;frame='inertial';t=0;playing=true;}
   else if(liveMode && playing)t=traffic!.frontier;
-  refreshTraffic();
+  // Solver yields often acknowledge an unchanged head. Batch drawing-history
+  // assembly with the panel cadence instead of rebuilding it for every reply.
+  if(first || previousFrontier!==traffic!.frontier){
+   if(first || !playing || performance.now()-lastPanel>100)refreshTraffic();else trafficDirty=true;
+  }
   if(first){$('launch-view').hidden=!run!.world.ports.some(p=>p.rail.kind==='surface');$('frame').innerHTML=`<option value="inertial">Inertial</option><option value="rotating">${esc(run!.rotating.name)}</option>`+[...run!.world.bodies.map(b=>[b.id,b.id]),...run!.stations.map(s=>[s.id,s.id]),...run!.vessels.map(v=>[v.id,v.name])].map(([id,name])=>`<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
    $('description').textContent=run!.description;$('provenance').textContent=run!.provenance;$('traffic-count').textContent=String(run!.vessels.length);$<HTMLButtonElement>('play').disabled=false;fit();}
-  updatePanels();
+  if(first)updatePanels();
  };
  worker.onerror=(event)=>{if(generation===revision){pending=false;liveError=`Simulation paused: ${event.message||'worker failed'}`;playing=false;$('load-status').textContent=liveError;updatePanels();}};
  worker.postMessage({generation,sequence,definition});
@@ -508,7 +520,7 @@ $('launch-view').onclick=()=>{
   const theta=pad.rail.kind==='surface'?pad.rail.phase+pad.rail.rate*t:0;
   setCamera('top');camera.center=[Math.cos(theta)*.075,Math.sin(theta)*.075,0];camera.scale=Math.min(width,height)/.22;updatePanels();
 };
-$('play').onclick=()=>{if(!ready)return;if(!traffic && t>=end())t=start();playing=!playing;if(traffic && !playing)liveMode=false;lastFrame=performance.now();updatePanels();};
+$('play').onclick=()=>{if(!ready)return;if(!traffic && t>=end())t=start();playing=!playing;if(traffic && !playing){liveMode=false;refreshTraffic();}lastFrame=performance.now();updatePanels();};
 $('live').onclick=goLive;
 $('restart').onclick=()=>{if(ready){if(traffic)loadSet(traffic.definition.id);else seek(start());}};
 $<HTMLInputElement>('time').oninput = e => seek(Number((e.target as HTMLInputElement).value));
@@ -590,6 +602,7 @@ function animate(now: number) {
     t = Math.min(end(), t + dt * playbackRate);
     if (t >= end()) { if ($<HTMLInputElement>('replay').checked) t = start(); else playing = false; }
   }
+  if(ready && trafficDirty && now-lastPanel>100)refreshTraffic();
   draw();
   if (ready && now - lastPanel > 100) { updatePanels(); lastPanel = now; }
   requestAnimationFrame(animate);
