@@ -27,10 +27,12 @@ export function* planServiceJob(d:AdaptiveDefinition,base:Anchor,prefix:Control[
   }
  }
  candidates.sort((a,b)=>a.cost-b.cost||a.schedule.homeArrival-b.schedule.homeArrival||JSON.stringify(a.schedule).localeCompare(JSON.stringify(b.schedule)));
- guide.chunks=[]; // Cheap ranks retain no speculative physical history.
+ // Retain only the incoming prefix needed by the ranked candidate family.
+ // Later unloaded guide controls have no authority over a loaded station.
+ guide.chunks=guide.chunks.filter(c=>c.data.start<base.t+32);
  let best:CoupledTrip|undefined,trials=0,last='No affordable transfer window';
  for(const c of candidates){if(trials>=admission.maxTrials)break;yield;trials++;work.trials=trials;
-  try{const trip=yield* buildPlanJob(d,base,prefix,c.schedule,fuel,id,work);
+  try{const trip=yield* buildPlanJob(d,base,prefix,c.schedule,fuel,id,work,guide,guide.nodes+(best?.nodes??0));
    if(trip.burned+trip.stationBurned>admission.maxBurned||trip.deltaV>admission.maxDeltaV)throw new PlanningFailure('Routine service burn budget exceeded',trip.plan.evaluations);
    if(!best||trip.burned+trip.stationBurned<best.burned+best.stationBurned-1e-12||Math.abs(trip.burned+trip.stationBurned-best.burned-best.stationBurned)<=1e-12&&trip.plan.end<best.plan.end)best=trip;
    if(best.burned+best.stationBurned<=admission.adequateBurned)break;

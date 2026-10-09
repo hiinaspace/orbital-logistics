@@ -1,0 +1,43 @@
+{
+  "seconds": 26.162709553,
+  "stalls": [
+    {
+      "at": 0,
+      "seconds": 9.233376093
+    },
+    {
+      "at": 55.9375,
+      "seconds": 13.173400306000001
+    },
+    {
+      "at": 63.9375,
+      "seconds": 3.7063422470000007
+    }
+  ],
+  "stats": {
+    "frames": 1029,
+    "chunks": 17,
+    "physicalChunks": 10,
+    "visits": 2,
+    "runnerNodes": 123619,
+    "maxPromotionNodes": 74428,
+    "completed": 1,
+    "planningFailed": 1,
+    "controllerChecks": 17,
+    "controllerCorrected": 13,
+    "controllerFailed": 0,
+    "controllerEvaluations": 229,
+    "maxVisitEvaluations": 81,
+    "trialControllerEvaluations": 1568,
+    "trialVisitorEvaluations": 588,
+    "maxOpportunityEvaluations": 1226,
+    "maxOpportunityTrials": 4,
+    "planningPending": 0,
+    "stationFuel": 0.580823020234968,
+    "stationFuelUsed": 0.050582176397521605,
+    "shipFuelUsed": 0.21274711083389383,
+    "fuelDelivered": 0.03140519663248964,
+    "fuelBalanceError": 0,
+    "packetBytes": 3901067
+  }
+}

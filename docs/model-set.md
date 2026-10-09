@@ -98,6 +98,16 @@ continuation, maintained stationkeeping, demand dispatch and persistence remain 
 
 ## Next decisions after viewing
 
+Adaptive flexible service now primes16 units of committed execution for live viewing,
+then advances the display clock through that history while the worker refills. Its
+physics head still owns actual facts; predictions keep their known-at visibility.
+At full lead the128-unit total retention provides112 units behind the viewer. Fast
+warp can drain the buffer; playback waits rather than extrapolating. Live joins the
+buffered edge without rewinding a later cursor. Pause/hidden stops new work, history
+can drain through a terminal fault, and Restart resets the seeded run. See
+[reviewed playback contract](design/responsive-service/README.md) and
+[measurements](evidence/responsive-service.md).
+
 First assess the experience directly: readability, motion, frames, time controls, and
 what kind of activity the user wants next. No required engagement diary or puzzle gate.
 Then choose one content extension or simulation change from that feedback.

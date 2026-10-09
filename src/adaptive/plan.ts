@@ -52,6 +52,7 @@ export class CoupledTrip {
   const stationFuel=pre.sample(d.relay.id,s.relayArrival+.5).propellant,amount=Math.max(0,d.relay.ship.tankCapacity-stationFuel);
   if(!Number.isFinite(p.delivery)||Math.abs(p.delivery-amount)>1e-12||p.delivery<0||p.delivery>this.capture.propellantAfter)throw Error('Coupled delivery does not match funded top-up');
   this.beforeTransferFuel=this.capture.propellantAfter;this.afterTransferFuel=this.capture.propellantAfter-p.delivery;
+  pre.chunks=[]; // Captures/top-up are scalar facts; drop the unloaded replay.
   this.world=new AdaptiveWorld(d,p.base);const job=this.world.extend(Math.ceil(p.end/8)*8,p.knownAt,this.ownership(),p.controls);while(!job.next().done){}
   this.inbound=leg(d,p.inbound,s.release,s.homeArrival-s.release,this.world.sample(d.relay.id,s.release).y,this.afterTransferFuel);
   this.home=freeze(paid(d,this.inbound,this.world.sample(d.origin.id,s.homeArrival).y,s.homeArrival,d.origin.id));if(this.home.propellantAfter<.05)throw new PlanningFailure('Funded return reserve failed');
@@ -78,16 +79,25 @@ export class CoupledTrip {
  get boundaries():EventBoundary[]{const times=[...new Set(this.events.map(e=>e.t))].filter(t=>t>this.plan.schedule.departure);return times.map(t=>({t,before:this.sample(t,true),after:this.sample(t)}));}
  get nodes(){return this.world.nodes+this.outbound.retainedNodes+this.inbound.retainedNodes;}
 }
-export function* buildPlanJob(d:AdaptiveDefinition,base:Anchor,prefix:Control[],schedule:Schedule,fuel:number,id:string,work?:{controller:PropagationBudget;visitor:PropagationBudget}):Generator<void,CoupledTrip>{
+export function* buildPlanJob(d:AdaptiveDefinition,base:Anchor,prefix:Control[],schedule:Schedule,fuel:number,id:string,work?:{controller:PropagationBudget;visitor:PropagationBudget},guide?:AdaptiveWorld,residentNodes=0):Generator<void,CoupledTrip>{
  const s=schedule,end=s.homeArrival+2;validateSchedule(s,end);
- const pre=new AdaptiveWorld(d,base,work?.controller);yield* pre.extend(Math.ceil((s.relayArrival+.5)/8)*8,base.t,[],undefined);
+ const incomingEnd=Math.ceil((s.relayArrival+.5)/8)*8;
+ // The ranking guide already owns exactly this unloaded canonical prefix.
+ // Reuse its immutable runners; no interpolation or new propagation origin.
+ const pre=guide?guide.fork():new AdaptiveWorld(d,base,work?.controller);
+ if(guide){pre.chunks=pre.chunks.filter(c=>c.data.start<incomingEnd);const last=pre.chunks.at(-1);if(!last||pre.chunks.length!==(incomingEnd-base.t)/8||pre.chunks.some((c,i)=>c.data.start!==base.t+i*8)||last.data.end!==incomingEnd||key(pre.chunks[0].anchor)!==key(base)||key(guide.definition)!==key(d))throw Error('Invalid incoming guide prefix');pre.anchor=copy(last.endAnchor);}
+ else yield* pre.extend(incomingEnd,base.t,[],undefined);
  // Immutable controls already committed at the head must match this candidate.
  for(const control of prefix)if(key(pre.controls.find(c=>c.t===control.t))!==key(control))throw Error('Candidate changed committed owner prefix');
  const outScenario=legScenario(d,s.departure,s.relayArrival-s.departure,pre.sample(d.origin.id,s.departure).y,fuel),outTarget=pre.sample(d.relay.id,s.relayArrival).y;
  const out=yield* shootForcesJob(outScenario,[{start:s.departure,end:s.departure+1.6},{start:s.relayArrival-1.8,end:s.relayArrival}],outTarget,economicalSeed(outScenario.ship.state,outTarget,outScenario.duration,1.05+fuel),96,'sphere',work?.visitor);
  const capture=paid(d,out.runner,outTarget,s.relayArrival,d.relay.id),delivery=Math.max(0,d.relay.ship.tankCapacity-pre.sample(d.relay.id,s.relayArrival+.5).propellant),remaining=capture.propellantAfter-delivery;
  if(remaining<.05)throw new PlanningFailure('Donor cannot fund station top-up');
- const owner=new AdaptiveWorld(d,base,work?.controller),events:Ownership[]=[{t:s.relayArrival,kind:'capture',visitorId:d.world.scenario.ship.id,fuel:capture.propellantAfter},{t:s.relayArrival+.5,kind:'transfer',visitorId:d.world.scenario.ship.id,amount:delivery},{t:s.release,kind:'release',visitorId:d.world.scenario.ship.id}];yield* owner.extend(Math.ceil(end/8)*8,base.t,events);
+ const owner=new AdaptiveWorld(d,base,work?.controller),events:Ownership[]=[{t:s.relayArrival,kind:'capture',visitorId:d.world.scenario.ship.id,fuel:capture.propellantAfter},{t:s.relayArrival+.5,kind:'transfer',visitorId:d.world.scenario.ship.id,amount:delivery},{t:s.release,kind:'release',visitorId:d.world.scenario.ship.id}];
+ // Capture/transfer occur after the control pulses. Controls through that
+ // block are unchanged; the subsequent controls must solve with loaded mass.
+ yield* owner.extend(incomingEnd,base.t,events,pre.controls);
+ yield* owner.extend(Math.ceil(end/8)*8,base.t,events);
  if(owner.chunks.some(c=>c.data.check.outcome==='failed'))throw new PlanningFailure('Candidate station maintenance failed');
  if(Math.hypot(...owner.sample(d.relay.id,s.relayArrival).y.map((x,i)=>x-outTarget[i]))>1e-12)throw Error('Docking changed its proven incoming target');
  pre.chunks=[]; // Incoming proof/amount are now immutable scalar facts.
@@ -96,8 +106,11 @@ export function* buildPlanJob(d:AdaptiveDefinition,base:Anchor,prefix:Control[],
  const outBundle=out.runner.bundle,backBundle=back.runner.bundle;outBundle.program.id=`${id}:out`;backBundle.program.id=`${id}:back`;outBundle.program.thrustArcs!.forEach((a,i)=>a.id=`${id}:out:${i}`);backBundle.program.thrustArcs!.forEach((a,i)=>a.id=`${id}:back:${i}`);
  const plan:CoupledPlan={schemaVersion:1,modelVersion:'coupled-service-v1',id,knownAt:base.t,end,base:copy(base),controls:owner.controls,schedule:copy(s),visitorId:d.world.scenario.ship.id,fuel,delivery,outbound:outBundle,inbound:backBundle,evaluations:out.evaluations+back.evaluations};yield;
  const trip=new CoupledTrip(d,plan);
- if(owner.nodes+trip.nodes+out.runner.retainedNodes+back.runner.retainedNodes>220000)throw Error('Candidate physical storage budget exceeded');
- for(let t=base.t;t<=Math.ceil(end/8)*8;t+=1/256){for(const id of [d.origin.id,d.relay.id]){const a=owner.sample(id,t),b=trip.world.sample(id,t);if(key(a)!==key(b))throw Error('Reconstructed coupled owner mismatch');}}
+ if(residentNodes+owner.nodes+trip.nodes+out.runner.retainedNodes+back.runner.retainedNodes>220000)throw Error('Candidate physical storage budget exceeded');
+ // A deterministic replay of every identical grid input is a regression
+ // oracle, not admission work. Keep the event/block anchor checks here.
+ for(const chunk of owner.chunks)for(const t of [chunk.data.start,chunk.data.end,...chunk.data.boundaries.map(b=>b.t)])for(const id of [d.origin.id,d.relay.id])if(key(owner.sample(id,t))!==key(trip.world.sample(id,t)))throw Error('Reconstructed coupled owner mismatch');
+ for(let i=0;i<owner.chunks.length;i++)if(key(owner.chunks[i].data.boundaries)!==key(trip.world.chunks[i].data.boundaries))throw Error('Reconstructed event-left/right ownership mismatch');
  for(const leg of [trip.outbound,trip.inbound])for(const seg of leg.coastSegments(leg.bundle.scenario.epoch+leg.bundle.scenario.duration)){for(const state of [seg.y0,seg.y1]){const r=Math.hypot(...state.slice(0,3));if(r<1.7||r>3.4)throw new PlanningFailure('Outside routine service orbital corridor');}}
  return trip;
 }

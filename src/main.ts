@@ -1,6 +1,7 @@
 import './style.css';
 import PrepareWorker from './model-set/prepare.worker?worker&inline';
 import TrafficWorker from './traffic/traffic.worker?worker&inline';
+import {adaptivePlaybackLead,bufferedEdge} from './traffic/playback';
 import {StableLabels,type Label,type PlacedLabel} from './view/labels';
 import freight from '../fixtures/model-sets/orison-freight.json';
 import lunar from '../fixtures/model-sets/lunar-loop.json';
@@ -80,11 +81,13 @@ const start = () => run!.window.start;
 const cursorEnd=()=>traffic?.frontier??end();
 function refreshTraffic(){if(!traffic)return;trafficDirty=false;run=traffic.view(t);events=setEvents(run);const v=vessel(),chart=document.querySelector('.budget-chart');if(v && chart)chart.outerHTML=fuelGraph(v);buildTimeline();}
 function requestTraffic(target:number){
- if(!traffic || !worker || pending || liveError || traffic.halt || !playing || !liveMode || document.hidden)return;
+ if(!traffic || !worker || pending || liveError || traffic.halt || !playing || !liveMode || document.hidden || target<=traffic.frontier)return;
  pending=true;requestedTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,target));
  worker.postMessage({generation:revision,sequence:++sequence,target:requestedTarget,after:traffic.frontier});
 }
-function goLive(){if(!traffic)return;traffic.release();t=traffic.frontier;desiredTarget=t;liveMode=true;playing=!liveError && !traffic.halt;lastFrame=performance.now();refreshTraffic();updatePanels();}
+const playbackLead=()=>traffic instanceof AdaptiveViewStore?adaptivePlaybackLead:0;
+const liveEdge=()=>traffic?bufferedEdge(traffic.frontier,traffic.oldest,playbackLead()):0;
+function goLive(){if(!traffic)return;traffic.release();if(!liveMode)t=Math.max(t,liveEdge());desiredTarget=t+playbackLead();liveMode=!!playbackLead()||!liveError&&!traffic.halt;playing=(!liveError&&!traffic.halt)||t<traffic.frontier;lastFrame=performance.now();refreshTraffic();updatePanels();}
 const vessel = () => run?.vessels.find(v => v.id === selected)??run?.maintained?.[selected];
 function project3(y:State,time:number):ScreenPoint {
   try{return cameraPoint(camera,transform(run!,y,time,frame),width,height);}catch{return [NaN,NaN,NaN];}
@@ -170,7 +173,8 @@ function status(v: VesselView): string {
 }
 function select(id: string) { selected = id;if(tracking!=='off')trackingOffset=[0,0,0]; $('hit-menu').hidden = true; draw();updatePanels(); }
 function buildTimeline() {
-  $('timelines').innerHTML = [...Object.values(run!.maintained??{}),...run!.vessels].map(v => {
+  const template=document.createElement('template');
+  template.innerHTML = [...Object.values(run!.maintained??{}),...run!.vessels].map(v => {
     const maintenance=!!run!.maintained?.[v.id];
     const times = [...new Set([start(), end(), ...v.ledger.map(e => e.t)])].sort((a, b) => a - b);
     const blocks = times.slice(0, -1).map((a, i) => {
@@ -179,8 +183,20 @@ function buildTimeline() {
       return `<rect x="${1000 * (a - start()) / (end() - start())}" y="${maintenance?(powered?7:9):l?.service || powered ? 3 : 7}" width="${1000 * (b - a) / (end() - start())}" height="${maintenance?(powered?6:2):l?.service || powered ? 14 : 6}" fill="${fill}" opacity="${maintenance?(powered ? .55 : .4):powered?0.95:l?.dockedPortId && !l.service ? 0.8 : 0.65}"/>`;
     }).join('');
     const burns = v.ledger.filter(e => e.kind === 'burn').map(e => `<path d="M${1000 * (e.t - start()) / (end() - start())} 4v12" stroke="${v.color}" stroke-width="1"/>`).join('');
-    return `<div class="timeline-row" data-vessel="${esc(v.name)}"><button class="timeline-name" data-select="${esc(v.id)}" style="color:${v.color}">${esc(v.name)}</button><div class="timeline-track"><svg viewBox="0 0 1000 20" preserveAspectRatio="none" aria-label="${esc(v.name)} ${maintenance?'stationkeeping; small teal spans are corrections':'activity; colored spans are flight, gold is cargo service'}">${blocks}${burns}</svg>${traffic?`<span class="future-region" style="left:${Math.min(100,100*(traffic.frontier-start())/(end()-start()))}%" title="Planned"></span><span class="frontier-cursor" style="left:${Math.min(100,100*(traffic.frontier-start())/(end()-start()))}%" title="Simulation head"></span>`:""}<span class="time-cursor"></span><button class="timeline-seek" aria-label="Scrub ${esc(v.name)} timeline"></button></div></div>`;
+    return `<div class="timeline-row ${selected===v.id?'selected':''}" data-vessel="${esc(v.id)}"><button class="timeline-name" data-select="${esc(v.id)}" style="color:${v.color}">${esc(v.name)}</button><div class="timeline-track"><svg viewBox="0 0 1000 20" preserveAspectRatio="none" aria-label="${esc(v.name)} ${maintenance?'stationkeeping; small teal spans are corrections':'activity; colored spans are flight, gold is cargo service'}">${blocks}${burns}</svg>${traffic?`<span class="future-region" style="left:${Math.min(100,100*(traffic.frontier-start())/(end()-start()))}%" title="Planned"></span><span class="frontier-cursor" style="left:${Math.min(100,100*(traffic.frontier-start())/(end()-start()))}%" title="Simulation head"></span>`:""}<span class="time-cursor"></span><button class="timeline-seek" aria-label="Scrub ${esc(v.name)} timeline"></button></div></div>`;
   }).join('');
+  // Keep interactive rows/buttons alive while forecast spans change. Replacing
+  // the whole lane between pointer-down and click loses focus and hover state.
+  const lanes=$('timelines'),existing=new Map(Array.from(lanes.querySelectorAll<HTMLElement>('.timeline-row')).map(r=>[r.dataset.vessel!,r]));
+  for(const incoming of template.content.querySelectorAll<HTMLElement>('.timeline-row')){
+   const row=existing.get(incoming.dataset.vessel!);existing.delete(incoming.dataset.vessel!);
+   if(!row){lanes.append(incoming);continue;}
+   row.className=incoming.className;
+   const name=row.querySelector<HTMLElement>('.timeline-name')!,newName=incoming.querySelector<HTMLElement>('.timeline-name')!;name.textContent=newName.textContent;name.style.cssText=newName.style.cssText;
+   const svg=row.querySelector('svg')!,next=incoming.querySelector('svg')!;if(svg.innerHTML!==next.innerHTML)svg.innerHTML=next.innerHTML;
+   for(const kind of ['future-region','frontier-cursor']){const marker=row.querySelector<HTMLElement>(`.${kind}`),replacement=incoming.querySelector<HTMLElement>(`.${kind}`);if(marker&&replacement)marker.style.cssText=replacement.style.cssText;else if(replacement)row.querySelector('.timeline-track')!.append(replacement);else marker?.remove();}
+  }
+  for(const row of existing.values())row.remove();
   document.querySelectorAll<HTMLButtonElement>('[data-select]').forEach(b => b.onclick = () => select(b.dataset.select!));
   document.querySelectorAll<HTMLButtonElement>('.timeline-seek').forEach(b => b.onclick = e => {
     const rect = b.getBoundingClientRect(); seek(start() + (e.clientX - rect.left) / rect.width * (end() - start()));
@@ -213,7 +229,7 @@ function updatePanels() {
   $<HTMLInputElement>('time').min=String(Math.floor(start()*1000)/1000);$<HTMLInputElement>('time').max=String(cursorEnd());
   $('clock').textContent=traffic?`${number(t)} · head ${number(traffic.frontier)}`:`${number(t)} / ${number(end())}`;
   $('live').textContent=liveMode?'Live':'Return to live';$('live').setAttribute('aria-pressed',String(liveMode));
-  $('load-status').textContent = liveError || (traffic?.halt??(traffic?liveMode?'':playing?'Playing history':'History held':t===end()?'End of scene':''));
+  $('load-status').textContent = liveError || (traffic?.halt&&t>=traffic.frontier?traffic.halt:(traffic?liveMode?'':playing?'Playing history':'History held':t===end()?'End of scene':''));
   if(traffic){const origin=run.vessels.find(v=>v.id===frame);if(origin && sampleVessel(origin,t).activity?.kind==='fault'){frame='inertial';$<HTMLSelectElement>('frame').value=frame;}
    for(const option of $<HTMLSelectElement>('frame').options){const v=run.vessels.find(v=>v.id===option.value);option.disabled=!!v && sampleVessel(v,t).activity?.kind==='fault';}}
   html('fleet', run.vessels.map(v => `<button class="object-row ${selected === v.id ? 'selected' : ''}" data-object="${esc(v.id)}"><i style="background:${v.color}"></i><span><strong>${esc(v.name)}</strong><small>${esc(status(v))}</small></span></button>`).join(''));
@@ -276,7 +292,7 @@ function updatePanels() {
   document.querySelectorAll<HTMLButtonElement>('[data-time]').forEach(b => b.onclick = () => seek(Number(b.dataset.time)));
   const percent = (t - start()) / (end() - start()) * 100;
   document.querySelectorAll<HTMLElement>('.time-cursor').forEach(c => c.style.left = `${percent}%`);
-  document.querySelectorAll<HTMLElement>('.timeline-row').forEach(r => r.classList.toggle('selected', r.dataset.vessel === v?.name));
+  document.querySelectorAll<HTMLElement>('.timeline-row').forEach(r => r.classList.toggle('selected', r.dataset.vessel === selected));
   $('frame-name').textContent = $<HTMLSelectElement>('frame').selectedOptions[0]?.textContent ?? '';
   publishState();
 }
@@ -326,10 +342,10 @@ function loadTraffic(definition:TrafficDefinition|MaintainedDefinition|AdaptiveD
  worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta|MaintainedDelta|AdaptiveDelta;error?:string}>)=>{
   if(generation!==revision || e.data.generation!==revision || e.data.sequence!==sequence)return;
   pending=false;
-  if(e.data.error){liveError=`Simulation paused: ${e.data.error}`;playing=false;$('load-status').textContent=liveError;updatePanels();return;}
+  if(e.data.error){liveError=`Simulation stopped: ${e.data.error}`;playing=playing&&ready&&!!playbackLead()&&t<traffic!.frontier;if(!playbackLead())liveMode=false;$('load-status').textContent=liveError;updatePanels();return;}
   const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof AdaptiveViewStore)traffic.ingest(e.data.delta! as AdaptiveDelta,!liveMode || !playing && !first);else if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
   if(first){ready=true;selected=traffic!.definition.vessels[0].id;frame='inertial';t=0;playing=true;}
-  else if(liveMode && playing)t=traffic!.frontier;
+  else if(liveMode && playing && !playbackLead())t=traffic!.frontier;
   // Solver yields often acknowledge an unchanged head. Batch drawing-history
   // assembly with the panel cadence instead of rebuilding it for every reply.
   if(first || previousFrontier!==traffic!.frontier){
@@ -339,7 +355,7 @@ function loadTraffic(definition:TrafficDefinition|MaintainedDefinition|AdaptiveD
    $('description').textContent=run!.description;$('provenance').textContent=run!.provenance;$('traffic-count').textContent=String(run!.vessels.length);$<HTMLButtonElement>('play').disabled=false;fit();}
   if(first)updatePanels();
  };
- worker.onerror=(event)=>{if(generation===revision){pending=false;liveError=`Simulation paused: ${event.message||'worker failed'}`;playing=false;$('load-status').textContent=liveError;updatePanels();}};
+ worker.onerror=(event)=>{if(generation===revision){pending=false;liveError=`Simulation stopped: ${event.message||'worker failed'}`;playing=playing&&ready&&!!playbackLead()&&t<traffic!.frontier;if(!playbackLead())liveMode=false;$('load-status').textContent=liveError;updatePanels();}};
  worker.postMessage({generation,sequence,definition});
 }
 
@@ -601,8 +617,12 @@ $<HTMLInputElement>('speed').oninput = () => {
 function animate(now: number) {
   const dt = Math.min(0.1, (now - lastFrame) / 1000); lastFrame = now;
   if(ready && playing && traffic && !document.hidden){
-   if(liveMode){desiredTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,desiredTarget)+dt*playbackRate);requestTraffic(desiredTarget);}
-   else {t=Math.min(traffic.frontier,t+dt*playbackRate);if(t>=traffic.frontier){traffic.release();desiredTarget=traffic.frontier;liveMode=true;}if(now-lastPanel>100)refreshTraffic();}
+   if(liveMode){
+    if(playbackLead()){t=Math.min(traffic.frontier,t+dt*playbackRate);desiredTarget=t+playbackLead();if((traffic.halt||liveError)&&t>=traffic.frontier)playing=false;if(now-lastPanel>100||t>run!.window.end||t>run!.traffic!.frontier)refreshTraffic();}
+    else desiredTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,desiredTarget)+dt*playbackRate);
+    requestTraffic(desiredTarget);
+   }
+   else {t=Math.min(traffic.frontier,t+dt*playbackRate);if((traffic.halt||liveError)&&t>=traffic.frontier)playing=false;else if(t>=liveEdge()){traffic.release();desiredTarget=t+playbackLead();liveMode=true;}if(now-lastPanel>100||playbackLead()&&(t>run!.window.end||t>run!.traffic!.frontier))refreshTraffic();}
   }
   if (ready && playing && !traffic) {
     t = Math.min(end(), t + dt * playbackRate);

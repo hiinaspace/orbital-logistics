@@ -73,8 +73,14 @@ flexible schedules and relay dwell. **Orison · flexible service** now adds join
 bounded timing, passive docked mass, funded station fuel delivery and a frozen
 coupled-plan evaluator after [Astra review](design/flexible-service/README.md).
 [Evidence](evidence/flexible-service.md) covers1536 units, economical repeat service,
-independent original-anchor replay, fault stops and browser history. Human viewing
-of this new cadence is next; multi-visitor/demand routing remains separate.
+independent original-anchor replay, fault stops and browser history. The user accepted
+the cadence but reported planning stalls at1x and timeline highlight flapping.
+The [responsive playback follow-up](design/responsive-service/README.md) removes
+redundant canonical work and adds bounded committed-history playback after Astra
+review. [Evidence](evidence/responsive-service.md) records route/control/event parity,
+normal-speed timing and stable timeline controls. A [stationkeeping literature pass](../reports/Efficient%20orbital%20stationkeeping.md)
+identifies sensitivity propagation and element/deadband policies as later experiments;
+the current dynamics/controller policy remain. Multi-visitor/demand routing stays separate.
 Lunar continuation, demand routing/rescue, persistence, staging/recovery,
 attitude dynamics and retargeting of existing surface steering remain separate extensions. No general
 steering optimizer is claimed.

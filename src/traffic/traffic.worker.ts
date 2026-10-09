@@ -4,6 +4,7 @@ import {MaintainedEngine} from '../maintained/engine';
 import {isMaintained,type MaintainedDefinition} from '../maintained/world';
 import {AdaptiveEngine} from '../adaptive/engine';
 import {isAdaptive,type AdaptiveDefinition} from '../adaptive/world';
+import {adaptivePlaybackLead} from './playback';
 let engine:TrafficEngine|MaintainedEngine|AdaptiveEngine|undefined,generation=0;
 self.onmessage=async(event:MessageEvent<{generation:number;sequence:number;definition?:TrafficDefinition|MaintainedDefinition|AdaptiveDefinition;target?:number;after?:number}>)=>{
  const m=event.data;
@@ -13,6 +14,7 @@ self.onmessage=async(event:MessageEvent<{generation:number;sequence:number;defin
   if(engine instanceof MaintainedEngine||engine instanceof AdaptiveEngine) {
    // Initial forecasts may take several bounded turns; no partial ready packet.
    while(!engine.initialized){engine.advanceTo(0,24);await new Promise(resolve=>setTimeout(resolve,0));}
+   if(m.definition && engine instanceof AdaptiveEngine)while(engine.frontier<adaptivePlaybackLead&&!engine.halt){engine.advanceTo(adaptivePlaybackLead,24);await new Promise(resolve=>setTimeout(resolve,0));}
    if(m.target!==undefined)engine.advanceTo(m.target,24);
   }else if(m.target!==undefined)engine.advanceTo(m.target,128);
   self.postMessage({generation,sequence:m.sequence,delta:engine.delta(m.after)});

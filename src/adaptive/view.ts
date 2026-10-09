@@ -36,7 +36,7 @@ export class AdaptiveViewStore {
  release(){this.#heldCurrent=undefined;this.oldest=this.watermark;const anchor=<T extends {t:number}>(a:T[])=>{let i=0;while(i+1<a.length&&a[i+1].t<=this.oldest)i++;return a.slice(i);};this.frames=anchor(this.frames);this.resources=anchor(this.resources);this.boundaries=this.boundaries.filter(b=>b.t>=this.oldest);this.events=this.events.filter(e=>e.t>=this.oldest);this.chunks=this.chunks.filter(c=>c.end>=this.oldest);this.visits=this.visits.filter(v=>v.end>=this.oldest);}
  view(cursor:number):SceneView {
   if(cursor<this.oldest||cursor>this.frontier)throw Error('Cursor outside adaptive history');
-  const d=this.definition,world=d.world.scenario,chunks=this.chunks.filter(c=>c.knownAt<=cursor),end=this.halt?this.frontier:Math.min(cursor+40,chunks.at(-1)!.end);
+  const d=this.definition,world=d.world.scenario,chunks=this.chunks.filter(c=>c.knownAt<=cursor),end=Math.min(cursor+40,chunks.at(-1)!.end,...(this.halt?[this.frontier]:[]));
   const key=chunks.map(c=>c.id).join(',');
   if(this.#streams?.key!==key)this.#streams={key,station:sorted(chunks.flatMap(c=>c.station)),origin:sorted(chunks.flatMap(c=>c.origin)),baseline:sorted(chunks.flatMap(c=>c.baseline)),arcs:chunks.flatMap(c=>c.arcs)};
   const {station:stationSamples,origin,baseline,arcs}=this.#streams;
@@ -53,20 +53,23 @@ export class AdaptiveViewStore {
   const actual=sorted([...dense,...this.frames.map(f=>f.ships[0]),this.current.ships[0],...(this.#heldCurrent?[this.#heldCurrent.ships[0]]:[])]);
   const shipArcs=known.flatMap(v=>[...v.plan.outbound.program.thrustArcs!,...v.plan.inbound.program.thrustArcs!]),boundary:EventBoundary[]=sorted([...known.flatMap(v=>v.boundaries).filter(b=>b.t<=this.frontier),...this.boundaries.map(b=>({t:b.t,before:b.before.ships[0],after:b.after.ships[0]}))]);
   const baseV:VesselView={...d.vessels[0],ship:world.ship,ports,cargoCapacity:.1,arcs:shipArcs,continuousFuel:true,portSamples,samples:actual,ledger:this.events.filter(e=>e.t<=cursor),boundaries:boundary};
-  const at=sampleVessel(baseV,cursor),samples=actual.filter(s=>s.t<cursor);samples.push(at);
+  // Playback may advance within this descriptor before another panel refresh.
+  // Keep the already committed right bracket and exact resource transitions;
+  // only epochs beyond the physical frontier use the admitted prediction.
+  const at=sampleVessel(baseV,cursor),samples=sorted([...actual.filter(s=>s.t<=end),at]);
   const prediction=plan?{...baseV,samples:plan.samples,boundaries:plan.boundaries}:undefined;
   const plannedSamples=new Map(plan?.samples.map(s=>[s.t,s])??[]);
   // The admitted plan already has a dense drawing grid and exact event samples.
   // Do not overlay another cursor-relative grid and clone/interpolate it anew
   // on every reply. Unplanned attached coasts still get their drawing samples.
-  const times=[...new Set([end,...Array.from({length:Math.ceil((end-cursor)*32)},(_,i)=>cursor+(i+1)/32).filter(t=>t<end && !(plan && t>=plan.departure && t<=plan.end)),...(plan?plan.samples.filter(s=>s.t>cursor&&s.t<=end).map(s=>s.t):[])])].sort((a,b)=>a-b);
+  const times=[...new Set([end,...Array.from({length:Math.ceil((end-cursor)*32)},(_,i)=>cursor+(i+1)/32).filter(t=>t<end && !(plan && t>=plan.departure && t<=plan.end)),...(plan?plan.samples.filter(s=>s.t>cursor&&s.t<=end).map(s=>s.t):[])])].filter(t=>t>this.frontier).sort((a,b)=>a-b);
   for(const t of times){let s:ViewSample;
    if(plan&&t>=plan.departure&&t<=plan.end)s=plannedSamples.get(t)??sampleVessel(prediction!,t);
    else if(at.activity?.kind==='fault')s={...at,t};
    else{const previous=samples.at(-1)!,id=previous.logistics?.dockedPortId??d.origin.id;s={...previous,t,y:displayPortState(ports.find(p=>p.id===id)!,portSamples,t),thrust:undefined,logistics:{...previous.logistics!,service:undefined}};}
    samples.push(s);
   }
-  const vessel={...baseV,samples,ledger:[...baseV.ledger,...(plan?plan.events.filter(e=>e.t>cursor&&e.t<=end):[])],boundaries:[...boundary.filter(b=>b.t<=cursor),...(plan?plan.boundaries.filter(b=>b.t>cursor&&b.t<=end):[])]};
+  const vessel={...baseV,samples,ledger:[...this.events.filter(e=>e.t<=this.frontier&&e.t<=end),...(plan?plan.events.filter(e=>e.t>this.frontier&&e.t<=end):[])],boundaries:[...boundary.filter(b=>b.t<=end),...(plan?plan.boundaries.filter(b=>b.t>this.frontier&&b.t<=end):[])]};
   return {schemaVersion:1,id:d.id,name:d.name,description:d.description,provenance:d.provenance,extent:d.extent,rotating:d.rotating,stations:d.stations.map(p=>({...p,...(p.id===d.relay.id?{maintenance:{reference:d.reference,checks:chunks.map(c=>c.check)}}:{})})),vessels:[vessel],maintained:{[d.relay.id]:maintained},portSamples,world:{bodies:world.bodies,ports,units:world.units},window:{start:this.oldest,end},traffic:{frontier:this.frontier,oldest:this.oldest,resources:this.resources,depots:d.stations,stats:this.stats,halt:this.halt}};
  }
 }
