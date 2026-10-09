@@ -2,7 +2,7 @@ import {Runner} from '../sim/runner';
 import type {Scenario,State,ThrustArc,Vec3} from '../sim/schema';
 
 // Physical trajectories and sensitivity sweeps both consume bounded work.
-export interface PropagationBudget {used:number;limit:number}
+export interface PropagationBudget {used:number;limit:number;storage?:{reserve(extra?:number):void}}
 export interface Pulse {start:number;end:number}
 export interface Shot {runner:Runner;arcs:ThrustArc[];evaluations:number;residual:number}
 export class PlanningFailure extends Error {constructor(message:string,public evaluations=0){super(message);}}
@@ -31,6 +31,7 @@ export function* shootForcesJob(scenario:Scenario,pulses:[Pulse,Pulse],target:St
   if(evaluations>=budget)throw new PlanningFailure('Shooting evaluation budget exhausted');evaluations++;
   if(!inside(v,1e-12))throw new PlanningFailure('Force bound exceeded');
   const program={schemaVersion:3 as const,id:'bounded-online-shot',burns:[],thrustArcs:arcs(v)};
+  work?.storage?.reserve(2*(Math.ceil(duration/step)+1024));
   const runner=new Runner({scenario:{...scenario,logistics:undefined,rendezvous:undefined,policy:{...scenario.policy,step,maxNodes:Math.ceil(duration/step)+1024}},program});
   const end=runner.advanceTo(scenario.epoch+duration);if(end.status!=='horizon'||end.t!==scenario.epoch+duration)throw new PlanningFailure(`Unsafe shooting candidate: ${end.status}`);
   const residual=end.y.map((a,i)=>(a-target[i])*(i<3?1:scale));

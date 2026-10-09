@@ -1,0 +1,386 @@
+{
+  "schemaVersion": 1,
+  "domain": "maintained-network-v1",
+  "id": "orison-relay-network",
+  "name": "Orison · relay network",
+  "description": "Two freighters keep Meridian and Solstice supplied from Equator.",
+  "provenance": "Planar prescribed Orison/Mote field. Two maintained relays have independent paid controls and assigned visitors. Equator is ballistic, with two berths and one finite fuel inventory replenished by explicit imports. Finite paid transfer/capture, actual docked mass, and bounded online near-Hohmann search.",
+  "lanes": [
+    {
+      "schemaVersion": 1,
+      "domain": "adaptive-relay-v1",
+      "id": "orison-flexible-service",
+      "name": "Orison · flexible service",
+      "description": "Tern brings fuel to Meridian, waits aboard, and returns when the orbits line up.",
+      "provenance": "Coupled finite-force plans with passive docked mass and paid capture. Funded station top-ups, flexible windows and relay dwell; bounded rolling history.",
+      "extent": 6.5,
+      "world": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "maintained-relay",
+          "units": {
+            "length": "Orison radius",
+            "time": "√(R³/μ)",
+            "mass": "mass unit"
+          },
+          "epoch": 0,
+          "duration": 8,
+          "policy": {
+            "step": 0.00390625,
+            "maxNodes": 65536,
+            "maxSubdivision": 20
+          },
+          "bodies": [
+            {
+              "id": "Orison",
+              "mu": 1,
+              "radius": 1,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "id": "Mote",
+              "mu": 0.004,
+              "radius": 0.12,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 6,
+                "rate": 0.06817732869618864,
+                "phase": 0.4
+              }
+            }
+          ],
+          "ship": {
+            "id": "Tern",
+            "state": [
+              -1.046267788577712,
+              -1.7045010163049783,
+              0,
+              0.6026321135843061,
+              -0.36991152412017664,
+              0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0.05,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3,
+            "engine": {
+              "maxThrust": 0.8,
+              "maxAcceleration": 0.4
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 3,
+          "id": "live-field",
+          "burns": []
+        }
+      },
+      "reference": {
+        "kind": "circular",
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ],
+        "radius": 3,
+        "rate": 0.19245008972987523,
+        "phase": -0.7074091410077115
+      },
+      "origin": {
+        "id": "Equator",
+        "state": [
+          -1.046267788577712,
+          -1.7045010163049783,
+          0,
+          0.6026321135843061,
+          -0.36991152412017664,
+          0
+        ]
+      },
+      "relay": {
+        "id": "Meridian",
+        "ship": {
+          "id": "Meridian",
+          "state": [
+            2.2801444146556964,
+            -1.949600330404781,
+            0,
+            0.37520075852379453,
+            0.4388139971975627,
+            0
+          ],
+          "dryMass": 4,
+          "cargoMass": 0,
+          "propellant": 0.6,
+          "tankCapacity": 0.6,
+          "exhaustVelocity": 3,
+          "engine": {
+            "maxThrust": 0.06,
+            "maxAcceleration": 0.012
+          }
+        }
+      },
+      "vessels": [
+        {
+          "id": "Tern",
+          "name": "Tern",
+          "color": "#efbf7c",
+          "cargo": "Supplies"
+        }
+      ],
+      "stations": [
+        {
+          "id": "Equator",
+          "role": "Ballistic origin",
+          "berths": 1,
+          "cargo": 0,
+          "cargoCapacity": 0,
+          "propellant": 4,
+          "tankCapacity": 4,
+          "cargoRate": 0,
+          "propellantRate": 0.015
+        },
+        {
+          "id": "Meridian",
+          "role": "Maintained relay",
+          "berths": 1,
+          "cargo": 0,
+          "cargoCapacity": 0,
+          "propellant": 0,
+          "tankCapacity": 0,
+          "cargoRate": 0,
+          "propellantRate": 0
+        }
+      ],
+      "rotating": {
+        "name": "Meridian rotating",
+        "rate": 0.19245008972987523,
+        "phase": -0.7074091410077115
+      },
+      "historyDuration": 128,
+      "forecastDuration": 40
+    },
+    {
+      "schemaVersion": 1,
+      "domain": "adaptive-relay-v1",
+      "id": "solstice-service",
+      "name": "Orison · flexible service",
+      "description": "Tern brings fuel to Meridian, waits aboard, and returns when the orbits line up.",
+      "provenance": "Coupled finite-force plans with passive docked mass and paid capture. Funded station top-ups, flexible windows and relay dwell; bounded rolling history.",
+      "extent": 6.5,
+      "world": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "maintained-relay",
+          "units": {
+            "length": "Orison radius",
+            "time": "√(R³/μ)",
+            "mass": "mass unit"
+          },
+          "epoch": 0,
+          "duration": 8,
+          "policy": {
+            "step": 0.00390625,
+            "maxNodes": 65536,
+            "maxSubdivision": 20
+          },
+          "bodies": [
+            {
+              "id": "Orison",
+              "mu": 1,
+              "radius": 1,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "id": "Mote",
+              "mu": 0.004,
+              "radius": 0.12,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 6,
+                "rate": 0.06817732869618864,
+                "phase": 0.4
+              }
+            }
+          ],
+          "ship": {
+            "id": "Ibis",
+            "state": [
+              -1.046267788577712,
+              -1.7045010163049783,
+              0,
+              0.6026321135843061,
+              -0.36991152412017664,
+              0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0.05,
+            "propellant": 0.9,
+            "tankCapacity": 1,
+            "exhaustVelocity": 3,
+            "engine": {
+              "maxThrust": 0.8,
+              "maxAcceleration": 0.4
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 3,
+          "id": "live-field",
+          "burns": []
+        }
+      },
+      "reference": {
+        "kind": "circular",
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ],
+        "radius": 3,
+        "rate": 0.19245008972987523,
+        "phase": 0.8633871857871851
+      },
+      "origin": {
+        "id": "Equator",
+        "state": [
+          -1.046267788577712,
+          -1.7045010163049783,
+          0,
+          0.6026321135843061,
+          -0.36991152412017664,
+          0
+        ]
+      },
+      "relay": {
+        "id": "Solstice",
+        "ship": {
+          "id": "Solstice",
+          "state": [
+            1.9496003304047813,
+            2.2801444146556964,
+            0,
+            -0.4388139971975627,
+            0.37520075852379453,
+            0
+          ],
+          "dryMass": 4,
+          "cargoMass": 0,
+          "propellant": 0.6,
+          "tankCapacity": 0.6,
+          "exhaustVelocity": 3,
+          "engine": {
+            "maxThrust": 0.06,
+            "maxAcceleration": 0.012
+          }
+        }
+      },
+      "vessels": [
+        {
+          "id": "Ibis",
+          "name": "Ibis",
+          "color": "#8fbcdf",
+          "cargo": "Supplies"
+        }
+      ],
+      "stations": [
+        {
+          "id": "Equator",
+          "role": "Ballistic origin",
+          "berths": 1,
+          "cargo": 0,
+          "cargoCapacity": 0,
+          "propellant": 4,
+          "tankCapacity": 4,
+          "cargoRate": 0,
+          "propellantRate": 0.015
+        },
+        {
+          "id": "Solstice",
+          "role": "Maintained relay",
+          "berths": 1,
+          "cargo": 0,
+          "cargoCapacity": 0,
+          "propellant": 0,
+          "tankCapacity": 0,
+          "cargoRate": 0,
+          "propellantRate": 0
+        }
+      ],
+      "rotating": {
+        "name": "Meridian rotating",
+        "rate": 0.19245008972987523,
+        "phase": -0.7074091410077115
+      },
+      "historyDuration": 128,
+      "forecastDuration": 40
+    }
+  ]
+}

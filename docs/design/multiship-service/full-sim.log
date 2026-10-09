@@ -1,0 +1,1022 @@
+
+> orbital-logistics@0.0.0 test:sim
+> node --import tsx --test tests/sim/*.test.ts
+
+TAP version 13
+# Subtest: coupled dependencies halt at their actual event-left fuel and mass without ghost station credits
+ok 1 - coupled dependencies halt at their actual event-left fuel and mass without ghost station credits
+  ---
+  duration_ms: 26229.30006
+  type: 'test'
+  ...
+# Subtest: request sizes, solver yields, exact paused heads and forecast visibility preserve admitted physical plans
+ok 2 - request sizes, solver yields, exact paused heads and forecast visibility preserve admitted physical plans
+  ---
+  duration_ms: 33483.223447
+  type: 'test'
+  ...
+# Subtest: orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility
+ok 3 - orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility
+  ---
+  duration_ms: 2.623903
+  type: 'test'
+  ...
+# Subtest: pan follows screen axes and cursor zoom anchors the same plane point in tilted views
+ok 4 - pan follows screen axes and cursor zoom anchors the same plane point in tilted views
+  ---
+  duration_ms: 1.390685
+  type: 'test'
+  ...
+# Subtest: sphere occlusion distinguishes front/back, limb, silhouette crossings and multiple bodies
+ok 5 - sphere occlusion distinguishes front/back, limb, silhouette crossings and multiple bodies
+  ---
+  duration_ms: 4.214584
+  type: 'test'
+  ...
+# Subtest: chase rigs and selected pivots remain orthonormal and deterministic at degenerate states
+ok 6 - chase rigs and selected pivots remain orthonormal and deterministic at degenerate states
+  ---
+  duration_ms: 37.263016
+  type: 'test'
+  ...
+# Subtest: draft edits, gesture cancel/commit, undo and redo preserve the executed program
+ok 7 - draft edits, gesture cancel/commit, undo and redo preserve the executed program
+  ---
+  duration_ms: 13.511893
+  type: 'test'
+  ...
+# Subtest: editing and duplicate-epoch validation are atomic
+ok 8 - editing and duplicate-epoch validation are atomic
+  ---
+  duration_ms: 3.626468
+  type: 'test'
+  ...
+# Subtest: canonical event brackets exclude burn velocity jumps and circular sign noise
+ok 9 - canonical event brackets exclude burn velocity jumps and circular sign noise
+  ---
+  duration_ms: 722.110953
+  type: 'test'
+  ...
+# Subtest: apsis time, radius and speed converge against independent analytic orbit
+ok 10 - apsis time, radius and speed converge against independent analytic orbit
+  ---
+  duration_ms: 175.543894
+  type: 'test'
+  ...
+# Subtest: snap keeps an explicit epoch and reports upstream changes, missing and ambiguous windows
+ok 11 - snap keeps an explicit epoch and reports upstream changes, missing and ambiguous windows
+  ---
+  duration_ms: 1196.304155
+  type: 'test'
+  ...
+# Subtest: execution, save/load and baseline preserve a queue and snap provenance
+ok 12 - execution, save/load and baseline preserve a queue and snap provenance
+  ---
+  duration_ms: 991.162653
+  type: 'test'
+  ...
+# Subtest: failed or unfinished plans never replace accepted execution
+ok 13 - failed or unfinished plans never replace accepted execution
+  ---
+  duration_ms: 10.952011
+  type: 'test'
+  ...
+# Subtest: per-draft step refinement blocks an unconverged plan before acceptance
+ok 14 - per-draft step refinement blocks an unconverged plan before acceptance
+  ---
+  duration_ms: 547.496969
+  type: 'test'
+  ...
+# Subtest: a zero impulse does not erase a continuous apsis and a radial jump does not invent one
+ok 15 - a zero impulse does not erase a continuous apsis and a radial jump does not invent one
+  ---
+  duration_ms: 302.251379
+  type: 'test'
+  ...
+# Subtest: sample-time frame transformations are independent of view epoch and burn axes
+ok 16 - sample-time frame transformations are independent of view epoch and burn axes
+  ---
+  duration_ms: 220.063268
+  type: 'test'
+  ...
+# Subtest: path hit testing preserves the explicitly previewed occurrence on overlapping revolutions
+ok 17 - path hit testing preserves the explicitly previewed occurrence on overlapping revolutions
+  ---
+  duration_ms: 7.172705
+  type: 'test'
+  ...
+# Subtest: JSON rejects invalid snap provenance and editor snapshot without altering an existing session
+ok 18 - JSON rejects invalid snap provenance and editor snapshot without altering an existing session
+  ---
+  duration_ms: 10.284185
+  type: 'test'
+  ...
+# Subtest: manual tangent transfer exposes both orbit matching and simultaneous intercept
+ok 19 - manual tangent transfer exposes both orbit matching and simultaneous intercept
+  ---
+  duration_ms: 1238.933422
+  type: 'test'
+  ...
+# Subtest: phase-offset crossing offers only orbit matching, pays for it and does not imply rendezvous
+ok 20 - phase-offset crossing offers only orbit matching, pays for it and does not imply rendezvous
+  ---
+  duration_ms: 715.339557
+  type: 'test'
+  ...
+# Subtest: stale, unaffordable and inaccurate correction requests do not change their input
+ok 21 - stale, unaffordable and inaccurate correction requests do not change their input
+  ---
+  duration_ms: 645.698361
+  type: 'test'
+  ...
+# Subtest: canonical event roots and matching corrections converge under step refinement
+ok 22 - canonical event roots and matching corrections converge under step refinement
+  ---
+  duration_ms: 2280.752987
+  type: 'test'
+  ...
+# Subtest: spherical force shooting admits axis-aligned hardware-feasible forces and is rotation covariant, preserving the old cube by default
+ok 23 - spherical force shooting admits axis-aligned hardware-feasible forces and is rotation covariant, preserving the old cube by default
+  ---
+  duration_ms: 284.759264
+  type: 'test'
+  ...
+# Subtest: antipodal Hohmann seed is finite on either side and exact endpoint geometry, without executed impulses
+ok 24 - antipodal Hohmann seed is finite on either side and exact endpoint geometry, without executed impulses
+  ---
+  duration_ms: 57.815697
+  type: 'test'
+  ...
+# Subtest: coupled witness reconstructs loaded dwell, paid captures and conserved fuel delivery; rejects unfunded or altered dependencies
+ok 25 - coupled witness reconstructs loaded dwell, paid captures and conserved fuel delivery; rejects unfunded or altered dependencies
+  ---
+  duration_ms: 9467.65116
+  type: 'test'
+  ...
+# Subtest: sphere-edge finite differences stay feasible while correcting a full-axis force seed
+ok 26 - sphere-edge finite differences stay feasible while correcting a full-axis force seed
+  ---
+  duration_ms: 159.533563
+  type: 'test'
+  ...
+# Subtest: aggregate station propulsion crosses its acceleration cap and depletes only the engine-owned tank
+ok 27 - aggregate station propulsion crosses its acceleration cap and depletes only the engine-owned tank
+  ---
+  duration_ms: 231.54248
+  type: 'test'
+  ...
+# Subtest: shared paid capture rejects invalid budgets without mutating either participant
+ok 28 - shared paid capture rejects invalid budgets without mutating either participant
+  ---
+  duration_ms: 12.425842
+  type: 'test'
+  ...
+# Subtest: an exhausted controller budget records an unpaid coast and an observable failure
+ok 29 - an exhausted controller budget records an unpaid coast and an observable failure
+  ---
+  duration_ms: 110.669733
+  type: 'test'
+  ...
+# Subtest: RK4 sensitivities match central force probes including fuel coupling, spatial gravity and off-grid pulse events
+ok 30 - RK4 sensitivities match central force probes including fuel coupling, spatial gravity and off-grid pulse events
+  ---
+  duration_ms: 1479.592939
+  type: 'test'
+  ...
+# Subtest: sensitivity shooting converges from zero and uses fewer sweeps with unchanged canonical arrival and fuel checks
+ok 31 - sensitivity shooting converges from zero and uses fewer sweeps with unchanged canonical arrival and fuel checks
+  ---
+  duration_ms: 469.55183
+  type: 'test'
+  ...
+# Subtest: acceleration-cap branches explicitly fall back to finite probes
+ok 32 - acceleration-cap branches explicitly fall back to finite probes
+  ---
+  duration_ms: 228.871947
+  type: 'test'
+  ...
+# Subtest: sphere-edge sensitivity updates stay within hardware bounds and numerical work is charged
+ok 33 - sphere-edge sensitivity updates stay within hardware bounds and numerical work is charged
+  ---
+  duration_ms: 110.434755
+  type: 'test'
+  ...
+# Subtest: sensitivities follow safety subdivisions rather than the authored coarse grid
+ok 34 - sensitivities follow safety subdivisions rather than the authored coarse grid
+  ---
+  duration_ms: 25.907378
+  type: 'test'
+  ...
+# Subtest: moving and reversing labels retain anchors through transient collisions and selection changes
+ok 35 - moving and reversing labels retain anchors through transient collisions and selection changes
+  ---
+  duration_ms: 19.951981
+  type: 'test'
+  ...
+# Subtest: landing full-speed/position envelope is paid; exterior below COM and upward residuals are allowed
+ok 36 - landing full-speed/position envelope is paid; exterior below COM and upward residuals are allowed
+  ---
+  duration_ms: 41.709696
+  type: 'test'
+  ...
+# Subtest: failed attachment preserves input state, resources and cursor, including zero-fuel nonzero residual
+ok 37 - failed attachment preserves input state, resources and cursor, including zero-fuel nonzero residual
+  ---
+  duration_ms: 79.424784
+  type: 'test'
+  ...
+# Subtest: landing rejects simultaneous impulse/start/other operations before any mutation; ending thrust is allowed
+ok 38 - landing rejects simultaneous impulse/start/other operations before any mutation; ending thrust is allowed
+  ---
+  duration_ms: 928.594315
+  type: 'test'
+  ...
+# Subtest: landing commits separately from a rejected subsequent transfer; service can finish then relaunch
+ok 39 - landing commits separately from a rejected subsequent transfer; service can finish then relaunch
+  ---
+  duration_ms: 8.007144
+  type: 'test'
+  ...
+# Subtest: complete round trip conserves stocks, counts one berth arrival and replays exact event sides and retained snapshots
+ok 40 - complete round trip conserves stocks, counts one berth arrival and replays exact event sides and retained snapshots
+  ---
+  duration_ms: 2798.804724
+  type: 'test'
+  ...
+# Subtest: round trip delivers finite cargo, refuels, returns empty and reconciles every resource
+ok 41 - round trip delivers finite cargo, refuels, returns empty and reconciles every resource
+  ---
+  duration_ms: 587.797615
+  type: 'test'
+  ...
+# Subtest: load/unload commits only at service completion; undock and burn then use the new cargo mass
+ok 42 - load/unload commits only at service completion; undock and burn then use the new cargo mass
+  ---
+  duration_ms: 6.471476
+  type: 'test'
+  ...
+# Subtest: mistimed capture and early departure stop atomically with readable diagnostics
+ok 43 - mistimed capture and early departure stop atomically with readable diagnostics
+  ---
+  duration_ms: 93.758553
+  type: 'test'
+  ...
+# Subtest: over-capacity, exhausted stocks, duplicate transfers and burn while docked are rejected
+ok 44 - over-capacity, exhausted stocks, duplicate transfers and burn while docked are rejected
+  ---
+  duration_ms: 40.430392
+  type: 'test'
+  ...
+# Subtest: delivery alone, depleted return fuel and cargo left onboard do not satisfy reusable return
+ok 45 - delivery alone, depleted return fuel and cargo left onboard do not satisfy reusable return
+  ---
+  duration_ms: 508.283316
+  type: 'test'
+  ...
+# Subtest: capture residual is charged and tightening the interface preserves the known solution
+ok 46 - capture residual is charged and tightening the interface preserves the known solution
+  ---
+  duration_ms: 918.631583
+  type: 'test'
+  ...
+# Subtest: warp, display queries, save/reload and undo preserve physical and discrete event results
+ok 47 - warp, display queries, save/reload and undo preserve physical and discrete event results
+  ---
+  duration_ms: 3198.197516
+  type: 'test'
+  ...
+# Subtest: operation JSON validates duration, identity, finite stock and simultaneous ordering
+ok 48 - operation JSON validates duration, identity, finite stock and simultaneous ordering
+  ---
+  duration_ms: 10.507605
+  type: 'test'
+  ...
+# Subtest: a missing arrival impulse cannot be supplied by docking, and capture fuel failure is atomic
+ok 49 - a missing arrival impulse cannot be supplied by docking, and capture fuel failure is atomic
+  ---
+  duration_ms: 141.910966
+  type: 'test'
+  ...
+# Subtest: refueling checks finite stock and tank room; no future action can hide a failed plan
+ok 50 - refueling checks finite stock and tank room; no future action can hide a failed plan
+  ---
+  duration_ms: 1176.771942
+  type: 'test'
+  ...
+# Subtest: three paid lunar round trips conserve finite freight and fuel and return home
+ok 51 - three paid lunar round trips conserve finite freight and fuel and return home
+  ---
+  duration_ms: 13.526272
+  type: 'test'
+  ...
+# Subtest: ballistic stations are canonical safe targets through dock, dwell and undock
+ok 52 - ballistic stations are canonical safe targets through dock, dwell and undock
+  ---
+  duration_ms: 3058.03996
+  type: 'test'
+  ...
+# Subtest: inclined ballistic target capture, departure and replay obey the spatial contract
+ok 53 - inclined ballistic target capture, departure and replay obey the spatial contract
+  ---
+  duration_ms: 10277.507335
+  type: 'test'
+  ...
+# Subtest: online maintenance and paired targeting span multiple chunks, make repeated paid visits and conserve explicit fuel supply
+ok 54 - online maintenance and paired targeting span multiple chunks, make repeated paid visits and conserve explicit fuel supply
+  ---
+  duration_ms: 41168.014752
+  type: 'test'
+  ...
+# Subtest: yielded planning preserves the held cursor and deterministic admitted programs, and retained owner joins stay canonical
+ok 55 - yielded planning preserves the held cursor and deterministic admitted programs, and retained owner joins stay canonical
+  ---
+  duration_ms: 3935.063424
+  type: 'test'
+  ...
+# Subtest: bounded maintenance and transfer failures coast/retry without resetting fuel; attached failure halts and post-release failure isolates
+ok 56 - bounded maintenance and transfer failures coast/retry without resetting fuel; attached failure halts and post-release failure isolates
+  ---
+  duration_ms: 9072.861845
+  type: 'test'
+  ...
+# Subtest: maintained domain rejects unsupported fields, identities and nonfinite inventory
+ok 57 - maintained domain rejects unsupported fields, identities and nonfinite inventory
+  ---
+  duration_ms: 4.481887
+  type: 'test'
+  ...
+# Subtest: Lambert seed recovers normalized circular quarter and three-quarter coasts without introducing impulses
+ok 58 - Lambert seed recovers normalized circular quarter and three-quarter coasts without introducing impulses
+  ---
+  duration_ms: 9.927087
+  type: 'test'
+  ...
+# Subtest: cached live drawing streams preserve plan knowledge, paid captures and event-side samples after duplicate replies and rewind
+ok 59 - cached live drawing streams preserve plan knowledge, paid captures and event-side samples after duplicate replies and rewind
+  ---
+  duration_ms: 5581.748131
+  type: 'test'
+  ...
+# Subtest: prepared freight conserves shared cargo and accounts for every unit of propellant
+ok 60 - prepared freight conserves shared cargo and accounts for every unit of propellant
+  ---
+  duration_ms: 51.02973
+  type: 'test'
+  ...
+# Subtest: admission rejects incompatible worlds, aggregate overdrafts and berth contention
+ok 61 - admission rejects incompatible worlds, aggregate overdrafts and berth contention
+  ---
+  duration_ms: 3091.616466
+  type: 'test'
+  ...
+# Subtest: display interpolation does not anticipate cargo operations or impulses and remains disposable
+ok 62 - display interpolation does not anticipate cargo operations or impulses and remains disposable
+  ---
+  duration_ms: 399.599376
+  type: 'test'
+  ...
+# Subtest: rotating frame includes omega cross r and transforms every epoch independently
+ok 63 - rotating frame includes omega cross r and transforms every epoch independently
+  ---
+  duration_ms: 2.352062
+  type: 'test'
+  ...
+# Subtest: lunar rotating-frame loop closes in the current runner; view changes cannot mutate its program
+ok 64 - lunar rotating-frame loop closes in the current runner; view changes cannot mutate its program
+  ---
+  duration_ms: 821.356624
+  type: 'test'
+  ...
+# Subtest: network identity forbids sharing a depot across differing physical worlds
+ok 65 - network identity forbids sharing a depot across differing physical worlds
+  ---
+  duration_ms: 29.735655
+  type: 'test'
+  ...
+# Subtest: origin reuse requires the identical canonical interval, field and anchor
+ok 66 - origin reuse requires the identical canonical interval, field and anchor
+  ---
+  duration_ms: 280.452027
+  type: 'test'
+  ...
+# Subtest: network publication is atomic across yields, partitions, input order and exact origin reuse
+ok 67 - network publication is atomic across yields, partitions, input order and exact origin reuse
+  ---
+  duration_ms: 72972.514054
+  type: 'test'
+  ...
+# Subtest: simultaneous refuel requests compete for one imported stock and recover without ghost credit
+ok 68 - simultaneous refuel requests compete for one imported stock and recover without ghost credit
+  ---
+  duration_ms: 22385.809325
+  type: 'test'
+  ...
+# Subtest: a failed coupled dependency invalidates only its assigned pair while the other service continues
+ok 69 - a failed coupled dependency invalidates only its assigned pair while the other service continues
+  ---
+  duration_ms: 104369.371339
+  type: 'test'
+  ...
+# Subtest: powered lunar fleet conserves freight and continuous fuel usage through both paid returns
+ok 70 - powered lunar fleet conserves freight and continuous fuel usage through both paid returns
+  ---
+  duration_ms: 13.566778
+  type: 'test'
+  ...
+# Subtest: drawing fuel remains continuous through thrust, with discrete refuelling at event completion
+ok 71 - drawing fuel remains continuous through thrust, with discrete refuelling at event completion
+  ---
+  duration_ms: 7140.907737
+  type: 'test'
+  ...
+# Subtest: powered primitive matches analytic zero-gravity rocket motion in an inclined direction
+ok 72 - powered primitive matches analytic zero-gravity rocket motion in an inclined direction
+  ---
+  duration_ms: 12.355139
+  type: 'test'
+  ...
+# Subtest: acceleration cap has an exact transition and capped mass decay
+ok 73 - acceleration cap has an exact transition and capped mass decay
+  ---
+  duration_ms: 113.005177
+  type: 'test'
+  ...
+# Subtest: powered queries, event boundaries, segments and snapshots preserve canonical results
+ok 74 - powered queries, event boundaries, segments and snapshots preserve canonical results
+  ---
+  duration_ms: 435.541798
+  type: 'test'
+  ...
+# Subtest: adjacent arcs retain the preceding force at the RK endpoint and expose the new heading
+ok 75 - adjacent arcs retain the preceding force at the RK endpoint and expose the new heading
+  ---
+  duration_ms: 49.757127
+  type: 'test'
+  ...
+# Subtest: depletion preserves flown state, closes the partial arc once, and exact-end exhaustion completes
+ok 76 - depletion preserves flown state, closes the partial arc once, and exact-end exhaustion completes
+  ---
+  duration_ms: 84.03367
+  type: 'test'
+  ...
+# Subtest: powered safety and work exhaustion preserve the charged partial prefix
+ok 77 - powered safety and work exhaustion preserve the charged partial prefix
+  ---
+  duration_ms: 237.128439
+  type: 'test'
+  ...
+# Subtest: legacy propulsion fields are rejected before conversion and incompatible programs fail explicitly
+ok 78 - legacy propulsion fields are rejected before conversion and incompatible programs fail explicitly
+  ---
+  duration_ms: 7.895414
+  type: 'test'
+  ...
+# Subtest: powered surface approach stops with a paid reproducible prefix
+ok 79 - powered surface approach stops with a paid reproducible prefix
+  ---
+  duration_ms: 11.501674
+  type: 'test'
+  ...
+# Subtest: powered rotations preserve physics and legacy snapshots cannot resume
+ok 80 - powered rotations preserve physics and legacy snapshots cannot resume
+  ---
+  duration_ms: 194.037996
+  type: 'test'
+  ...
+# Subtest: attached thrust and impulses touching an arc reject explicitly
+ok 81 - attached thrust and impulses touching an arc reject explicitly
+  ---
+  duration_ms: 17.848336
+  type: 'test'
+  ...
+# Subtest: fixed puzzle starters are unsolved; two paid solutions trade time for fuel
+ok 82 - fixed puzzle starters are unsolved; two paid solutions trade time for fuel
+  ---
+  duration_ms: 3519.83346
+  type: 'test'
+  ...
+# Subtest: deadline lives in saved simulation rules, and successful early completion survives the horizon
+ok 83 - deadline lives in saved simulation rules, and successful early completion survives the horizon
+  ---
+  duration_ms: 741.352175
+  type: 'test'
+  ...
+# Subtest: only fixed rules and completed actual runs qualify; persisted scores are independently recomputed
+ok 84 - only fixed rules and completed actual runs qualify; persisted scores are independently recomputed
+  ---
+  duration_ms: 910.564815
+  type: 'test'
+  ...
+# Subtest: port targeting preserves player epochs/prefix, proposes paid docking, and charges gross consumed fuel
+ok 85 - port targeting preserves player epochs/prefix, proposes paid docking, and charges gross consumed fuel
+  ---
+  duration_ms: 5745.770001
+  type: 'test'
+  ...
+# Subtest: port solver rejects service, invalid arrival, work exhaustion, prefix failures and stale itinerary actions without mutation
+ok 86 - port solver rejects service, invalid arrival, work exhaustion, prefix failures and stale itinerary actions without mutation
+  ---
+  duration_ms: 320.278291
+  type: 'test'
+  ...
+# Subtest: following grey applies only to identical event prefixes and old trail opacity decreases
+ok 87 - following grey applies only to identical event prefixes and old trail opacity decreases
+  ---
+  duration_ms: 3.432574
+  type: 'test'
+  ...
+# Subtest: bounded shooting recovers an independently analytic Hohmann rendezvous and charges both impulses
+ok 88 - bounded shooting recovers an independently analytic Hohmann rendezvous and charges both impulses
+  ---
+  duration_ms: 2068.696945
+  type: 'test'
+  ...
+# Subtest: manually closer and worse seeds converge locally with different correction cost and work
+ok 89 - manually closer and worse seeds converge locally with different correction cost and work
+  ---
+  duration_ms: 2077.696956
+  type: 'test'
+  ...
+# Subtest: fuel, work, component bounds and unsupported queue failures leave the input unchanged
+ok 90 - fuel, work, component bounds and unsupported queue failures leave the input unchanged
+  ---
+  duration_ms: 1364.255915
+  type: 'test'
+  ...
+# Subtest: a recreated departure can move, preserve its prefix and replace an existing arrival explicitly
+ok 91 - a recreated departure can move, preserve its prefix and replace an existing arrival explicitly
+  ---
+  duration_ms: 1571.703656
+  type: 'test'
+  ...
+# Subtest: clockwise, full-revolution and inadequate-clearance seeds are rejected before route correction
+ok 92 - clockwise, full-revolution and inadequate-clearance seeds are rejected before route correction
+  ---
+  duration_ms: 590.106522
+  type: 'test'
+  ...
+# Subtest: proposal acceptance is one undoable draft change; execution and saved target remain reproducible
+ok 93 - proposal acceptance is one undoable draft change; execution and saved target remain reproducible
+  ---
+  duration_ms: 1691.313883
+  type: 'test'
+  ...
+# Subtest: unsupported rendezvous metadata is rejected and coarse accuracy cannot become a proposal
+ok 94 - unsupported rendezvous metadata is rejected and coarse accuracy cannot become a proposal
+  ---
+  duration_ms: 83.607803
+  type: 'test'
+  ...
+# Subtest: sensitivity admission preserves service schedules and canonical owner grid
+ok 95 - sensitivity admission preserves service schedules and canonical owner grid
+  ---
+  duration_ms: 29073.931337
+  type: 'test'
+  ...
+# Subtest: exhausted speculative visitor budget cannot mutate or promote a reused owner prefix
+ok 96 - exhausted speculative visitor budget cannot mutate or promote a reused owner prefix
+  ---
+  duration_ms: 860.369617
+  type: 'test'
+  ...
+# Subtest: a later coupled fault permits playback and scrubbing of earlier known history
+ok 97 - a later coupled fault permits playback and scrubbing of earlier known history
+  ---
+  duration_ms: 16797.904616
+  type: 'test'
+  ...
+# Subtest: analytic state and step halving: e=0
+ok 98 - analytic state and step halving: e=0
+  ---
+  duration_ms: 329.63892
+  type: 'test'
+  ...
+# Subtest: analytic state and step halving: e=0.6
+ok 99 - analytic state and step halving: e=0.6
+  ---
+  duration_ms: 112.407997
+  type: 'test'
+  ...
+# Subtest: analytic state and step halving: e=1.5
+ok 100 - analytic state and step halving: e=1.5
+  ---
+  duration_ms: 49.127094
+  type: 'test'
+  ...
+# Subtest: eccentric apsides and period agree with independent Kepler solution
+ok 101 - eccentric apsides and period agree with independent Kepler solution
+  ---
+  duration_ms: 33.463915
+  type: 'test'
+  ...
+# Subtest: off-grid impulse has analytic axes, exact accounting, and no early leakage
+ok 102 - off-grid impulse has analytic axes, exact accounting, and no early leakage
+  ---
+  duration_ms: 18.061106
+  type: 'test'
+  ...
+# Subtest: two burns use current mass, including cargo; zero burn costs zero
+ok 103 - two burns use current mass, including cargo; zero burn costs zero
+  ---
+  duration_ms: 29.058442
+  type: 'test'
+  ...
+# Subtest: prepared burn follows an independent post-impulse Kepler ellipse over the browser horizon
+ok 104 - prepared burn follows an independent post-impulse Kepler ellipse over the browser horizon
+  ---
+  duration_ms: 162.887563
+  type: 'test'
+  ...
+# Subtest: basis is CCW transverse, not velocity aligned, even on clockwise eccentric paths
+ok 105 - basis is CCW transverse, not velocity aligned, even on clockwise eccentric paths
+  ---
+  duration_ms: 5.054373
+  type: 'test'
+  ...
+# Subtest: unaffordable burn is atomic and blocks all later events
+ok 106 - unaffordable burn is atomic and blocks all later events
+  ---
+  duration_ms: 1.993368
+  type: 'test'
+  ...
+# Subtest: display queries, playback partitions, seek, and horizon extension preserve committed states
+ok 107 - display queries, playback partitions, seek, and horizon extension preserve committed states
+  ---
+  duration_ms: 34.327118
+  type: 'test'
+  ...
+# Subtest: snapshot reload at t=0 preserves grid/event cursor
+ok 108 - snapshot reload at t=0 preserves grid/event cursor
+  ---
+  duration_ms: 18.171123
+  type: 'test'
+  ...
+# Subtest: snapshot reload at t=0.6 preserves grid/event cursor
+ok 109 - snapshot reload at t=0.6 preserves grid/event cursor
+  ---
+  duration_ms: 17.433236
+  type: 'test'
+  ...
+# Subtest: snapshot reload at t=1.137 preserves grid/event cursor
+ok 110 - snapshot reload at t=1.137 preserves grid/event cursor
+  ---
+  duration_ms: 14.338688
+  type: 'test'
+  ...
+# Subtest: snapshot reload at t=1.138 preserves grid/event cursor
+ok 111 - snapshot reload at t=1.138 preserves grid/event cursor
+  ---
+  duration_ms: 11.767945
+  type: 'test'
+  ...
+# Subtest: snapshot reload at t=6 preserves grid/event cursor
+ok 112 - snapshot reload at t=6 preserves grid/event cursor
+  ---
+  duration_ms: 8.926573
+  type: 'test'
+  ...
+# Subtest: snapshot reload at t=16 preserves grid/event cursor
+ok 113 - snapshot reload at t=16 preserves grid/event cursor
+  ---
+  duration_ms: 12.789045
+  type: 'test'
+  ...
+# Subtest: tampered snapshots are rejected
+ok 114 - tampered snapshots are rejected
+  ---
+  duration_ms: 12.367242
+  type: 'test'
+  ...
+# Subtest: snapshot object key order is immaterial in JSON
+ok 115 - snapshot object key order is immaterial in JSON
+  ---
+  duration_ms: 9.895996
+  type: 'test'
+  ...
+# Subtest: nonzero scenario epoch anchors grid and future queries do not execute live burns
+ok 116 - nonzero scenario epoch anchors grid and future queries do not execute live burns
+  ---
+  duration_ms: 111.667495
+  type: 'test'
+  ...
+# Subtest: initial surface collision takes precedence over coincident burn
+ok 117 - initial surface collision takes precedence over coincident burn
+  ---
+  duration_ms: 1.295305
+  type: 'test'
+  ...
+# Subtest: high-speed surface approach cannot tunnel, h=0.03125
+ok 118 - high-speed surface approach cannot tunnel, h=0.03125
+  ---
+  duration_ms: 2.783283
+  type: 'test'
+  ...
+# Subtest: high-speed surface approach cannot tunnel, h=0.015625
+ok 119 - high-speed surface approach cannot tunnel, h=0.015625
+  ---
+  duration_ms: 2.386016
+  type: 'test'
+  ...
+# Subtest: high-speed surface approach cannot tunnel, h=0.0078125
+ok 120 - high-speed surface approach cannot tunnel, h=0.0078125
+  ---
+  duration_ms: 2.378512
+  type: 'test'
+  ...
+# Subtest: moving surfaces enter the clearance bound
+ok 121 - moving surfaces enter the clearance bound
+  ---
+  duration_ms: 4.030939
+  type: 'test'
+  ...
+# Subtest: retained-node budget is enforced during deterministic subdivisions
+ok 122 - retained-node budget is enforced during deterministic subdivisions
+  ---
+  duration_ms: 1.902497
+  type: 'test'
+  ...
+# Subtest: owned data cannot be modified by view or caller
+ok 123 - owned data cannot be modified by view or caller
+  ---
+  duration_ms: 0.799343
+  type: 'test'
+  ...
+# Subtest: untrusted JSON validates versions, IDs, times, work, mass and finite state
+ok 124 - untrusted JSON validates versions, IDs, times, work, mass and finite state
+  ---
+  duration_ms: 3.681321
+  type: 'test'
+  ...
+# Subtest: crossing-plane witnesses pay two real inclination changes with distinct node axes
+ok 125 - crossing-plane witnesses pay two real inclination changes with distinct node axes
+  ---
+  duration_ms: 1605.989684
+  type: 'test'
+  ...
+# Subtest: all spatial view queries leave the immutable scene and event sides unchanged
+ok 126 - all spatial view queries leave the immutable scene and event sides unchanged
+  ---
+  duration_ms: 1204.404365
+  type: 'test'
+  ...
+# Subtest: v1 conversion preserves all saved planar trajectories, events and resource ledgers
+ok 127 - v1 conversion preserves all saved planar trajectories, events and resource ledgers
+  ---
+  duration_ms: 5011.976076
+  type: 'test'
+  ...
+# Subtest: oblique translated circular orbit has full XYZ analytic accuracy and fourth-order convergence
+ok 128 - oblique translated circular orbit has full XYZ analytic accuracy and fourth-order convergence
+  ---
+  duration_ms: 72.250691
+  type: 'test'
+  ...
+# Subtest: noncoplanar moving-source propagation and spatial impulses are rotation covariant
+ok 129 - noncoplanar moving-source propagation and spatial impulses are rotation covariant
+  ---
+  duration_ms: 203.035835
+  type: 'test'
+  ...
+# Subtest: orientation poles reject atomically, radial motion is valid, and Cartesian burns have no pole
+ok 130 - orientation poles reject atomically, radial motion is valid, and Cartesian burns have no pole
+  ---
+  duration_ms: 3.657337
+  type: 'test'
+  ...
+# Subtest: spatial safety and capture use Z and vertical velocity, including paid residuals
+ok 131 - spatial safety and capture use Z and vertical velocity, including paid residuals
+  ---
+  duration_ms: 182.877474
+  type: 'test'
+  ...
+# Subtest: spatial snapshots, event sides and query partitions remain canonical
+ok 132 - spatial snapshots, event sides and query partitions remain canonical
+  ---
+  duration_ms: 347.121335
+  type: 'test'
+  ...
+# Subtest: planar planners fence spatial states, sources, ports and burns explicitly
+ok 133 - planar planners fence spatial states, sources, ports and burns explicitly
+  ---
+  duration_ms: 6.5686
+  type: 'test'
+  ...
+# Subtest: display uses the true event-left state instead of reversing a post-capture burn
+ok 134 - display uses the true event-left state instead of reversing a post-capture burn
+  ---
+  duration_ms: 355.539825
+  type: 'test'
+  ...
+# Subtest: maintained relay owns paid propulsion, preserves an orbit envelope and hosts a paid visitor between corrections
+ok 135 - maintained relay owns paid propulsion, preserves an orbit envelope and hosts a paid visitor between corrections
+  ---
+  duration_ms: 6898.706552
+  type: 'test'
+  ...
+# Subtest: powered targets reject hidden legacy fields, unsafe/depleted/expired/budgeted providers and exchange without mutating input
+ok 136 - powered targets reject hidden legacy fields, unsafe/depleted/expired/budgeted providers and exchange without mutating input
+  ---
+  duration_ms: 1739.470125
+  type: 'test'
+  ...
+# Subtest: maintenance endpoints allow capture at burn end and release at next start, and forbid every overlapping attachment
+ok 137 - maintenance endpoints allow capture at burn end and release at next start, and forbid every overlapping attachment
+  ---
+  duration_ms: 63.371689
+  type: 'test'
+  ...
+# Subtest: station display shares the canonical target and cannot become a physical planning source
+ok 138 - station display shares the canonical target and cannot become a physical planning source
+  ---
+  duration_ms: 1782.030877
+  type: 'test'
+  ...
+# Subtest: bounded maintenance authoring responds to a changed initial state and records budget/reserve failures
+ok 139 - bounded maintenance authoring responds to a changed initial state and records budget/reserve failures
+  ---
+  duration_ms: 3.39852
+  type: 'test'
+  ...
+# Subtest: spherical steering is unit length, rotation equivariant and C1 at authored keys
+ok 140 - spherical steering is unit length, rotation equivariant and C1 at authored keys
+  ---
+  duration_ms: 34.906919
+  type: 'test'
+  ...
+# Subtest: steering input rejects ambiguous, discontinuous, nonunit and unrepresentable key sequences
+ok 141 - steering input rejects ambiguous, discontinuous, nonunit and unrepresentable key sequences
+  ---
+  duration_ms: 9.066406
+  type: 'test'
+  ...
+# Subtest: steering knots split canonical steps without ledger events, query dependence or mass-law resets
+ok 142 - steering knots split canonical steps without ledger events, query dependence or mass-law resets
+  ---
+  duration_ms: 697.792806
+  type: 'test'
+  ...
+# Subtest: steered depletion and conservative surface safety retain paid, replayable prefixes
+ok 143 - steered depletion and conservative surface safety retain paid, replayable prefixes
+  ---
+  duration_ms: 150.601126
+  type: 'test'
+  ...
+# Subtest: inclined finite transfer is paid, capped, impulse-free and has continuous display headings
+ok 144 - inclined finite transfer is paid, capped, impulse-free and has continuous display headings
+  ---
+  duration_ms: 1721.930152
+  type: 'test'
+  ...
+# Subtest: continuous template rotations include every steering key without mutating the template
+ok 145 - continuous template rotations include every steering key without mutating the template
+  ---
+  duration_ms: 554.197641
+  type: 'test'
+  ...
+# Subtest: surface service domain is explicit and rejects uncalibrated hardware, targets and extra ships
+ok 146 - surface service domain is explicit and rejects uncalibrated hardware, targets and extra ships
+  ---
+  duration_ms: 28.479194
+  type: 'test'
+  ...
+# Subtest: support prelude remains private; exact launch/arrival survives last admissible calendar window
+ok 147 - support prelude remains private; exact launch/arrival survives last admissible calendar window
+  ---
+  duration_ms: 487.127399
+  type: 'test'
+  ...
+# Subtest: recurring launches/landings conserve real service resources and exact berth/event ownership
+ok 148 - recurring launches/landings conserve real service resources and exact berth/event ownership
+  ---
+  duration_ms: 3761.257841
+  type: 'test'
+  ...
+# Subtest: fleet partitions, dense drawing queries and backward views cannot alter physics
+ok 149 - fleet partitions, dense drawing queries and backward views cannot alter physics
+  ---
+  duration_ms: 3209.982374
+  type: 'test'
+  ...
+# Subtest: failed launch admission and stock shortage retry without free release or repeated service charges
+ok 150 - failed launch admission and stock shortage retry without free release or repeated service charges
+  ---
+  duration_ms: 1058.405525
+  type: 'test'
+  ...
+# Subtest: divergent execution history uses its paid actual prefix while old cursors retain their original forecast
+ok 151 - divergent execution history uses its paid actual prefix while old cursors retain their original forecast
+  ---
+  duration_ms: 663.798709
+  type: 'test'
+  ...
+# Subtest: missing designated arrival faults once instead of spinning the global event queue
+ok 152 - missing designated arrival faults once instead of spinning the global event queue
+  ---
+  duration_ms: 548.109015
+  type: 'test'
+  ...
+# Subtest: rolling dense coverage stays bounded after eviction and one held pending reply
+ok 153 - rolling dense coverage stays bounded after eviction and one held pending reply
+  ---
+  duration_ms: 4644.089604
+  type: 'test'
+  ...
+# Subtest: supported loading, atomic release, inherited rotation, no instantaneous state/fuel jump
+ok 154 - supported loading, atomic release, inherited rotation, no instantaneous state/fuel jump
+  ---
+  duration_ms: 46.686496
+  type: 'test'
+  ...
+# Subtest: release rejection uses post-service mass, heading, throttle, acceleration cap and fuel atomically
+ok 155 - release rejection uses post-service mass, heading, throttle, acceleration cap and fuel atomically
+  ---
+  duration_ms: 110.715579
+  type: 'test'
+  ...
+# Subtest: surface interface rejects ordinary undock, later landing, wrong reference and nonexact initial attachment
+ok 156 - surface interface rejects ordinary undock, later landing, wrong reference and nonexact initial attachment
+  ---
+  duration_ms: 432.607816
+  type: 'test'
+  ...
+# Subtest: physical support validation and legacy gates preserve old schemas
+ok 157 - physical support validation and legacy gates preserve old schemas
+  ---
+  duration_ms: 17.634645
+  type: 'test'
+  ...
+# Subtest: surface replay partitions/snapshots and before-change legacy snapshots are identical
+ok 158 - surface replay partitions/snapshots and before-change legacy snapshots are identical
+  ---
+  duration_ms: 10229.882
+  type: 'test'
+  ...
+# Subtest: inward turn after release retains paid safe prefix; early depletion is paid
+ok 159 - inward turn after release retains paid safe prefix; early depletion is paid
+  ---
+  duration_ms: 24.84334
+  type: 'test'
+  ...
+# Subtest: complete surface freight set conserves stock and berth ownership; close display interpolation bounded
+ok 160 - complete surface freight set conserves stock and berth ownership; close display interpolation bounded
+  ---
+  duration_ms: 368.614057
+  type: 'test'
+  ...
+# Subtest: fleet partitions and disposable queries preserve authoritative state and conservation
+ok 161 - fleet partitions and disposable queries preserve authoritative state and conservation
+  ---
+  duration_ms: 3475.034519
+  type: 'test'
+  ...
+# Subtest: rolling history remains bounded and historical views only expose admitted plans
+ok 162 - rolling history remains bounded and historical views only expose admitted plans
+  ---
+  duration_ms: 6638.971034
+  type: 'test'
+  ...
+# Subtest: pause can accept a bounded pending reply without evicting the cursor
+ok 163 - pause can accept a bounded pending reply without evicting the cursor
+  ---
+  duration_ms: 1868.330783
+  type: 'test'
+  ...
+# Subtest: retryable planning waits keep serviced loadouts and advance the window
+ok 164 - retryable planning waits keep serviced loadouts and advance the window
+  ---
+  duration_ms: 404.231528
+  type: 'test'
+  ...
+# Subtest: external flows count actual imports and exports at full and empty buffers
+ok 165 - external flows count actual imports and exports at full and empty buffers
+  ---
+  duration_ms: 0.903689
+  type: 'test'
+  ...
+# Subtest: stock shortages retry while other ships and boundary flows continue
+ok 166 - stock shortages retry while other ships and boundary flows continue
+  ---
+  duration_ms: 213.379548
+  type: 'test'
+  ...
+# Subtest: a real paid flight fault isolates one ship and retains its known epoch
+ok 167 - a real paid flight fault isolates one ship and retains its known epoch
+  ---
+  duration_ms: 504.606526
+  type: 'test'
+  ...
+# Subtest: a failed production flight admission waits for a later window without recharging service
+ok 168 - a failed production flight admission waits for a later window without recharging service
+  ---
+  duration_ms: 350.109993
+  type: 'test'
+  ...
+1..168
+# tests 168
+# suites 0
+# pass 168
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 201056.189506

@@ -87,7 +87,15 @@ The final32-unit reserve and set-specific4× cap sustained3.998× through512 in 
 production browser without buffer exhaustion; other sets retain16×. See
 [numerical and playback evidence](evidence/sensitivity-planning.md). A separate
 element/deadband policy remains optional future work; multiple visitors/demand
-routing stays separate. Human viewing of this4× follow-up remains open.
+routing stays separate. The user accepted the faster cadence and authorized a
+multiship orbital exhibit with Astra review. **Orison · relay network** now has two
+finite-propulsion freighters assigned to two paid maintained relays, sharing one
+ballistic hub with two berths, finite stock and imports. A separate atomic runtime,
+exact canonical hub reuse, per-owner validity and aggregate storage guards preserve
+physical ownership while independent journeys overlap. See
+[review/contract](design/multiship-service/README.md) and
+[evidence](evidence/multiship-service.md). Human viewing of the new exhibit is next;
+arbitrary cross-relay routing/queues and additional perturbing fields remain separate.
 Lunar continuation, demand routing/rescue, persistence, staging/recovery,
 attitude dynamics and retargeting of existing surface steering remain separate extensions. No general
 steering optimizer is claimed.

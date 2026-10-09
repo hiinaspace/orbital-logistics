@@ -1,4 +1,5 @@
 import {Runner,type EventBoundary} from '../sim/runner';
+import type {OriginIntervals} from '../network/origin';
 import type {Bundle,Scenario,State,ThrustArc} from '../sim/schema';
 import {orbitError,type ViewSample,type ViewerEvent} from '../model-set/model';
 import {validateMaintained,type MaintainedDefinition,type WorldChunk} from '../maintained/world';
@@ -18,9 +19,10 @@ export const aligned=(t:number)=>Number.isFinite(t)&&Number.isInteger(t*256);
 export const quiet=(t:number)=>aligned(t)&&t%8>=4&&t%8<8;
 const copy=<T>(v:T):T=>structuredClone(v);
 export class AdaptiveWorld {
- chunks:Chunk[]=[];anchor:Anchor;checks=0;corrected=0;failed=0;evaluations=0;
- constructor(readonly definition:AdaptiveDefinition,anchor?:Anchor,readonly work?:PropagationBudget){const d=definition;this.anchor=copy(anchor??{t:0,y:d.relay.ship.state,fuel:d.relay.ship.propellant,used:0,origin:d.origin.state,baseline:d.relay.ship.state});if(this.anchor.t%8!==0)throw Error('Owner anchor must be a control boundary');}
- fork(){const w=new AdaptiveWorld(this.definition,this.anchor);w.chunks=[...this.chunks];w.checks=this.checks;w.corrected=this.corrected;w.failed=this.failed;w.evaluations=this.evaluations;return w;}
+ chunks:Chunk[]=[];anchor:Anchor;checks=0;corrected=0;failed=0;evaluations=0;#release?:()=>void;
+ dispose(){this.#release?.();this.#release=undefined;}
+ constructor(readonly definition:AdaptiveDefinition,anchor?:Anchor,readonly work?:PropagationBudget,readonly originIntervals?:OriginIntervals){const d=definition;this.anchor=copy(anchor??{t:0,y:d.relay.ship.state,fuel:d.relay.ship.propellant,used:0,origin:d.origin.state,baseline:d.relay.ship.state});if(this.anchor.t%8!==0)throw Error('Owner anchor must be a control boundary');this.#release=originIntervals?.watch(this);}
+ fork(){const w=new AdaptiveWorld(this.definition,this.anchor,undefined,this.originIntervals);w.chunks=[...this.chunks];w.checks=this.checks;w.corrected=this.corrected;w.failed=this.failed;w.evaluations=this.evaluations;return w;}
  get end(){return this.anchor.t;}
  scenario(t:number,duration:number,y:State,fuel:number,visitorFuel?:number,relay=true):Scenario{
   const d=this.definition,s=copy(d.world.scenario);s.epoch=t;s.duration=duration;delete s.logistics;delete s.rendezvous;s.bodies.forEach(b=>b.radius+=.2);
@@ -30,16 +32,16 @@ export class AdaptiveWorld {
   if(!aligned(through)||through>10096||through<this.end)throw Error('Invalid owner horizon');
   if(frozen&&(new Set(frozen.map(c=>c.t)).size!==frozen.length||frozen.some(c=>c.t%8!==0||c.arcs.some(a=>a.start<c.t||a.end>c.t+4))))throw Error('Invalid frozen ownership controls');
   if(events.some((e,i)=>!quiet(e.t)||e.visitorId!==this.definition.world.scenario.ship.id||i>0&&e.t<=events[i-1].t))throw Error('Invalid coupled ownership calendar');
-  while(this.end<through){yield;const start=copy(this.anchor),t=start.t,s=this.scenario(t,8,start.y,start.fuel,start.visitorFuel),before=orbitError(start.y,this.definition.reference);let arcs:ThrustArc[]=[],check:WorldChunk['check']={t,outcome:'skip',before:[before.position,before.velocity],evaluations:0};
+  while(this.end<through){yield;this.originIntervals?.reserve(3*(8*256+1024)+4096);const start=copy(this.anchor),t=start.t,s=this.scenario(t,8,start.y,start.fuel,start.visitorFuel),before=orbitError(start.y,this.definition.reference);let arcs:ThrustArc[]=[],check:WorldChunk['check']={t,outcome:'skip',before:[before.position,before.velocity],evaluations:0};
    if(frozen){const control=frozen.find(c=>c.t===t);if(!control)throw Error('Incomplete frozen station stream');arcs=copy(control.arcs);check=copy(control.check);}
    else if(before.position>.001||before.velocity>.0003){try{
     const coast=new Runner({scenario:s,program:{schemaVersion:3,id:'loaded-coast-seed',burns:[]}}),p=coast.sample(t+4).y,r=this.definition.reference,a=Math.atan2(p[1],p[0]),c=Math.cos(a),sn=Math.sin(a),target=[3*c,3*sn,0,-3*r.rate*sn,3*r.rate*c,0] as State;
     const shot=yield* shootForcesJob({...s,duration:4},[{start:t,end:t+1.9},{start:t+2.1,end:t+4}],target,undefined,64,'sphere',this.work,'sensitivity');
     const at=shot.runner.sample(t+4),err=orbitError(at.y,r);if(at.propellant<.1||err.position>Math.max(.001,before.position)||err.velocity>Math.max(.0003,before.velocity))throw new PlanningFailure('Loaded maintenance reserve/quality gate failed',shot.evaluations);
-    arcs=shot.arcs.map((a,i)=>({...a,id:`adaptive-maintain-${t}-${i}`}));check={t,outcome:'correct',before:[before.position,before.velocity],after:[err.position,err.velocity],evaluations:shot.evaluations};
+    arcs=shot.arcs.map((a,i)=>({...a,id:this.originIntervals?`network-${this.definition.relay.id}-maintain-${t}-${i}`:`adaptive-maintain-${t}-${i}`}));check={t,outcome:'correct',before:[before.position,before.velocity],after:[err.position,err.velocity],evaluations:shot.evaluations};
    }catch(error){if(!(error instanceof PlanningFailure))throw error;check={t,outcome:'failed',before:[before.position,before.velocity],evaluations:error.evaluations,detail:error.message};}}
-   const local=events.filter(e=>e.t>=t&&e.t<t+8),pieces:Piece[]=[],ownershipBounds:EventBoundary[]=[],ledger:ViewerEvent[]=[];let y=copy(start.y),fuel=start.fuel,used=start.used,visitorFuel=start.visitorFuel,at=t;
-   for(const event of [...local,undefined]){
+   const local=events.filter(e=>e.t>=t&&e.t<t+8),pieces:Piece[]=[],ownershipBounds:EventBoundary[]=[],ledger:ViewerEvent[]=[];const releasePieces=this.originIntervals?.watch({get runners(){return pieces.map(p=>p.runner);}});let y=copy(start.y),fuel=start.fuel,used=start.used,visitorFuel=start.visitorFuel,at=t;
+   try{for(const event of [...local,undefined]){
     const end=event?.t??t+8;if(end>at){const scenario=this.scenario(at,end-at,y,fuel,visitorFuel),runner=new Runner({scenario,program:{schemaVersion:3,id:`owned-${at}`,burns:[],thrustArcs:arcs.filter(a=>a.start>=at&&a.end<=end)}});yield;const last=runner.advanceTo(end);if(last.status!=='horizon'||last.t!==end)throw Error(`Coupled owner physical failure: ${last.status}`);
      pieces.push({start:at,end,runner,used,visitorFuel,dryMass:scenario.ship.dryMass});ledger.push(...runner.ledger);y=last.y;fuel=last.propellant;used+=last.fuelUsed??0;at=end;}
     if(!event)break;const beforeSample:ViewSample={mass:this.definition.relay.ship.dryMass+(visitorFuel===undefined?0:1.05+visitorFuel)+fuel,t:at,y:copy(y),propellant:fuel,fuelUsed:used,burnCursor:0,status:'running',detail:''};
@@ -48,7 +50,8 @@ export class AdaptiveWorld {
     else{if(visitorFuel===undefined)throw Error('Release without visitor');visitorFuel=undefined;}
     ownershipBounds.push({t:at,before:beforeSample,after:{...beforeSample,propellant:fuel,mass:this.definition.relay.ship.dryMass+(visitorFuel===undefined?0:1.05+visitorFuel)+fuel} as ViewSample});
    }
-   const origin=new Runner({scenario:this.scenario(t,8,start.origin,0,undefined,false),program:{schemaVersion:3,id:`adaptive-origin-${t}`,burns:[]}}),baseline=new Runner({scenario:this.scenario(t,8,start.baseline,this.definition.relay.ship.propellant),program:{schemaVersion:3,id:`adaptive-baseline-${t}`,burns:[]}});
+   const originBundle={scenario:this.scenario(t,8,start.origin,0,undefined,false),program:{schemaVersion:3 as const,id:`adaptive-origin-${t}`,burns:[]}};
+   const origin=this.originIntervals?.get(originBundle)??new Runner(originBundle),baseline=new Runner({scenario:this.scenario(t,8,start.baseline,this.definition.relay.ship.propellant),program:{schemaVersion:3,id:`adaptive-baseline-${t}`,burns:[]}});
    yield;const o=origin.advanceTo(t+8);yield;const b=baseline.advanceTo(t+8);if(o.status!=='horizon'||b.status!=='horizon')throw Error('Coupled background physical failure');
    const sample=(epoch:number):ViewSample=>{const piece=pieces.find(p=>p.start<=epoch&&p.end>epoch)??pieces.at(-1)!;const a=piece.runner.sample(epoch);return {...a,fuelUsed:piece.used+(a.fuelUsed??0),mass:piece.dryMass+a.propellant} as ViewSample;};
    const times=[...new Set([...Array.from({length:257},(_,i)=>t+i/32),...ledger.map(e=>e.t),...local.map(e=>e.t)])].sort((a,b)=>a-b),boundaries=[...pieces.flatMap(p=>p.runner.eventBoundaries.map(b=>({t:b.t,before:{...b.before,mass:p.dryMass+b.before.propellant,fuelUsed:p.used+(b.before.fuelUsed??0)},after:{...b.after,mass:p.dryMass+b.after.propellant,fuelUsed:p.used+(b.after.fuelUsed??0)}}))),...ownershipBounds].sort((a,b)=>a.t-b.t);
@@ -56,6 +59,7 @@ export class AdaptiveWorld {
    if(check.outcome==='failed')ledger.push({t,kind:'planning-failed',id:`adaptive-maintenance-failed-${t}`,deltaV:0,fuelUsed:0,propellantBefore:start.fuel,propellantAfter:start.fuel,detail:check.detail});
    const data:WorldChunk={id:t/8,start:t,end:t+8,knownAt,check,station:times.map(sample),origin:times.map(epoch=>({t:epoch,y:origin.sample(epoch).y})),baseline:times.map(epoch=>({t:epoch,y:baseline.sample(epoch).y})),arcs,ledger,boundaries};
    this.chunks.push({data,pieces,origin,baseline,anchor:start,endAnchor,control:{t,arcs,check}});this.anchor=endAnchor;this.checks++;this.evaluations+=check.evaluations;if(check.outcome==='correct')this.corrected++;if(check.outcome==='failed')this.failed++;
+   }finally{releasePieces?.();}
   }
  }
  sample(id:string,t:number):ViewSample{
@@ -64,6 +68,7 @@ export class AdaptiveWorld {
   const piece=chunk.pieces.find(p=>p.start<=t&&p.end>t)??chunk.pieces.at(-1)!,a=piece.runner.sample(t);return {...a,fuelUsed:piece.used+(a.fuelUsed??0),mass:piece.dryMass+a.propellant} as ViewSample;
  }
  get controls(){return this.chunks.map(c=>copy(c.control));}
- get nodes(){return this.chunks.reduce((n,c)=>n+c.pieces.reduce((a,p)=>a+p.runner.retainedNodes,0)+c.origin.retainedNodes+c.baseline.retainedNodes,0);}
+ get runners(){return this.chunks.flatMap(c=>[...c.pieces.map(p=>p.runner),c.origin,c.baseline]);}
+ get nodes(){return [...new Set(this.runners)].reduce((n,r)=>n+r.retainedNodes,0);}
  evict(t:number){this.chunks=this.chunks.filter(c=>c.data.end>=t);}
 }

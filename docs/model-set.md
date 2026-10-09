@@ -319,3 +319,32 @@ stops its dependent station future before any ghost attachment or fuel transfer.
 Viewing the new cadence is the next human gate. Multiple visitors, demand/rescue,
 arbitrary online spatial targeting and phase-maintaining station policies remain
 separate extensions.
+
+
+## Maintained multiship network — 2026-10-09
+
+The user accepted faster flexible service and selected a modest fleet exhibit.
+After [Astra review](design/multiship-service/README.md), **Orison · relay network**
+adds Ibis → Solstice beside Tern → Meridian. Both maintained relays orbit at radius3
+under the same Orison/Mote field and thrust limits; Solstice begins a quarter orbit
+away. Equator remains a ballistic radius2 hub with two berths and one finite fuel
+inventory/import stream. Journeys overlap and deliver actual stationkeeping fuel;
+ships retain their .05 cargo mass throughout this assigned fuel service.
+
+One `maintained-network-v1` runtime owns the shared actual frontier and stock anchor.
+Private epoch transactions process due flight facts and stable-identity refuels before
+sequential bounded planners, then install the complete result without yielding.
+Each relay owns its canonical loaded stream and one assigned reservation. Exact
+sealed hub intervals can be shared; drawing data cannot seed physics. Storage guards
+cover aggregate owners, private trials, cache and held displays. The existing32-unit
+lead/128 total retention preserve Pause/Play/Live. The new set is capped at2× after
+isolated actual-frame measurements at1×/2×; legacy speed ranges remain. Legacy domains are unchanged.
+
+A shortage keeps a returned ship attached until a later funded retry. Coupled
+capture/transfer/release faults invalidate that visitor and dependent station from
+the event-left state; the healthy lane continues. Stopped stations are last-known
+markers, with no later physical position or usable reference frame, even after that
+stop leaves the rolling history window. Unexpected invariant failures stop the common
+head at its last published state. General routing, shared-relay competition, new
+fields, demand dispatch, station-to-station journeys and free-flight fault recovery
+remain separate work. See [numerical and browser evidence](evidence/multiship-service.md).

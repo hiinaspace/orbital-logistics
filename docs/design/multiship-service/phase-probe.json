@@ -1,0 +1,228 @@
+[
+  {
+    "offset": 3.141592653589793,
+    "seconds": 44.658655661999994,
+    "snapshot": {
+      "frontier": 160,
+      "current": {
+        "t": 160,
+        "ships": [
+          {
+            "t": 160,
+            "y": [
+              -1.1531607668510193,
+              -1.6516688046612915,
+              0,
+              0.5759814979093678,
+              -0.4022123928886061,
+              0
+            ],
+            "propellant": 0.9,
+            "fuelUsed": 0.47028318425806537,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "logistics": {
+              "operationCursor": 0,
+              "cargoMass": 0.05,
+              "fuelUsed": 0.47028318425806537,
+              "ports": [],
+              "dockedPortId": "Equator"
+            },
+            "activity": {
+              "kind": "waiting",
+              "nextDeparture": 175.5
+            }
+          }
+        ]
+      },
+      "resources": {
+        "t": 160,
+        "stocks": [
+          {
+            "id": "Equator",
+            "cargo": 0,
+            "propellant": 3.8728715820453217
+          },
+          {
+            "id": "Solstice",
+            "cargo": 0,
+            "propellant": 0
+          }
+        ],
+        "cargoImported": 0,
+        "cargoExported": 0,
+        "fuelImported": 0.41450389021021783,
+        "fuelExported": 0
+      },
+      "stats": {
+        "frames": 2056,
+        "chunks": 26,
+        "physicalChunks": 10,
+        "visits": 3,
+        "runnerNodes": 123743,
+        "maxPromotionNodes": 74552,
+        "completed": 2,
+        "planningFailed": 4,
+        "controllerChecks": 29,
+        "controllerCorrected": 21,
+        "controllerFailed": 0,
+        "controllerEvaluations": 132,
+        "maxVisitEvaluations": 27,
+        "trialControllerEvaluations": 986,
+        "trialVisitorEvaluations": 739,
+        "maxOpportunityEvaluations": 293,
+        "maxOpportunityTrials": 4,
+        "planningPending": 0,
+        "stationFuel": 0.5689032848290418,
+        "stationFuelUsed": 0.10244583907778904,
+        "shipFuelUsed": 0.47028318425806537,
+        "fuelDelivered": 0.0713491239068309,
+        "fuelBalanceError": -8.881784197001252e-16,
+        "packetBytes": 6134426
+      }
+    },
+    "visits": [
+      {
+        "schedule": {
+          "departure": 23,
+          "relayArrival": 36,
+          "release": 54,
+          "homeArrival": 69
+        },
+        "delivery": 0.019899945369275307
+      },
+      {
+        "schedule": {
+          "departure": 102,
+          "relayArrival": 116,
+          "release": 133.5,
+          "homeArrival": 148
+        },
+        "delivery": 0.051449178537555595
+      },
+      {
+        "schedule": {
+          "departure": 175.5,
+          "relayArrival": 189.5,
+          "release": 215.5,
+          "homeArrival": 228.5
+        },
+        "delivery": 0.05018876639597669
+      }
+    ]
+  },
+  {
+    "offset": 1.5707963267948966,
+    "seconds": 26.735382251999997,
+    "snapshot": {
+      "frontier": 160,
+      "current": {
+        "t": 160,
+        "ships": [
+          {
+            "t": 160,
+            "y": [
+              -1.1531607668510193,
+              -1.6516688046612915,
+              0,
+              0.5759814979093678,
+              -0.4022123928886061,
+              0
+            ],
+            "propellant": 0.9,
+            "fuelUsed": 0.44739942343370886,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "logistics": {
+              "operationCursor": 0,
+              "cargoMass": 0.05,
+              "fuelUsed": 0.44739942343370886,
+              "ports": [],
+              "dockedPortId": "Equator"
+            },
+            "activity": {
+              "kind": "waiting",
+              "nextDeparture": 167.5
+            }
+          }
+        ]
+      },
+      "resources": {
+        "t": 160,
+        "stocks": [
+          {
+            "id": "Equator",
+            "cargo": 0,
+            "propellant": 3.9876995125784824
+          },
+          {
+            "id": "Solstice",
+            "cargo": 0,
+            "propellant": 0
+          }
+        ],
+        "cargoImported": 0,
+        "cargoExported": 0,
+        "fuelImported": 0.5152062230590433,
+        "fuelExported": 0
+      },
+      "stats": {
+        "frames": 2055,
+        "chunks": 25,
+        "physicalChunks": 9,
+        "visits": 3,
+        "runnerNodes": 117470,
+        "maxPromotionNodes": 74552,
+        "completed": 2,
+        "planningFailed": 2,
+        "controllerChecks": 28,
+        "controllerCorrected": 20,
+        "controllerFailed": 0,
+        "controllerEvaluations": 128,
+        "maxVisitEvaluations": 27,
+        "trialControllerEvaluations": 606,
+        "trialVisitorEvaluations": 426,
+        "maxOpportunityEvaluations": 292,
+        "maxOpportunityTrials": 4,
+        "planningPending": 0,
+        "stationFuel": 0.5546957250575879,
+        "stationFuelUsed": 0.12541156198926384,
+        "shipFuelUsed": 0.44739942343370886,
+        "fuelDelivered": 0.08010728704685177,
+        "fuelBalanceError": -8.881784197001252e-16,
+        "packetBytes": 6052168
+      }
+    },
+    "visits": [
+      {
+        "schedule": {
+          "departure": 14,
+          "relayArrival": 28,
+          "release": 45.5,
+          "homeArrival": 60
+        },
+        "delivery": 0.02506130305871357
+      },
+      {
+        "schedule": {
+          "departure": 87.5,
+          "relayArrival": 101.5,
+          "release": 127.5,
+          "homeArrival": 140.5
+        },
+        "delivery": 0.0550459839881382
+      },
+      {
+        "schedule": {
+          "departure": 167.5,
+          "relayArrival": 181,
+          "release": 207,
+          "homeArrival": 220
+        },
+        "delivery": 0.058137430426032366
+      }
+    ]
+  }
+]

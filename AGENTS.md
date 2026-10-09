@@ -96,6 +96,22 @@ ownership events, paid captures, incomplete-dependency fault stops, bounded work
 storage and historical/future separation are required. Preserve old maintained and
 analytical/surface semantics. Multi-visitor scheduling and arbitrary online spatial
 targeting remain separate work.
+The user authorized the multiship exhibit after the flexible-service performance
+pass. maintained-network-v1 now has two assigned visitors/maintained relays and
+one shared two-berth ballistic hub in the unchanged field. Read
+ docs/design/multiship-service/README.md and docs/evidence/multiship-service.md.
+The network owns one clock/resource anchor and publishes complete private epoch
+transactions; sequential planners may delay the common head but never leak partial
+stock/admissions. Stable identity order allocates real refuels; shortages retain
+attachment and retry after eight units. Canonical hub intervals may be reused only
+with exact bundle/anchor/policy keys; loaded relay streams stay owner-specific.
+Coupled capture/transfer/release faults stop just the dependent pair at event-left;
+healthy traffic continues. Failed stations remain last-known markers, invalid for
+later physical/frame queries, including after their epoch leaves retained history.
+Unexpected invariants stop at the last published head. Preserve aggregate400k
+transient/140k retained physical-node and16MB serialized reply/held-row guards,32-unit committed
+lead and128 total retention. Arbitrary shared-relay visitors/routing and new fields
+are outside this narrowly versioned assigned network.
 Follow/Chase and selection-pivot orbiting are presentation only; see
 docs/design/camera-tracking.md. Atmosphere, staging, attitude/slew limits and arbitrary
 ground latitude/spin axes remain deferred.
