@@ -207,6 +207,7 @@ function buildTimeline() {
   });
 }
 function fuelChart(v:VesselView):string {return `<div class="chart-key"><span>Fuel</span>${run?.maintained?.[v.id]?'':'<span>Freight</span>'}</div>${fuelGraph(v)}`;}
+const budgetCursorTransform=()=>`translate(${4+(t-start())/(end()-start())*232},0)`;
 function fuelGraph(v: VesselView): string {
   const edges=new Map(v.boundaries.map(e=>[e.t,e.before]));
   const path = (get: (s: typeof v.samples[number]) => number, max: number) => {
@@ -222,7 +223,7 @@ function fuelGraph(v: VesselView): string {
       return i ? v.continuousFuel?`L${x},${y}`:`H${x}V${y}` : `M${x},${y}`;
     }).join(' ');
   };
-  return `<svg class="budget-chart" viewBox="0 0 240 72" role="img" aria-label="Fuel and freight over the scene"><path d="M4 64H236" stroke="#33414b"/><path d="${path(s => s.propellant, v.ship.tankCapacity)}" fill="none" stroke="#78c9c0" stroke-width="1.5"/><path d="${path(s => s.logistics?.cargoMass ?? v.ship.cargoMass, v.cargoCapacity ?? 1)}" fill="none" stroke="#efb878" stroke-width="1.5"/><path class="budget-cursor" d="M0 5V66" stroke="#c7d5de" stroke-opacity="0.6"/></svg>`;
+  return `<svg class="budget-chart" data-start="${start()}" data-end="${end()}" viewBox="0 0 240 72" role="img" aria-label="Fuel and freight over the scene"><path d="M4 64H236" stroke="#33414b"/><path d="${path(s => s.propellant, v.ship.tankCapacity)}" fill="none" stroke="#78c9c0" stroke-width="1.5"/><path d="${path(s => s.logistics?.cargoMass ?? v.ship.cargoMass, v.cargoCapacity ?? 1)}" fill="none" stroke="#efb878" stroke-width="1.5"/><path class="budget-cursor" d="M0 5V66" transform="${budgetCursorTransform()}" stroke="#c7d5de" stroke-opacity="0.6"/></svg>`;
 }
 let inspectorKey = '';
 function updatePanels() {
@@ -273,7 +274,7 @@ function updatePanels() {
     const local=s.activity?.kind==='fault'?[0,0,0,0,0,0]:transform(run,s.y,t,frame);
     if(Math.abs(local[2])+Math.abs(local[5])>1e-9)$('readouts').innerHTML+=`<div><dt>Z position</dt><dd>${number(local[2])}</dd></div><div><dt>Z velocity</dt><dd>${number(local[5])}</dd></div>`;
     const cursor = document.querySelector<SVGPathElement>('.budget-cursor');
-    cursor?.setAttribute('transform', `translate(${4 + (t - start()) / (end() - start()) * 232},0)`);
+    cursor?.setAttribute('transform', budgetCursorTransform());
     upcoming = events.find(e => e.vessel === selected && e.t > t + 1e-9 && e.kind !== 'burn');
   } else {
     const station = run.stations.find(s => s.id === selected), stock = stocks.find(s => s.id === selected);

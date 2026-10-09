@@ -14,8 +14,9 @@ export class OriginIntervals {
   if(bundle.program.burns.length||bundle.program.thrustArcs?.length||bundle.program.operations?.length||bundle.scenario.ship.propellant!==0)throw Error('Origin cache requires an unpaid ballistic interval');
   const key=JSON.stringify(bundle),found=this.enabled?this.#entries.get(key):undefined;
   if(found){this.hits++;return found;}
-  this.reserve(Math.ceil(bundle.scenario.duration/bundle.scenario.policy.step)+1024);
-  const runner=new Runner(bundle),end=bundle.scenario.epoch+bundle.scenario.duration,last=runner.advanceTo(end);
+  const maxNodes=Math.min(bundle.scenario.policy.maxNodes,Math.ceil(bundle.scenario.duration/bundle.scenario.policy.step)+1024);
+  this.reserve(maxNodes);
+  const runner=new Runner({...bundle,scenario:{...bundle.scenario,policy:{...bundle.scenario.policy,maxNodes}}}),end=bundle.scenario.epoch+bundle.scenario.duration,last=runner.advanceTo(end);
   if(last.t!==end||last.status!=='horizon')throw Error('Origin interval did not complete');
   if(this.enabled)this.#entries.set(key,runner);this.misses++;
   // FIFO eviction removes cache ownership only; an active physical forecast

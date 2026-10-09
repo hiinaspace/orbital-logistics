@@ -14,6 +14,23 @@ test('two maintained lanes preserve selection, paused poses, shared stocks and s
  await page.getByLabel('Playback speed').fill('4');await page.getByLabel('Model set').selectOption('orison-relay-network');await expect.poll(async()=>(await state(page)).ready,{timeout:90000}).toBe(true);expect((await state(page)).playbackRate).toBe(2);await expect(page.getByLabel('Playback speed')).toHaveAttribute('max','1');expect((await state(page)).traffic.error).toBe('');expect(errors).toEqual([]);
  await page.screenshot({path:'docs/design/multiship-service/browser.png',fullPage:true});
 });
+test('live fuel chart replacements keep the time cursor at the displayed epoch',async({page})=>{
+ test.setTimeout(90000);await load(page);await page.getByLabel('Playback speed').fill('1');
+ await page.evaluate(()=>{
+  const result={replacements:0,invalid:[] as string[]};(window as any).chartCursorWitness=result;
+  new MutationObserver(records=>{
+   if(!records.some(r=>[...r.addedNodes].some(n=>n instanceof Element&&n.matches('.budget-chart'))))return;
+   result.replacements++;const cursor=document.querySelector('.budget-cursor'),epoch=(window as any).orbitalPlayback.epoch;
+   const position=Number(cursor?.getAttribute('transform')?.match(/^translate\(([^,]+),0\)$/)?.[1]);
+   // Replacements may precede the next panel tick; their own chart carries
+   // exact window bounds rather than borrowing the stale inspector clock.
+   const chart=cursor?.closest('svg'),from=Number(chart?.getAttribute('data-start')),to=Number(chart?.getAttribute('data-end')),expected=4+(epoch-from)/(to-from)*232;
+   if(!Number.isFinite(position)||!Number.isFinite(expected)||Math.abs(position-expected)>1e-7)result.invalid.push(`${epoch}:${position}/${expected}`);
+  }).observe(document.querySelector('#inspector')!,{childList:true,subtree:true});
+ });
+ await expect.poll(async()=>(await state(page)).t,{timeout:15000}).toBeGreaterThan(12);
+ const witness=await page.evaluate(()=>(window as any).chartCursorWitness);expect(witness.replacements).toBeGreaterThan(10);expect(witness.invalid).toEqual([]);
+});
 test('measure actual network display frames and committed-buffer continuity',async({page})=>{
  test.skip(!process.env.NETWORK_RATES,'Opt-in isolated production playback witness');
  const rates=process.env.NETWORK_RATES!.split(',').map(Number),through=Number(process.env.NETWORK_THROUGH??160),rows:any[]=[];

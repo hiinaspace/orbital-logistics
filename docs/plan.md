@@ -94,7 +94,10 @@ ballistic hub with two berths, finite stock and imports. A separate atomic runti
 exact canonical hub reuse, per-owner validity and aggregate storage guards preserve
 physical ownership while independent journeys overlap. See
 [review/contract](design/multiship-service/README.md) and
-[evidence](evidence/multiship-service.md). Human viewing of the new exhibit is next;
+[evidence](evidence/multiship-service.md). The user accepted2× viewing, then reported
+a late candidate-budget halt and sidebar cursor flicker. The
+[robustness follow-up](evidence/network-robustness.md) fixes duplicate legacy
+accounting, enforces reserved runner caps and positions chart replacements immediately;
 arbitrary cross-relay routing/queues and additional perturbing fields remain separate.
 Lunar continuation, demand routing/rescue, persistence, staging/recovery,
 attitude dynamics and retargeting of existing surface steering remain separate extensions. No general

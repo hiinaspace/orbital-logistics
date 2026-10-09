@@ -69,7 +69,8 @@ export class CoupledTrip {
    {t:s.relayArrival+.5,kind:'transfer',id:`${p.id}:fuel`,portId:d.relay.id,deltaV:0,fuelUsed:0,propellantBefore:this.beforeTransferFuel,propellantAfter:this.afterTransferFuel,portPropellantBefore:stationFuel,portPropellantAfter:stationFuel+p.delivery,cargoBefore:.05,cargoAfter:.05},
    {t:s.release,kind:'undock',id:`${p.id}:release`,portId:d.relay.id,deltaV:0,fuelUsed:0,propellantBefore:this.afterTransferFuel,propellantAfter:this.afterTransferFuel},...this.inbound.ledger,
    {t:s.homeArrival,kind:'dock',id:`${p.id}:home`,portId:d.origin.id,...this.home}].map(e=>{const {y,...event}=e as ViewerEvent&{y?:State};return event;}).sort((a,b)=>a.t-b.t));
-  this.#release=originIntervals?.watch(this);originIntervals?.reserve();
+  this.#release=originIntervals?.watch(this);
+  try{originIntervals?.reserve();}catch(error){this.dispose();throw error;}
  }
  ownership():Ownership[]{const s=this.plan.schedule,id=this.plan.visitorId;return [{t:s.relayArrival,kind:'capture',visitorId:id,fuel:this.capture.propellantAfter},{t:s.relayArrival+.5,kind:'transfer',visitorId:id,amount:this.plan.delivery},{t:s.release,kind:'release',visitorId:id}];}
  sample(t:number,before=false):ViewSample{
@@ -128,7 +129,11 @@ export function* buildPlanJob(d:AdaptiveDefinition,base:Anchor,prefix:Control[],
  const outBundle=out.runner.bundle,backBundle=back.runner.bundle;outBundle.program.id=`${id}:out`;backBundle.program.id=`${id}:back`;outBundle.program.thrustArcs!.forEach((a,i)=>a.id=`${id}:out:${i}`);backBundle.program.thrustArcs!.forEach((a,i)=>a.id=`${id}:back:${i}`);
  const plan:CoupledPlan={schemaVersion:1,modelVersion:'coupled-service-v1',id,knownAt:base.t,end,base:copy(base),controls:owner.controls,schedule:copy(s),visitorId:d.world.scenario.ship.id,fuel,delivery,outbound:outBundle,inbound:backBundle,evaluations:out.evaluations+back.evaluations};yield;
  const trip=created=originIntervals?yield* CoupledTrip.createJob(d,plan,originIntervals):new CoupledTrip(d,plan);
- if(residentNodes+owner.nodes+trip.nodes+out.runner.retainedNodes+back.runner.retainedNodes>220000)throw Error('Candidate physical storage budget exceeded');
+ // The network registry accounts for all owners and deduplicates shared
+ // canonical hub intervals. The legacy per-candidate sum counts those
+ // intervals repeatedly and cannot be used alongside that global authority.
+ if(originIntervals)originIntervals.reserve();
+ else if(residentNodes+owner.nodes+trip.nodes+out.runner.retainedNodes+back.runner.retainedNodes>220000)throw Error('Candidate physical storage budget exceeded');
  // A deterministic replay of every identical grid input is a regression
  // oracle, not admission work. Keep the event/block anchor checks here.
  for(const chunk of owner.chunks)for(const t of [chunk.data.start,chunk.data.end,...chunk.data.boundaries.map(b=>b.t)])for(const id of [d.origin.id,d.relay.id])if(key(owner.sample(id,t))!==key(trip.world.sample(id,t)))throw Error('Reconstructed coupled owner mismatch');

@@ -112,6 +112,10 @@ Unexpected invariants stop at the last published head. Preserve aggregate400k
 transient/140k retained physical-node and16MB serialized reply/held-row guards,32-unit committed
 lead and128 total retention. Arbitrary shared-relay visitors/routing and new fields
 are outside this narrowly versioned assigned network.
+Network candidate accounting uses the global unique-Runner registry, not the
+legacy220k single-lane sum. Enforce each short runner's reserved node allowance
+and release registrations when construction refuses a candidate. See
+ docs/design/network-robustness/README.md and docs/evidence/network-robustness.md.
 Follow/Chase and selection-pivot orbiting are presentation only; see
 docs/design/camera-tracking.md. Atmosphere, staging, attitude/slew limits and arbitrary
 ground latitude/spin axes remain deferred.

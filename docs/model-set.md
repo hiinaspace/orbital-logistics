@@ -348,3 +348,7 @@ stop leaves the rolling history window. Unexpected invariant failures stop the c
 head at its last published state. General routing, shared-relay competition, new
 fields, demand dispatch, station-to-station journeys and free-flight fault recovery
 remain separate work. See [numerical and browser evidence](evidence/multiship-service.md).
+The user accepted the exhibit at2×. A later robustness follow-up replaces the
+duplicate legacy candidate sum with network-wide accounting, enforces reserved
+short-runner caps, cleans up refused registrations and initializes chart cursors
+at the current time. See [follow-up evidence](evidence/network-robustness.md).

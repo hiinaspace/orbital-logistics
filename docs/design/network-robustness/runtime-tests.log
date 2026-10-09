@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: coupled dependencies halt at their actual event-left fuel and mass without ghost station credits
+ok 1 - coupled dependencies halt at their actual event-left fuel and mass without ghost station credits
+  ---
+  duration_ms: 13964.088053
+  type: 'test'
+  ...
+# Subtest: request sizes, solver yields, exact paused heads and forecast visibility preserve admitted physical plans
+ok 2 - request sizes, solver yields, exact paused heads and forecast visibility preserve admitted physical plans
+  ---
+  duration_ms: 35171.55924
+  type: 'test'
+  ...
+# Subtest: network identity forbids sharing a depot across differing physical worlds
+ok 3 - network identity forbids sharing a depot across differing physical worlds
+  ---
+  duration_ms: 19.961784
+  type: 'test'
+  ...
+# Subtest: origin reuse requires the identical canonical interval, field and anchor
+ok 4 - origin reuse requires the identical canonical interval, field and anchor
+  ---
+  duration_ms: 163.428442
+  type: 'test'
+  ...
+# Subtest: transient physical budget rejects an interval before allocating it
+ok 5 - transient physical budget rejects an interval before allocating it
+  ---
+  duration_ms: 8.406086
+  type: 'test'
+  ...
+# Subtest: network publication is atomic across yields, partitions, input order and exact origin reuse
+ok 6 - network publication is atomic across yields, partitions, input order and exact origin reuse
+  ---
+  duration_ms: 70023.055229
+  type: 'test'
+  ...
+# Subtest: simultaneous refuel requests compete for one imported stock and recover without ghost credit
+ok 7 - simultaneous refuel requests compete for one imported stock and recover without ghost credit
+  ---
+  duration_ms: 32425.000372
+  type: 'test'
+  ...
+# Subtest: a failed coupled dependency invalidates only its assigned pair while the other service continues
+ok 8 - a failed coupled dependency invalidates only its assigned pair while the other service continues
+  ---
+  duration_ms: 150208.924168
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 253225.439803

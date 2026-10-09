@@ -1,0 +1,14 @@
+[WebServer] (node:2817306) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:2817330) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser/network-service.spec.ts:5:1 › two maintained lanes preserve selection, paused poses, shared stocks and set switching (30.8s)
+  ✓  2 tests/browser/network-service.spec.ts:17:1 › live fuel chart replacements keep the time cursor at the displayed epoch (17.8s)
+  -  3 tests/browser/network-service.spec.ts:34:1 › measure actual network display frames and committed-buffer continuity
+  ✓  4 tests/browser/network-service.spec.ts:51:1 › a stopped station is a last-known marker and cannot become a reference frame (4.5s)
+
+  1 skipped
+  3 passed (56.1s)

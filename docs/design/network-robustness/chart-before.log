@@ -1,0 +1,86 @@
+[WebServer] (node:2807116) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:2807146) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 tests/browser/network-service.spec.ts:17:1 › live fuel chart replacements keep the time cursor at the displayed epoch (14.3s)
+
+
+  1) tests/browser/network-service.spec.ts:17:1 › live fuel chart replacements keep the time cursor at the displayed epoch
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 54
+
+    - Array []
+    + Array [
+    +   "1.1331999999999993:null",
+    +   "1.3666000000000007:null",
+    +   "1.6000000000000005:null",
+    +   "1.8331999999999997:null",
+    +   "2.066600000000001:null",
+    +   "2.500000000000001:null",
+    +   "2.7332:null",
+    +   "2.966600000000002:null",
+    +   "3.199800000000003:null",
+    +   "3.4332000000000007:null",
+    +   "3.6664000000000017:null",
+    +   "3.8998000000000035:null",
+    +   "4.133200000000001:null",
+    +   "4.566400000000002:null",
+    +   "4.799800000000003:null",
+    +   "5.0332:null",
+    +   "5.4664:null",
+    +   "5.699800000000001:null",
+    +   "5.932999999999997:null",
+    +   "6.166399999999998:null",
+    +   "6.399599999999998:null",
+    +   "6.632999999999996:null",
+    +   "6.866399999999997:null",
+    +   "7.099599999999997:null",
+    +   "7.332999999999994:null",
+    +   "7.566199999999994:null",
+    +   "7.799599999999996:null",
+    +   "8.032999999999992:null",
+    +   "8.266399999999997:null",
+    +   "8.499600000000001:null",
+    +   "8.733000000000002:null",
+    +   "8.966200000000006:null",
+    +   "9.19960000000001:null",
+    +   "9.433000000000012:null",
+    +   "9.666200000000014:null",
+    +   "9.899600000000017:null",
+    +   "10.132800000000021:null",
+    +   "10.366200000000022:null",
+    +   "10.599400000000026:null",
+    +   "11.033000000000031:null",
+    +   "11.266200000000035:null",
+    +   "11.499400000000039:null",
+    +   "11.732800000000042:null",
+    +   "11.966200000000043:null",
+    +   "12.199400000000047:null",
+    +   "12.432800000000052:null",
+    +   "12.666200000000053:null",
+    +   "13.099400000000058:null",
+    +   "13.332800000000063:null",
+    +   "13.566200000000064:null",
+    +   "13.799400000000066:null",
+    +   "14.032800000000071:null",
+    + ]
+
+      26 |  });
+      27 |  await expect.poll(async()=>(await state(page)).t,{timeout:15000}).toBeGreaterThan(12);
+    > 28 |  const witness=await page.evaluate(()=>(window as any).chartCursorWitness);expect(witness.replacements).toBeGreaterThan(10);expect(witness.invalid).toEqual([]);
+         |                                                                                                                                                     ^
+      29 | });
+      30 | test('measure actual network display frames and committed-buffer continuity',async({page})=>{
+      31 |  test.skip(!process.env.NETWORK_RATES,'Opt-in isolated production playback witness');
+        at /home/s/code/orbital-logistics/tests/browser/network-service.spec.ts:28:149
+
+    Error Context: test-results/network-service-live-fuel--b3168-rsor-at-the-displayed-epoch/error-context.md
+
+  1 failed
+    tests/browser/network-service.spec.ts:17:1 › live fuel chart replacements keep the time cursor at the displayed epoch

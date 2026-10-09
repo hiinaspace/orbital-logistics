@@ -26,6 +26,9 @@ export class AdaptiveWorld {
  get end(){return this.anchor.t;}
  scenario(t:number,duration:number,y:State,fuel:number,visitorFuel?:number,relay=true):Scenario{
   const d=this.definition,s=copy(d.world.scenario);s.epoch=t;s.duration=duration;delete s.logistics;delete s.rendezvous;s.bodies.forEach(b=>b.radius+=.2);
+  // Network block reservations include a bounded subdivision allowance per
+  // Runner. Enforce that allowance rather than inheriting the scene-wide cap.
+  if(this.originIntervals)s.policy.maxNodes=Math.min(s.policy.maxNodes,Math.ceil(duration/s.policy.step)+1024);
   s.ship=relay?{...copy(d.relay.ship),state:copy(y),propellant:fuel,dryMass:d.relay.ship.dryMass+(visitorFuel===undefined?0:d.world.scenario.ship.dryMass+d.world.scenario.ship.cargoMass+visitorFuel)}:{id:d.origin.id,state:copy(y),dryMass:1,cargoMass:0,propellant:0,tankCapacity:0,exhaustVelocity:1};return s;
  }
  *extend(through:number,knownAt:number,events:Ownership[]=[],frozen?:Control[]):Generator<void,void>{
