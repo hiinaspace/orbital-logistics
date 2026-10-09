@@ -1,0 +1,121 @@
+{
+  "checks": [
+    {
+      "step": 0.001953125,
+      "maxStateError": 4.169062274814019e-10,
+      "maxFuelError": 4.6005615983446546e-11,
+      "oracleRefinement": 2.057114033127755e-12,
+      "nodes": [
+        435,
+        1669,
+        1655
+      ],
+      "captures": [
+        {
+          "id": "on-pad",
+          "productionPosition": 0,
+          "oraclePosition": 0.0,
+          "productionVelocity": 0,
+          "oracleVelocity": 0.0
+        },
+        {
+          "id": "touchdown",
+          "productionPosition": 1.4917907276175404e-10,
+          "oraclePosition": 2.7469995415162644e-12,
+          "productionVelocity": 3.179523538831071e-10,
+          "oracleVelocity": 4.37452283787866e-12
+        },
+        {
+          "id": "delivery-arrival",
+          "productionPosition": 2.0117519907827594e-10,
+          "oraclePosition": 8.317451852482882e-12,
+          "productionVelocity": 1.677346651761118e-10,
+          "oracleVelocity": 4.115345333149469e-12
+        }
+      ]
+    },
+    {
+      "step": 0.0009765625,
+      "maxStateError": 2.5942351673200602e-11,
+      "maxFuelError": 1.841082841735897e-12,
+      "oracleRefinement": 2.057114033127755e-12,
+      "nodes": [
+        830,
+        3312,
+        3302
+      ],
+      "captures": [
+        {
+          "id": "on-pad",
+          "productionPosition": 0,
+          "oraclePosition": 0.0,
+          "productionVelocity": 0,
+          "oracleVelocity": 0.0
+        },
+        {
+          "id": "touchdown",
+          "productionPosition": 7.688891902239596e-12,
+          "oraclePosition": 2.7469995415162644e-12,
+          "productionVelocity": 1.6981808211279916e-11,
+          "oracleVelocity": 4.37452283787866e-12
+        },
+        {
+          "id": "delivery-arrival",
+          "productionPosition": 1.0380945248680217e-11,
+          "oraclePosition": 8.317451852482882e-12,
+          "productionVelocity": 5.928494628473114e-12,
+          "oracleVelocity": 4.115345333149469e-12
+        }
+      ]
+    },
+    {
+      "step": 0.00048828125,
+      "maxStateError": 1.654274533804268e-12,
+      "maxFuelError": 1.345867861601846e-13,
+      "oracleRefinement": 2.057114033127755e-12,
+      "nodes": [
+        1625,
+        6601,
+        6595
+      ],
+      "captures": [
+        {
+          "id": "on-pad",
+          "productionPosition": 0,
+          "oraclePosition": 0.0,
+          "productionVelocity": 0,
+          "oracleVelocity": 0.0
+        },
+        {
+          "id": "touchdown",
+          "productionPosition": 2.323856064120332e-12,
+          "oraclePosition": 2.7469995415162644e-12,
+          "productionVelocity": 3.518118950807921e-12,
+          "oracleVelocity": 4.37452283787866e-12
+        },
+        {
+          "id": "delivery-arrival",
+          "productionPosition": 8.066518418729997e-12,
+          "oraclePosition": 8.317451852482882e-12,
+          "productionVelocity": 3.5308529168511777e-12,
+          "oracleVelocity": 4.115345333149469e-12
+        }
+      ]
+    }
+  ],
+  "fuelRemaining": {
+    "booster": 0.14022121196977008,
+    "courier": 0.13782435714007724
+  },
+  "deliveredFreight": 0.1,
+  "splitState": [
+    -0.054734417309481406,
+    1.14388700258588,
+    0.0,
+    -0.36762105009974555,
+    0.6378222628814915,
+    0.0
+  ],
+  "oracleFuelRefinement": 2.222388939543407e-13,
+  "note": "Oracle independently integrates assembly and derives child seeds; production interval certificates remain the safety proof."
+}

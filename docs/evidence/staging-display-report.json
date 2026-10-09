@@ -1,0 +1,20 @@
+{
+  "maxPositionError": 1.0862764465109156e-7,
+  "pixelsAtMaximumZoom": 0.10862764465109156,
+  "checked": 16077,
+  "samples": [
+    {
+      "id": "kestrel-stack",
+      "count": 1612
+    },
+    {
+      "id": "kestrel",
+      "count": 6595
+    },
+    {
+      "id": "wren",
+      "count": 6594
+    }
+  ],
+  "packetBytes": 6615387
+}

@@ -9,6 +9,8 @@ import seleneFreight from '../fixtures/model-sets/selene-freight.json';
 import selenePowered from '../fixtures/model-sets/selene-powered.json';
 import orisonPowered from '../fixtures/model-sets/orison-powered.json';
 import surfaceAscent from '../fixtures/model-sets/selene-ascent.json';
+import stagedFlight from '../fixtures/model-sets/selene-staging.json';
+import type {StagedFlight} from './model-set/staging';
 import surfaceReturn from '../fixtures/model-sets/selene-return.json';
 import trafficDefinition from '../fixtures/traffic/orison-service.json';
 import surfaceService from '../fixtures/traffic/selene-service.json';
@@ -34,10 +36,10 @@ import type {TrafficDefinition} from './traffic/planner';
 import type {TrafficDelta} from './traffic/engine';
 import {bodyState} from './sim/dynamics';
 import type {State,Vec3} from './sim/schema';
-import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVessel, setEvents, stockAt, type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
+import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVessel, setEvents, stockAt, isPresent,presenceLabel,type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
-const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,crossingPlanes,steered,maintainedSet] as ModelSet[];
+const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,crossingPlanes,steered,maintainedSet] as (ModelSet|StagedFlight)[];
 const trafficSets=[trafficDefinition,surfaceService,maintainedService,flexibleService,networkService] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
@@ -94,12 +96,13 @@ const liveEdge=()=>traffic?bufferedEdge(traffic.frontier,traffic.oldest,playback
 function goLive(){if(!traffic)return;traffic.release();if(!liveMode)t=Math.max(t,liveEdge());desiredTarget=t+playbackLead();liveMode=!!playbackLead()||!liveError&&!traffic.halt;playing=(!liveError&&!traffic.halt)||t<traffic.frontier;lastFrame=performance.now();refreshTraffic();updatePanels();}
 const vessel = () => run?.vessels.find(v => v.id === selected)??run?.maintained?.[selected];
 function project3(y:State,time:number):ScreenPoint {
+  const ref=run?.vessels.find(v=>v.id===frame);if(ref&&!isPresent(ref,time))return [NaN,NaN,NaN];
   try{return cameraPoint(camera,transform(run!,y,time,frame),width,height);}catch{return [NaN,NaN,NaN];}
 }
 function project(y:State,time:number):[number,number] {const p=project3(y,time);return [p[0],p[1]];}
 function selectedState():State|undefined {
  if(!run)return;
- const v=vessel();if(v){const sample=sampleVessel(v,t);if(sample.activity?.kind==='fault'||sample.activity?.kind==='unavailable')return;return sample.y;}
+ const v=vessel();if(v){if(!isPresent(v,t))return;const sample=sampleVessel(v,t);if(sample.activity?.kind==='fault'||sample.activity?.kind==='unavailable')return;return sample.y;}
  const port=portsOf(run).find(p=>p.id===selected);if(port)return displayPortState(port,run.portSamples,t);
  const body=run.world.bodies.find(b=>b.id===selected);if(body)return bodyState(body,t);
 }
@@ -146,6 +149,7 @@ function seek(time: number, pause = true) {
 function eventLabel(e: SetEvent): string {
   const port = e.portId ?? '';
   if(e.kind==='burn' && e.id.includes('plane-change'))return 'Plane change';
+  if(e.kind==='separation')return 'Stage separation';
   if(e.kind==='land')return `Touchdown · ${port}`;
   if (e.kind === 'dock') return `Dock ${port}`;
   if(e.kind==='launch')return `Lift off · ${port}`;
@@ -163,6 +167,7 @@ function eventLabel(e: SetEvent): string {
 }
 function nextArrival(v: VesselView) { return events.find(e => e.vessel === v.id && e.t > t + 1e-9 && (e.kind === 'dock'||e.kind==='land')); }
 function status(v: VesselView): string {
+  if(!isPresent(v,t))return presenceLabel(v,t);
   const s = sampleVessel(v, t), l = s.logistics;
   if(s.activity?.kind==='fault')return `Fault · last seen ${number(s.activity.knownEpoch!)}`;
   if(run?.maintained?.[v.id])return s.thrust?.force?'Stationkeeping':'Coasting';
@@ -182,11 +187,11 @@ function buildTimeline() {
     const maintenance=!!run!.maintained?.[v.id];
     const times = [...new Set([start(), end(), ...v.ledger.map(e => e.t)])].sort((a, b) => a - b);
     const blocks = times.slice(0, -1).map((a, i) => {
-      const b = times[i + 1], state = sampleVessel(v, (a + b) / 2), l = state.logistics, powered=(state.thrust?.force??0)>0;
+      const b = times[i + 1];if(!isPresent(v,(a+b)/2))return '';const state = sampleVessel(v, (a + b) / 2), l = state.logistics, powered=(state.thrust?.force??0)>0;
       const fill = maintenance?(powered?'#85c9c0':'#35434d'):l?.service ? '#e9c485' : l?.dockedPortId ? '#35434d' : v.color;
       return `<rect x="${1000 * (a - start()) / (end() - start())}" y="${maintenance?(powered?7:9):l?.service || powered ? 3 : 7}" width="${1000 * (b - a) / (end() - start())}" height="${maintenance?(powered?6:2):l?.service || powered ? 14 : 6}" fill="${fill}" opacity="${maintenance?(powered ? .55 : .4):powered?0.95:l?.dockedPortId && !l.service ? 0.8 : 0.65}"/>`;
     }).join('');
-    const burns = v.ledger.filter(e => e.kind === 'burn').map(e => `<path d="M${1000 * (e.t - start()) / (end() - start())} 4v12" stroke="${v.color}" stroke-width="1"/>`).join('');
+    const burns = v.ledger.filter(e => e.kind === 'burn'||e.kind==='separation').map(e => `<path d="M${1000 * (e.t - start()) / (end() - start())} 4v12" stroke="${v.color}" stroke-width="1"/>`).join('');
     return `<div class="timeline-row ${selected===v.id?'selected':''}" data-vessel="${esc(v.id)}"><button class="timeline-name" data-select="${esc(v.id)}" style="color:${v.color}">${esc(v.name)}</button><div class="timeline-track"><svg viewBox="0 0 1000 20" preserveAspectRatio="none" aria-label="${esc(v.name)} ${maintenance?'stationkeeping; small teal spans are corrections':'activity; colored spans are flight, gold is cargo service'}">${blocks}${burns}</svg>${traffic?`<span class="future-region" style="left:${Math.min(100,100*(traffic.frontier-start())/(end()-start()))}%" title="Planned"></span><span class="frontier-cursor" style="left:${Math.min(100,100*(traffic.frontier-start())/(end()-start()))}%" title="Simulation head"></span>`:""}<span class="time-cursor"></span><button class="timeline-seek" aria-label="Scrub ${esc(v.name)} timeline"></button></div></div>`;
   }).join('');
   // Keep interactive rows/buttons alive while forecast spans change. Replacing
@@ -206,7 +211,7 @@ function buildTimeline() {
     const rect = b.getBoundingClientRect(); seek(start() + (e.clientX - rect.left) / rect.width * (end() - start()));
   });
 }
-function fuelChart(v:VesselView):string {return `<div class="chart-key"><span>Fuel</span>${run?.maintained?.[v.id]?'':'<span>Freight</span>'}</div>${fuelGraph(v)}`;}
+function fuelChart(v:VesselView):string {return `<div class="chart-key"><span>Fuel</span>${run?.maintained?.[v.id]||v.cargoCapacity===0?'':'<span>Freight</span>'}</div>${fuelGraph(v)}`;}
 const budgetCursorTransform=()=>`translate(${4+(t-start())/(end()-start())*232},0)`;
 function fuelGraph(v: VesselView): string {
   const edges=new Map(v.boundaries.map(e=>[e.t,e.before]));
@@ -235,8 +240,9 @@ function updatePanels() {
   $('clock').textContent=traffic?`${number(t)} · head ${number(traffic.frontier)}`:`${number(t)} / ${number(end())}`;
   $('live').textContent=liveMode?'Live':'Return to live';$('live').setAttribute('aria-pressed',String(liveMode));
   $('load-status').textContent = liveError || (traffic?.halt&&t>=traffic.frontier?traffic.halt:(traffic?liveMode?'':playing?'Playing history':'History held':t===end()?'End of scene':''));
-  if(traffic){const origin=[...run.vessels,...Object.values(run.maintained??{})].find(v=>v.id===frame);if(origin && sampleVessel(origin,t).activity?.kind==='fault'){frame='inertial';$<HTMLSelectElement>('frame').value=frame;}
-   for(const option of $<HTMLSelectElement>('frame').options){const v=[...run.vessels,...Object.values(run.maintained??{})].find(v=>v.id===option.value);option.disabled=!!v && sampleVessel(v,t).activity?.kind==='fault';}}
+  {const origin=[...run.vessels,...Object.values(run.maintained??{})].find(v=>v.id===frame);if(origin && (!isPresent(origin,t)||sampleVessel(origin,t).activity?.kind==='fault')){frame='inertial';$<HTMLSelectElement>('frame').value=frame;}
+   for(const option of $<HTMLSelectElement>('frame').options){const v=[...run.vessels,...Object.values(run.maintained??{})].find(v=>v.id===option.value);option.disabled=!!v && (!isPresent(v,t)||sampleVessel(v,t).activity?.kind==='fault');}}
+  $('traffic-count').textContent=String(run.vessels.filter(v=>isPresent(v,t)).length);
   html('fleet', run.vessels.map(v => `<button class="object-row ${selected === v.id ? 'selected' : ''}" data-object="${esc(v.id)}"><i style="background:${v.color}"></i><span><strong>${esc(v.name)}</strong><small>${esc(status(v))}</small></span></button>`).join(''));
   const stocks = stockAt(run, t);
   $('station-heading').hidden = !run.stations.length;
@@ -254,12 +260,18 @@ function updatePanels() {
     $('object-frame').onclick = () => { frame = selected; $<HTMLSelectElement>('frame').value = frame; fit(); updatePanels(); };
   }
   let upcoming: SetEvent | undefined;
-  if (v) {
+  if(v&&!isPresent(v,t)) {
+    $('object-status').textContent=presenceLabel(v,t);
+    $('readouts').innerHTML=t<v.lifetime!.start&&v.id===run.staging?.separation.children[1]?`<div><dt>Reserved propellant</dt><dd>${number(v.ship.propellant)}</dd></div>`:'';
+    $<HTMLButtonElement>('object-frame').disabled=true;
+    upcoming=events.find(e=>e.vessel===v.id&&e.t>t);
+  } else if (v) {
     const s = sampleVessel(v, t), cargo = s.logistics?.cargoMass ?? v.ship.cargoMass;
     $('object-status').textContent = status(v);
     const maintenance=run.stations.find(p=>p.id===selected)?.maintenance;
-    const used = s.fuelUsed??v.ledger.filter(e => e.t <= t).reduce((sum, e) => sum + e.fuelUsed, 0);
-    $('readouts').innerHTML = `<div><dt>${esc(v.cargo)}</dt><dd>${number(cargo)} / ${number(v.cargoCapacity ?? cargo)}</dd></div><div><dt>Propellant</dt><dd>${number(s.propellant)} / ${number(v.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${number(used)}</dd></div>`;
+    const used = (v.inheritedFuelUsed??0)+(s.fuelUsed??v.ledger.filter(e => e.t <= t).reduce((sum, e) => sum + e.fuelUsed, 0));
+    $('readouts').innerHTML = `${v.cargoCapacity===0?'':`<div><dt>${esc(v.cargo)}</dt><dd>${number(cargo)} / ${number(v.cargoCapacity ?? cargo)}</dd></div>`}<div><dt>${v.id===run.staging?.separation.parentId?'Booster propellant':'Propellant'}</dt><dd>${number(s.propellant)} / ${number(v.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${number(used)}</dd></div>`;
+    if(v.id===run.staging?.separation.parentId)$('readouts').innerHTML+=`<div><dt>Carried payload fuel</dt><dd>${number(run.staging.separation.reservedPayloadFuel)}</dd></div>`;
     if(maintenance){const err=orbitError(s.y,maintenance.reference),baseline=displayPortState(portsOf(run).find(p=>p.id===selected)!,{[selected]:run.maintained![selected].baseline},s.activity?.knownEpoch??t),unmaintained=orbitError(baseline,maintenance.reference);$('readouts').innerHTML=`<div><dt>Maintenance fuel</dt><dd>${s.propellant.toFixed(4)} / ${number(v.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${used.toFixed(4)}</dd></div><div><dt>Orbit error · R</dt><dd>${err.position.toExponential(2)}</dd></div><div><dt>Velocity error</dt><dd>${err.velocity.toExponential(2)}</dd></div><div><dt>Unmaintained error · R</dt><dd>${unmaintained.position.toExponential(2)}</dd></div>`;}
     if(v.ship.engine)$('readouts').innerHTML+=`<div><dt>Thrust</dt><dd>${maintenance?(s.thrust?.force??0).toExponential(2):number(s.thrust?.force??0)} / ${number(v.ship.engine.maxThrust)}</dd></div><div><dt>Thrust acceleration</dt><dd>${maintenance?(s.thrust?.acceleration??0).toExponential(2):number(s.thrust?.acceleration??0)}</dd></div>`;
     if(v.ports.some(p=>p.rail.kind==='surface')) {
@@ -303,7 +315,8 @@ function updatePanels() {
 }
 function publishState() {
   $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, frame, selected, layers, traffic:traffic?{frontier:traffic.frontier,oldest:traffic.oldest,pending,sequence,live:liveMode,stats:run?.traffic?.stats,halt:traffic.halt,error:liveError}:undefined,
-    ships: run?.vessels.map(v => ({id: v.id, ...sampleVessel(v, t), screen: project(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),occludedBy:occluder(project3(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),spheres)?.id})),
+    staging:run?.staging,
+    ships: run?.vessels.map(v => !isPresent(v,t)?({id:v.id,present:false,lifetime:v.lifetime}):({id: v.id,present:true, ...sampleVessel(v, t), screen: project(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),occludedBy:occluder(project3(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),spheres)?.id})),
     labels:placedLabels.map(({id,anchor,alpha,left,top})=>({id,anchor,alpha,left,top})),
     maintenance:run?.maintained?Object.fromEntries(Object.entries(run.maintained).map(([id,v])=>[id,{...sampleVessel(v,t),error:orbitError(sampleVessel(v,t).y,run!.stations.find(p=>p.id===id)!.maintenance!.reference)}])):undefined,
     stocks: run ? stockAt(run, t) : [], events, thrustWhiskers, camera: {...camera,preset:cameraPreset,panMode,tracking,trackingOffset}, seeThroughBodies, hits});
@@ -395,7 +408,7 @@ function draw() {
   for (let i = 0; i < 65; i++) { ctx.globalAlpha = 0.12 + (i % 4) * 0.035; ctx.fillRect((i * 313.47) % width, (i * 137.33) % height, 1, 1); }
   ctx.globalAlpha = 1;
   if (!run || !ready) return;
-  const reference=[...run.vessels,...Object.values(run.maintained??{})].find(v=>v.id===frame);if(reference && sampleVessel(reference,t).activity?.kind==='fault'){frame='inertial';$<HTMLSelectElement>('frame').value=frame;}
+  const reference=[...run.vessels,...Object.values(run.maintained??{})].find(v=>v.id===frame);if(reference && (!isPresent(reference,t)||sampleVessel(reference,t).activity?.kind==='fault')){frame='inertial';$<HTMLSelectElement>('frame').value=frame;}
   syncTracking();
   hits = [];thrustWhiskers=[];
   const scenario = run.world;
@@ -446,15 +459,15 @@ function draw() {
         prev = p;
       }
       if(chunk.length)worldPath(chunk,v.color,isSelected?1.7:1.1,shade/32);
-      if (prev && sampleVessel(v,t).activity?.kind!=='fault') worldPath([prev, project3(sampleVessel(v, t).y, t)], v.color, 1.5, 0.75);
+      if (prev && isPresent(v,t) && sampleVessel(v,t).activity?.kind!=='fault') worldPath([prev, project3(sampleVessel(v, t).y, t)], v.color, 1.5, 0.75);
     }
-    if (layers.plan && isSelected && sampleVessel(v,t).activity?.kind!=='fault') {
+    if (layers.plan && isSelected && (!isPresent(v,t)||sampleVessel(v,t).activity?.kind!=='fault')) {
       const stop = nextArrival(v)?.t ?? Math.min(end(), t + (run.id === 'lunar-loop' ? 5.58 : 8));
-      worldPath([project3(sampleVessel(v, t).y, t), ...v.samples.filter(s => s.t > t && s.t <= stop).map(s => project3(s.y, s.t))], '#b5bdc7', 1, 0.28, [3, 5]);
+      worldPath([...(isPresent(v,t)?[project3(sampleVessel(v,t).y,t)]:[]), ...v.samples.filter(s => s.t > t && s.t <= stop).map(s => project3(s.y, s.t))], '#b5bdc7', 1, 0.28, [3, 5]);
     }
     if(layers.plan && isSelected)for(const arc of v.arcs) {
       const stop=nextArrival(v)?.t??end();
-      if(arc.throttle===0 || arc.end<=t || arc.start>=stop || arc.end>end() || sampleVessel(v,t).activity?.kind==='fault')continue;
+      if(arc.throttle===0 || arc.end<=t || arc.start>=stop || arc.end>end() || isPresent(v,t)&&sampleVessel(v,t).activity?.kind==='fault')continue;
       const curve=[project3(sampleVessel(v,Math.max(start(),arc.start)).y,Math.max(start(),arc.start)),...v.samples.filter(s=>s.t>arc.start && s.t<arc.end).map(s=>project3(s.y,s.t)),project3(sampleVessel(v,arc.end).y,arc.end)];
       const length=curve.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p[0]-curve[i][0],p[1]-curve[i][1]),0);
       const maintenance=!!run.maintained?.[id];
@@ -507,6 +520,7 @@ function draw() {
     }});
   }
   for (const v of run.vessels) {
+    if(!isPresent(v,t))continue;
     const state=sampleVessel(v,t),epoch=state.activity?.kind==='fault'?state.activity.knownEpoch!:t,p=project(state.y,epoch);
     if(!p.every(Number.isFinite) || occluder(project3(state.y,epoch),spheres))continue;
     const transformed=transform(run,state.y,epoch,frame),velocity=cameraVector(camera,transformed.slice(3));

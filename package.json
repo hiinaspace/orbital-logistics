@@ -34,7 +34,8 @@
     "evidence:steering": "tsx scripts/steering-evidence.ts && uv run --project spikes/numerics python spikes/numerics/steering_oracle.py",
     "evidence:spatial-viewer": "tsx scripts/spatial-viewer-evidence.ts && uv run --project spikes/numerics python spikes/numerics/spatial_viewer_oracle.py",
     "evidence:surface-traffic": "tsx scripts/surface-traffic-evidence.ts && uv run --project spikes/numerics python spikes/numerics/surface_traffic_oracle.py",
-    "evidence:maintained-service": "tsx scripts/maintained-service-evidence.ts && uv run --project spikes/numerics python spikes/numerics/maintained_service_oracle.py"
+    "evidence:maintained-service": "tsx scripts/maintained-service-evidence.ts && uv run --project spikes/numerics python spikes/numerics/maintained_service_oracle.py",
+    "evidence:staging": "tsx scripts/staging-evidence.ts && uv run --project spikes/numerics python spikes/numerics/staging_oracle.py"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

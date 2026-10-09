@@ -352,3 +352,30 @@ The user accepted the exhibit at2×. A later robustness follow-up replaces the
 duplicate legacy candidate sum with network-wide accounting, enforces reserved
 short-runner caps, cleans up refused registrations and initializes chart cursors
 at the current time. See [follow-up evidence](evidence/network-robustness.md).
+
+## Finite staged launch and recovery — 2026-10-09
+
+**Selene · Launch & recovery** carries Wren on Kestrel from Cairn, separates during
+ascent, delivers .1 freight to Lantern, and recovers Kestrel at Cairn. Both vehicles
+use smooth finite steering with force and acceleration limits. This is one authored
+mission; Replay repeats the same prepared history, without resetting a continuous
+resource economy.
+
+The explicit `staged-flight-v1` orchestrator derives legacy Bundles from a single
+component manifest. Upper-stage fuel is carried ballast during boost and stays in
+its own tank. Separation is a retained thrust-end checkpoint with zero kick and
+conserved wet mass/momentum. Children inherit its canonical state, not a display
+sample. One mission-start stock ledger audits delivery, berths and consumption;
+local child port copies only admit their independent operations.
+
+The launch assembly retires at separation and two child actors become present.
+Their lanes/history remain selectable; absent actors have metadata rather than
+invented physical samples. Inactive centered frames disable and fall back as a whole
+to inertial. Historical paths clip to the selected frame's lifetime. Follow/Chase
+stop if their target disappears. Close-zoom drawing samples explicitly include each
+newborn child's first coast and flight. Physical nodes, drawing samples and output
+bytes have aggregate admission bounds.
+
+[Astra disposition](design/staging/disposition.md) and [validation](evidence/staging.md)
+record the bounded contracts. Atmosphere, hull/contact physics, separation kicks,
+continuous turnaround and connection to maintained stations remain subsequent work.

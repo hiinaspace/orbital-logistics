@@ -1,0 +1,425 @@
+{
+  "schemaVersion": 1,
+  "modelVersion": "staged-flight-v1",
+  "id": "selene-staging",
+  "name": "Selene \u00b7 Launch & recovery",
+  "extent": 1.55,
+  "description": "Kestrel launches Wren to Lantern and returns to Cairn.",
+  "provenance": "Fictional airless world. Smooth bounded thrust; conserved zero-kick separation. Offline authored finite mission, unchanged gravity and paid captures. Point spacecraft without hull or atmospheric simulation.",
+  "stations": [
+    {
+      "id": "Cairn",
+      "role": "Launch & recovery terminal",
+      "berths": 1
+    },
+    {
+      "id": "Lantern",
+      "role": "Orbital freight depot",
+      "berths": 1
+    }
+  ],
+  "rotating": {
+    "name": "Surface rotating",
+    "rate": 0.003,
+    "phase": 0
+  },
+  "world": {
+    "schemaVersion": 3,
+    "modelVersion": "rk4-canonical-v3",
+    "id": "selene-staging",
+    "units": {
+      "length": "Selene radius",
+      "time": "\u221a(R\u00b3/\u03bc)",
+      "mass": "mass unit"
+    },
+    "epoch": 0,
+    "duration": 4,
+    "policy": {
+      "step": 0.00048828125,
+      "maxNodes": 65536,
+      "maxSubdivision": 20
+    },
+    "bodies": [
+      {
+        "id": "Selene",
+        "mu": 1,
+        "radius": 1,
+        "rail": {
+          "kind": "fixed",
+          "position": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    ],
+    "logistics": {
+      "modelVersion": "surface-ports-v3",
+      "ports": [
+        {
+          "id": "Cairn",
+          "rail": {
+            "kind": "surface",
+            "bodyId": "Selene",
+            "centerHeight": 1e-06,
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "u": [
+              1,
+              0,
+              0
+            ],
+            "v": [
+              0,
+              1,
+              0
+            ],
+            "radius": 1.000001,
+            "rate": 0.003,
+            "phase": 1.5707963267948966
+          },
+          "cargo": 0.2,
+          "cargoCapacity": 1,
+          "propellant": 1,
+          "tankCapacity": 2,
+          "serviceDuration": 0.3
+        },
+        {
+          "id": "Lantern",
+          "rail": {
+            "kind": "circular",
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "u": [
+              1,
+              0,
+              0
+            ],
+            "v": [
+              0,
+              1,
+              0
+            ],
+            "radius": 1.25,
+            "rate": 0.7155417527999327,
+            "phase": 1.005283388574574
+          },
+          "cargo": 0,
+          "cargoCapacity": 1,
+          "propellant": 1,
+          "tankCapacity": 2,
+          "serviceDuration": 0.3
+        }
+      ],
+      "cargoCapacity": 0.1,
+      "capture": {
+        "position": 1e-07,
+        "velocity": 1e-07
+      },
+      "objective": {
+        "destinationId": "Lantern",
+        "quota": 0.1,
+        "returnPortId": "Cairn",
+        "minPropellant": 0,
+        "hardwareCost": 1
+      }
+    }
+  },
+  "separation": {
+    "id": "stage-separation",
+    "t": 0.7840092895528833
+  },
+  "booster": {
+    "id": "kestrel",
+    "name": "Kestrel",
+    "color": "#f2bd72",
+    "dryMass": 0.3,
+    "propellant": 1.55,
+    "tankCapacity": 1.7,
+    "exhaustVelocity": 3,
+    "engine": {
+      "maxThrust": 5,
+      "maxAcceleration": 3
+    }
+  },
+  "payload": {
+    "id": "wren",
+    "name": "Wren",
+    "color": "#85c9c0",
+    "dryMass": 0.25,
+    "cargoMass": 0.1,
+    "propellant": 0.3,
+    "tankCapacity": 0.35,
+    "exhaustVelocity": 3,
+    "engine": {
+      "maxThrust": 1.8,
+      "maxAcceleration": 3
+    }
+  },
+  "stack": {
+    "id": "kestrel-stack",
+    "name": "Kestrel + Wren",
+    "color": "#f2bd72"
+  },
+  "programs": {
+    "stack": {
+      "schemaVersion": 4,
+      "id": "stack-ascent-v1",
+      "burns": [],
+      "thrustArcs": [
+        {
+          "id": "boost",
+          "start": 0.3,
+          "end": 0.7840092895528833,
+          "direction": [
+            -0.0008999998784998446,
+            0.9999995950000273,
+            0
+          ],
+          "throttle": 1,
+          "steering": {
+            "kind": "spherical-smoothstep-v1",
+            "keys": [
+              {
+                "offset": 0.0,
+                "direction": [
+                  -0.0008999998784998446,
+                  0.9999995950000273,
+                  0
+                ]
+              },
+              {
+                "offset": 0.09680185791057666,
+                "direction": [
+                  -0.1197122072889194,
+                  0.9928086358538663,
+                  0
+                ]
+              },
+              {
+                "offset": 0.19360371582115332,
+                "direction": [
+                  -0.21822962308086924,
+                  0.9758974493306055,
+                  0
+                ]
+              },
+              {
+                "offset": 0.29040557373173,
+                "direction": [
+                  -0.31456656061611776,
+                  0.9492354180824408,
+                  0
+                ]
+              },
+              {
+                "offset": 0.38720743164230664,
+                "direction": [
+                  -0.47942553860420295,
+                  0.8775825618903728,
+                  0
+                ]
+              },
+              {
+                "offset": 0.4840092895528833,
+                "direction": [
+                  -0.6816387600233341,
+                  0.7316888688738209,
+                  0
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "operations": [
+        {
+          "id": "on-pad",
+          "kind": "dock",
+          "t": 0,
+          "portId": "Cairn"
+        },
+        {
+          "id": "lift-off",
+          "kind": "launch",
+          "t": 0.3,
+          "portId": "Cairn",
+          "thrustArcId": "boost"
+        }
+      ]
+    },
+    "payload": {
+      "schemaVersion": 4,
+      "id": "wren-insertion-v1",
+      "burns": [],
+      "thrustArcs": [
+        {
+          "id": "insertion",
+          "start": 0.7840092895528833,
+          "end": 1.074316860929234,
+          "direction": [
+            -0.9290024101370042,
+            -0.3700736709894901,
+            0
+          ],
+          "throttle": 1,
+          "steering": {
+            "kind": "spherical-smoothstep-v1",
+            "keys": [
+              {
+                "offset": 0.0,
+                "direction": [
+                  -0.9290024101370042,
+                  -0.3700736709894901,
+                  0
+                ]
+              },
+              {
+                "offset": 0.07257689284408766,
+                "direction": [
+                  -0.850012302322408,
+                  -0.5267628364838957,
+                  0
+                ]
+              },
+              {
+                "offset": 0.14515378568817533,
+                "direction": [
+                  -0.6637971717890752,
+                  -0.7479126384310035,
+                  0
+                ]
+              },
+              {
+                "offset": 0.217730678532263,
+                "direction": [
+                  -0.41759746870195025,
+                  -0.9086321335577582,
+                  0
+                ]
+              },
+              {
+                "offset": 0.29030757137635066,
+                "direction": [
+                  -0.1433241115797239,
+                  -0.9896758050189379,
+                  0
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "operations": [
+        {
+          "id": "delivery-arrival",
+          "kind": "dock",
+          "t": 1.9296407559406652,
+          "portId": "Lantern"
+        },
+        {
+          "id": "unload",
+          "kind": "transfer",
+          "t": 1.9296407559406652,
+          "portId": "Lantern",
+          "cargo": -0.1,
+          "propellant": 0
+        }
+      ]
+    },
+    "booster": {
+      "schemaVersion": 4,
+      "id": "kestrel-recovery-v1",
+      "burns": [],
+      "thrustArcs": [
+        {
+          "id": "recovery",
+          "start": 0.8993383530851267,
+          "end": 1.7631341277606114,
+          "direction": [
+            0.20201174194765392,
+            -0.9793830997700923,
+            0
+          ],
+          "throttle": 0.6,
+          "steering": {
+            "kind": "spherical-smoothstep-v1",
+            "keys": [
+              {
+                "offset": 0.0,
+                "direction": [
+                  0.20201174194765392,
+                  -0.9793830997700923,
+                  0
+                ]
+              },
+              {
+                "offset": 0.14396596244591411,
+                "direction": [
+                  0.37608948454764407,
+                  -0.9265833473642225,
+                  0
+                ]
+              },
+              {
+                "offset": 0.28793192489182823,
+                "direction": [
+                  0.5490997748731307,
+                  -0.8357568050780545,
+                  0
+                ]
+              },
+              {
+                "offset": 0.43189788733774237,
+                "direction": [
+                  0.9475953918647132,
+                  0.31947296179295137,
+                  0
+                ]
+              },
+              {
+                "offset": 0.5758638497836565,
+                "direction": [
+                  -0.6098202124208627,
+                  0.7925397835585125,
+                  0
+                ]
+              },
+              {
+                "offset": 0.7198298122295705,
+                "direction": [
+                  -0.6447250996974307,
+                  0.7644145117801846,
+                  0
+                ]
+              },
+              {
+                "offset": 0.8637957746754847,
+                "direction": [
+                  -0.32056789859649215,
+                  0.9472255393460572,
+                  0
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "operations": [
+        {
+          "id": "touchdown",
+          "kind": "land",
+          "t": 1.7631341277606114,
+          "portId": "Cairn"
+        }
+      ]
+    }
+  }
+}

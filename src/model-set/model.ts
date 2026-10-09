@@ -15,6 +15,8 @@ export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
 export interface ViewSample extends Sample {activity?:Activity;mass?:number}
 export interface VesselView {
+ inheritedFuelUsed?:number;
+ lifetime?:{start:number;end:number;retired?:boolean;parentId?:string};
  id:string;name:string;color:string;cargo:string;ship:Scenario['ship'];ports:Port[];cargoCapacity:number;
  arcs:ThrustArc[];continuousFuel:boolean;portSamples:PortSamples;samples:ViewSample[];
  ledger:ViewerEvent[];boundaries:EventBoundary[];
@@ -25,6 +27,7 @@ export interface VesselView {
 export interface VesselRun extends Vessel,VesselView {}
 export interface MaintainedView extends VesselView {baseline:{t:number;y:State}[]}
 export interface SceneView {
+ staging?:{separation:{t:number;parentId:string;children:string[];state:State;beforeMass:number;afterMass:number;momentumBefore:number[];momentumAfter:number[];reservedPayloadFuel:number;boosterFuel:number};initialFuel:number};
  maintained?:Record<string,MaintainedView>;
  schemaVersion:1;id:string;name:string;extent:number;description:string;provenance:string;
  stations:Station[];rotating:ModelSet['rotating'];vessels:VesselView[];portSamples:PortSamples;
@@ -33,7 +36,7 @@ export interface SceneView {
 }
 export interface SetRun extends SceneView {vessels:VesselRun[]}
 export interface Stock { id: string; cargo: number; propellant: number; occupied: number }
-export type ViewerEvent=Omit<LedgerEntry,'kind'> & {kind:LedgerEntry['kind']|'planning-failed'|'unavailable'|'fault'};
+export type ViewerEvent=Omit<LedgerEntry,'kind'> & {kind:LedgerEntry['kind']|'planning-failed'|'unavailable'|'fault'|'separation'};
 export interface SetEvent extends ViewerEvent { vessel: string; color: string }
 
 // A curated set overlays independent test ships. Admission checks shared finite
@@ -160,6 +163,13 @@ export function prepareSet(value: ModelSet): SetRun {
   return run;
 }
 
+// Presence is distinct from retained endpoint data used by histories and events.
+export function isPresent(v:VesselView,t:number):boolean {
+ const l=v.lifetime;return !l||t>=l.start&&(l.retired?t<l.end:t<=l.end);
+}
+export function presenceLabel(v:VesselView,t:number):string {
+ return t<(v.lifetime?.start??-Infinity)?'Attached to launch stack':'Separated';
+}
 export function sampleVessel(v: VesselView, t: number): ViewSample {
   const dense=v.trajectories?.find(p=>t>=p.start && t<p.end && t<=p.through);
   if(dense)return sampleVessel({...v,trajectories:undefined,samples:dense.samples,boundaries:dense.boundaries,arcs:dense.arcs??v.arcs},t);
