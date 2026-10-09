@@ -11,6 +11,10 @@ import surfaceAscent from '../fixtures/model-sets/selene-ascent.json';
 import surfaceReturn from '../fixtures/model-sets/selene-return.json';
 import trafficDefinition from '../fixtures/traffic/orison-service.json';
 import surfaceService from '../fixtures/traffic/selene-service.json';
+import flexibleService from '../fixtures/traffic/orison-flexible-service.json';
+import {AdaptiveViewStore} from './adaptive/view';
+import {isAdaptive,type AdaptiveDefinition} from './adaptive/world';
+import type {AdaptiveDelta} from './adaptive/engine';
 import maintainedService from '../fixtures/traffic/orison-maintained-service.json';
 import {MaintainedViewStore} from './maintained/view';
 import {isMaintained,type MaintainedDefinition} from './maintained/world';
@@ -29,7 +33,7 @@ import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVesse
 import {transform,transformDirection} from './model-set/frames';
 
 const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,crossingPlanes,steered,maintainedSet] as ModelSet[];
-const trafficSets=[trafficDefinition,surfaceService,maintainedService] as unknown as (TrafficDefinition|MaintainedDefinition)[];
+const trafficSets=[trafficDefinition,surfaceService,maintainedService,flexibleService] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
@@ -49,7 +53,7 @@ document.body.innerHTML = `
 
 const canvas = $<HTMLCanvasElement>('space'), ctx = canvas.getContext('2d')!;
 let run: SceneView | undefined, worker: Worker | undefined, revision = 0;
-let traffic:TrafficViewStore|MaintainedViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='',trafficDirty=false;
+let traffic:TrafficViewStore|MaintainedViewStore|AdaptiveViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='',trafficDirty=false;
 let events: SetEvent[] = [], selected = '', frame = 'inertial', t = 0, playing = false;
 let ready = false, width = 900, height = 600;
 const camera:Camera={yaw:0,pitch:Math.PI/2,center:[0,0,0],scale:100};
@@ -140,6 +144,7 @@ function eventLabel(e: SetEvent): string {
   if(e.kind==='launch')return `Lift off · ${port}`;
   if (e.kind === 'undock') return `Depart ${port}`;
   if (e.kind === 'transfer-start') return `Service ${port}`;
+  if(e.kind==='transfer'&&e.cargoAfter===e.cargoBefore)return `${e.propellantAfter<e.propellantBefore?'Deliver fuel':'Refuel'} · ${port}`;
   if (e.kind === 'transfer') return `${e.cargoAfter! < e.cargoBefore! ? 'Unload' : 'Load'} freight · ${port}`;
   if(e.kind==='thrust-start')return 'Begin thrust';
   if(e.kind==='thrust-end')return 'End thrust';
@@ -156,6 +161,7 @@ function status(v: VesselView): string {
   if(s.activity?.kind==='fault')return `Fault · last seen ${number(s.activity.knownEpoch!)}`;
   if(s.activity?.kind==='unavailable')return 'Transfer unavailable';
   if(s.activity?.kind==='waiting' && s.activity.reason)return 'Waiting for transfer window';
+  if(l?.service&&l.service.cargo===0&&l.service.propellant!==0)return `${l.service.propellant<0?'Delivering fuel':'Refueling'} · ${l.service.portId}`;
   if (l?.service) return `${l.service.cargo < 0 ? 'Unloading' : 'Loading'} · ${l.service.portId}`;
   if (l?.dockedPortId) return `${v.ports.find(p=>p.id===l.dockedPortId)?.rail.kind==='surface'?'On pad':'Docked'} · ${l.dockedPortId}`;
   if((s.thrust?.force??0)>0)return `Powered flight · ${nextArrival(v)?.portId??''}`;
@@ -284,7 +290,7 @@ function publishState() {
 function loadSet(id: string) {
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
-  tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service'].includes(id)?'oblique':'top';orient(camera,cameraPreset);panMode=false;cameraControls();
+  tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service','orison-flexible-service'].includes(id)?'oblique':'top';orient(camera,cameraPreset);panMode=false;cameraControls();
   worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=true;trafficDirty=false;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
   $('load-status').textContent = 'Preparing scene…';
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
@@ -313,21 +319,21 @@ function loadSet(id: string) {
   worker.postMessage({revision, set});
 }
 
-function loadTraffic(definition:TrafficDefinition|MaintainedDefinition){
- traffic=isMaintained(definition)?new MaintainedViewStore(definition):new TrafficViewStore(definition);
+function loadTraffic(definition:TrafficDefinition|MaintainedDefinition|AdaptiveDefinition){
+ traffic=isAdaptive(definition)?new AdaptiveViewStore(definition):isMaintained(definition)?new MaintainedViewStore(definition):new TrafficViewStore(definition);
  worker=new TrafficWorker({name:'continuous-traffic'});
  const generation=revision;pending=true;
- worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta|MaintainedDelta;error?:string}>)=>{
+ worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta|MaintainedDelta|AdaptiveDelta;error?:string}>)=>{
   if(generation!==revision || e.data.generation!==revision || e.data.sequence!==sequence)return;
   pending=false;
   if(e.data.error){liveError=`Simulation paused: ${e.data.error}`;playing=false;$('load-status').textContent=liveError;updatePanels();return;}
-  const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
+  const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof AdaptiveViewStore)traffic.ingest(e.data.delta! as AdaptiveDelta,!liveMode || !playing && !first);else if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
   if(first){ready=true;selected=traffic!.definition.vessels[0].id;frame='inertial';t=0;playing=true;}
   else if(liveMode && playing)t=traffic!.frontier;
   // Solver yields often acknowledge an unchanged head. Batch drawing-history
   // assembly with the panel cadence instead of rebuilding it for every reply.
   if(first || previousFrontier!==traffic!.frontier){
-   if(first || !playing || performance.now()-lastPanel>100)refreshTraffic();else trafficDirty=true;
+   if(first || !playing || t>run!.window.end || performance.now()-lastPanel>100)refreshTraffic();else trafficDirty=true;
   }
   if(first){$('launch-view').hidden=!run!.world.ports.some(p=>p.rail.kind==='surface');$('frame').innerHTML=`<option value="inertial">Inertial</option><option value="rotating">${esc(run!.rotating.name)}</option>`+[...run!.world.bodies.map(b=>[b.id,b.id]),...run!.stations.map(s=>[s.id,s.id]),...run!.vessels.map(v=>[v.id,v.name])].map(([id,name])=>`<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
    $('description').textContent=run!.description;$('provenance').textContent=run!.provenance;$('traffic-count').textContent=String(run!.vessels.length);$<HTMLButtonElement>('play').disabled=false;fit();}

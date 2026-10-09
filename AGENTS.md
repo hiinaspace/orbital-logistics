@@ -86,8 +86,16 @@ actual target. Historical physics is evicted at the head;128-unit disposable his
 retains held-head playback. Bounded failed plans retry later windows, free-flight
 faults isolate and attached faults halt before unsupported station thrust. The
 fixture is coplanar/one visitor/no relay exchange, with explicit origin fuel imports.
-Shared mass/refueling, multi-visitor scheduling and arbitrary online spatial targeting
-remain separate work; preserve finite maintained and analytical/surface witnesses.
+A separate adaptive-relay-v1 runtime now implements flexible windows/passive relay
+dwell and funded station top-ups. Read docs/design/flexible-service/README.md,
+disposition.md and docs/evidence/flexible-service.md. Coupled-service-v1 plans freeze
+both finite flight legs, station controls and derived ownership together. Captured
+visitor dry/cargo/fuel mass is carried by the station engine; transfers preserve
+aggregate mass and debit the donor exactly. Short idle commits, quiet canonical-grid
+ownership events, paid captures, incomplete-dependency fault stops, bounded work/
+storage and historical/future separation are required. Preserve old maintained and
+analytical/surface semantics. Multi-visitor scheduling and arbitrary online spatial
+targeting remain separate work.
 Follow/Chase and selection-pivot orbiting are presentation only; see
 docs/design/camera-tracking.md. Atmosphere, staging, attitude/slew limits and arbitrary
 ground latitude/spin axes remain deferred.

@@ -1,0 +1,77 @@
+[
+  {
+    "step": 0.0078125,
+    "errors": {
+      "position": 4.987290236399963e-11,
+      "velocity": 1.7278275009433678e-11,
+      "fuel": 1.084821121821733e-11,
+      "station": 4.451341596076956e-12
+    },
+    "captures": [
+      {
+        "positionError": 2.3753015097686777e-11,
+        "deltaV": 4.163727070027315e-12,
+        "fuelUsed": 2.561509778946695e-12,
+        "propellantBefore": 0.795589109853688,
+        "propellantAfter": 0.7955891098511265
+      },
+      {
+        "positionError": 4.305917728188123e-11,
+        "deltaV": 1.4386102258680855e-11,
+        "fuelUsed": 8.302797869360029e-12,
+        "propellantBefore": 0.6814205863585878,
+        "propellantAfter": 0.681420586350285
+      }
+    ]
+  },
+  {
+    "step": 0.00390625,
+    "errors": {
+      "position": 0,
+      "velocity": 0,
+      "fuel": 0,
+      "station": 0
+    },
+    "captures": [
+      {
+        "positionError": 8.225123192264399e-14,
+        "deltaV": 2.0214446172896028e-14,
+        "fuelUsed": 1.2435853906140115e-14,
+        "propellantBefore": 0.795589109853688,
+        "propellantAfter": 0.7955891098536756
+      },
+      {
+        "positionError": 2.6619434782030476e-14,
+        "deltaV": 6.358389842764978e-15,
+        "fuelUsed": 3.6696823566242745e-15,
+        "propellantBefore": 0.6814205863611369,
+        "propellantAfter": 0.6814205863611332
+      }
+    ]
+  },
+  {
+    "step": 0.001953125,
+    "errors": {
+      "position": 4.3599274156459194e-12,
+      "velocity": 1.5386268668042774e-12,
+      "fuel": 1.2314593789142236e-12,
+      "station": 8.348209692871257e-13
+    },
+    "captures": [
+      {
+        "positionError": 1.824790205420979e-12,
+        "deltaV": 3.337202989505802e-13,
+        "fuelUsed": 2.053035164934246e-13,
+        "propellantBefore": 0.795589109853688,
+        "propellantAfter": 0.7955891098534827
+      },
+      {
+        "positionError": 5.236109511304235e-12,
+        "deltaV": 1.8058344210609606e-12,
+        "fuelUsed": 1.0422196307277346e-12,
+        "propellantBefore": 0.6814205863609439,
+        "propellantAfter": 0.6814205863599018
+      }
+    ]
+  }
+]

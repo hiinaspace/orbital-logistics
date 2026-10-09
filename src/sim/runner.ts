@@ -1,4 +1,5 @@
 import {directionAt} from './steering';
+import {paidCapture,CaptureFailure} from './capture';
 import {resolveBurn} from './burns';
 import {distance, relativeSpeed, norm, dot} from './vectors';
 import { bodyState, certifiedCoast, derivative } from './dynamics';
@@ -163,7 +164,7 @@ export class Runner {
       if (op.kind === 'dock' || op.kind==='land') {
         if (l.dockedPortId) { this.#rejectOperation(op.id, `Already docked at ${l.dockedPortId}`); return; }
         if(port.rail.kind==='powered' && port.rail.program.thrustArcs!.some(a=>a.throttle>0&&n.t>=a.start&&n.t<a.end)){this.#rejectOperation(op.id,'Capture during station maintenance');return;}
-        const y = this.portState(port.id, n.t), miss = distance(n.y,y), speed = relativeSpeed(n.y,y);
+        const y = this.portState(port.id, n.t);
         if(op.kind==='dock' && port.rail.kind==='surface' && (n.t!==s.epoch || n.y.some((v,i)=>v!==y[i]))) {
           this.#rejectOperation(op.id,'Surface attachment requires exact initial pad state; use land for later arrival');return;
         }
@@ -175,17 +176,14 @@ export class Runner {
           positionTolerance=Math.min(positionTolerance,clearance/4);
           if(!Number.isFinite(clearance) || clearance<=0){this.#rejectOperation(op.id,'Invalid landing support clearance');return;}
         }
-        if (!Number.isFinite(miss) || !Number.isFinite(speed) || miss > positionTolerance || speed > spec.capture.velocity) {
-          this.#rejectOperation(op.id, `Capture ${port.id}: miss ${miss.toExponential(2)}, speed ${speed.toExponential(2)}`); return;
-        }
-        const used = (s.ship.dryMass + l.cargoMass + n.propellant) * -Math.expm1(-speed / s.ship.exhaustVelocity);
-        if (used > n.propellant || !Number.isFinite(used)) { this.#rejectOperation(op.id, 'Not enough fuel for capture residual'); return; }
-        const before = n.propellant; n.propellant -= used; l.fuelUsed += used;
-        if(n.fuelUsed!==undefined)n.fuelUsed+=used;
-        // Explicit constrained-port interface: bounded position attachment and a
-        // fully charged residual velocity impulse. There is no free capture burn.
-        n.y = y; l.dockedPortId = port.id;
-        this.#ledger.push({t: n.t, kind: op.kind, id: op.id, portId: port.id, positionError:miss, deltaV: speed, fuelUsed: used, propellantBefore: before, propellantAfter: n.propellant});
+        let capture;
+        try{capture=paidCapture(n.y,y,{dryMass:s.ship.dryMass,cargoMass:l.cargoMass,propellant:n.propellant,exhaustVelocity:s.ship.exhaustVelocity},{position:positionTolerance,velocity:spec.capture.velocity},port.id);}
+        catch(error){if(!(error instanceof CaptureFailure))throw error;this.#rejectOperation(op.id,error.message);return;}
+        n.propellant=capture.propellantAfter;l.fuelUsed+=capture.fuelUsed;
+        if(n.fuelUsed!==undefined)n.fuelUsed+=capture.fuelUsed;
+        // Explicit constrained-port interface: all residual velocity matching is paid.
+        n.y=capture.y;l.dockedPortId=port.id;
+        this.#ledger.push({t:n.t,kind:op.kind,id:op.id,portId:port.id,positionError:capture.positionError,deltaV:capture.deltaV,fuelUsed:capture.fuelUsed,propellantBefore:capture.propellantBefore,propellantAfter:capture.propellantAfter});
       } else if (l.dockedPortId !== port.id) { this.#rejectOperation(op.id, `Dock at ${port.id} first`); return; }
       else if(op.kind==='launch') {
         const index=n.thrustCursor??0,arc=this.#bundle.program.thrustArcs?.[index];

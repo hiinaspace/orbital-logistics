@@ -1,0 +1,169 @@
+{
+  "through": 512,
+  "calls": 7,
+  "seconds": 155.727072951,
+  "snapshot": {
+    "frontier": 512,
+    "current": {
+      "t": 512,
+      "ships": [
+        {
+          "t": 512,
+          "y": [
+            -2.9159592869633326,
+            -0.3649631293582262,
+            0,
+            0.18179567455284384,
+            -0.49673753709640706,
+            0
+          ],
+          "propellant": 0.6592839695318444,
+          "fuelUsed": 1.4139239954416498,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 0,
+            "cargoMass": 0.05,
+            "fuelUsed": 1.4139239954416498,
+            "ports": []
+          },
+          "activity": {
+            "kind": "flying"
+          }
+        }
+      ]
+    },
+    "resources": {
+      "t": 512,
+      "stocks": [
+        {
+          "id": "Equator",
+          "cargo": 0,
+          "propellant": 4
+        },
+        {
+          "id": "Meridian",
+          "cargo": 0,
+          "propellant": 0
+        }
+      ],
+      "cargoImported": 0,
+      "cargoExported": 0,
+      "fuelImported": 1.5322877856262846,
+      "fuelExported": 0
+    },
+    "stats": {
+      "frames": 2056,
+      "chunks": 19,
+      "physicalChunks": 3,
+      "visits": 2,
+      "runnerNodes": 81347,
+      "maxPromotionNodes": 118110,
+      "completed": 6,
+      "planningFailed": 6,
+      "controllerChecks": 66,
+      "controllerCorrected": 52,
+      "controllerFailed": 0,
+      "controllerEvaluations": 895,
+      "maxVisitEvaluations": 88,
+      "trialControllerEvaluations": 9666,
+      "trialVisitorEvaluations": 3866,
+      "maxOpportunityEvaluations": 1423,
+      "maxOpportunityTrials": 4,
+      "planningPending": 0,
+      "stationFuel": 0.5893463270857477,
+      "stationFuelUsed": 0.36973349356704244,
+      "shipFuelUsed": 1.4139239954416498,
+      "fuelDelivered": 0.3590798206527902,
+      "fuelBalanceError": 0,
+      "packetBytes": 4593014
+    }
+  },
+  "visits": [
+    {
+      "id": "adaptive-0",
+      "schedule": {
+        "departure": 6,
+        "relayArrival": 20,
+        "release": 39.5,
+        "homeArrival": 52.5
+      },
+      "delivery": 0.03140519663248964,
+      "evaluations": 81,
+      "burned": 0.21274711083389383
+    },
+    {
+      "id": "adaptive-1",
+      "schedule": {
+        "departure": 79.5,
+        "relayArrival": 93,
+        "release": 119,
+        "homeArrival": 132
+      },
+      "delivery": 0.039415621326996386,
+      "evaluations": 74,
+      "burned": 0.18928178185569544
+    },
+    {
+      "id": "adaptive-2",
+      "schedule": {
+        "departure": 159.5,
+        "relayArrival": 172.5,
+        "release": 191.5,
+        "homeArrival": 207.5
+      },
+      "delivery": 0.06767971182433674,
+      "evaluations": 81,
+      "burned": 0.19798182299544004
+    },
+    {
+      "id": "adaptive-3",
+      "schedule": {
+        "departure": 238.5,
+        "relayArrival": 252,
+        "release": 271.5,
+        "homeArrival": 285.5
+      },
+      "delivery": 0.03863093861071165,
+      "evaluations": 88,
+      "burned": 0.20613261175640438
+    },
+    {
+      "id": "adaptive-4",
+      "schedule": {
+        "departure": 311.5,
+        "relayArrival": 325.5,
+        "release": 351.5,
+        "homeArrival": 365.5
+      },
+      "delivery": 0.068717771727138,
+      "evaluations": 74,
+      "burned": 0.23573429582677158
+    },
+    {
+      "id": "adaptive-5",
+      "schedule": {
+        "departure": 391.5,
+        "relayArrival": 405.5,
+        "release": 431.5,
+        "homeArrival": 444
+      },
+      "delivery": 0.040329292092341595,
+      "evaluations": 81,
+      "burned": 0.2042316301440649
+    },
+    {
+      "id": "adaptive-6",
+      "schedule": {
+        "departure": 471.5,
+        "relayArrival": 485.5,
+        "release": 503,
+        "homeArrival": 518.5
+      },
+      "delivery": 0.07290128843877619,
+      "evaluations": 82,
+      "burned": 0.25648998071498075
+    }
+  ]
+}

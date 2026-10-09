@@ -286,3 +286,23 @@ semantics. Station whiskers and correction lanes are smaller, sparse teal marks.
 early/late replay, conservation, partition invariance and storage limits. Human
 viewing of the new continuous set is next. Shared maintained-station exchange/mass,
 general fleet routing and arbitrary online spatial transfers remain separate work.
+
+
+## Flexible maintained service — 2026-10-09
+
+The user accepted flexible transfer schedules and economical relay dwell rather
+than requiring an industrial wall-clock timetable. **Orison · flexible service**
+selects departure, flight duration, passive dwell and return jointly. Tern explicitly
+delivers maintenance fuel; Meridian's engine carries the visitor's actual dry/cargo/
+fuel mass while docked. Both legs and dependent station controls are admitted as one
+immutable funded plan. Short idle forecasts leave later timing choices open.
+
+See [Astra-reviewed ownership/scheduling contract](design/flexible-service/README.md)
+and [numerical, sustained-run and browser evidence](evidence/flexible-service.md).
+The previous maintained domain and analytical/surface sets retain their semantics.
+This bounded economical family is not a general route optimizer. Pause/Play/Live,
+retained history and frame/camera controls remain presentation; a failed prerequisite
+stops its dependent station future before any ghost attachment or fuel transfer.
+Viewing the new cadence is the next human gate. Multiple visitors, demand/rescue,
+arbitrary online spatial targeting and phase-maintaining station policies remain
+separate extensions.

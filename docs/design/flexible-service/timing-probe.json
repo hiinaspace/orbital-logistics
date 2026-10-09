@@ -1,0 +1,51 @@
+{
+  "qualification": "Unattached-station timing probe only: no aggregate docked mass/refueling, no full paid pair admission or independent oracle. Not an implemented route.",
+  "out": {
+    "best": {
+      "dep": 5,
+      "arr": 20,
+      "score": 0.29659178311021817,
+      "fuel": 0.795589109853688,
+      "cost": 0.104410890146312,
+      "evals": 37,
+      "minR": 2.0002289020136943,
+      "residual": 1.1185498567117662e-13
+    },
+    "attempts": [
+      {
+        "dep": 5,
+        "arr": 20,
+        "score": 0.29659178311021817,
+        "fuel": 0.795589109853688,
+        "cost": 0.104410890146312,
+        "evals": 37,
+        "minR": 2.0002289020136943,
+        "residual": 1.1185498567117662e-13
+      }
+    ]
+  },
+  "back": {
+    "best": {
+      "dep": 39.5,
+      "arr": 52.5,
+      "score": 0.2376004194317562,
+      "fuel": 0.7113930734787794,
+      "cost": 0.08419603637490858,
+      "evals": 37,
+      "minR": 2.018197528404552,
+      "residual": 4.443863769754075e-14
+    },
+    "attempts": [
+      {
+        "dep": 39.5,
+        "arr": 52.5,
+        "score": 0.2376004194317562,
+        "fuel": 0.7113930734787794,
+        "cost": 0.08419603637490858,
+        "evals": 37,
+        "minR": 2.018197528404552,
+        "residual": 4.443863769754075e-14
+      }
+    ]
+  }
+}

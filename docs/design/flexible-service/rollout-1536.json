@@ -1,0 +1,321 @@
+{
+  "through": 1536,
+  "calls": 19,
+  "seconds": 480.05035132,
+  "snapshot": {
+    "frontier": 1536,
+    "current": {
+      "t": 1536,
+      "ships": [
+        {
+          "t": 1536,
+          "y": [
+            2.166653851299955,
+            -0.48856447973316147,
+            0,
+            0.03414573539014357,
+            0.7062718871157334,
+            0
+          ],
+          "propellant": 0.6126214714775517,
+          "fuelUsed": 4.435559605215703,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 0,
+            "cargoMass": 0.05,
+            "fuelUsed": 4.435559605215703,
+            "ports": []
+          },
+          "activity": {
+            "kind": "flying"
+          }
+        }
+      ]
+    },
+    "resources": {
+      "t": 1536,
+      "stocks": [
+        {
+          "id": "Equator",
+          "cargo": 0,
+          "propellant": 4
+        },
+        {
+          "id": "Meridian",
+          "cargo": 0,
+          "propellant": 0
+        }
+      ],
+      "cargoImported": 0,
+      "cargoExported": 0,
+      "fuelImported": 5.246697834610957,
+      "fuelExported": 0
+    },
+    "stats": {
+      "frames": 2056,
+      "chunks": 18,
+      "physicalChunks": 2,
+      "visits": 2,
+      "runnerNodes": 68791,
+      "maxPromotionNodes": 123745,
+      "completed": 19,
+      "planningFailed": 21,
+      "controllerChecks": 193,
+      "controllerCorrected": 149,
+      "controllerFailed": 0,
+      "controllerEvaluations": 2559,
+      "maxVisitEvaluations": 89,
+      "planningPending": 0,
+      "stationFuel": 0.5686437367222998,
+      "stationFuelUsed": 1.1298730211954036,
+      "shipFuelUsed": 4.435559605215703,
+      "fuelDelivered": 1.0985167579177033,
+      "fuelBalanceError": 1.7763568394002505e-15,
+      "packetBytes": 4464508
+    }
+  },
+  "visits": [
+    {
+      "id": "adaptive-0",
+      "schedule": {
+        "departure": 6,
+        "relayArrival": 20,
+        "release": 39.5,
+        "homeArrival": 52.5
+      },
+      "delivery": 0.03140519663248964,
+      "evaluations": 81,
+      "burned": 0.21274711083389383
+    },
+    {
+      "id": "adaptive-1",
+      "schedule": {
+        "departure": 79.5,
+        "relayArrival": 93,
+        "release": 119,
+        "homeArrival": 132
+      },
+      "delivery": 0.039415621326996386,
+      "evaluations": 74,
+      "burned": 0.18928178185569544
+    },
+    {
+      "id": "adaptive-2",
+      "schedule": {
+        "departure": 159.5,
+        "relayArrival": 172.5,
+        "release": 191.5,
+        "homeArrival": 207.5
+      },
+      "delivery": 0.06767971182433674,
+      "evaluations": 81,
+      "burned": 0.19798182299544004
+    },
+    {
+      "id": "adaptive-3",
+      "schedule": {
+        "departure": 238.5,
+        "relayArrival": 252,
+        "release": 271.5,
+        "homeArrival": 285.5
+      },
+      "delivery": 0.03863093861071165,
+      "evaluations": 88,
+      "burned": 0.20613261175640438
+    },
+    {
+      "id": "adaptive-4",
+      "schedule": {
+        "departure": 311.5,
+        "relayArrival": 325.5,
+        "release": 351.5,
+        "homeArrival": 365.5
+      },
+      "delivery": 0.068717771727138,
+      "evaluations": 74,
+      "burned": 0.23573429582677158
+    },
+    {
+      "id": "adaptive-5",
+      "schedule": {
+        "departure": 391.5,
+        "relayArrival": 405.5,
+        "release": 431.5,
+        "homeArrival": 444
+      },
+      "delivery": 0.040329292092341595,
+      "evaluations": 81,
+      "burned": 0.2042316301440649
+    },
+    {
+      "id": "adaptive-6",
+      "schedule": {
+        "departure": 471.5,
+        "relayArrival": 485.5,
+        "release": 503,
+        "homeArrival": 518.5
+      },
+      "delivery": 0.07290128843877619,
+      "evaluations": 82,
+      "burned": 0.25648998071498075
+    },
+    {
+      "id": "adaptive-7",
+      "schedule": {
+        "departure": 551.5,
+        "relayArrival": 564.5,
+        "release": 582,
+        "homeArrival": 597
+      },
+      "delivery": 0.05057059795562624,
+      "evaluations": 89,
+      "burned": 0.248191130055235
+    },
+    {
+      "id": "adaptive-8",
+      "schedule": {
+        "departure": 623.5,
+        "relayArrival": 637.5,
+        "release": 663.5,
+        "homeArrival": 678
+      },
+      "delivery": 0.053688897862145146,
+      "evaluations": 81,
+      "burned": 0.25840247651062287
+    },
+    {
+      "id": "adaptive-9",
+      "schedule": {
+        "departure": 703.5,
+        "relayArrival": 717.5,
+        "release": 743.5,
+        "homeArrival": 756.5
+      },
+      "delivery": 0.0521981295004309,
+      "evaluations": 81,
+      "burned": 0.22316566834048468
+    },
+    {
+      "id": "adaptive-10",
+      "schedule": {
+        "departure": 783.5,
+        "relayArrival": 797,
+        "release": 823,
+        "homeArrival": 836
+      },
+      "delivery": 0.05308146731175023,
+      "evaluations": 74,
+      "burned": 0.19168951459819825
+    },
+    {
+      "id": "adaptive-11",
+      "schedule": {
+        "departure": 863.5,
+        "relayArrival": 877.5,
+        "release": 894,
+        "homeArrival": 909.5
+      },
+      "delivery": 0.06924796580536918,
+      "evaluations": 82,
+      "burned": 0.2528668640917831
+    },
+    {
+      "id": "adaptive-12",
+      "schedule": {
+        "departure": 943,
+        "relayArrival": 956,
+        "release": 975.5,
+        "homeArrival": 989.5
+      },
+      "delivery": 0.04097528058251443,
+      "evaluations": 88,
+      "burned": 0.21539560637079996
+    },
+    {
+      "id": "adaptive-13",
+      "schedule": {
+        "departure": 1015.5,
+        "relayArrival": 1030,
+        "release": 1055,
+        "homeArrival": 1068.5
+      },
+      "delivery": 0.06281906887620037,
+      "evaluations": 88,
+      "burned": 0.24997231300062053
+    },
+    {
+      "id": "adaptive-14",
+      "schedule": {
+        "departure": 1095.5,
+        "relayArrival": 1109,
+        "release": 1135.5,
+        "homeArrival": 1148
+      },
+      "delivery": 0.05428193862349706,
+      "evaluations": 81,
+      "burned": 0.21404508649312007
+    },
+    {
+      "id": "adaptive-15",
+      "schedule": {
+        "departure": 1181.5,
+        "relayArrival": 1197,
+        "release": 1214.5,
+        "homeArrival": 1228
+      },
+      "delivery": 0.06817758555753206,
+      "evaluations": 82,
+      "burned": 0.26727047805321263
+    },
+    {
+      "id": "adaptive-16",
+      "schedule": {
+        "departure": 1255.5,
+        "relayArrival": 1268,
+        "release": 1287.5,
+        "homeArrival": 1303.5
+      },
+      "delivery": 0.052539784740651796,
+      "evaluations": 74,
+      "burned": 0.18594337657216864
+    },
+    {
+      "id": "adaptive-17",
+      "schedule": {
+        "departure": 1334.5,
+        "relayArrival": 1348,
+        "release": 1367.5,
+        "homeArrival": 1382
+      },
+      "delivery": 0.0660279316948168,
+      "evaluations": 67,
+      "burned": 0.18300981099155322
+    },
+    {
+      "id": "adaptive-18",
+      "schedule": {
+        "departure": 1407.5,
+        "relayArrival": 1421.5,
+        "release": 1447.5,
+        "homeArrival": 1461
+      },
+      "delivery": 0.05260479947387642,
+      "evaluations": 81,
+      "burned": 0.21885300676870745
+    },
+    {
+      "id": "adaptive-19",
+      "schedule": {
+        "departure": 1494.5,
+        "relayArrival": 1510,
+        "release": 1527,
+        "homeArrival": 1540
+      },
+      "delivery": 0.06322348928050248,
+      "evaluations": 89,
+      "burned": 0.26147777665197103
+    }
+  ]
+}

@@ -13,7 +13,7 @@ export interface ModelSet {
 }
 export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
-export interface ViewSample extends Sample {activity?:Activity}
+export interface ViewSample extends Sample {activity?:Activity;mass?:number}
 export interface VesselView {
  id:string;name:string;color:string;cargo:string;ship:Scenario['ship'];ports:Port[];cargoCapacity:number;
  arcs:ThrustArc[];continuousFuel:boolean;portSamples:PortSamples;samples:ViewSample[];
@@ -167,6 +167,7 @@ export function sampleVessel(v: VesselView, t: number): ViewSample {
   if(a.fuelUsed!==undefined && a!==b && a.t!==t) {
     const endpoint=v.boundaries.find(e=>e.t===b.t)?.before??b,u=(t-a.t)/(b.t-a.t);
     sample.propellant=a.propellant+u*(endpoint.propellant-a.propellant);
+    if(a.mass!==undefined)sample.mass=a.mass+u*((endpoint as ViewSample).mass!-a.mass);
     sample.fuelUsed=a.fuelUsed+u*(endpoint.fuelUsed!-a.fuelUsed);
     if(sample.logistics)sample.logistics.fuelUsed=a.logistics!.fuelUsed+u*(endpoint.logistics!.fuelUsed-a.logistics!.fuelUsed);
   }
@@ -174,7 +175,7 @@ export function sampleVessel(v: VesselView, t: number): ViewSample {
   // Mass and therefore force/acceleration vary smoothly. These are drawing values, never a target or propagation origin.
   if(sample.thrust) {
     const engine=v.ship.engine!,arc=v.arcs.find(a=>a.id===sample.thrust!.id)!;
-    const mass=v.ship.dryMass+(sample.logistics?.cargoMass??v.ship.cargoMass)+sample.propellant;
+    const mass=sample.mass??v.ship.dryMass+(sample.logistics?.cargoMass??v.ship.cargoMass)+sample.propellant;
     sample.thrust.force=Math.min(engine.maxThrust*arc.throttle,(engine.maxAcceleration??Infinity)*mass);
     sample.thrust.direction=directionAt(arc,t-arc.start);
     sample.thrust.acceleration=sample.thrust.force/mass*Math.hypot(...sample.thrust.direction);

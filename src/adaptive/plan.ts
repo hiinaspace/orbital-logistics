@@ -1,0 +1,104 @@
+import {Runner,type EventBoundary} from '../sim/runner';
+import {paidCapture,CaptureFailure} from '../sim/capture';
+import {validateBundle,type Bundle,type Scenario,type State} from '../sim/schema';
+import {PlanningFailure,shootForcesJob,type PropagationBudget} from '../maintained/shoot';
+import {transferSeed} from '../maintained/seed';
+import type {ViewSample,ViewerEvent} from '../model-set/model';
+import {AdaptiveWorld,quiet,type AdaptiveDefinition,type Anchor,type Control,type Ownership} from './world';
+const copy=<T>(v:T):T=>structuredClone(v);
+const freeze=<T>(v:T):T=>{if(v&&typeof v==='object'){for(const x of Object.values(v))freeze(x);Object.freeze(v);}return v;};
+const key=(v:unknown)=>JSON.stringify(v,(_k,x)=>x&&typeof x==='object'&&!Array.isArray(x)?Object.fromEntries(Object.keys(x).sort().map(k=>[k,x[k]])):x);
+const limits={position:1e-7,velocity:1e-7};
+export interface Schedule {departure:number;relayArrival:number;release:number;homeArrival:number}
+export interface CoupledPlan {
+ schemaVersion:1;modelVersion:'coupled-service-v1';id:string;knownAt:number;end:number;
+ base:Anchor;controls:Control[];schedule:Schedule;visitorId:string;fuel:number;delivery:number;
+ outbound:Bundle;inbound:Bundle;evaluations:number;
+}
+export function legScenario(d:AdaptiveDefinition,epoch:number,duration:number,state:State,fuel:number):Scenario{
+ const s=copy(d.world.scenario);s.epoch=epoch;s.duration=duration;delete s.logistics;delete s.rendezvous;s.ship.state=copy(state);s.ship.propellant=fuel;return s;
+}
+export function economicalSeed(from:State,to:State,duration:number,mass:number){
+ const r0=Math.hypot(from[0],from[1]),r1=Math.hypot(to[0],to[1]),cos=(from[0]*to[0]+from[1]*to[1])/(r0*r1);
+ if(cos>-.9999)return transferSeed(from,to,duration,mass);
+ if(from[2]!==0||to[2]!==0||from[0]*from[4]-from[1]*from[3]<=0)throw new PlanningFailure('Unsupported antipodal seed plane/direction');
+ const a=(r0+r1)/2,v0=Math.sqrt(2/r0-1/a),v1=Math.sqrt(2/r1-1/a);
+ return [(-from[1]/r0*v0-from[3])*mass/1.6,(from[0]/r0*v0-from[4])*mass/1.6,0,(to[3]+to[1]/r1*v1)*mass/1.8,(to[4]-to[0]/r1*v1)*mass/1.8,0];
+}
+function paid(d:AdaptiveDefinition,runner:Runner,target:State,t:number,label:string){const s=runner.advanceTo(t);if(s.status!=='horizon'||s.t!==t)throw new PlanningFailure('Flight did not complete');let c;try{c=paidCapture(s.y,target,{...d.world.scenario.ship,propellant:s.propellant},limits,label);}catch(error){if(!(error instanceof CaptureFailure))throw error;throw new PlanningFailure(error.message);}if(c.positionError+1e-8>=limits.position||c.deltaV+1e-8>=limits.velocity)throw new PlanningFailure('Paid capture numerical allowance failed');return c;}
+function validateSchedule(s:Schedule,end:number){
+ if(!Object.values(s).every(quiet)||s.relayArrival-s.departure<12||s.relayArrival-s.departure>16||s.release-s.relayArrival<8||s.release-s.relayArrival>40||s.homeArrival-s.release<12||s.homeArrival-s.release>16||end!==s.homeArrival+2||end-s.departure>64)throw Error('Unsupported coupled schedule');
+ // Transfer completes half a unit after arrival, in a quiet ownership window.
+ if(!quiet(s.relayArrival+.5))throw Error('Transfer completion outside quiet interval');
+}
+function leg(d:AdaptiveDefinition,b:Bundle,t:number,duration:number,state:State,fuel:number){
+ const value=validateBundle(b),template=legScenario(d,t,duration,state,fuel);template.policy.maxNodes=Math.ceil(duration/template.policy.step)+1024;const expected=validateBundle({scenario:template,program:value.program});
+ if(key(value.scenario)!==key(expected.scenario)||value.program.burns.length||value.program.operations!==undefined||value.program.thrustArcs?.length!==2)throw Error('Coupled flight hardware/anchor mismatch');
+ return new Runner(value);
+}
+export class CoupledTrip {
+ readonly world:AdaptiveWorld;readonly outbound:Runner;readonly inbound:Runner;
+ readonly capture:ReturnType<typeof paidCapture>;readonly home:ReturnType<typeof paidCapture>;
+ readonly events:ViewerEvent[];readonly burned:number;readonly deltaV:number;readonly stationBurned:number;
+ readonly beforeTransferFuel:number;readonly afterTransferFuel:number;
+ constructor(readonly definition:AdaptiveDefinition,readonly plan:CoupledPlan){
+  this.plan=freeze(copy(plan));this.definition=freeze(copy(definition));
+  const p=this.plan,d=this.definition,s=p.schedule;validateSchedule(s,p.end);
+  if(p.schemaVersion!==1||p.modelVersion!=='coupled-service-v1'||p.visitorId!==d.world.scenario.ship.id||p.base.visitorFuel!==undefined||p.base.t!==p.knownAt||!Number.isFinite(p.fuel)||p.fuel<.05||p.fuel>d.world.scenario.ship.tankCapacity)throw Error('Invalid coupled plan identity/anchor');
+  if(p.controls.length!==(Math.ceil(p.end/8)*8-p.base.t)/8||p.controls.some((c,i)=>c.t!==p.base.t+i*8||c.check.t!==c.t||c.arcs.length>2||c.arcs.some(a=>a.start<c.t||a.end>c.t+4)))throw Error('Invalid frozen controller chain');
+  const pre=new AdaptiveWorld(d,p.base),preJob=pre.extend(Math.ceil((s.relayArrival+.5)/8)*8,p.knownAt,[],p.controls);while(!preJob.next().done){}
+  this.outbound=leg(d,p.outbound,s.departure,s.relayArrival-s.departure,pre.sample(d.origin.id,s.departure).y,p.fuel);
+  this.capture=freeze(paid(d,this.outbound,pre.sample(d.relay.id,s.relayArrival).y,s.relayArrival,d.relay.id));
+  const stationFuel=pre.sample(d.relay.id,s.relayArrival+.5).propellant,amount=Math.max(0,d.relay.ship.tankCapacity-stationFuel);
+  if(!Number.isFinite(p.delivery)||Math.abs(p.delivery-amount)>1e-12||p.delivery<0||p.delivery>this.capture.propellantAfter)throw Error('Coupled delivery does not match funded top-up');
+  this.beforeTransferFuel=this.capture.propellantAfter;this.afterTransferFuel=this.capture.propellantAfter-p.delivery;
+  this.world=new AdaptiveWorld(d,p.base);const job=this.world.extend(Math.ceil(p.end/8)*8,p.knownAt,this.ownership(),p.controls);while(!job.next().done){}
+  this.inbound=leg(d,p.inbound,s.release,s.homeArrival-s.release,this.world.sample(d.relay.id,s.release).y,this.afterTransferFuel);
+  this.home=freeze(paid(d,this.inbound,this.world.sample(d.origin.id,s.homeArrival).y,s.homeArrival,d.origin.id));if(this.home.propellantAfter<.05)throw new PlanningFailure('Funded return reserve failed');
+  this.burned=(this.outbound.sample(s.relayArrival).fuelUsed??0)+(this.inbound.sample(s.homeArrival).fuelUsed??0)+this.capture.fuelUsed+this.home.fuelUsed;
+  this.deltaV=[...this.outbound.ledger,...this.inbound.ledger].filter(e=>e.kind==='thrust-end').reduce((n,e)=>n+e.deltaV,0)+this.capture.deltaV+this.home.deltaV;
+  this.stationBurned=this.world.anchor.used-p.base.used;
+  this.events=freeze([{t:s.departure,kind:'undock',id:`${p.id}:depart`,portId:d.origin.id,deltaV:0,fuelUsed:0,propellantBefore:p.fuel,propellantAfter:p.fuel},...this.outbound.ledger,
+   {t:s.relayArrival,kind:'dock',id:`${p.id}:relay`,portId:d.relay.id,...this.capture},
+   {t:s.relayArrival,kind:'transfer-start',id:`${p.id}:fuel-start`,portId:d.relay.id,deltaV:0,fuelUsed:0,propellantBefore:this.beforeTransferFuel,propellantAfter:this.beforeTransferFuel},
+   {t:s.relayArrival+.5,kind:'transfer',id:`${p.id}:fuel`,portId:d.relay.id,deltaV:0,fuelUsed:0,propellantBefore:this.beforeTransferFuel,propellantAfter:this.afterTransferFuel,portPropellantBefore:stationFuel,portPropellantAfter:stationFuel+p.delivery,cargoBefore:.05,cargoAfter:.05},
+   {t:s.release,kind:'undock',id:`${p.id}:release`,portId:d.relay.id,deltaV:0,fuelUsed:0,propellantBefore:this.afterTransferFuel,propellantAfter:this.afterTransferFuel},...this.inbound.ledger,
+   {t:s.homeArrival,kind:'dock',id:`${p.id}:home`,portId:d.origin.id,...this.home}].map(e=>{const {y,...event}=e as ViewerEvent&{y?:State};return event;}).sort((a,b)=>a.t-b.t));
+ }
+ ownership():Ownership[]{const s=this.plan.schedule,id=this.plan.visitorId;return [{t:s.relayArrival,kind:'capture',visitorId:id,fuel:this.capture.propellantAfter},{t:s.relayArrival+.5,kind:'transfer',visitorId:id,amount:this.plan.delivery},{t:s.release,kind:'release',visitorId:id}];}
+ sample(t:number,before=false):ViewSample{
+  const p=this.plan,s=p.schedule,d=this.definition;if(t<s.departure||t>p.end)throw Error('Outside coupled episode');
+  const log=(used:number,port?:string)=>({operationCursor:0,cargoMass:.05,fuelUsed:used,ports:[],...(port?{dockedPortId:port}:{})});
+  const free=(r:Runner,usedBefore:number)=>{const boundary=before?r.eventBoundaries.find(b=>b.t===t)?.before:undefined,a=boundary??r.sample(t),used=usedBefore+(a.fuelUsed??0);return {...a,fuelUsed:used,logistics:log(used),activity:{kind:'flying' as const}};};
+  if(t<s.relayArrival||before&&t===s.relayArrival)return free(this.outbound,0);
+  if(t<s.release||before&&t===s.release){const transferred=t>s.relayArrival+.5||t===s.relayArrival+.5&&!before,used=(this.outbound.sample(s.relayArrival).fuelUsed??0)+this.capture.fuelUsed,fuel=transferred?this.afterTransferFuel:this.beforeTransferFuel;return {t,y:this.world.sample(d.relay.id,t).y,propellant:fuel,fuelUsed:used,burnCursor:0,status:'running',detail:'',logistics:{...log(used,d.relay.id),...(!transferred?{service:{id:`${p.id}:fuel`,portId:d.relay.id,end:s.relayArrival+.5,cargo:0,propellant:-p.delivery}}:{})},activity:{kind:transferred?'waiting':'service'}};}
+  if(t<s.homeArrival||before&&t===s.homeArrival)return free(this.inbound,(this.outbound.sample(s.relayArrival).fuelUsed??0)+this.capture.fuelUsed);
+  return {t,y:this.world.sample(d.origin.id,t).y,propellant:this.home.propellantAfter,fuelUsed:this.burned,burnCursor:0,status:'running',detail:'',logistics:{...log(this.burned,d.origin.id),service:{id:`${p.id}:origin-refuel`,portId:d.origin.id,end:p.end,cargo:0,propellant:d.world.scenario.ship.propellant-this.home.propellantAfter}},activity:{kind:'service'}};
+ }
+ get boundaries():EventBoundary[]{const times=[...new Set(this.events.map(e=>e.t))].filter(t=>t>this.plan.schedule.departure);return times.map(t=>({t,before:this.sample(t,true),after:this.sample(t)}));}
+ get nodes(){return this.world.nodes+this.outbound.retainedNodes+this.inbound.retainedNodes;}
+}
+export function* buildPlanJob(d:AdaptiveDefinition,base:Anchor,prefix:Control[],schedule:Schedule,fuel:number,id:string,work?:{controller:PropagationBudget;visitor:PropagationBudget}):Generator<void,CoupledTrip>{
+ const s=schedule,end=s.homeArrival+2;validateSchedule(s,end);
+ const pre=new AdaptiveWorld(d,base,work?.controller);yield* pre.extend(Math.ceil((s.relayArrival+.5)/8)*8,base.t,[],undefined);
+ // Immutable controls already committed at the head must match this candidate.
+ for(const control of prefix)if(key(pre.controls.find(c=>c.t===control.t))!==key(control))throw Error('Candidate changed committed owner prefix');
+ const outScenario=legScenario(d,s.departure,s.relayArrival-s.departure,pre.sample(d.origin.id,s.departure).y,fuel),outTarget=pre.sample(d.relay.id,s.relayArrival).y;
+ const out=yield* shootForcesJob(outScenario,[{start:s.departure,end:s.departure+1.6},{start:s.relayArrival-1.8,end:s.relayArrival}],outTarget,economicalSeed(outScenario.ship.state,outTarget,outScenario.duration,1.05+fuel),96,'sphere',work?.visitor);
+ const capture=paid(d,out.runner,outTarget,s.relayArrival,d.relay.id),delivery=Math.max(0,d.relay.ship.tankCapacity-pre.sample(d.relay.id,s.relayArrival+.5).propellant),remaining=capture.propellantAfter-delivery;
+ if(remaining<.05)throw new PlanningFailure('Donor cannot fund station top-up');
+ const owner=new AdaptiveWorld(d,base,work?.controller),events:Ownership[]=[{t:s.relayArrival,kind:'capture',visitorId:d.world.scenario.ship.id,fuel:capture.propellantAfter},{t:s.relayArrival+.5,kind:'transfer',visitorId:d.world.scenario.ship.id,amount:delivery},{t:s.release,kind:'release',visitorId:d.world.scenario.ship.id}];yield* owner.extend(Math.ceil(end/8)*8,base.t,events);
+ if(owner.chunks.some(c=>c.data.check.outcome==='failed'))throw new PlanningFailure('Candidate station maintenance failed');
+ if(Math.hypot(...owner.sample(d.relay.id,s.relayArrival).y.map((x,i)=>x-outTarget[i]))>1e-12)throw Error('Docking changed its proven incoming target');
+ pre.chunks=[]; // Incoming proof/amount are now immutable scalar facts.
+ const returnScenario=legScenario(d,s.release,s.homeArrival-s.release,owner.sample(d.relay.id,s.release).y,remaining),homeTarget=owner.sample(d.origin.id,s.homeArrival).y;
+ const back=yield* shootForcesJob(returnScenario,[{start:s.release,end:s.release+1.6},{start:s.homeArrival-1.8,end:s.homeArrival}],homeTarget,economicalSeed(returnScenario.ship.state,homeTarget,returnScenario.duration,1.05+remaining),96,'sphere',work?.visitor);
+ const outBundle=out.runner.bundle,backBundle=back.runner.bundle;outBundle.program.id=`${id}:out`;backBundle.program.id=`${id}:back`;outBundle.program.thrustArcs!.forEach((a,i)=>a.id=`${id}:out:${i}`);backBundle.program.thrustArcs!.forEach((a,i)=>a.id=`${id}:back:${i}`);
+ const plan:CoupledPlan={schemaVersion:1,modelVersion:'coupled-service-v1',id,knownAt:base.t,end,base:copy(base),controls:owner.controls,schedule:copy(s),visitorId:d.world.scenario.ship.id,fuel,delivery,outbound:outBundle,inbound:backBundle,evaluations:out.evaluations+back.evaluations};yield;
+ const trip=new CoupledTrip(d,plan);
+ if(owner.nodes+trip.nodes+out.runner.retainedNodes+back.runner.retainedNodes>220000)throw Error('Candidate physical storage budget exceeded');
+ for(let t=base.t;t<=Math.ceil(end/8)*8;t+=1/256){for(const id of [d.origin.id,d.relay.id]){const a=owner.sample(id,t),b=trip.world.sample(id,t);if(key(a)!==key(b))throw Error('Reconstructed coupled owner mismatch');}}
+ for(const leg of [trip.outbound,trip.inbound])for(const seg of leg.coastSegments(leg.bundle.scenario.epoch+leg.bundle.scenario.duration)){for(const state of [seg.y0,seg.y1]){const r=Math.hypot(...state.slice(0,3));if(r<1.7||r>3.4)throw new PlanningFailure('Outside routine service orbital corridor');}}
+ return trip;
+}
+export function buildPlan(...args:Parameters<typeof buildPlanJob>){const job=buildPlanJob(...args);let r=job.next();while(!r.done)r=job.next();return r.value;}

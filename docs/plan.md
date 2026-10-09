@@ -1,6 +1,6 @@
-# Tactical plan — updated 2026-10-08
+# Tactical plan — updated 2026-10-09
 
-Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic, continuous airless surface service and orthographic 3D viewer and smooth finite steering, tracking cameras and finite/continuous maintained relay implemented**.
+Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic, continuous airless surface service and orthographic 3D viewer and smooth finite steering, tracking cameras and finite/continuous maintained relay and flexible funded service implemented**.
 
 On 2026-10-08 the user chose fictional orbital buildups and traffic as the next
 product direction, authorized retiring the CoaDE editing UI, and requested implementation.
@@ -68,7 +68,13 @@ canonical target chunks and online paired visit/return admission after
 [review](design/maintained-service/README.md). [Evidence](evidence/maintained-service.md)
 covers512 actual units, repeated paid visits, retries, independent early/late replay,
 fault isolation and bounded history. Station marks are quieter teal. Human viewing
-of the new service is next; relay exchange/shared mass and broader routing remain open.
+of the prior service led to a scheduling/retention diagnosis. The user accepted
+flexible schedules and relay dwell. **Orison · flexible service** now adds joint
+bounded timing, passive docked mass, funded station fuel delivery and a frozen
+coupled-plan evaluator after [Astra review](design/flexible-service/README.md).
+[Evidence](evidence/flexible-service.md) covers1536 units, economical repeat service,
+independent original-anchor replay, fault stops and browser history. Human viewing
+of this new cadence is next; multi-visitor/demand routing remains separate.
 Lunar continuation, demand routing/rescue, persistence, staging/recovery,
 attitude dynamics and retargeting of existing surface steering remain separate extensions. No general
 steering optimizer is claimed.

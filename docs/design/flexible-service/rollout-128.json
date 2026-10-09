@@ -1,0 +1,105 @@
+{
+  "through": 128,
+  "calls": 2,
+  "seconds": 25.931066990999998,
+  "snapshot": {
+    "frontier": 128,
+    "current": {
+      "t": 128,
+      "ships": [
+        {
+          "t": 128,
+          "y": [
+            1.2570283862029024,
+            -1.791431738431723,
+            0,
+            0.5103685194008446,
+            0.5033988555480978,
+            0
+          ],
+          "propellant": 0.710957037946194,
+          "fuelUsed": 0.3623744515607034,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 0,
+            "cargoMass": 0.05,
+            "fuelUsed": 0.3623744515607034,
+            "ports": []
+          },
+          "activity": {
+            "kind": "flying"
+          }
+        }
+      ]
+    },
+    "resources": {
+      "t": 128,
+      "stocks": [
+        {
+          "id": "Equator",
+          "cargo": 0,
+          "propellant": 4
+        },
+        {
+          "id": "Meridian",
+          "cargo": 0,
+          "propellant": 0
+        }
+      ],
+      "cargoImported": 0,
+      "cargoExported": 0,
+      "fuelImported": 0.2441523074663836,
+      "fuelExported": 0
+    },
+    "stats": {
+      "frames": 2056,
+      "chunks": 17,
+      "physicalChunks": 2,
+      "visits": 2,
+      "runnerNodes": 74428,
+      "maxPromotionNodes": 117470,
+      "completed": 1,
+      "planningFailed": 1,
+      "controllerChecks": 17,
+      "controllerCorrected": 13,
+      "controllerFailed": 0,
+      "controllerEvaluations": 229,
+      "maxVisitEvaluations": 81,
+      "planningPending": 0,
+      "stationFuel": 0.5596342996811101,
+      "stationFuelUsed": 0.11118651827837589,
+      "shipFuelUsed": 0.3623744515607034,
+      "fuelDelivered": 0.07082081795948603,
+      "fuelBalanceError": 0,
+      "packetBytes": 4287041
+    }
+  },
+  "visits": [
+    {
+      "id": "adaptive-0",
+      "schedule": {
+        "departure": 6,
+        "relayArrival": 20,
+        "release": 39.5,
+        "homeArrival": 52.5
+      },
+      "delivery": 0.03140519663248964,
+      "evaluations": 81,
+      "burned": 0.21274711083389383
+    },
+    {
+      "id": "adaptive-1",
+      "schedule": {
+        "departure": 79.5,
+        "relayArrival": 93,
+        "release": 119,
+        "homeArrival": 132
+      },
+      "delivery": 0.039415621326996386,
+      "evaluations": 74,
+      "burned": 0.18928178185569544
+    }
+  ]
+}
