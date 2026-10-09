@@ -11,6 +11,10 @@ import surfaceAscent from '../fixtures/model-sets/selene-ascent.json';
 import surfaceReturn from '../fixtures/model-sets/selene-return.json';
 import trafficDefinition from '../fixtures/traffic/orison-service.json';
 import surfaceService from '../fixtures/traffic/selene-service.json';
+import maintainedService from '../fixtures/traffic/orison-maintained-service.json';
+import {MaintainedViewStore} from './maintained/view';
+import {isMaintained,type MaintainedDefinition} from './maintained/world';
+import type {MaintainedDelta} from './maintained/engine';
 import maintainedSet from '../fixtures/model-sets/orison-maintained.json';
 import steered from '../fixtures/model-sets/orison-steered.json';
 import crossingPlanes from '../fixtures/model-sets/crossing-planes.json';
@@ -25,7 +29,7 @@ import {orbitError,displayPortState,portsOf, sampleVessel, setEvents, stockAt, t
 import {transform,transformDirection} from './model-set/frames';
 
 const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,crossingPlanes,steered,maintainedSet] as ModelSet[];
-const trafficSets=[trafficDefinition,surfaceService] as unknown as TrafficDefinition[];
+const trafficSets=[trafficDefinition,surfaceService,maintainedService] as unknown as (TrafficDefinition|MaintainedDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
@@ -45,7 +49,7 @@ document.body.innerHTML = `
 
 const canvas = $<HTMLCanvasElement>('space'), ctx = canvas.getContext('2d')!;
 let run: SceneView | undefined, worker: Worker | undefined, revision = 0;
-let traffic:TrafficViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='';
+let traffic:TrafficViewStore|MaintainedViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='';
 let events: SetEvent[] = [], selected = '', frame = 'inertial', t = 0, playing = false;
 let ready = false, width = 900, height = 600;
 const camera:Camera={yaw:0,pitch:Math.PI/2,center:[0,0,0],scale:100};
@@ -153,14 +157,15 @@ function status(v: VesselView): string {
 function select(id: string) { selected = id;if(tracking!=='off')trackingOffset=[0,0,0]; $('hit-menu').hidden = true; draw();updatePanels(); }
 function buildTimeline() {
   $('timelines').innerHTML = [...Object.values(run!.maintained??{}),...run!.vessels].map(v => {
+    const maintenance=!!run!.maintained?.[v.id];
     const times = [...new Set([start(), end(), ...v.ledger.map(e => e.t)])].sort((a, b) => a - b);
     const blocks = times.slice(0, -1).map((a, i) => {
       const b = times[i + 1], state = sampleVessel(v, (a + b) / 2), l = state.logistics, powered=(state.thrust?.force??0)>0;
-      const fill = l?.service ? '#e9c485' : l?.dockedPortId ? '#35434d' : v.color;
-      return `<rect x="${1000 * (a - start()) / (end() - start())}" y="${l?.service || powered ? 3 : 7}" width="${1000 * (b - a) / (end() - start())}" height="${l?.service || powered ? 14 : 6}" fill="${fill}" opacity="${powered?0.95:l?.dockedPortId && !l.service ? 0.8 : 0.65}"/>`;
+      const fill = maintenance?(powered?'#85c9c0':'#35434d'):l?.service ? '#e9c485' : l?.dockedPortId ? '#35434d' : v.color;
+      return `<rect x="${1000 * (a - start()) / (end() - start())}" y="${maintenance?(powered?7:9):l?.service || powered ? 3 : 7}" width="${1000 * (b - a) / (end() - start())}" height="${maintenance?(powered?6:2):l?.service || powered ? 14 : 6}" fill="${fill}" opacity="${maintenance?(powered ? .55 : .4):powered?0.95:l?.dockedPortId && !l.service ? 0.8 : 0.65}"/>`;
     }).join('');
     const burns = v.ledger.filter(e => e.kind === 'burn').map(e => `<path d="M${1000 * (e.t - start()) / (end() - start())} 4v12" stroke="${v.color}" stroke-width="1"/>`).join('');
-    return `<div class="timeline-row" data-vessel="${esc(v.name)}"><button class="timeline-name" data-select="${esc(v.id)}" style="color:${v.color}">${esc(v.name)}</button><div class="timeline-track"><svg viewBox="0 0 1000 20" preserveAspectRatio="none" aria-label="${esc(v.name)} activity; colored spans are flight, gold is cargo service">${blocks}${burns}</svg>${traffic?`<span class="future-region" style="left:${100*(traffic.frontier-start())/(end()-start())}%" title="Planned"></span><span class="frontier-cursor" style="left:${100*(traffic.frontier-start())/(end()-start())}%" title="Simulation head"></span>`:""}<span class="time-cursor"></span><button class="timeline-seek" aria-label="Scrub ${esc(v.name)} timeline"></button></div></div>`;
+    return `<div class="timeline-row" data-vessel="${esc(v.name)}"><button class="timeline-name" data-select="${esc(v.id)}" style="color:${v.color}">${esc(v.name)}</button><div class="timeline-track"><svg viewBox="0 0 1000 20" preserveAspectRatio="none" aria-label="${esc(v.name)} ${maintenance?'stationkeeping; small teal spans are corrections':'activity; colored spans are flight, gold is cargo service'}">${blocks}${burns}</svg>${traffic?`<span class="future-region" style="left:${Math.min(100,100*(traffic.frontier-start())/(end()-start()))}%" title="Planned"></span><span class="frontier-cursor" style="left:${Math.min(100,100*(traffic.frontier-start())/(end()-start()))}%" title="Simulation head"></span>`:""}<span class="time-cursor"></span><button class="timeline-seek" aria-label="Scrub ${esc(v.name)} timeline"></button></div></div>`;
   }).join('');
   document.querySelectorAll<HTMLButtonElement>('[data-select]').forEach(b => b.onclick = () => select(b.dataset.select!));
   document.querySelectorAll<HTMLButtonElement>('.timeline-seek').forEach(b => b.onclick = e => {
@@ -271,7 +276,7 @@ function publishState() {
 function loadSet(id: string) {
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
-  tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained'].includes(id)?'oblique':'top';orient(camera,cameraPreset);panMode=false;cameraControls();
+  tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service'].includes(id)?'oblique':'top';orient(camera,cameraPreset);panMode=false;cameraControls();
   worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=true;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
   $('load-status').textContent = 'Preparing scene…';
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
@@ -300,15 +305,15 @@ function loadSet(id: string) {
   worker.postMessage({revision, set});
 }
 
-function loadTraffic(definition:TrafficDefinition){
- traffic=new TrafficViewStore(definition);
+function loadTraffic(definition:TrafficDefinition|MaintainedDefinition){
+ traffic=isMaintained(definition)?new MaintainedViewStore(definition):new TrafficViewStore(definition);
  worker=new TrafficWorker({name:'continuous-traffic'});
  const generation=revision;pending=true;
- worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta;error?:string}>)=>{
+ worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta|MaintainedDelta;error?:string}>)=>{
   if(generation!==revision || e.data.generation!==revision || e.data.sequence!==sequence)return;
   pending=false;
   if(e.data.error){liveError=`Simulation paused: ${e.data.error}`;playing=false;$('load-status').textContent=liveError;updatePanels();return;}
-  const first=!ready;traffic!.ingest(e.data.delta!,!liveMode || !playing && !first);
+  const first=!ready;if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
   if(first){ready=true;selected=traffic!.definition.vessels[0].id;frame='inertial';t=0;playing=true;}
   else if(liveMode && playing)t=traffic!.frontier;
   refreshTraffic();
@@ -412,7 +417,8 @@ function draw() {
       if(arc.throttle===0 || arc.end<=t || arc.start>=stop || arc.end>end() || sampleVessel(v,t).activity?.kind==='fault')continue;
       const curve=[project3(sampleVessel(v,Math.max(start(),arc.start)).y,Math.max(start(),arc.start)),...v.samples.filter(s=>s.t>arc.start && s.t<arc.end).map(s=>project3(s.y,s.t)),project3(sampleVessel(v,arc.end).y,arc.end)];
       const length=curve.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p[0]-curve[i][0],p[1]-curve[i][1]),0);
-      const count=Math.max(2,Math.min(40,Math.ceil(length/14)));
+      const maintenance=!!run.maintained?.[id];
+      const count=Math.max(2,Math.min(maintenance?12:40,Math.ceil(length/(maintenance?32:14))));
       // Samples stay anchored to the whole arc, so whiskers disappear as flown
       // rather than crawling along the remaining portion during playback.
       for(let i=0;i<count;i++) {
@@ -424,10 +430,10 @@ function draw() {
         // Exhaust-side whiskers share the ship's burn schematic convention.
         // A visibility floor and square-root scale show small burns without
         // letting large engines dominate the drawing. Force includes cap taper.
-        const pixels=3+15*Math.sqrt(Math.min(1,force/v.ship.engine!.maxThrust));
+        const pixels=maintenance?2+7*Math.sqrt(Math.min(1,force/v.ship.engine!.maxThrust)):3+15*Math.sqrt(Math.min(1,force/v.ship.engine!.maxThrust));
         const tip:ScreenPoint=[point[0]-d[0]*pixels,point[1]+d[1]*pixels,point[2]-d[2]*pixels];
         if(occluder(point,spheres))continue;
-        worldPath([point,tip],'#f0cf8f',1,.75);
+        worldPath([point,tip],maintenance?'#85c9c0':'#f0cf8f',maintenance ? .8 : 1,maintenance ? .4 : .75);
         thrustWhiskers.push({vessel:id,t:epoch,force,from:[point[0],point[1]],to:[tip[0],tip[1]]});
       }
     }

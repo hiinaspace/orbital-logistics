@@ -21,7 +21,8 @@ planar guards on historical aiming tools. See docs/evidence/spatial-foundation.m
 docs/design/spatial-foundation/disposition.md. Multi-system content,
 production/upkeep and general demand dispatch remain future work. Prepared
 multi-ship overlays are admitted only after shared-stock/berth checks; they are not a
-joint fleet scheduler. Current burns/operations remain static; route intent is deferred.
+joint fleet scheduler. Prepared scenes use static burns/operations; maintained
+service resolves bounded flights online. General authored route intent is deferred.
 Prior periodic/topology studies and the recovered Fable consultation are preserved in
 docs/design/. M1/M2/M3a acceptance and M4a evidence are history, not current UI gates.
 Ballistic ports are finite burn-free target trajectories, safety-certified through
@@ -77,8 +78,16 @@ visiting ship. powered-ports-v4 owns one fully admitted canonical powered target
 one ballistic origin; no target impulses, operations, cargo/fuel exchange or attached
 maintenance. Half-open attachment windows permit release at burn start and capture
 at burn end. Preserve separate tank/mass ownership, exact physical target queries,
-version rejection and aggregate work/display budgets. This is not continuous adaptive
-maintenance; shared mass/event ownership must precede maintained-station service.
+version rejection and aggregate work/display budgets. The user accepted the finite witness and selected continuous maintenance/targeting.
+Read docs/design/maintained-service/README.md and docs/evidence/maintained-service.md.
+The separate maintained-relay-v1 runtime appends immutable eight-unit canonical
+forecasts, pays station fuel once and admits visit/return pairs online against the
+actual target. Historical physics is evicted at the head;128-unit disposable history
+retains held-head playback. Bounded failed plans retry later windows, free-flight
+faults isolate and attached faults halt before unsupported station thrust. The
+fixture is coplanar/one visitor/no relay exchange, with explicit origin fuel imports.
+Shared mass/refueling, multi-visitor scheduling and arbitrary online spatial targeting
+remain separate work; preserve finite maintained and analytical/surface witnesses.
 Follow/Chase and selection-pivot orbiting are presentation only; see
 docs/design/camera-tracking.md. Atmosphere, staging, attitude/slew limits and arbitrary
 ground latitude/spin axes remain deferred.

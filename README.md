@@ -25,6 +25,8 @@ paid changes between inclined circular orbits around different node axes.
 **Orison · inclined transfer** delivers freight to a 35° depot with smooth finite-thrust
 departure and braking, an acceleration cap and paid fuel. **Orison · maintained relay**
 adds a perturbed station with its own paid maintenance burns and a visiting ship.
+**Orison · maintained service** computes station corrections and repeated paid
+visit/return flights online, with finite tanks and rolling history.
 **Surface view** shows the close scale; choose a slower rate for launch or landing,
 then Fit or a ship frame to follow the orbit. Playback starts
 immediately. Click a ship or station to inspect it; overlapping objects open a chooser.
@@ -58,12 +60,17 @@ npm run evidence:surface-traffic
 npm run evidence:spatial-viewer
 npm run evidence:steering
 npm run evidence:stationkeeping
+npm run evidence:maintained-service
 npx tsx scripts/stationkeeping-fixture.ts --check
 npx tsx scripts/steering-fixture.ts --check
 npx tsx scripts/spatial-viewer-fixture.ts --check
 npx tsx scripts/model-set-fixtures.ts --check
 uv run --project spikes/numerics --group dev --group plots pre-commit run --config spikes/numerics/.pre-commit-config.yaml --all-files
 ```
+
+[Continuous maintained-service evidence](docs/evidence/maintained-service.md) and its
+[Astra-reviewed contract](docs/design/maintained-service/README.md) cover online
+corrections, actual-target paired visits, retries, paid fuel and bounded history.
 
 [Stationkeeping evidence](docs/evidence/stationkeeping.md), the
 [Astra-reviewed contract](docs/design/stationkeeping/README.md) and

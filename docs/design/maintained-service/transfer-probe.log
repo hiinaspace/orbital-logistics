@@ -1,0 +1,59 @@
+{
+  departure: 6,
+  rows: [
+    {
+      start: 6,
+      evaluations: 44,
+      fuel: 0.7687938106861449,
+      ms: 376.4990560000001
+    }
+  ],
+  error: 'Force bound exceeded'
+}
+{
+  departure: 14,
+  rows: [],
+  error: 'Unsafe shooting candidate: unsupported-approach'
+}
+{ departure: 22, rows: [], error: 'Force bound exceeded' }
+{
+  departure: 30,
+  rows: [
+    {
+      start: 30,
+      evaluations: 51,
+      fuel: 0.6142726621856418,
+      ms: 415.64068900000007
+    },
+    {
+      start: 46,
+      evaluations: 44,
+      fuel: 0.45560356219828524,
+      ms: 385.55022799999983
+    }
+  ]
+}
+{
+  departure: 38,
+  rows: [
+    {
+      start: 38,
+      evaluations: 44,
+      fuel: 0.7521986696401806,
+      ms: 383.04067499999974
+    }
+  ],
+  error: 'Force bound exceeded'
+}
+{
+  departure: 46,
+  rows: [
+    {
+      start: 46,
+      evaluations: 44,
+      fuel: 0.7403055118496991,
+      ms: 376.16722200000004
+    }
+  ],
+  error: 'Force bound exceeded'
+}

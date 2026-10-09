@@ -1,0 +1,220 @@
+{
+  "elapsedMs": 26697.115357000002,
+  "maxRequestMs": 526.5496709999989,
+  "peak": {
+    "runnerNodes": 61675,
+    "frames": 2063,
+    "chunks": 22,
+    "physicalChunks": 6,
+    "visits": 5,
+    "packetBytes": 615058,
+    "viewBytes": 6147705
+  },
+  "snapshot": {
+    "frontier": 512,
+    "current": {
+      "t": 512,
+      "ships": [
+        {
+          "t": 512,
+          "y": [
+            -2.3311090359155315,
+            -1.2908900932599847,
+            0,
+            0.09851696492072673,
+            -0.5335857796187148,
+            0
+          ],
+          "propellant": 0.7373938935750173,
+          "fuelUsed": 4.121836246289709,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 0,
+            "cargoMass": 0.05,
+            "fuelUsed": 4.121836246289709,
+            "ports": [
+              {
+                "id": "Equator",
+                "cargo": 0,
+                "propellant": 0
+              },
+              {
+                "id": "Meridian",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ]
+          },
+          "activity": {
+            "kind": "flying"
+          }
+        }
+      ]
+    },
+    "resources": {
+      "t": 512,
+      "stocks": [
+        {
+          "id": "Equator",
+          "cargo": 0,
+          "propellant": 3.8330047350635357
+        },
+        {
+          "id": "Meridian",
+          "cargo": 0,
+          "propellant": 0
+        }
+      ],
+      "cargoImported": 0,
+      "cargoExported": 0,
+      "fuelImported": 3.792234874928261,
+      "fuelExported": 0
+    },
+    "stats": {
+      "frames": 2061,
+      "chunks": 22,
+      "physicalChunks": 6,
+      "visits": 4,
+      "runnerNodes": 61675,
+      "completed": 9,
+      "planningFailed": 17,
+      "controllerChecks": 69,
+      "controllerCorrected": 54,
+      "controllerFailed": 0,
+      "controllerEvaluations": 927,
+      "maxVisitEvaluations": 102,
+      "planningPending": 0,
+      "stationFuel": 0.2810146514724714,
+      "stationFuelUsed": 0.3189853485275286,
+      "shipFuelUsed": 4.121836246289709,
+      "packetBytes": 5631053
+    }
+  },
+  "maxPositionError": 0.00933691565272786,
+  "maxVelocityError": 0.008353641124189053,
+  "fuelConservationError": -1.7763568394002505e-15,
+  "admitted": [
+    {
+      "departure": 30,
+      "arrival": 60,
+      "evaluations": 95,
+      "leaseChunks": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "departure": 70,
+      "arrival": 100,
+      "evaluations": 102,
+      "leaseChunks": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "departure": 110,
+      "arrival": 140,
+      "evaluations": 95,
+      "leaseChunks": [
+        13,
+        14,
+        15,
+        16,
+        17
+      ]
+    },
+    {
+      "departure": 150,
+      "arrival": 180,
+      "evaluations": 95,
+      "leaseChunks": [
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "departure": 190,
+      "arrival": 220,
+      "evaluations": 95,
+      "leaseChunks": [
+        23,
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "departure": 230,
+      "arrival": 260,
+      "evaluations": 95,
+      "leaseChunks": [
+        28,
+        29,
+        30,
+        31,
+        32
+      ]
+    },
+    {
+      "departure": 382,
+      "arrival": 412,
+      "evaluations": 95,
+      "leaseChunks": [
+        47,
+        48,
+        49,
+        50,
+        51
+      ]
+    },
+    {
+      "departure": 422,
+      "arrival": 452,
+      "evaluations": 95,
+      "leaseChunks": [
+        52,
+        53,
+        54,
+        55,
+        56
+      ]
+    },
+    {
+      "departure": 462,
+      "arrival": 492,
+      "evaluations": 102,
+      "leaseChunks": [
+        57,
+        58,
+        59,
+        60,
+        61
+      ]
+    },
+    {
+      "departure": 502,
+      "arrival": 532,
+      "evaluations": 95,
+      "leaseChunks": [
+        62,
+        63,
+        64,
+        65,
+        66
+      ]
+    }
+  ]
+}

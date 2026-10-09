@@ -1,0 +1,314 @@
+{
+  "bundle": {
+    "scenario": {
+      "schemaVersion": 3,
+      "modelVersion": "rk4-canonical-v3",
+      "id": "maintained-relay",
+      "units": {
+        "length": "Orison radius",
+        "time": "√(R³/μ)",
+        "mass": "mass unit"
+      },
+      "epoch": 30,
+      "duration": 32,
+      "policy": {
+        "step": 0.00390625,
+        "maxNodes": 65536,
+        "maxSubdivision": 20
+      },
+      "bodies": [
+        {
+          "id": "Orison",
+          "mu": 1,
+          "radius": 1,
+          "rail": {
+            "kind": "fixed",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "id": "Mote",
+          "mu": 0.004,
+          "radius": 0.12,
+          "rail": {
+            "kind": "circular",
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "u": [
+              1,
+              0,
+              0
+            ],
+            "v": [
+              0,
+              1,
+              0
+            ],
+            "radius": 6,
+            "rate": 0.06817732869618864,
+            "phase": 0.4
+          }
+        }
+      ],
+      "ship": {
+        "id": "Tern",
+        "state": [
+          -1.1776356301022182,
+          1.632589926944883,
+          0,
+          -0.5722648256767838,
+          -0.4088946481174811,
+          0
+        ],
+        "dryMass": 1,
+        "cargoMass": 0.05,
+        "propellant": 0.9,
+        "tankCapacity": 1,
+        "exhaustVelocity": 3,
+        "engine": {
+          "maxThrust": 0.8,
+          "maxAcceleration": 0.4
+        }
+      },
+      "logistics": {
+        "modelVersion": "powered-ports-v4",
+        "ports": [
+          {
+            "id": "Equator",
+            "rail": {
+              "kind": "ballistic",
+              "epoch": 30,
+              "validUntil": 62,
+              "state": [
+                -1.1776356301022182,
+                1.632589926944883,
+                0,
+                -0.5722648256767838,
+                -0.4088946481174811,
+                0
+              ],
+              "policy": {
+                "step": 0.00390625,
+                "maxNodes": 65536,
+                "maxSubdivision": 20
+              },
+              "minClearance": 0.2,
+              "provenance": "Committed online target lease 30–62; immutable canonical chunk chain."
+            },
+            "cargo": 0,
+            "cargoCapacity": 0,
+            "propellant": 0,
+            "tankCapacity": 0,
+            "serviceDuration": 0.25
+          },
+          {
+            "id": "Meridian",
+            "rail": {
+              "kind": "powered",
+              "epoch": 30,
+              "validUntil": 62,
+              "state": [
+                1.0185722616365214,
+                -2.821674983486013,
+                0,
+                0.5429889696364884,
+                0.19613100743393874,
+                0
+              ],
+              "policy": {
+                "step": 0.00390625,
+                "maxNodes": 65536,
+                "maxSubdivision": 20
+              },
+              "minClearance": 0.2,
+              "provenance": "Committed online target lease 30–62; immutable canonical chunk chain.",
+              "propulsion": {
+                "dryMass": 4,
+                "propellant": 0.565897367701905,
+                "tankCapacity": 0.6,
+                "exhaustVelocity": 3,
+                "engine": {
+                  "maxThrust": 0.06,
+                  "maxAcceleration": 0.012
+                }
+              },
+              "program": {
+                "schemaVersion": 3,
+                "id": "station-lease-30",
+                "burns": [],
+                "thrustArcs": [
+                  {
+                    "id": "maintain-40-0",
+                    "start": 40,
+                    "end": 41.9,
+                    "direction": [
+                      -0.14508456374199727,
+                      0.9894192586380125,
+                      0
+                    ],
+                    "throttle": 0.0751028460825394
+                  },
+                  {
+                    "id": "maintain-40-1",
+                    "start": 42.1,
+                    "end": 44,
+                    "direction": [
+                      0.32067412401969636,
+                      -0.9471895830213719,
+                      0
+                    ],
+                    "throttle": 0.10688324851779085
+                  },
+                  {
+                    "id": "maintain-48-0",
+                    "start": 48,
+                    "end": 49.9,
+                    "direction": [
+                      0.5592053002901699,
+                      -0.8290292106599024,
+                      0
+                    ],
+                    "throttle": 0.013520410150681625
+                  },
+                  {
+                    "id": "maintain-48-1",
+                    "start": 50.1,
+                    "end": 52,
+                    "direction": [
+                      0.5376157950320851,
+                      0.8431899293350336,
+                      0
+                    ],
+                    "throttle": 0.036770413787653375
+                  },
+                  {
+                    "id": "maintain-56-0",
+                    "start": 56,
+                    "end": 57.9,
+                    "direction": [
+                      0.04076923856714491,
+                      0.9991685889711782,
+                      0
+                    ],
+                    "throttle": 0.13131493157116442
+                  },
+                  {
+                    "id": "maintain-56-1",
+                    "start": 58.1,
+                    "end": 60,
+                    "direction": [
+                      0.5340839685882541,
+                      -0.8454314368989484,
+                      0
+                    ],
+                    "throttle": 0.03914522393614267
+                  }
+                ]
+              },
+              "minPropellant": 0
+            },
+            "cargo": 0,
+            "cargoCapacity": 0,
+            "propellant": 0,
+            "tankCapacity": 0,
+            "serviceDuration": 0.25
+          }
+        ],
+        "cargoCapacity": 0.1,
+        "capture": {
+          "position": 1e-7,
+          "velocity": 1e-7
+        },
+        "objective": {
+          "destinationId": "Meridian",
+          "quota": 0.05,
+          "returnPortId": "Equator",
+          "minPropellant": 0.05,
+          "hardwareCost": 0
+        }
+      }
+    },
+    "program": {
+      "schemaVersion": 3,
+      "id": "Tern:0",
+      "burns": [],
+      "thrustArcs": [
+        {
+          "id": "trip-0-30-0",
+          "start": 30,
+          "end": 31.6,
+          "direction": [
+            0.8995132223690259,
+            -0.436893537126943,
+            0
+          ],
+          "throttle": 0.4683241320787663
+        },
+        {
+          "id": "trip-0-30-1",
+          "start": 42.2,
+          "end": 44,
+          "direction": [
+            -0.9787020886992306,
+            0.20528570718820968,
+            0
+          ],
+          "throttle": 0.17897716970989866
+        },
+        {
+          "id": "trip-0-46-0",
+          "start": 46,
+          "end": 47.6,
+          "direction": [
+            0.9925117381583002,
+            -0.12214929233519896,
+            0
+          ],
+          "throttle": 0.13620744614556723
+        },
+        {
+          "id": "trip-0-46-1",
+          "start": 58.2,
+          "end": 60,
+          "direction": [
+            -0.9998797007788965,
+            -0.015510769494263624,
+            0
+          ],
+          "throttle": 0.20948733951092918
+        }
+      ],
+      "operations": [
+        {
+          "id": "Tern:0:relay",
+          "t": 44,
+          "portId": "Meridian",
+          "kind": "dock"
+        },
+        {
+          "id": "Tern:0:release",
+          "t": 46,
+          "portId": "Meridian",
+          "kind": "undock"
+        },
+        {
+          "id": "Tern:0:home",
+          "t": 60,
+          "portId": "Equator",
+          "kind": "dock"
+        }
+      ]
+    }
+  },
+  "evaluations": 95,
+  "capturePosition": 2.5690879845023565e-13,
+  "captureVelocity": 5.0940971718527383e-14,
+  "ms": 1839.2676110000002
+}

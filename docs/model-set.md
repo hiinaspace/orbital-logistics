@@ -266,4 +266,23 @@ complete target safety/reserve, exact epoch validity and explicit aggregate work
 display limits. Display samples never drive capture. This is the finite ownership
 witness before continuous maintained traffic, shared mass/refuelling or runtime
 maintenance. See [review/contract](design/stationkeeping/README.md) and
-[evidence](evidence/stationkeeping.md). Human viewing of the new set and cameras is next.
+[evidence](evidence/stationkeeping.md). The user accepted the finite witness and tracking cameras.
+
+
+## Continuous maintained relay — 2026-10-08
+
+The user selected continuous stationkeeping/actual-target navigation. After
+[Astra architecture review](design/maintained-service/README.md), **Orison · maintained
+service** appends immutable canonical target forecasts and admits paid visit/return
+pairs online. Eight-unit controls and quiet relay dwell preserve separate tank/mass
+ownership. One visitor carries its cargo throughout; the origin refuels from finite
+stock with explicit supply, while relay exchange remains deferred.
+
+Failed bounded plans retry later windows; free-flight faults isolate the visitor and
+attached faults halt before unsupported maintenance. Canonical physics retains only
+current/future owners;128-unit disposable history supports the existing Pause/Play/Live
+semantics. Station whiskers and correction lanes are smaller, sparse teal marks.
+[Evidence](evidence/maintained-service.md) records512-unit repeated service, independent
+early/late replay, conservation, partition invariance and storage limits. Human
+viewing of the new continuous set is next. Shared maintained-station exchange/mass,
+general fleet routing and arbitrary online spatial transfers remain separate work.

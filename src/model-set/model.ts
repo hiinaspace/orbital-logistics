@@ -183,7 +183,7 @@ export function sampleVessel(v: VesselView, t: number): ViewSample {
 }
 function bracket(v: VesselView, t: number): [ViewSample, ViewSample] {
   const samples = v.samples;
-  if (!Number.isFinite(t) || t < samples[0].t || t > samples.at(-1)!.t) throw new Error('Display epoch outside set');
+  if (!Number.isFinite(t) || t < samples[0].t || t > samples.at(-1)!.t) throw new Error(`Display epoch outside set: ${v.id}, t=${t}, range=[${samples[0].t}, ${samples.at(-1)!.t}]`);
   let lo = 0, hi = samples.length - 1;
   while (lo < hi) {
     const mid = Math.ceil((lo + hi) / 2);
