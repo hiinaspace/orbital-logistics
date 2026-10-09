@@ -30,6 +30,7 @@ import maintainedSet from '../fixtures/model-sets/orison-maintained.json';
 import steered from '../fixtures/model-sets/orison-steered.json';
 import crossingPlanes from '../fixtures/model-sets/crossing-planes.json';
 import {directionAt} from './sim/steering';
+import {rocketAxis,drawRocket} from './view/rocket';
 import {cameraPoint,cameraVector,orient,pan,zoom,chaseRig,orbitAround,occluder,visibleSegment,type Camera,type CameraPreset,type ScreenPoint,type Sphere} from './model-set/camera';
 import {TrafficViewStore} from './traffic/view';
 import type {TrafficDefinition} from './traffic/planner';
@@ -66,6 +67,7 @@ let ready = false, width = 900, height = 600;
 const camera:Camera={yaw:0,pitch:Math.PI/2,center:[0,0,0],scale:100};
 let cameraPreset:CameraPreset|'custom'='top',panMode=false,spheres:Sphere[]=[],seeThroughBodies=false;
 let tracking:'off'|'follow'|'chase'='off',trackingOffset:Vec3=[0,0,0];
+const setSpeeds=new Map<string,number>();let currentSet='';
 let lastFrame = performance.now(), lastPanel = 0, playbackRate = 1;
 let layers = {orbits: true, trails: true, plan: true, labels: true};
 let savedLayers = {...layers}, cleared = false;
@@ -316,12 +318,14 @@ function updatePanels() {
 function publishState() {
   $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, frame, selected, layers, traffic:traffic?{frontier:traffic.frontier,oldest:traffic.oldest,pending,sequence,live:liveMode,stats:run?.traffic?.stats,halt:traffic.halt,error:liveError}:undefined,
     staging:run?.staging,
-    ships: run?.vessels.map(v => !isPresent(v,t)?({id:v.id,present:false,lifetime:v.lifetime}):({id: v.id,present:true, ...sampleVessel(v, t), screen: project(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),occludedBy:occluder(project3(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),spheres)?.id})),
+    ships: run?.vessels.map(v => !isPresent(v,t)?({id:v.id,present:false,lifetime:v.lifetime}):({id: v.id,present:true, ...sampleVessel(v, t), ...(v.glyph?{glyph:v.glyph,axis:rocketAxis(v,sampleVessel(v,t),t)}:{}), screen: project(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),occludedBy:occluder(project3(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),spheres)?.id})),
     labels:placedLabels.map(({id,anchor,alpha,left,top})=>({id,anchor,alpha,left,top})),
     maintenance:run?.maintained?Object.fromEntries(Object.entries(run.maintained).map(([id,v])=>[id,{...sampleVessel(v,t),error:orbitError(sampleVessel(v,t).y,run!.stations.find(p=>p.id===id)!.maintenance!.reference)}])):undefined,
     stocks: run ? stockAt(run, t) : [], events, thrustWhiskers, camera: {...camera,preset:cameraPreset,panMode,tracking,trackingOffset}, seeThroughBodies, hits});
 }
 function loadSet(id: string) {
+  if(currentSet)setSpeeds.set(currentSet,playbackRate);currentSet=id;
+  playbackRate=setSpeeds.get(id)??(id==='selene-staging'?.1:1);
   const speed=$<HTMLInputElement>('speed');speed.max=String(Math.log2(maximumPlaybackRate(id)));playbackRate=Math.min(playbackRate,maximumPlaybackRate(id));speed.value=String(Math.log2(playbackRate));showSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
@@ -530,8 +534,13 @@ function draw() {
       const direction=cameraVector(camera,transformDirection(run!,state.thrust.direction,t,frame)),dx=direction[0],dy=-direction[1],length=Math.hypot(dx,dy);
       if(length>1e-10)path([[p[0]-dx*5,p[1]-dy*5],[p[0]-dx*15,p[1]-dy*15]],'#ffe0a0',2,.9);
     }
-    const angle = Math.hypot(velocity[0],velocity[1]) > 1e-10 ? Math.atan2(-velocity[1],velocity[0]) : 0;
-    ctx.save(); ctx.translate(...p); ctx.rotate(angle); ctx.beginPath(); ctx.moveTo(6, 0); ctx.lineTo(-4, -3.5); ctx.lineTo(-2, 0); ctx.lineTo(-4, 3.5); ctx.closePath(); ctx.fillStyle = v.color; ctx.fill(); ctx.restore();
+    ctx.save();ctx.translate(...p);
+    if(v.glyph)drawRocket(ctx,v.glyph,v.color,cameraVector(camera,transformDirection(run!,rocketAxis(v,state,t),t,frame)));
+    else {
+      const angle=Math.hypot(velocity[0],velocity[1])>1e-10?Math.atan2(-velocity[1],velocity[0]):0;
+      ctx.rotate(angle);ctx.beginPath();ctx.moveTo(6,0);ctx.lineTo(-4,-3.5);ctx.lineTo(-2,0);ctx.lineTo(-4,3.5);ctx.closePath();ctx.fillStyle=v.color;ctx.fill();
+    }
+    ctx.restore();
     if (selected === v.id) { ctx.beginPath(); ctx.arc(...p, 11, 0, Math.PI * 2); ctx.strokeStyle = v.color; ctx.globalAlpha = 0.65; ctx.stroke(); ctx.globalAlpha = 1; }
     if (!state.logistics?.dockedPortId || selected===v.id) label(v.id, v.name, ...p, v.color);
     hits.push({id: v.id, name: v.name, x: p[0], y: p[1],depth:project3(state.y,epoch)[2]});

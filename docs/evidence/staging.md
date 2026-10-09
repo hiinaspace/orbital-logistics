@@ -63,3 +63,29 @@ runtime/readability evidence; the owner's subjective viewing gate remains.
 This slice does not implement repeated launches, turnaround refuelling, atmosphere,
 contact geometry, attitude dynamics, separation kicks, multibody surface operations
 or station-network handoffs.
+
+## Presentation follow-up — 2026-10-09
+
+The user accepted the physical/visual choreography and requested thrust-aligned
+rocket schematics plus a slower viewing scale. Staged actors now draw rockets with
+commanded axes, inherited pre-burn direction, deterministic coast heading and pad
+normal support. They are foreshortened in3D and use an end-on symbol when the axis
+projects to a point. Staging starts at0.1×; each set retains its own chosen speed
+within a page session.
+
+Build/typecheck and19 distinct production Chrome checks pass across staging, viewer,
+tracking and3D controls. The final staging case repeats after a canvas-probe tolerance
+correction: native canvas transform translation differs from the double-precision
+screen position by about4e-6px, so matching uses a .01px drawing tolerance. At t1.6,
+booster thrust opposes velocity with cosine-.99822. Actual painted rocket-axis matrix
+matches that thrust direction, and the glyph differs from the old velocity arrow.
+Coast headings repeat through rewind, landed axis follows the pad normal, and a
+chosen.25× rate survives switching to1× orbital service and back.
+
+Five focused staging physics/ownership tests and the complete three-step independent
+DOP853/clearance/resource/drawing witness were repeated. Oracle inputs/results and
+numerical errors are unchanged; only presentation packet bytes change.
+[Recovery rocket screenshot](staging-rocket.png) was visually inspected in installed
+headless Chrome. Full176 simulation checks remain the preceding physical slice's
+baseline; this follow-up does not claim a second full numerical-suite run or a
+continuous multistage rollout.

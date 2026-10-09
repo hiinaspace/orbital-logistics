@@ -2,7 +2,7 @@ import {directionAt} from '../sim/steering';
 import { Runner, type LedgerEntry, type Sample, type EventBoundary } from '../sim/runner';
 import {resourcesAt,type ResourceAnchor,type Depot} from '../traffic/resources';
 import {portState} from '../sim/logistics';
-import { validateBundle, type Bundle, type Port, type Scenario, type Rail, type State, type ThrustArc } from '../sim/schema';
+import { validateBundle, type Bundle, type Port, type Scenario, type Rail, type State, type Vec3, type ThrustArc } from '../sim/schema';
 
 export interface Station { id: string; role: string; berths: number; maintenance?:{reference:Extract<Rail,{kind:'circular'}>;checks:{t:number;outcome:string;before:number[];after?:number[];evaluations:number}[]} }
 export interface Vessel { name: string; color: string; cargo: string; bundle: Bundle }
@@ -15,6 +15,7 @@ export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
 export interface ViewSample extends Sample {activity?:Activity;mass?:number}
 export interface VesselView {
+ glyph?:'rocket'|'stack';initialAxis?:Vec3;
  inheritedFuelUsed?:number;
  lifetime?:{start:number;end:number;retired?:boolean;parentId?:string};
  id:string;name:string;color:string;cargo:string;ship:Scenario['ship'];ports:Port[];cargoCapacity:number;

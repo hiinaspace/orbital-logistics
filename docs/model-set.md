@@ -379,3 +379,32 @@ bytes have aggregate admission bounds.
 [Astra disposition](design/staging/disposition.md) and [validation](evidence/staging.md)
 record the bounded contracts. Atmosphere, hull/contact physics, separation kicks,
 continuous turnaround and connection to maintained stations remain subsequent work.
+
+## Surface detail and playback — 2026-10-09 follow-up
+
+The user accepted staged launch/recovery as a model-train analogue of a launchpad
+catch, and prefers watching it around0.1×. The set now starts at0.1×; playback speeds
+are remembered separately for each set during the page session. This changes the
+viewer clock rate, not physical durations or integration policy.
+
+Staged actors use rocket silhouettes; the assembly includes a visible join. Their
+axis follows commanded thrust during burns, holds the last commanded direction
+while coasting, inherits the assembly's release direction before the booster's next
+burn, and follows the outward pad normal while supported. Camera/frame transforms
+rotate this world axis as a direction rather than subtracting reference velocity.
+End-on views have a circular nose/nozzle symbol. This is presentation of steering
+commands, not a new rigid-body attitude or angular-momentum model.
+
+For larger networks, the proposed boundary is a funded surface-operation contract:
+actual departure/arrival times, orbital handoff state and mass, consumed fuel,
+delivered freight, booster recovery and turnaround availability. A pre-solved local
+trajectory can supply close playback without online reintegration. At network scale,
+most stage geometry can be hidden; inspection can show the local sequence or slow
+the shared clock explicitly. Physics/resource outcomes must not change with zoom.
+Pre-solving addresses computation cost; it does not make short events more visible
+at fast playback. This contract/provider abstraction is a proposal, not an implemented
+continuous staged scheduler.
+
+[Orekit's generated ephemeris interface](https://www.orekit.org/site-orekit-latest/apidocs/org/orekit/propagation/BoundedPropagator.html)
+provides a relevant precedent for querying bounded trajectories after numerical
+integration. No Orekit dependency was added.

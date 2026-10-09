@@ -1,3 +1,4 @@
+import {directionAt} from '../sim/steering';
 import {Runner,type Sample} from '../sim/runner';
 import {portState} from '../sim/logistics';
 import {validateBundle,type Scenario,type Program,type Bundle} from '../sim/schema';
@@ -70,7 +71,7 @@ function segmentView(h:{id:string;name:string;color:string},runner:Runner,end:nu
  const count=Math.ceil((end-start)*2048),ledger=runner.ledger;
  const times=[...new Set([start,end,...Array.from({length:count+1},(_,i)=>start+(end-start)*i/count),...ledger.map(e=>e.t),...(bundle.program.thrustArcs??[]).flatMap(a=>a.steering?.keys.map(k=>a.start+k.offset)??[])])].sort((a,b)=>a-b);
  ok(times.length<=20000,'display storage budget exceeded');
- return {...h,ship:s.ship,cargo:'Freight',ports:s.logistics!.ports,cargoCapacity:s.logistics!.cargoCapacity,continuousFuel:true,portSamples:{},arcs:bundle.program.thrustArcs!,samples:times.map(t=>runner.sample(t)),ledger,boundaries:runner.eventBoundaries};
+ return {...h,glyph:'rocket',ship:s.ship,cargo:'Freight',ports:s.logistics!.ports,cargoCapacity:s.logistics!.cargoCapacity,continuousFuel:true,portSamples:{},arcs:bundle.program.thrustArcs!,samples:times.map(t=>runner.sample(t)),ledger,boundaries:runner.eventBoundaries};
 }
 
 export function prepareStaged(value:unknown):StagedRun {
@@ -96,6 +97,9 @@ export function prepareStaged(value:unknown):StagedRun {
  ok(Math.abs(totalBefore-totalAfter)<1e-12&&momentumBefore.every((v,i)=>Math.abs(v-momentumAfter[i])<1e-12),'separation mass/momentum mismatch');
  const separation:SeparationRecord={t:split,parentId:d.stack.id,children:[d.booster.id,d.payload.id],state:[...before.y],beforeMass:totalBefore,afterMass:totalAfter,momentumBefore,momentumAfter,reservedPayloadFuel:d.payload.propellant,boosterFuel:before.propellant};
  const assembly=segmentView(d.stack,stack,split),lower=segmentView(d.booster,booster,end),upper=segmentView(d.payload,payload,end);
+ assembly.glyph='stack';assembly.initialAxis=[...d.programs.stack.thrustArcs![0].direction];
+ const arc=d.programs.stack.thrustArcs!.find(a=>a.end===split)!;
+ lower.initialAxis=directionAt(arc,arc.end-arc.start);upper.initialAxis=[...lower.initialAxis];
  lower.inheritedFuelUsed=before.fuelUsed??0;lower.cargoCapacity=0;
  assembly.lifetime={start:0,end:split,retired:true};lower.lifetime={start:split,end,parentId:d.stack.id};upper.lifetime={start:split,end,parentId:d.stack.id};
  const event:ViewerEvent={t:split,kind:'separation',id:d.separation.id,deltaV:0,fuelUsed:0,propellantBefore:before.propellant,propellantAfter:before.propellant,detail:`${d.booster.name} + ${d.payload.name}`};
