@@ -1,5 +1,5 @@
 import { bodyState } from './dynamics';
-import type { Logistics, Port, State } from './schema';
+import type { Logistics, Port, State,Vec3 } from './schema';
 
 export interface LogisticsState {
   operationCursor: number; cargoMass: number; ports: {id: string; cargo: number; propellant: number}[];
@@ -10,11 +10,16 @@ export interface LogisticsState {
 export function copyLogistics(state: LogisticsState): LogisticsState {
   return {...state, ports: state.ports.map(p => ({...p})), ...(state.service ? {service: {...state.service}} : {})};
 }
+export function surfaceBodyState(port:Port,t:number):State{
+ if(port.rail.kind!=='surface')throw Error('Surface center requires support');
+ const r=port.rail;
+ return r.bodyRail?bodyState({id:r.bodyId,mu:0,radius:0,rail:r.bodyRail},t):[...r.center,0,0,0];
+}
 export function portState(port: Port, t: number): State {
   if((port.rail.kind==='ballistic'||port.rail.kind==='powered'))throw new Error('Ballistic port requires a canonical ephemeris');
-  if(port.rail.kind==='surface' && port.rail.latitude!==undefined){
-    const r=port.rail,a=r.phase+r.rate*t,xy=r.radius*Math.cos(r.latitude!),z=r.radius*Math.sin(r.latitude!);
-    return [r.center[0]+xy*Math.cos(a),r.center[1]+xy*Math.sin(a),r.center[2]+z,-xy*r.rate*Math.sin(a),xy*r.rate*Math.cos(a),0];
+  if(port.rail.kind==='surface' && (port.rail.latitude!==undefined||port.rail.bodyRail)){
+    const r=port.rail,a=r.phase+r.rate*t,xy=r.radius*Math.cos(r.latitude??0),z=r.radius*Math.sin(r.latitude??0),b=surfaceBodyState(port,t);
+    return [b[0]+xy*Math.cos(a),b[1]+xy*Math.sin(a),b[2]+z,b[3]-xy*r.rate*Math.sin(a),b[4]+xy*r.rate*Math.cos(a),b[5]];
   }
   return bodyState({id: port.id, mu: 0, radius: 0, rail: {...port.rail,kind:'circular'}}, t);
 }
@@ -33,5 +38,5 @@ export function logisticsResult(spec: Logistics, state: LogisticsState, propella
 
 export function surfaceNormal(port:Port,t:number):[number,number,number]{
  if(port.rail.kind!=='surface')throw Error('Surface normal requires a surface port');
- const y=portState(port,t),r=port.rail;return y.slice(0,3).map((v,i)=>(v-r.center[i])/r.radius) as [number,number,number];
+ const r=port.rail,a=r.phase+r.rate*t,latitude=r.latitude??0;return [Math.cos(latitude)*Math.cos(a),Math.cos(latitude)*Math.sin(a),Math.sin(latitude)] as Vec3;
 }

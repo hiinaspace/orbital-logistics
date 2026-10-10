@@ -1,0 +1,368 @@
+{
+  "schemaVersion": 1,
+  "id": "selene-ground",
+  "name": "Selene \u00b7 Northern ground service",
+  "extent": 1.2,
+  "frameExtents": {
+    "moon": 0.026,
+    "Northhaven": 0.04,
+    "Tern": 0.045
+  },
+  "description": "Tern carries supplies from Selene's northern surface to an inclined Crescent depot, then lands back at Northhaven.",
+  "provenance": "Fictional circular binary, actual moving body-relative pad at 20\u00b0 north with explicitly synchronous spin. Full two-body gravity, ballistic inclined depot, independently authored smooth finite-thrust sortie and paid captures. Finite prepared scene.",
+  "rotating": {
+    "name": "Planet\u2013moon rotating",
+    "rate": 1,
+    "phase": 0
+  },
+  "stations": [
+    {
+      "id": "Northhaven",
+      "role": "Lunar surface freight terminal",
+      "berths": 1
+    },
+    {
+      "id": "Crescent",
+      "role": "Inclined lunar depot",
+      "berths": 1
+    }
+  ],
+  "vessels": [
+    {
+      "name": "Tern",
+      "color": "#efb878",
+      "cargo": "Supplies",
+      "glyph": "rocket",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "selene-ground",
+          "units": {
+            "length": "planet\u2013moon separation",
+            "time": "inverse binary angular rate",
+            "mass": "ship dry mass"
+          },
+          "epoch": 0,
+          "duration": 0.5,
+          "policy": {
+            "step": 0.0001220703125,
+            "maxNodes": 32768,
+            "maxSubdivision": 20
+          },
+          "bodies": [
+            {
+              "id": "primary",
+              "mu": 0.98,
+              "radius": 0.08,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.02,
+                "rate": 1,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "moon",
+              "mu": 0.02,
+              "radius": 0.025,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.98,
+                "rate": 1,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "Tern",
+            "state": [
+              1.0034932552122684,
+              0.0,
+              0.008550845603285045,
+              0.0,
+              1.0034932552122684,
+              0.0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 6,
+            "tankCapacity": 6,
+            "exhaustVelocity": 2.6832815729997477,
+            "engine": {
+              "maxThrust": 1023.9999999999999,
+              "maxAcceleration": 38.39999999999999
+            }
+          },
+          "logistics": {
+            "modelVersion": "moving-surface-ports-v6",
+            "ports": [
+              {
+                "id": "Northhaven",
+                "rail": {
+                  "kind": "surface",
+                  "bodyId": "moon",
+                  "centerHeight": 1e-06,
+                  "latitude": 0.3490658503988659,
+                  "rate": 1,
+                  "phase": 0
+                },
+                "cargo": 0.2,
+                "cargoCapacity": 1,
+                "propellant": 10,
+                "tankCapacity": 10,
+                "serviceDuration": 0.005590169943749475
+              },
+              {
+                "id": "Crescent",
+                "rail": {
+                  "kind": "ballistic",
+                  "epoch": 0,
+                  "validUntil": 0.5,
+                  "state": [
+                    0.9994369149833409,
+                    -0.02823399321498092,
+                    0.007074458499898834,
+                    0.5730216802092709,
+                    1.426739598891962,
+                    0.20856283518538118
+                  ],
+                  "policy": {
+                    "step": 0.0001220703125,
+                    "maxNodes": 16384,
+                    "maxSubdivision": 20
+                  },
+                  "minClearance": 0.0001,
+                  "provenance": "Inclined moon-local depot, propagated in both gravitational fields"
+                },
+                "cargo": 0,
+                "cargoCapacity": 1,
+                "propellant": 4,
+                "tankCapacity": 4,
+                "serviceDuration": 0.005590169943749475
+              }
+            ],
+            "cargoCapacity": 0.05,
+            "capture": {
+              "position": 1e-07,
+              "velocity": 1e-07
+            },
+            "objective": {
+              "destinationId": "Crescent",
+              "quota": 0.05,
+              "returnPortId": "Northhaven",
+              "minPropellant": 0.1,
+              "hardwareCost": 1
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 4,
+          "id": "selene-ground-sortie",
+          "burns": [],
+          "thrustArcs": [
+            {
+              "id": "ascent",
+              "start": 0.013975424859373687,
+              "end": 0.0714743354698916,
+              "direction": [
+                0.9396008554220013,
+                0.013132176123268932,
+                0.3420201433256687
+              ],
+              "throttle": 1,
+              "steering": {
+                "kind": "spherical-smoothstep-v1",
+                "keys": [
+                  {
+                    "offset": 0.0,
+                    "direction": [
+                      0.9396008554220013,
+                      0.013132176123268932,
+                      0.3420201433256687
+                    ]
+                  },
+                  {
+                    "offset": 0.014374727652629479,
+                    "direction": [
+                      0.8097333794463684,
+                      0.5489227152738293,
+                      0.20740228269421265
+                    ]
+                  },
+                  {
+                    "offset": 0.028749455305258957,
+                    "direction": [
+                      0.8972331398137627,
+                      0.012582431918306245,
+                      0.44137781460666775
+                    ]
+                  },
+                  {
+                    "offset": 0.04312418295788843,
+                    "direction": [
+                      -0.048634349715311546,
+                      0.9984513075007754,
+                      -0.027012711410755764
+                    ]
+                  },
+                  {
+                    "offset": 0.057498910610517914,
+                    "direction": [
+                      -0.7639308059003237,
+                      -0.546278065695081,
+                      -0.3434967230366583
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "descent",
+              "start": 0.3200372292796574,
+              "end": 0.38178599827629356,
+              "direction": [
+                -0.9261329255294648,
+                0.1781361072428423,
+                -0.33248358086768925
+              ],
+              "throttle": 1,
+              "steering": {
+                "kind": "spherical-smoothstep-v1",
+                "keys": [
+                  {
+                    "offset": 0.0,
+                    "direction": [
+                      -0.9261329255294648,
+                      0.1781361072428423,
+                      -0.33248358086768925
+                    ]
+                  },
+                  {
+                    "offset": 0.015437192249159043,
+                    "direction": [
+                      0.2966313613499041,
+                      -0.9395237568574561,
+                      0.17118687380799455
+                    ]
+                  },
+                  {
+                    "offset": 0.030874384498318086,
+                    "direction": [
+                      0.7756574650088617,
+                      0.5941108376411287,
+                      0.21304414935262345
+                    ]
+                  },
+                  {
+                    "offset": 0.04631157674747713,
+                    "direction": [
+                      0.8152120198070311,
+                      -0.47033245896240605,
+                      0.3379596733465655
+                    ]
+                  },
+                  {
+                    "offset": 0.06174876899663617,
+                    "direction": [
+                      0.8720354018750859,
+                      0.3501092392897487,
+                      0.3420201433256687
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "operations": [
+            {
+              "id": "at-pad",
+              "kind": "dock",
+              "t": 0,
+              "portId": "Northhaven"
+            },
+            {
+              "id": "load",
+              "kind": "transfer",
+              "t": 0,
+              "portId": "Northhaven",
+              "cargo": 0.05,
+              "propellant": 0
+            },
+            {
+              "id": "launch",
+              "kind": "launch",
+              "t": 0.013975424859373687,
+              "portId": "Northhaven",
+              "thrustArcId": "ascent"
+            },
+            {
+              "id": "arrival",
+              "kind": "dock",
+              "t": 0.0714743354698916,
+              "portId": "Crescent"
+            },
+            {
+              "id": "unload",
+              "kind": "transfer",
+              "t": 0.0714743354698916,
+              "portId": "Crescent",
+              "cargo": -0.05,
+              "propellant": 0
+            },
+            {
+              "id": "top-up",
+              "kind": "transfer",
+              "t": 0.07706450541364107,
+              "portId": "Crescent",
+              "cargo": 0,
+              "propellant": 0.7538166016151213
+            },
+            {
+              "id": "depart",
+              "kind": "undock",
+              "t": 0.3200372292796574,
+              "portId": "Crescent"
+            },
+            {
+              "id": "land",
+              "kind": "land",
+              "t": 0.38178599827629356,
+              "portId": "Northhaven"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

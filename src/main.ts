@@ -23,6 +23,7 @@ import freight from '../fixtures/model-sets/orison-freight.json';
 import lunar from '../fixtures/model-sets/lunar-loop.json';
 import seleneFreight from '../fixtures/model-sets/selene-freight.json';
 import selenePowered from '../fixtures/model-sets/selene-powered.json';
+import seleneGround from '../fixtures/model-sets/selene-ground.json';
 import orisonPowered from '../fixtures/model-sets/orison-powered.json';
 import surfaceAscent from '../fixtures/model-sets/selene-ascent.json';
 import stagedFlight from '../fixtures/model-sets/selene-staging.json';
@@ -57,7 +58,7 @@ import type {State,Vec3} from './sim/schema';
 import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVessel, setEvents, stockAt, isPresent,presenceLabel,type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
-const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle] as (ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
+const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle] as (ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
 const trafficSets=[trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
@@ -127,6 +128,10 @@ function selectedState():State|undefined {
  const body=run.world.bodies.find(b=>b.id===selected);if(body)return bodyState(body,t);
 }
 function pivot():Vec3|undefined {const state=selectedState();return state?transform(run!,state,t,frame).slice(0,3) as Vec3:undefined;}
+function surfaceReference(v:VesselView|undefined){
+ const pad=v?.ports.find(p=>p.rail.kind==='surface'),id=pad?.rail.kind==='surface'?pad.rail.bodyId:undefined;
+ return run!.world.bodies.find(b=>b.id===id)??run!.world.bodies[0];
+}
 function syncTracking() {
  if(tracking==='off')return;
  const state=selectedState();
@@ -134,7 +139,7 @@ function syncTracking() {
  const target=transform(run!,state,t,frame);
  camera.center=target.slice(0,3).map((x,i)=>x+trackingOffset[i]) as Vec3;
  if(tracking==='chase') {
-  const primary=bodyState(run!.world.bodies[0],t),r=state.slice(0,3).map((x,i)=>x-primary[i]),v=state.slice(3).map((x,i)=>x-primary[i+3]);
+  const primary=bodyState(surfaceReference(vessel()),t),r=state.slice(0,3).map((x,i)=>x-primary[i]),v=state.slice(3).map((x,i)=>x-primary[i+3]);
   camera.rig=chaseRig(transformDirection(run!,r as Vec3,t,frame),transformDirection(run!,v as Vec3,t,frame));
  }
 }
@@ -156,7 +161,7 @@ function setCamera(preset:CameraPreset) {if(tracking==='chase')tracking='follow'
 function fit() {
   if (!run) return;
   camera.center = [0, 0, 0];
-  camera.scale = Math.min(width, height) / (2 * run.extent * (frame === 'inertial' || frame === 'rotating' ? 1 : 1.8));
+  camera.scale = Math.min(width, height) / (2 * (run.frameExtents?.[frame]??run.extent) * (frame === 'inertial' || frame === 'rotating' ? 1 : 1.8));
 }
 function seek(time: number, pause = true) {
   if (!ready) return;
@@ -306,10 +311,10 @@ function updatePanels() {
       $('readouts').innerHTML+=`<div><dt>Altitude · R</dt><dd>${(r-body.radius).toFixed(5)}</dd></div><div><dt>Air speed</dt><dd>${Math.hypot(...(a?.relativeVelocity??[0,0,0])).toFixed(4)}</dd></div><div><dt>Density</dt><dd>${(a?.density??0).toExponential(2)}</dd></div><div><dt>Dynamic pressure</dt><dd>${pressure.toFixed(4)}</dd></div><div><dt>Lift / drag</dt><dd>${(drag>0?lift/drag:0).toFixed(3)}</dd></div><div><dt>Flight load</dt><dd>${load.toFixed(3)}</dd></div>${s.entryPhase==='recovered'?`<div><dt>Recovery speed</dt><dd>${(run.recoveries?.[v.id]??run.entry!).relativeSpeed.toFixed(4)}</dd></div>`:''}`;
     }
     if(v.ports.some(p=>p.rail.kind==='surface')) {
-      const body=run.world.bodies[0],b=bodyState(body,t),relative=s.y.slice(0,3).map((v,i)=>v-b[i]),velocity=s.y.slice(3).map((v,i)=>v-b[i+3]),r=Math.hypot(...relative),radial=relative.reduce((n,v,i)=>n+v*velocity[i],0)/r,tangential=Math.sqrt(Math.max(0,velocity.reduce((n,v)=>n+v*v,0)-radial*radial));
+      const body=surfaceReference(v),b=bodyState(body,t),relative=s.y.slice(0,3).map((v,i)=>v-b[i]),velocity=s.y.slice(3).map((v,i)=>v-b[i+3]),r=Math.hypot(...relative),radial=relative.reduce((n,v,i)=>n+v*velocity[i],0)/r,tangential=Math.sqrt(Math.max(0,velocity.reduce((n,v)=>n+v*v,0)-radial*radial));
       const small=(x:number)=>Math.abs(x)<1e-12?'0.0000':Math.abs(x)<.001?x.toExponential(2):x.toFixed(4);
       const mass=v.ship.dryMass+cargo+s.propellant;
-      $('readouts').innerHTML+=`${v.entry||v.aerodynamics?'':`<div><dt>Altitude · R</dt><dd>${small(r-body.radius)}</dd></div>`}<div><dt>Radial speed</dt><dd>${small(radial)}</dd></div><div><dt>Tangential speed</dt><dd>${small(tangential)}</dd></div><div><dt>Thrust / weight</dt><dd>${number((s.thrust?.force??0)/mass/(body.mu/r**2))}</dd></div>`;
+      $('readouts').innerHTML+=`${v.entry||v.aerodynamics?'':`<div><dt>Altitude · R</dt><dd>${small((r-body.radius)/body.radius)}</dd></div>`}<div><dt>Radial speed</dt><dd>${small(radial)}</dd></div><div><dt>Tangential speed</dt><dd>${small(tangential)}</dd></div><div><dt>Thrust / weight</dt><dd>${number((s.thrust?.force??0)/mass/(body.mu/r**2))}</dd></div>`;
     }
     $<HTMLButtonElement>('object-frame').disabled=s.activity?.kind==='fault';
     if(s.activity?.reason)$('readouts').innerHTML+=`<div class="fault-reason">${esc(s.activity.reason)}</div>`;
@@ -354,11 +359,11 @@ function publishState() {
 }
 function loadSet(id: string) {
   if(currentSet)setSpeeds.set(currentSet,playbackRate);currentSet=id;
-  playbackRate=setSpeeds.get(id)??(['selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
+  playbackRate=setSpeeds.get(id)??(id==='selene-ground'?.01:['selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
   const speed=$<HTMLInputElement>('speed');speed.max=String(Math.log2(maximumPlaybackRate(id)));playbackRate=Math.min(playbackRate,maximumPlaybackRate(id));speed.value=String(Math.log2(playbackRate));showSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
-  tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service','orison-flexible-service','orison-relay-network','orison-latitude-shuttle','aster-northern-launch'].includes(id)?'oblique':'top';orient(camera,cameraPreset);if(id==='orison-latitude-shuttle')camera.yaw=1.2;if(id==='aster-northern-launch')camera.yaw=2.6;panMode=false;cameraControls();
+  tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service','orison-flexible-service','orison-relay-network','orison-latitude-shuttle','aster-northern-launch','selene-ground'].includes(id)?'oblique':'top';orient(camera,cameraPreset);if(id==='orison-latitude-shuttle'||id==='selene-ground')camera.yaw=1.2;if(id==='aster-northern-launch')camera.yaw=2.6;panMode=false;cameraControls();
   worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=true;trafficDirty=false;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
   $('load-status').textContent = 'Preparing scene…';
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
@@ -374,10 +379,11 @@ function loadSet(id: string) {
     if (e.data.error) { $('load-status').textContent = e.data.error; return; }
     run = e.data.run!; events = setEvents(run); ready = true; selected = run.id==='orison-direct-surface'?run.vessels[0].id:Object.keys(run.maintained??{})[0]??run.vessels[0].id;
     $('launch-view').hidden=!run.entry&&!run.world.ports.some(p=>p.rail.kind==='surface');$('launch-view').textContent=run.entry?'Entry view':'Surface view';document.querySelectorAll<HTMLElement>('.entry-layer').forEach(e=>e.hidden=!run!.atmosphere);
-    frame = 'inertial'; t = run.id === 'orison-freight' ? 2 : run.id==='orison-direct-surface'||run.id==='orison-low-orbit-shuttle'?start():0; playing = true;
+    frame = run.id==='selene-ground'?'moon':'inertial'; t = run.id === 'orison-freight' ? 2 : run.id==='orison-direct-surface'||run.id==='orison-low-orbit-shuttle'?start():0; playing = true;
     $<HTMLInputElement>('time').min = String(start()); $<HTMLInputElement>('time').max = String(end());
     $('frame').innerHTML = `<option value="inertial">Inertial</option><option value="rotating">${esc(run.rotating.name)}</option>` +
       [...run.world.bodies.map(b => [b.id, b.id]), ...run.stations.map(s => [s.id, s.id]), ...run.vessels.map(v => [v.id, v.name])].map(([id, name]) => `<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
+    $<HTMLSelectElement>('frame').value=frame;
     $('description').textContent = run.description; $('provenance').textContent = run.provenance;
     $('traffic-count').textContent = String(run.vessels.length);
     $<HTMLButtonElement>('play').disabled = false; fit(); buildTimeline(); updatePanels();
@@ -541,7 +547,7 @@ function draw() {
   for (const port of portsOf(run)) {
     const powered=run.maintained?.[port.id],known=powered?sampleVessel(powered,t):undefined,epoch=known?.activity?.kind==='fault'?known.activity.knownEpoch!:t;
     const state=known?.activity?.kind==='fault'?known.y:displayPortState(port,run.portSamples,t);
-    if(port.rail.kind==='surface'){const rail=port.rail,body=run.world.bodies.find(b=>b.id===rail.bodyId)!;for(let i=0;i<3;i++)state[i]=rail.center[i]+(state[i]-rail.center[i])*body.radius/rail.radius;}
+    if(port.rail.kind==='surface'){const rail=port.rail,body=run.world.bodies.find(b=>b.id===rail.bodyId)!,center=bodyState(body,t);for(let i=0;i<3;i++)state[i]=center[i]+(state[i]-center[i])*body.radius/rail.radius;}
     const p3=project3(state,epoch);if(occluder(p3,spheres))continue;
     const p:[number,number]=[p3[0],p3[1]];
     icons.push({depth:p3[2],draw:()=>{
@@ -632,12 +638,14 @@ $('launch-view').onclick=()=>{
   }
   const pad=run?.world.ports.find(p=>p.rail.kind==='surface');if(!pad)return;
   track('off');frame=pad.id;$<HTMLSelectElement>('frame').value=frame;
+  const ownerId=pad.rail.kind==='surface'?pad.rail.bodyId:undefined;
+  const surfaceBody=run!.world.bodies.find(b=>b.id===ownerId)??run!.world.bodies[0];
   const theta=pad.rail.kind==='surface'?pad.rail.phase+pad.rail.rate*t:0;
   if(pad.rail.kind==='surface'&&pad.rail.latitude!==undefined){
     const normal=surfaceNormal(pad,t),east:Vec3=[-Math.sin(theta),Math.cos(theta),0],north:Vec3=[-Math.sin(pad.rail.latitude)*Math.cos(theta),-Math.sin(pad.rail.latitude)*Math.sin(theta),Math.cos(pad.rail.latitude)];
-    setCamera('front');camera.rig={right:east,forward:north,up:normal};camera.center=normal.map(v=>v*.075) as Vec3;cameraPreset='custom';cameraControls();
-  }else {setCamera('top');camera.center=[Math.cos(theta)*.075,Math.sin(theta)*.075,0];}
-  camera.scale=Math.min(width,height)/.22;updatePanels();
+    setCamera('front');camera.rig={right:east,forward:north,up:normal};camera.center=normal.map(v=>v*.075*surfaceBody.radius) as Vec3;cameraPreset='custom';cameraControls();
+  }else {setCamera('top');camera.center=[Math.cos(theta)*.075*surfaceBody.radius,Math.sin(theta)*.075*surfaceBody.radius,0];}
+  camera.scale=Math.min(width,height)/(.22*surfaceBody.radius);updatePanels();
 };
 $('play').onclick=()=>{if(!ready)return;if(!traffic && t>=end())t=start();playing=!playing;if(traffic && !playing){liveMode=false;refreshTraffic();}lastFrame=performance.now();updatePanels();};
 $('live').onclick=goLive;

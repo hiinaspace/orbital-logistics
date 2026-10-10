@@ -13,14 +13,14 @@ export interface BallisticRail {kind:'ballistic'; epoch:number; validUntil:numbe
 // A powered target owns a frozen logistics-free propulsion program and tank.
 export interface PoweredRail extends Omit<BallisticRail,'kind'> {kind:'powered';propulsion:{dryMass:number;propellant:number;tankCapacity:number;exhaustVelocity:number;engine:Engine};program:Program;minPropellant:number}
 // Physical support geometry. Circular fields are derived by validation, never trusted.
-export interface SurfaceRail {latitude?:number;kind:'surface';bodyId:string;centerHeight:number;center:Vec3;u:Vec3;v:Vec3;radius:number;rate:number;phase:number}
+export interface SurfaceRail {bodyRail?:Rail;latitude?:number;kind:'surface';bodyId:string;centerHeight:number;center:Vec3;u:Vec3;v:Vec3;radius:number;rate:number;phase:number}
 export interface Port {
   id: string; rail: Extract<Rail, {kind: 'circular'}> | BallisticRail | PoweredRail | SurfaceRail;
   cargo: number; cargoCapacity: number; propellant: number; tankCapacity: number;
   serviceDuration: number;
 }
 export interface Logistics {
-  modelVersion: 'kinematic-ports-v1' | 'ballistic-ports-v2' | 'surface-ports-v3' | 'powered-ports-v4' | 'surface-ports-v5'; ports: Port[]; cargoCapacity: number;
+  modelVersion: 'kinematic-ports-v1' | 'ballistic-ports-v2' | 'surface-ports-v3' | 'powered-ports-v4' | 'surface-ports-v5' | 'moving-surface-ports-v6'; ports: Port[]; cargoCapacity: number;
   capture: {position: number; velocity: number};
   objective: {destinationId: string; quota: number; returnPortId: string; minPropellant: number; hardwareCost: number; deadline?: number};
 }
@@ -86,7 +86,7 @@ function upgradeWire(value: unknown): unknown {
   const input = object(value), rawScenario = object(input.scenario), rawProgram = object(input.program);
   const result = structuredClone(input), s = object(result.scenario), p = object(result.program);
   if ((rawScenario.schemaVersion!==3 || ![3,4].includes(rawProgram.schemaVersion as number)) &&
-      (['surface-ports-v3','surface-ports-v5'].includes(object(rawScenario.logistics??{}).modelVersion as string) ||
+      (['surface-ports-v3','surface-ports-v5','moving-surface-ports-v6'].includes(object(rawScenario.logistics??{}).modelVersion as string) ||
        (Array.isArray(object(rawScenario.logistics??{}).ports) && (object(rawScenario.logistics??{}).ports as unknown[]).some(p=>object(object(p).rail).kind==='surface')) ||
        (Array.isArray(rawProgram.operations) && rawProgram.operations.some(o=>object(o).kind==='launch'||object(o).kind==='land'))))throw new Error('Surface features require schema3');
   if ((rawScenario.schemaVersion !== 3 && (object(rawScenario.ship).engine !== undefined || rawScenario.engine !== undefined)) ||
@@ -174,25 +174,41 @@ export function validateBundle(value: unknown): Bundle {
   }
   if (s.logistics !== undefined) {
     const l = object(s.logistics), capture = object(l.capture), goal = object(l.objective);
-    if ((l.modelVersion !== 'kinematic-ports-v1' && l.modelVersion !== 'ballistic-ports-v2' && l.modelVersion !== 'surface-ports-v3' && l.modelVersion !== 'powered-ports-v4' && l.modelVersion !== 'surface-ports-v5') || scenario.rendezvous ||
-        (!['ballistic-ports-v2','powered-ports-v4'].includes(l.modelVersion as string) && (bodies.length !== 1 || bodies[0].rail.kind !== 'fixed')) ||
+    if ((l.modelVersion !== 'kinematic-ports-v1' && l.modelVersion !== 'ballistic-ports-v2' && l.modelVersion !== 'surface-ports-v3' && l.modelVersion !== 'powered-ports-v4' && l.modelVersion !== 'surface-ports-v5' && l.modelVersion !== 'moving-surface-ports-v6') || scenario.rendezvous ||
+        (!['ballistic-ports-v2','powered-ports-v4','moving-surface-ports-v6'].includes(l.modelVersion as string) && (bodies.length !== 1 || bodies[0].rail.kind !== 'fixed')) ||
         !Array.isArray(l.ports) || l.ports.length < 2 || l.ports.length > 8) throw new Error('Unsupported logistics domain');
     const primary = bodies[0];
     const center = primary.rail.kind==='fixed' ? primary.rail.position : undefined;
     const ports: Port[] = l.ports.map(value => {
       const port = object(value), r = object(port.rail);
+      const moving=l.modelVersion==='moving-surface-ports-v6';
+      if(!moving && r.bodyRail!==undefined)throw new Error('Body-relative support requires moving-surface-ports-v6');
       let rail: Port['rail'];
       if((l.modelVersion!=='powered-ports-v4'||r.kind!=='powered') && ['propulsion','program','minPropellant','maintenance'].some(k=>r[k]!==undefined))throw new Error('Powered target fields require powered-ports-v4');
-      if(['surface-ports-v3','surface-ports-v5'].includes(l.modelVersion as string) && r.kind==='surface') {
+      if(['surface-ports-v3','surface-ports-v5','moving-surface-ports-v6'].includes(l.modelVersion as string) && r.kind==='surface') {
         if(l.modelVersion==='surface-ports-v3' && r.latitude!==undefined)throw new Error('Latitude requires surface-ports-v5');
-        const latitude=l.modelVersion==='surface-ports-v5'?finite(r.latitude,'surface latitude'):undefined;
+        const latitude=l.modelVersion!=='surface-ports-v3'?finite(r.latitude,'surface latitude'):undefined;
         if(latitude!==undefined && Math.abs(latitude)>Math.PI/2)throw new Error('Invalid surface latitude');
-        const centerHeight=finite(r.centerHeight,'supported COM height',Number.MIN_VALUE),radius=primary.radius+centerHeight;
+        const owner=moving?bodies.find(b=>b.id===r.bodyId):primary;
+        if(!owner)throw new Error('Unknown surface body');
+        const centerHeight=finite(r.centerHeight,'supported COM height',Number.MIN_VALUE),radius=owner.radius+centerHeight;
+        const supportCenter=owner.rail.kind==='fixed'?owner.rail.position:owner.rail.center;
         const rate=finite(r.rate,'physical spin'),phase=finite(r.phase,'pad longitude');
-        if(r.bodyId!==primary.id || !center || radius<=primary.radius || !Number.isFinite(radius) ||
-          Math.abs(rate)>=Math.sqrt(primary.mu/radius**3) || !center.every(x=>Number.isFinite(x+radius)&&Number.isFinite(x-radius)))throw new Error('Unsupported surface support');
-        rail={kind:'surface',bodyId:primary.id,centerHeight,center:[...center],u:[1,0,0],v:[0,1,0],radius,rate,phase,...(latitude!==undefined?{latitude}:{})};
-      } else if(l.modelVersion==='ballistic-ports-v2'||l.modelVersion==='powered-ports-v4') {
+        if(r.bodyId!==owner.id || (!moving&&!center) || radius<=owner.radius || !Number.isFinite(radius) ||
+          Math.abs(rate)>=Math.sqrt(owner.mu/radius**3) || !supportCenter.every(x=>Number.isFinite(x+radius)&&Number.isFinite(x-radius)))throw new Error('Unsupported surface support');
+        // A conservative global rail envelope proves support cannot enter any
+        // other sphere while docked propagation bypasses free-flight collision.
+        if(moving)for(const other of bodies.filter(b=>b.id!==owner.id)){
+          const a=owner.rail,b=other.rail,ac=a.kind==='fixed'?a.position:a.center,bc=b.kind==='fixed'?b.position:b.center;
+          let separation=Math.hypot(...ac.map((x,i)=>x-bc[i]))-(a.kind==='fixed'?0:a.radius*Math.hypot(norm(a.u),norm(a.v)))-(b.kind==='fixed'?0:b.radius*Math.hypot(norm(b.u),norm(b.v)));
+          if(a.kind==='circular'&&b.kind==='circular'&&a.rate===b.rate&&a.u.every((x,i)=>x===b.u[i])&&a.v.every((x,i)=>x===b.v[i])){
+            const cosine=a.radius*Math.cos(a.phase)-b.radius*Math.cos(b.phase),sine=a.radius*Math.sin(a.phase)-b.radius*Math.sin(b.phase);
+            separation=Math.hypot(cosine,sine)*(1-1e-10)-Math.hypot(...ac.map((x,i)=>x-bc[i]));
+          }
+          if(!Number.isFinite(separation)||separation<=radius+other.radius)throw new Error('Surface support separation cannot be certified');
+        }
+        rail={kind:'surface',bodyId:owner.id,centerHeight,center:[...supportCenter],u:[1,0,0],v:[0,1,0],radius,rate,phase,...(latitude!==undefined?{latitude}:{}),...(moving?{bodyRail:structuredClone(owner.rail)}:{})};
+      } else if(l.modelVersion==='ballistic-ports-v2'||l.modelVersion==='powered-ports-v4'||moving) {
         const p=object(r.policy), targetEpoch=finite(r.epoch,'target epoch'),validUntil=finite(r.validUntil,'target validity');
         if((r.kind!=='ballistic' && !(l.modelVersion==='powered-ports-v4' && r.kind==='powered')) || targetEpoch!==epoch || validUntil!==epoch+duration)throw new Error('Ballistic port must cover the complete scenario');
         const targetStep=finite(p.step,'target step',1/65536), targetNodes=integer(p.maxNodes,'target nodes',2,65536);
@@ -228,6 +244,7 @@ export function validateBundle(value: unknown): Bundle {
     });
     const pads=ports.filter(p=>p.rail.kind==='surface');
     if(new Set(pads.map(p=>p.rail.kind==='surface'?p.rail.rate:0)).size>1)throw new Error('Inconsistent body spin');
+    if(l.modelVersion==='moving-surface-ports-v6' && (bodies.length!==2 || duration>2 || ports.length!==2 || ports.filter(p=>p.rail.kind==='surface').length!==1 || !ports.some(p=>p.rail.kind==='surface'&&p.rail.bodyRail?.kind==='circular') || ports.some(p=>!['surface','ballistic'].includes(p.rail.kind))))throw new Error('Moving surface domain requires two bodies, moving support and ballistic targets');
     const ids = [...bodies.map(b => b.id), scenario.ship.id, ...ports.map(p => p.id)];
     if (new Set(ids).size !== ids.length) throw new Error('Duplicate port ID');
     const cargoCapacity = finite(l.cargoCapacity, 'cargo capacity', 0);
@@ -315,12 +332,12 @@ export function validateBundle(value: unknown): Bundle {
       if (!port || t > epoch + duration) throw new Error('Invalid operation port/epoch');
       if(op.kind==='launch') {
         const thrustArcId=name(op.thrustArcId),arc=program.thrustArcs?.find(a=>a.id===thrustArcId);
-        if(!['surface-ports-v3','surface-ports-v5'].includes(scenario.logistics!.modelVersion) || port.rail.kind!=='surface' || t<=epoch || !arc || arc.start!==t ||
+        if(!['surface-ports-v3','surface-ports-v5','moving-surface-ports-v6'].includes(scenario.logistics!.modelVersion) || port.rail.kind!=='surface' || t<=epoch || !arc || arc.start!==t ||
           burns.some(b=>b.t===t))throw new Error('Invalid launch/first thrust arc');
         return {id,t,portId,kind:'launch',thrustArcId};
       }
       if(op.kind==='land') {
-        if(!['surface-ports-v3','surface-ports-v5'].includes(scenario.logistics!.modelVersion) || port.rail.kind!=='surface' || t<=epoch)throw new Error('Invalid surface landing');
+        if(!['surface-ports-v3','surface-ports-v5','moving-surface-ports-v6'].includes(scenario.logistics!.modelVersion) || port.rail.kind!=='surface' || t<=epoch)throw new Error('Invalid surface landing');
         return {id,t,portId,kind:'land'};
       }
       if (op.kind === 'dock' || op.kind === 'undock') return {id, t, portId, kind: op.kind};

@@ -6,16 +6,16 @@ repos:
         entry: uv run --project spikes/numerics ruff format --config spikes/numerics/pyproject.toml
         language: system
         types: [python]
-        files: ^(spikes/numerics/|scripts/periodic-study-plot\.py$|docs/design/(topology-study|orbital-model-set)/consultant/.*\.py$|docs/design/(surface-(ascent|landing)|staging|atmospheric-launch|surface-flexible|direct-surface|low-orbit-shuttle|freight-district|spatial-atmosphere)/.*\.py$)
+        files: ^(spikes/numerics/|scripts/periodic-study-plot\.py$|docs/design/(topology-study|orbital-model-set)/consultant/.*\.py$|docs/design/(surface-(ascent|landing)|staging|atmospheric-launch|surface-flexible|direct-surface|low-orbit-shuttle|freight-district|spatial-atmosphere|moving-selene)/.*\.py$)
       - id: ruff-check
         name: numerics ruff lint
         entry: uv run --project spikes/numerics ruff check --config spikes/numerics/pyproject.toml
         language: system
         types: [python]
-        files: ^(spikes/numerics/|scripts/periodic-study-plot\.py$|docs/design/(topology-study|orbital-model-set)/consultant/.*\.py$|docs/design/(surface-(ascent|landing)|staging|atmospheric-launch|surface-flexible|direct-surface|low-orbit-shuttle|freight-district|spatial-atmosphere)/.*\.py$)
+        files: ^(spikes/numerics/|scripts/periodic-study-plot\.py$|docs/design/(topology-study|orbital-model-set)/consultant/.*\.py$|docs/design/(surface-(ascent|landing)|staging|atmospheric-launch|surface-flexible|direct-surface|low-orbit-shuttle|freight-district|spatial-atmosphere|moving-selene)/.*\.py$)
       - id: ty
         name: numerics ty typecheck
-        entry: uv run --project spikes/numerics --group plots ty check spikes/numerics scripts/periodic-study-plot.py docs/design/topology-study/consultant docs/design/orbital-model-set/consultant docs/design/surface-ascent docs/design/surface-landing docs/design/staging docs/design/atmospheric-launch docs/design/surface-flexible docs/design/direct-surface docs/design/low-orbit-shuttle docs/design/freight-district docs/design/spatial-atmosphere
+        entry: uv run --project spikes/numerics --group plots ty check spikes/numerics scripts/periodic-study-plot.py docs/design/topology-study/consultant docs/design/orbital-model-set/consultant docs/design/surface-ascent docs/design/surface-landing docs/design/staging docs/design/atmospheric-launch docs/design/surface-flexible docs/design/direct-surface docs/design/low-orbit-shuttle docs/design/freight-district docs/design/spatial-atmosphere docs/design/moving-selene
         language: system
         pass_filenames: false
-        files: ^(spikes/numerics/.*\.py$|scripts/periodic-study-plot\.py$|docs/design/(topology-study|orbital-model-set)/consultant/.*\.py$|docs/design/(surface-(ascent|landing)|staging|atmospheric-launch|surface-flexible|direct-surface|low-orbit-shuttle|freight-district|spatial-atmosphere)/.*\.py$)
+        files: ^(spikes/numerics/.*\.py$|scripts/periodic-study-plot\.py$|docs/design/(topology-study|orbital-model-set)/consultant/.*\.py$|docs/design/(surface-(ascent|landing)|staging|atmospheric-launch|surface-flexible|direct-surface|low-orbit-shuttle|freight-district|spatial-atmosphere|moving-selene)/.*\.py$)

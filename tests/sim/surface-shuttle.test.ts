@@ -38,3 +38,8 @@ test('surface shuttle rejects unsupported hardware, support, or calendar',()=>{
  const pad=structuredClone(fixture);pad.pad.rail.centerHeight=0;assert.throws(()=>prepareSurfaceShuttle(pad),/pad/);
  const early=structuredClone(fixture);early.release=early.launch;assert.throws(()=>prepareSurfaceShuttle(early),/calendar/);
 });
+
+test('legacy surface shuttle rejects a moving support provider',()=>{
+ const bad=structuredClone(fixture);bad.pad.rail.bodyRail={kind:'fixed',position:[1e-5,0,0]};bad.world.scenario.ship.state=portState(bad.pad,0);
+ assert.throws(()=>prepareSurfaceShuttle(bad),/supported pad/);
+});

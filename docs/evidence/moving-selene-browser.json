@@ -1,0 +1,1379 @@
+{
+  "arcs": [
+    {
+      "id": "ascent",
+      "start": 0.013975424859373687,
+      "end": 0.0714743354698916,
+      "direction": [
+        0.9396008554220013,
+        0.013132176123268932,
+        0.3420201433256687
+      ],
+      "throttle": 1,
+      "steering": {
+        "kind": "spherical-smoothstep-v1",
+        "keys": [
+          {
+            "offset": 0,
+            "direction": [
+              0.9396008554220013,
+              0.013132176123268932,
+              0.3420201433256687
+            ]
+          },
+          {
+            "offset": 0.014374727652629479,
+            "direction": [
+              0.8097333794463684,
+              0.5489227152738293,
+              0.20740228269421265
+            ]
+          },
+          {
+            "offset": 0.028749455305258957,
+            "direction": [
+              0.8972331398137627,
+              0.012582431918306245,
+              0.44137781460666775
+            ]
+          },
+          {
+            "offset": 0.04312418295788843,
+            "direction": [
+              -0.048634349715311546,
+              0.9984513075007754,
+              -0.027012711410755764
+            ]
+          },
+          {
+            "offset": 0.057498910610517914,
+            "direction": [
+              -0.7639308059003237,
+              -0.546278065695081,
+              -0.3434967230366583
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "descent",
+      "start": 0.3200372292796574,
+      "end": 0.38178599827629356,
+      "direction": [
+        -0.9261329255294648,
+        0.1781361072428423,
+        -0.33248358086768925
+      ],
+      "throttle": 1,
+      "steering": {
+        "kind": "spherical-smoothstep-v1",
+        "keys": [
+          {
+            "offset": 0,
+            "direction": [
+              -0.9261329255294648,
+              0.1781361072428423,
+              -0.33248358086768925
+            ]
+          },
+          {
+            "offset": 0.015437192249159043,
+            "direction": [
+              0.2966313613499041,
+              -0.9395237568574561,
+              0.17118687380799455
+            ]
+          },
+          {
+            "offset": 0.030874384498318086,
+            "direction": [
+              0.7756574650088617,
+              0.5941108376411287,
+              0.21304414935262345
+            ]
+          },
+          {
+            "offset": 0.04631157674747713,
+            "direction": [
+              0.8152120198070311,
+              -0.47033245896240605,
+              0.3379596733465655
+            ]
+          },
+          {
+            "offset": 0.06174876899663617,
+            "direction": [
+              0.8720354018750859,
+              0.3501092392897487,
+              0.3420201433256687
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "states": [
+    {
+      "ready": true,
+      "revision": 2,
+      "set": "selene-ground",
+      "t": 0.4,
+      "playing": false,
+      "playbackRate": 0.01,
+      "frame": "Northhaven",
+      "selected": "Tern",
+      "layers": {
+        "orbits": true,
+        "trails": true,
+        "plan": true,
+        "labels": true,
+        "atmosphere": true,
+        "aero": false,
+        "glow": true
+      },
+      "aeroVectors": [],
+      "ships": [
+        {
+          "id": "Tern",
+          "present": true,
+          "t": 0.4,
+          "y": [
+            0.9242784951210028,
+            0.3907786799626732,
+            0.008550845603285045,
+            -0.3907786799626732,
+            0.9242784951210028,
+            0
+          ],
+          "propellant": 0.5703909776109427,
+          "fuelUsed": 6.183425624004178,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 8,
+            "cargoMass": 0,
+            "fuelUsed": 6.183425624004178,
+            "ports": [
+              {
+                "id": "Northhaven",
+                "cargo": 0.15000000000000002,
+                "propellant": 10
+              },
+              {
+                "id": "Crescent",
+                "cargo": 0.05,
+                "propellant": 3.2461833983848787
+              }
+            ],
+            "dockedPortId": "Northhaven",
+            "completedAt": 0.38178599827629356
+          },
+          "glyph": "rocket",
+          "axis": [
+            0.865514219358245,
+            0.3659335426661198,
+            0.3420201433256687
+          ],
+          "screen": [
+            471,
+            373.3636363636363
+          ]
+        }
+      ],
+      "labels": [
+        {
+          "id": "Tern",
+          "anchor": 0,
+          "alpha": 1,
+          "left": 484,
+          "top": 363.3636363636363
+        },
+        {
+          "id": "Crescent",
+          "anchor": 0,
+          "alpha": 1,
+          "left": 2862.7419057773836,
+          "top": 932.9003121782241
+        },
+        {
+          "id": "moon",
+          "anchor": 0,
+          "alpha": 1,
+          "left": 2460.4611625810917,
+          "top": 2381.19491390934
+        },
+        {
+          "id": "primary",
+          "anchor": 0,
+          "alpha": 1,
+          "left": 5124.604423114143,
+          "top": 78221.66029728009
+        }
+      ],
+      "stocks": [
+        {
+          "id": "Northhaven",
+          "cargo": 0.15000000000000002,
+          "propellant": 10,
+          "occupied": 1
+        },
+        {
+          "id": "Crescent",
+          "cargo": 0.05,
+          "propellant": 3.2461833983848787,
+          "occupied": 0
+        }
+      ],
+      "events": [
+        {
+          "t": 0,
+          "kind": "dock",
+          "id": "at-pad",
+          "portId": "Northhaven",
+          "positionError": 0,
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 6,
+          "propellantAfter": 6,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0,
+          "kind": "transfer-start",
+          "id": "load",
+          "portId": "Northhaven",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 6,
+          "propellantAfter": 6,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.005590169943749475,
+          "kind": "transfer",
+          "id": "load",
+          "portId": "Northhaven",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 6,
+          "propellantAfter": 6,
+          "cargoBefore": 0,
+          "cargoAfter": 0.05,
+          "portCargoBefore": 0.2,
+          "portCargoAfter": 0.15000000000000002,
+          "portPropellantBefore": 10,
+          "portPropellantAfter": 10,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.013975424859373687,
+          "kind": "launch",
+          "id": "launch",
+          "portId": "Northhaven",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 6,
+          "propellantAfter": 6,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.013975424859373687,
+          "kind": "thrust-start",
+          "id": "ascent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 6,
+          "propellantAfter": 6,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.0714743354698916,
+          "kind": "dock",
+          "id": "arrival",
+          "portId": "Crescent",
+          "positionError": 3.170145068857936e-13,
+          "deltaV": 3.5471524515813844e-11,
+          "fuelUsed": 4.092986230951522e-11,
+          "propellantBefore": 2.046183398384878,
+          "propellantAfter": 2.046183398343948,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.0714743354698916,
+          "kind": "thrust-end",
+          "id": "ascent",
+          "deltaV": 2.2079581674438873,
+          "fuelUsed": 3.953816601615122,
+          "propellantBefore": 6,
+          "propellantAfter": 2.046183398384878,
+          "detail": "completed",
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.0714743354698916,
+          "kind": "transfer-start",
+          "id": "unload",
+          "portId": "Crescent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 2.046183398343948,
+          "propellantAfter": 2.046183398343948,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.07706450541364107,
+          "kind": "transfer",
+          "id": "unload",
+          "portId": "Crescent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 2.046183398343948,
+          "propellantAfter": 2.046183398343948,
+          "cargoBefore": 0.05,
+          "cargoAfter": 0,
+          "portCargoBefore": 0,
+          "portCargoAfter": 0.05,
+          "portPropellantBefore": 4,
+          "portPropellantAfter": 4,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.07706450541364107,
+          "kind": "transfer-start",
+          "id": "top-up",
+          "portId": "Crescent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 2.046183398343948,
+          "propellantAfter": 2.046183398343948,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.08265467535739054,
+          "kind": "transfer",
+          "id": "top-up",
+          "portId": "Crescent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 2.046183398343948,
+          "propellantAfter": 2.7999999999590695,
+          "cargoBefore": 0,
+          "cargoAfter": 0,
+          "portCargoBefore": 0.05,
+          "portCargoAfter": 0.05,
+          "portPropellantBefore": 4,
+          "portPropellantAfter": 3.2461833983848787,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.3200372292796574,
+          "kind": "undock",
+          "id": "depart",
+          "portId": "Crescent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 2.7999999999590695,
+          "propellantAfter": 2.7999999999590695,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.3200372292796574,
+          "kind": "thrust-start",
+          "id": "descent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 2.7999999999590695,
+          "propellantAfter": 2.7999999999590695,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.38178599827629356,
+          "kind": "land",
+          "id": "land",
+          "portId": "Northhaven",
+          "positionError": 3.1509106073697122e-12,
+          "deltaV": 4.5593963871994474e-11,
+          "fuelUsed": 2.668387478197557e-11,
+          "propellantBefore": 0.5703909776376266,
+          "propellantAfter": 0.5703909776109427,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.38178599827629356,
+          "kind": "thrust-end",
+          "id": "descent",
+          "deltaV": 2.3711527294708286,
+          "fuelUsed": 2.229609022321443,
+          "propellantBefore": 2.7999999999590695,
+          "propellantAfter": 0.5703909776376266,
+          "detail": "completed",
+          "vessel": "Tern",
+          "color": "#efb878"
+        }
+      ],
+      "thrustWhiskers": [],
+      "camera": {
+        "yaw": 0,
+        "pitch": 0,
+        "center": [
+          0.0016375399910799927,
+          0.0006502597752312652,
+          0.0006412877687356289
+        ],
+        "scale": 80727.27272727272,
+        "rig": {
+          "right": [
+            -0.3690623995393574,
+            0.9294046186921237,
+            0
+          ],
+          "forward": [
+            -0.3178751008926186,
+            -0.12622677478656621,
+            0.9396926207859084
+          ],
+          "up": [
+            0.8733546619093295,
+            0.34680521345667475,
+            0.3420201433256687
+          ]
+        },
+        "preset": "custom",
+        "panMode": false,
+        "tracking": "off",
+        "trackingOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "seeThroughBodies": false,
+      "hits": [
+        {
+          "id": "primary",
+          "name": "primary",
+          "x": -1346.577395067675,
+          "y": 78231.66029728009,
+          "depth": -27603.51498376145,
+          "radius": 6458.181818181818
+        },
+        {
+          "id": "moon",
+          "name": "moon",
+          "x": 429.2793443992738,
+          "y": 2391.19491390934,
+          "depth": 0.15696868181280166,
+          "radius": 2018.181818181818
+        },
+        {
+          "id": "Tern",
+          "name": "Tern",
+          "x": 471,
+          "y": 373.3636363636363,
+          "depth": 8.75246844697389e-15
+        },
+        {
+          "id": "Crescent",
+          "name": "Crescent",
+          "x": 2849.7419057773836,
+          "y": 942.9003121782241,
+          "depth": 365.6749334333674
+        }
+      ]
+    },
+    {
+      "ready": true,
+      "revision": 2,
+      "set": "selene-ground",
+      "t": 0.006166000000000006,
+      "playing": false,
+      "playbackRate": 0.01,
+      "frame": "Northhaven",
+      "selected": "Tern",
+      "layers": {
+        "orbits": true,
+        "trails": true,
+        "plan": true,
+        "labels": true,
+        "atmosphere": true,
+        "aero": false,
+        "glow": true
+      },
+      "aeroVectors": [],
+      "ships": [
+        {
+          "id": "Tern",
+          "present": true,
+          "t": 0.006166000000000006,
+          "y": [
+            1.0034741790887014,
+            0.006187500203796526,
+            0.008550845603285045,
+            -0.006187500203796526,
+            1.0034741790887014,
+            0
+          ],
+          "propellant": 6,
+          "fuelUsed": 0,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 2,
+            "cargoMass": 0.05,
+            "fuelUsed": 0,
+            "ports": [
+              {
+                "id": "Northhaven",
+                "cargo": 0.15000000000000002,
+                "propellant": 10
+              },
+              {
+                "id": "Crescent",
+                "cargo": 0,
+                "propellant": 4
+              }
+            ],
+            "dockedPortId": "Northhaven"
+          },
+          "glyph": "rocket",
+          "axis": [
+            0.9396747574943953,
+            0.005794107984700897,
+            0.3420201433256687
+          ],
+          "screen": [
+            471,
+            373.3636363636363
+          ],
+          "occludedBy": "moon"
+        }
+      ],
+      "labels": [
+        {
+          "id": "Crescent",
+          "anchor": 0,
+          "alpha": 1,
+          "left": -1399.367950204761,
+          "top": 1130.734024527204
+        },
+        {
+          "id": "moon",
+          "anchor": 0,
+          "alpha": 1,
+          "left": 3191.243998789211,
+          "top": 2259.83722742002
+        },
+        {
+          "id": "primary",
+          "anchor": 0,
+          "alpha": 1,
+          "left": 36961.45704851395,
+          "top": 72934.663137128
+        }
+      ],
+      "stocks": [
+        {
+          "id": "Northhaven",
+          "cargo": 0.15000000000000002,
+          "propellant": 10,
+          "occupied": 1
+        },
+        {
+          "id": "Crescent",
+          "cargo": 0,
+          "propellant": 4,
+          "occupied": 0
+        }
+      ],
+      "events": [
+        {
+          "t": 0,
+          "kind": "dock",
+          "id": "at-pad",
+          "portId": "Northhaven",
+          "positionError": 0,
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 6,
+          "propellantAfter": 6,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0,
+          "kind": "transfer-start",
+          "id": "load",
+          "portId": "Northhaven",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 6,
+          "propellantAfter": 6,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.005590169943749475,
+          "kind": "transfer",
+          "id": "load",
+          "portId": "Northhaven",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 6,
+          "propellantAfter": 6,
+          "cargoBefore": 0,
+          "cargoAfter": 0.05,
+          "portCargoBefore": 0.2,
+          "portCargoAfter": 0.15000000000000002,
+          "portPropellantBefore": 10,
+          "portPropellantAfter": 10,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.013975424859373687,
+          "kind": "launch",
+          "id": "launch",
+          "portId": "Northhaven",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 6,
+          "propellantAfter": 6,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.013975424859373687,
+          "kind": "thrust-start",
+          "id": "ascent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 6,
+          "propellantAfter": 6,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.0714743354698916,
+          "kind": "dock",
+          "id": "arrival",
+          "portId": "Crescent",
+          "positionError": 3.170145068857936e-13,
+          "deltaV": 3.5471524515813844e-11,
+          "fuelUsed": 4.092986230951522e-11,
+          "propellantBefore": 2.046183398384878,
+          "propellantAfter": 2.046183398343948,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.0714743354698916,
+          "kind": "thrust-end",
+          "id": "ascent",
+          "deltaV": 2.2079581674438873,
+          "fuelUsed": 3.953816601615122,
+          "propellantBefore": 6,
+          "propellantAfter": 2.046183398384878,
+          "detail": "completed",
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.0714743354698916,
+          "kind": "transfer-start",
+          "id": "unload",
+          "portId": "Crescent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 2.046183398343948,
+          "propellantAfter": 2.046183398343948,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.07706450541364107,
+          "kind": "transfer",
+          "id": "unload",
+          "portId": "Crescent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 2.046183398343948,
+          "propellantAfter": 2.046183398343948,
+          "cargoBefore": 0.05,
+          "cargoAfter": 0,
+          "portCargoBefore": 0,
+          "portCargoAfter": 0.05,
+          "portPropellantBefore": 4,
+          "portPropellantAfter": 4,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.07706450541364107,
+          "kind": "transfer-start",
+          "id": "top-up",
+          "portId": "Crescent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 2.046183398343948,
+          "propellantAfter": 2.046183398343948,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.08265467535739054,
+          "kind": "transfer",
+          "id": "top-up",
+          "portId": "Crescent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 2.046183398343948,
+          "propellantAfter": 2.7999999999590695,
+          "cargoBefore": 0,
+          "cargoAfter": 0,
+          "portCargoBefore": 0.05,
+          "portCargoAfter": 0.05,
+          "portPropellantBefore": 4,
+          "portPropellantAfter": 3.2461833983848787,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.3200372292796574,
+          "kind": "undock",
+          "id": "depart",
+          "portId": "Crescent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 2.7999999999590695,
+          "propellantAfter": 2.7999999999590695,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.3200372292796574,
+          "kind": "thrust-start",
+          "id": "descent",
+          "deltaV": 0,
+          "fuelUsed": 0,
+          "propellantBefore": 2.7999999999590695,
+          "propellantAfter": 2.7999999999590695,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.38178599827629356,
+          "kind": "land",
+          "id": "land",
+          "portId": "Northhaven",
+          "positionError": 3.1509106073697122e-12,
+          "deltaV": 4.5593963871994474e-11,
+          "fuelUsed": 2.668387478197557e-11,
+          "propellantBefore": 0.5703909776376266,
+          "propellantAfter": 0.5703909776109427,
+          "vessel": "Tern",
+          "color": "#efb878"
+        },
+        {
+          "t": 0.38178599827629356,
+          "kind": "thrust-end",
+          "id": "descent",
+          "deltaV": 2.3711527294708286,
+          "fuelUsed": 2.229609022321443,
+          "propellantBefore": 2.7999999999590695,
+          "propellantAfter": 0.5703909776376266,
+          "detail": "completed",
+          "vessel": "Tern",
+          "color": "#efb878"
+        }
+      ],
+      "thrustWhiskers": [
+        {
+          "vessel": "Tern",
+          "t": 0.01613163400726811,
+          "force": 262.493922211792,
+          "from": [
+            470.6290276776064,
+            372.2070938861955
+          ],
+          "to": [
+            473.83665541872597,
+            382.303651680463
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.017569106772531057,
+          "force": 257.1492082258408,
+          "from": [
+            470.1448330771527,
+            370.08672735610446
+          ],
+          "to": [
+            472.7954293842473,
+            380.2639686796511
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.019006579537794003,
+          "force": 251.91331888536544,
+          "from": [
+            469.81338846123776,
+            366.77578199139714
+          ],
+          "to": [
+            471.73681113203526,
+            377.03401935879316
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.020444052303056952,
+          "force": 246.78403855230079,
+          "from": [
+            470.05134984563693,
+            362.16830807410565
+          ],
+          "to": [
+            471.1453659375628,
+            372.4630847307691
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.0218815250683199,
+          "force": 241.7591988528638,
+          "from": [
+            471.3407101510572,
+            356.17973948591475
+          ],
+          "to": [
+            471.5756868176138,
+            366.4407496498291
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.02331899783358285,
+          "force": 236.83667076617937,
+          "from": [
+            474.18417045291915,
+            348.7641885460122
+          ],
+          "to": [
+            473.6047364986191,
+            358.9191037694233
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.024756470598845795,
+          "force": 232.01437111974,
+          "from": [
+            479.0584917163568,
+            339.91752002446344
+          ],
+          "to": [
+            477.7806427588271,
+            349.91517845884323
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.026193943364108744,
+          "force": 227.2902591563963,
+          "from": [
+            486.3683558198955,
+            329.6662255356166
+          ],
+          "to": [
+            484.57315450761894,
+            339.4937916360893
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.027631416129371693,
+          "force": 222.6623371300948,
+          "from": [
+            496.4030177041417,
+            318.0450261700753
+          ],
+          "to": [
+            494.3300984021326,
+            327.73456433811134
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.029068888894634638,
+          "force": 218.12864593232507,
+          "from": [
+            509.29580337929923,
+            305.0694496419358
+          ],
+          "to": [
+            507.2365458789971,
+            314.6904305475075
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.030506361659897587,
+          "force": 213.68726599534835,
+          "from": [
+            524.990975537616,
+            290.7125130693479
+          ],
+          "to": [
+            523.2243194935633,
+            300.33692387269554
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.031943834425160536,
+          "force": 209.3363177642665,
+          "from": [
+            543.2471152236246,
+            274.9020031646944
+          ],
+          "to": [
+            541.9898817934593,
+            284.5611641123065
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.03338130719042348,
+          "force": 205.07396032025275,
+          "from": [
+            563.6718344911551,
+            257.54252302690384
+          ],
+          "to": [
+            563.077799547726,
+            267.2198630847504
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.03481877995568643,
+          "force": 200.89839128234607,
+          "from": [
+            585.7613838016003,
+            238.54406898409152
+          ],
+          "to": [
+            585.9182667142296,
+            248.18451887292963
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.03625625272094938,
+          "force": 196.8078417144057,
+          "from": [
+            608.9434877475205,
+            217.84563977543954
+          ],
+          "to": [
+            609.8704069174707,
+            227.37517540427982
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.037693725486212325,
+          "force": 192.80058053019485,
+          "from": [
+            632.623412343426,
+            195.42692258105197
+          ],
+          "to": [
+            634.2719108094832,
+            204.7768234382885
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.03913119825147528,
+          "force": 188.87491189002662,
+          "from": [
+            656.2305959377655,
+            171.30494070467614
+          ],
+          "to": [
+            658.4900708420578,
+            180.43495728053662
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.04056867101673822,
+          "force": 185.02917591631183,
+          "from": [
+            679.2630178551387,
+            145.51571671519474
+          ],
+          "to": [
+            681.9687701587854,
+            154.4307658986853
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.04200614378200117,
+          "force": 181.26174417273748,
+          "from": [
+            701.3273499494094,
+            118.08486347876604
+          ],
+          "to": [
+            704.2675510500759,
+            126.84098391466009
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.04344361654726411,
+          "force": 177.57102175132357,
+          "from": [
+            722.1762060433052,
+            88.99333922933297
+          ],
+          "to": [
+            725.0287330631926,
+            97.71066769327065
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.044881089312527066,
+          "force": 173.9554467691231,
+          "from": [
+            741.8109660141258,
+            58.12848324989534
+          ],
+          "to": [
+            743.8915162532744,
+            67.01003065028537
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.04631856207779002,
+          "force": 170.41348965227849,
+          "from": [
+            760.6817685962799,
+            25.249490850987485
+          ],
+          "to": [
+            761.379850908297,
+            34.30368042328682
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.047756034843052964,
+          "force": 166.94365223801,
+          "from": [
+            779.6753268822647,
+            -9.8949163367825
+          ],
+          "to": [
+            778.5632517103635,
+            -0.9220491556748591
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.04919350760831591,
+          "force": 163.54446477323083,
+          "from": [
+            799.9917698974637,
+            -47.3871054735277
+          ],
+          "to": [
+            796.8966913485674,
+            -38.943072534065934
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.050630980373578854,
+          "force": 160.21448875030504,
+          "from": [
+            822.9698075945884,
+            -87.00308651641188
+          ],
+          "to": [
+            818.0121712841661,
+            -79.57588373493887
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.0520684531388418,
+          "force": 156.9523149509704,
+          "from": [
+            849.8828764129535,
+            -128.17678454044756
+          ],
+          "to": [
+            843.4302205554319,
+            -122.11740799488695
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.05350592590410476,
+          "force": 153.7565642241812,
+          "from": [
+            881.7633257242591,
+            -170.08678341333837
+          ],
+          "to": [
+            874.3046082772657,
+            -165.47898222563845
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.054943398669367705,
+          "force": 150.6258829927261,
+          "from": [
+            919.3096049320343,
+            -211.83773188457326
+          ],
+          "to": [
+            911.3088742585907,
+            -208.4558576726614
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.05638087143463065,
+          "force": 147.55894609815462,
+          "from": [
+            962.8943419415725,
+            -252.6791237415664
+          ],
+          "to": [
+            954.6994261360503,
+            -250.02153465193675
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.057818344199893595,
+          "force": 144.55445563831853,
+          "from": [
+            1012.637565457682,
+            -292.2056713742196
+          ],
+          "to": [
+            1004.4325239267027,
+            -289.7873313584522
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.05925581696515654,
+          "force": 141.61114072820803,
+          "from": [
+            1068.5429057735032,
+            -330.25469513512644
+          ],
+          "to": [
+            1060.185116090706,
+            -328.78671970601016
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.060693289730419486,
+          "force": 138.72775607528982,
+          "from": [
+            1130.6739110760973,
+            -366.22811709673203
+          ],
+          "to": [
+            1122.263151465246,
+            -366.4641337413572
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.062130762495682446,
+          "force": 135.90308050823947,
+          "from": [
+            1199.014095474698,
+            -398.95758154365444
+          ],
+          "to": [
+            1191.022276422878,
+            -401.37884117499084
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.06356823526094539,
+          "force": 133.13591864800858,
+          "from": [
+            1273.1976533797483,
+            -426.8983591796265
+          ],
+          "to": [
+            1266.3354966181391,
+            -431.57702527826524
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.06500570802620834,
+          "force": 130.42509945459497,
+          "from": [
+            1352.3299192329548,
+            -448.42622061982706
+          ],
+          "to": [
+            1347.274670053403,
+            -454.9816523654479
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.06644318079147128,
+          "force": 127.76947702568475,
+          "from": [
+            1435.0033400727991,
+            -462.1694241586149
+          ],
+          "to": [
+            1432.1226517942903,
+            -469.9076230244698
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.06788065355673423,
+          "force": 125.16792625056814,
+          "from": [
+            1519.517215267108,
+            -467.2460270902453
+          ],
+          "to": [
+            1518.7331916018775,
+            -475.43659551867904
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.06931812632199719,
+          "force": 122.61934609714616,
+          "from": [
+            1604.2065470134091,
+            -463.3015000470058
+          ],
+          "to": [
+            1605.0420802600304,
+            -471.4452979219936
+          ]
+        },
+        {
+          "vessel": "Tern",
+          "t": 0.07075559908726013,
+          "force": 120.12265802749798,
+          "from": [
+            1687.7487473564179,
+            -450.3481228119791
+          ],
+          "to": [
+            1689.4670487705707,
+            -458.3014054366504
+          ]
+        }
+      ],
+      "camera": {
+        "yaw": 0,
+        "pitch": 0,
+        "center": [
+          0.0016375399910799927,
+          0.0006502597752312652,
+          0.0006412877687356289
+        ],
+        "scale": 80727.27272727272,
+        "rig": {
+          "right": [
+            -0.3690623995393574,
+            0.9294046186921237,
+            0
+          ],
+          "forward": [
+            -0.3178751008926186,
+            -0.12622677478656621,
+            0.9396926207859084
+          ],
+          "up": [
+            0.8733546619093295,
+            0.34680521345667475,
+            0.3420201433256687
+          ]
+        },
+        "preset": "custom",
+        "panMode": false,
+        "tracking": "off",
+        "trackingOffset": [
+          0,
+          0,
+          0
+        ]
+      },
+      "seeThroughBodies": false,
+      "hits": [
+        {
+          "id": "primary",
+          "name": "primary",
+          "x": 30490.275230332132,
+          "y": 72944.663137128,
+          "depth": -25679.205388816143,
+          "radius": 6458.181818181818
+        },
+        {
+          "id": "moon",
+          "name": "moon",
+          "x": 1160.0621806073932,
+          "y": 2269.83722742002,
+          "depth": 44.327554263334655,
+          "radius": 2018.181818181818
+        },
+        {
+          "id": "Crescent",
+          "name": "Crescent",
+          "x": -1412.367950204761,
+          "y": 1140.734024527204,
+          "depth": -257.2233175021266
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

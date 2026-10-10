@@ -3,7 +3,7 @@ import {forceSensitivityStep} from './sensitivity';
 import {paidCapture,CaptureFailure} from './capture';
 import {resolveBurn} from './burns';
 import {distance, relativeSpeed, norm, dot} from './vectors';
-import { bodyState, certifiedCoast, derivative } from './dynamics';
+import { bodyState, bodyAcceleration, certifiedCoast, derivative } from './dynamics';
 import { portState, logisticsResult, copyLogistics, type LogisticsState } from './logistics';
 import { MODEL, parseBundle, validateBundle, type Bundle, type State } from './schema';
 import {intervalStep,massLaw,massAt,thrustAt,thrustBound,propulsiveDeltaV,type MassLaw} from './propulsion';
@@ -90,6 +90,8 @@ export class Runner {
   // Diagnostic serialization size of this runner's owned data, not JS heap
   // allocation or child ephemerides. Query sparingly, after preparation.
   ownStorageBytes():number {return new TextEncoder().encode(JSON.stringify({bundle:this.#bundle,nodes:this.#nodes,ledger:this.#ledger,boundaries:this.#boundaries})).byteLength;}
+  get retainedTreeNodes():number{return this.retainedNodes+[...this.#portRunners.values()].reduce((n,r)=>n+r.retainedTreeNodes,0);}
+  treeStorageBytes():number{return this.ownStorageBytes()+[...this.#portRunners.values()].reduce((n,r)=>n+r.treeStorageBytes(),0);}
   get ledger(): LedgerEntry[] { return clone(this.#ledger.filter(e => e.t <= this.current.t)); }
   get current(): Sample { return this.sample(this.#requestedEpoch); }
   #last(): Node { return this.#nodes[this.#nodes.length - 1]; }
@@ -198,7 +200,7 @@ export class Runner {
         const surface=port.rail;
         const force=thrustAt(law,n.t),body=s.bodies.find(b=>b.id===surface.bodyId)!;
         const b=bodyState(body,n.t),r=distance(n.y,b),normal=n.y.slice(0,3).map((x,i)=>(x-b[i])/r);
-        const gravity=derivative(s,n.t,n.y).slice(3),outward=force/massAt(law,n.t)*dot(directionAt(arc,0),normal as [number,number,number]);
+        const bodyA=bodyAcceleration(body,n.t),gravity=derivative(s,n.t,n.y).slice(3).map((x,i)=>x-bodyA[i]),outward=force/massAt(law,n.t)*dot(directionAt(arc,0),normal as [number,number,number]);
         const relative=n.y.slice(3).map((v,i)=>v-b[i+3]),radialSpeed=dot(relative as [number,number,number],normal as [number,number,number]);
         const tangentialSquared=relative.reduce((n,v)=>n+v*v,0)-radialSpeed**2;
         const radial=outward+dot(gravity as [number,number,number],normal as [number,number,number])+Math.max(0,tangentialSquared)/r;

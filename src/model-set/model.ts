@@ -11,6 +11,7 @@ import { validateBundle, type Bundle, type Port, type Scenario, type Rail, type 
 export interface Station { inventoryOwner?:'propulsion'; id: string; role: string; berths: number; maintenance?:{reference:Extract<Rail,{kind:'circular'}>;checks:{t:number;outcome:string;before:number[];after?:number[];evaluations:number}[]} }
 export interface Vessel { glyph?:'rocket'|'stack';initialAxis?:Vec3; name: string; color: string; cargo: string; bundle: Bundle }
 export interface ModelSet {
+  frameExtents?:Record<string,number>;
   schemaVersion: 1; id: string; name: string; extent: number;
   description: string; provenance: string; stations: Station[]; vessels: Vessel[];
   rotating: { name: string; rate: number; phase: number };
@@ -36,6 +37,7 @@ export interface VesselView {
 export interface VesselRun extends Vessel,VesselView {}
 export interface MaintainedView extends VesselView {baseline:{t:number;y:State}[]}
 export interface SceneView {
+ frameExtents?:ModelSet['frameExtents'];
  atmosphere?:Atmosphere;entry?:{recoveryEpoch:number;relativeSpeed:number;waterEnergy:number;impulse:Vec3;work:{trials:number;evaluations:number;roots:number};maxima:{pressure:number;acceleration:number;heat:number;force:number}};
  recoveries?:Record<string,NonNullable<SceneView['entry']>>;
  staging?:{separation:{t:number;parentId:string;children:string[];state:State;beforeMass:number;afterMass:number;momentumBefore:number[];momentumAfter:number[];reservedPayloadFuel:number;boosterFuel:number};initialFuel:number};
@@ -57,6 +59,7 @@ export function validateSet(value: ModelSet): ModelSet {
       !Number.isFinite(value.rotating.rate) || !Number.isFinite(value.rotating.phase) ||
       value.vessels.length < 1 || value.vessels.length > 8) throw new Error('Invalid model set');
   const set = structuredClone(value);
+  if(set.vessels.some(v=>v.bundle.scenario.logistics?.modelVersion==='moving-surface-ports-v6')&&set.vessels.length!==1)throw Error('Moving surface exhibit requires one vessel');
   set.vessels.forEach(v => {
     v.bundle = validateBundle(v.bundle);
     if (!v.name || !v.cargo || !/^#[0-9a-f]{6}$/i.test(v.color)) throw new Error('Invalid vessel presentation');
@@ -66,6 +69,7 @@ export function validateSet(value: ModelSet): ModelSet {
   const ids = set.vessels.map(v => v.bundle.scenario.ship.id);
   const ports = set.vessels[0].bundle.scenario.logistics?.ports ?? [];
   const bodies = set.vessels[0].bundle.scenario.bodies;
+  if(Object.entries(set.frameExtents??{}).some(([id,r])=>!Number.isFinite(r)||r<=0||![...bodies.map(b=>b.id),...ports.map(p=>p.id),...ids,'inertial','rotating'].includes(id)))throw Error('Invalid frame extent');
   if (new Set(ids).size !== ids.length || ids.some(id => ports.some(p => p.id === id) || bodies.some(b => b.id === id)) ||
       new Set(set.stations.map(s => s.id)).size !== set.stations.length || set.stations.length !== ports.length ||
       set.stations.some(s => !ports.some(p => p.id === s.id) || !Number.isInteger(s.berths) || s.berths < 1)) throw new Error('Invalid set identities/berths');
@@ -127,7 +131,8 @@ export function prepareSet(value: ModelSet): SetRun {
     // owns physics; interpolation below is only for display, never a restart state.
     // Surface scenes need sub-pixel drawing accuracy even at close zoom. These
     // extra drawing queries cannot create canonical checkpoints.
-    const launchTimes=(v.bundle.program.operations??[]).filter(o=>o.kind==='launch').flatMap(o=>
+    const coveredMovingFlight=s.logistics?.modelVersion==='moving-surface-ports-v6'&&(v.bundle.program.operations??[]).some(o=>o.kind==='land');
+    const launchTimes=coveredMovingFlight?[]:(v.bundle.program.operations??[]).filter(o=>o.kind==='launch').flatMap(o=>
       Array.from({length:4097},(_,i)=>o.t+Math.min(2,end-o.t)*i/4096));
     // Sample every free-flight interval densely, not just a fixed landing window.
     // This also covers the return's initial coast at extreme ship-follow zoom.
@@ -135,7 +140,7 @@ export function prepareSet(value: ModelSet): SetRun {
       .filter(e=>e.kind==='dock'||e.kind==='land').flatMap(e=>{
         const departure=[...ledger].reverse().find(d=>d.t<e.t&&(d.kind==='launch'||d.kind==='undock'));
         if(!departure)return [];
-        const count=Math.ceil((e.t-departure.t)*2048);
+        const count=Math.ceil((e.t-departure.t)*(s.logistics?.modelVersion==='moving-surface-ports-v6'?65536:2048));
         if(count>16384)throw new Error('Surface display flight exceeds sample budget');
         return Array.from({length:count+1},(_,i)=>departure.t+(e.t-departure.t)*i/count);
       }) : [];
@@ -143,6 +148,8 @@ export function prepareSet(value: ModelSet): SetRun {
     if(epochs.length>32768)throw new Error('Surface display sample budget exceeded');
     return {...v,id:s.ship.id,ship:s.ship,ports:s.logistics?.ports??[],cargoCapacity:s.logistics?.cargoCapacity??s.ship.cargoMass,arcs:v.bundle.program.thrustArcs??[],continuousFuel:v.bundle.program.thrustArcs!==undefined, portSamples:{} as PortSamples, samples: epochs.map(t => runner.sample(t)), ledger, boundaries:runner.eventBoundaries};
   });
+  const moving=set.vessels[0].bundle.scenario.logistics?.modelVersion==='moving-surface-ports-v6';
+  if(moving && (runners.reduce((n,r)=>n+r.retainedTreeNodes,0)>65536||runners.reduce((n,r)=>n+r.treeStorageBytes(),0)>24_000_000))throw Error('Moving surface physical tree budget exceeded');
   const epochs=[...new Set(vessels.flatMap(v=>v.samples.map(s=>s.t)))].sort((a,b)=>a-b);
   const portSamples:PortSamples=Object.fromEntries((set.vessels[0].bundle.scenario.logistics?.ports??[])
     .filter(p=>p.rail.kind==='ballistic'||p.rail.kind==='powered').map(p=>[p.id,epochs.map(t=>({t,y:runners[0].portState(p.id,t)}))]));
@@ -171,6 +178,7 @@ export function prepareSet(value: ModelSet): SetRun {
           stock.propellant > port.tankCapacity + 1e-10 || stock.occupied < 0 || stock.occupied > berth.berths) throw new Error(`Shared stock or berths exceeded at ${stock.id}, t=${t}`);
     }
   }
+  if(moving&&new TextEncoder().encode(JSON.stringify(run)).byteLength>12_000_000)throw Error('Moving surface display packet budget exceeded');
   if(run.maintained && new TextEncoder().encode(JSON.stringify(run)).byteLength>8_000_000)throw new Error('Maintained scene display packet budget exceeded');
   return run;
 }

@@ -1,0 +1,61 @@
+{
+  "method": "inertial DOP853; full binary gravity; independently propagated target and surface provider",
+  "errors": [
+    {
+      "step": 0.0001220703125,
+      "position": 1.8221312700722367e-12,
+      "velocity": 7.593469316639573e-11,
+      "fuel": 4.070077608275824e-11,
+      "targetSixState": 7.6928474018916e-12
+    },
+    {
+      "step": 6.103515625e-05,
+      "position": 1.0243980877901904e-13,
+      "velocity": 4.862317645075305e-12,
+      "fuel": 2.4433788325950445e-12,
+      "targetSixState": 1.2827876261059557e-12
+    },
+    {
+      "step": 3.0517578125e-05,
+      "position": 3.5594748394222856e-14,
+      "velocity": 1.265910600550487e-12,
+      "fuel": 1.4130918657428992e-12,
+      "targetSixState": 5.151818923914089e-13
+    }
+  ],
+  "captures": [
+    {
+      "id": "ascent",
+      "positionError": 7.924742592417175e-15,
+      "deltaV": 1.905768644467745e-13,
+      "propellantAfter": 2.046183398384649,
+      "minimumMoonClearance": 1.000000000007939e-06
+    },
+    {
+      "id": "descent",
+      "positionError": 1.5794211564450959e-12,
+      "deltaV": 6.613407493282898e-11,
+      "propellantAfter": 0.5703909776157419,
+      "minimumMoonClearance": 1.0000000006532561e-06
+    }
+  ],
+  "returnFuel": 0.5703909776157419,
+  "cargo": 0.0,
+  "stock": {
+    "Northhaven": {
+      "cargo": 0.15000000000000002,
+      "fuel": 10
+    },
+    "Crescent": {
+      "cargo": 0.05,
+      "fuel": 3.2461833983848787
+    }
+  },
+  "display": {
+    "elapsedMs": 924.456637,
+    "samples": 9876,
+    "bytes": 8924211,
+    "maxShipPixelsAtMaxZoom": 0.11812695026970808,
+    "maxDepotPixelsAtMaxZoom": 0.11852755244618565
+  }
+}

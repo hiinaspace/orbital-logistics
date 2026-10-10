@@ -8,6 +8,11 @@ export function bodyState(body: Body, t: number): State {
   return [...rail.center.map((x,i)=>x+rail.radius*(rail.u[i]*c+rail.v[i]*s)),
     ...rail.u.map((u,i)=>rail.radius*rail.rate*(-u*s+rail.v[i]*c))] as State;
 }
+export function bodyAcceleration(body:Body,t:number):[number,number,number]{
+ const rail=body.rail;if(rail.kind==='fixed')return [0,0,0];
+ const a=rail.phase+rail.rate*t;
+ return rail.u.map((x,i)=>-rail.radius*rail.rate**2*(x*Math.cos(a)+rail.v[i]*Math.sin(a))) as [number,number,number];
+}
 export function derivative(scenario: Scenario, t: number, y: State, gravityJacobian?:number[]): State {
   const acceleration = [0,0,0];
   gravityJacobian?.fill(0);
