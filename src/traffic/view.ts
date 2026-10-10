@@ -1,9 +1,14 @@
 import {sampleVessel,type SceneView,type VesselView,type ViewSample} from '../model-set/model';
 import {portState} from '../sim/logistics';
 import type {EventBoundary} from '../sim/runner';
-import type {TrafficDefinition} from './planner';
+import {isCachedShuttle,type TrafficDefinition} from './planner';
 import {DENSE_SAMPLE_BUDGET,type TrafficDelta,type FleetFrame,type FleetBoundary,type FleetEvent,type EpisodeRecord} from './engine';
 import type {ResourceAnchor} from './resources';
+function brackets<T extends {t:number}>(rows:T[],lo:number,hi:number):T[]{
+ const first=rows.findIndex(p=>p.t>=lo),right=rows.findIndex(p=>p.t>hi);
+ if(first<0)return rows.slice(-1);
+ return rows.slice(Math.max(0,first-1),right<0?undefined:right+1);
+}
 const merge=<T>(a:T[],b:T[],key:(x:T)=>string|number):T[]=>[...new Map([...a,...b].map(x=>[key(x),x])).values()];
 // Disposable display history. It is never a source for physical restarts.
 export class TrafficViewStore {
@@ -37,11 +42,11 @@ export class TrafficViewStore {
    // Immutable Runner identity guarantees prediction/execution equivalence in
    // production. A divergent executor supplies its own committed dense prefix.
    // Fleet event frames win at attachment/service/fault epochs.
-   const dense=records.filter(r=>r.source.arrival>=cursor-12).flatMap(r=>(r.executionSamples??r.samples).filter(p=>p.t>=Math.max(this.oldest,cursor-12) && p.t<=cursor && p.t<r.source.arrival && (r.faultAt===undefined || p.t<r.faultAt)));
+   const dense=records.filter(r=>r.source.arrival>=cursor-12).flatMap(r=>{const rows=r.executionSamples??r.samples,lo=Math.max(this.oldest,cursor-12),selected=isCachedShuttle(d)?brackets(rows,lo,cursor):rows.filter(p=>p.t>=lo&&p.t<=cursor);return selected.filter(p=>p.t<r.source.arrival&&(r.faultAt===undefined||p.t<r.faultAt));});
    const actual=merge(dense,merge(this.frames,[this.current],f=>f.t).map(f=>f.ships[index]),f=>f.t).sort((a,b)=>a.t-b.t);
    const boundaries:EventBoundary[]=merge(records.flatMap(r=>r.executionBoundaries??r.boundaries).filter(b=>b.t<=cursor),this.boundaries.map(b=>({t:b.t,before:b.before.ships[index],after:b.after.ships[index]})),b=>b.t).sort((a,b)=>a.t-b.t);
-   const trajectories=records.filter(r=>r.source.departure<=cursor && (r.executionSamples??r.samples).length>0).map(r=>({start:r.source.departure,end:Math.min(r.source.arrival,r.faultAt??Infinity),through:cursor,samples:r.executionSamples??r.samples,boundaries:r.executionBoundaries??r.boundaries,arcs:r.executionArcs}));
-   const base:VesselView={...v,ship:s.ship,ports:s.logistics!.ports,cargoCapacity:s.logistics!.cargoCapacity,arcs,continuousFuel:true,portSamples:{},samples:actual,ledger:this.events.filter(e=>e.shipId===v.id),boundaries,trajectories};
+   const trajectories=records.filter(r=>(!isCachedShuttle(d)||r.source.arrival>=cursor-12)&&r.source.departure<=cursor && (r.executionSamples??r.samples).length>0).map(r=>({start:r.source.departure,end:Math.min(r.source.arrival,r.faultAt??Infinity),through:cursor,samples:r.executionSamples??r.samples,boundaries:r.executionBoundaries??r.boundaries,arcs:r.executionArcs}));
+   const base:VesselView={...v,...(isCachedShuttle(d)?{glyph:'rocket' as const,initialAxis:[1,0,0] as [number,number,number],interpolation:'hermite' as const}:{}),ship:s.ship,ports:s.logistics!.ports,cargoCapacity:s.logistics!.cargoCapacity,arcs,continuousFuel:true,portSamples:{},samples:actual,ledger:this.events.filter(e=>e.shipId===v.id),boundaries,trajectories};
    const at=sampleVessel(base,cursor),samples=actual.filter(a=>a.t<cursor);samples.push(at);
    const plan=records.find(r=>r.source.arrival>cursor && (r.faultAt===undefined || r.faultAt>cursor));
    const plannedSamples=plan?new Map(plan.samples.map(p=>[p.t,p])):undefined;
@@ -60,7 +65,7 @@ export class TrafficViewStore {
     samples.push(next);previous=next;
    }
    const future=plan?plan.events.filter(e=>e.t>cursor && e.t<=end):[];
-   return {...base,samples,trajectories:[...trajectories,...(plan?[{start:Math.max(cursor,plan.source.departure),end:plan.source.arrival,through:plan.source.arrival,samples:plan.samples,boundaries:plan.boundaries}]:[])],ledger:[...base.ledger.filter(e=>e.t<=cursor),...future],boundaries:[...boundaries.filter(b=>b.t<=cursor),...(plan?plan.boundaries.filter(b=>b.t>cursor && b.t<=end):[])]};
+   return {...base,samples,trajectories:isCachedShuttle(d)?undefined:[...trajectories,...(plan?[{start:Math.max(cursor,plan.source.departure),end:plan.source.arrival,through:plan.source.arrival,samples:plan.samples,boundaries:plan.boundaries}]:[])],ledger:[...base.ledger.filter(e=>e.t<=cursor),...future],boundaries:[...boundaries.filter(b=>b.t<=cursor),...(plan?plan.boundaries.filter(b=>b.t>cursor && b.t<=end):[])]};
   });
   return {schemaVersion:1,id:d.id,name:d.name,extent:d.extent,description:d.description,provenance:d.provenance,stations:d.stations,rotating:d.rotating,vessels,portSamples:{},world:{bodies:s.bodies,ports:s.logistics!.ports,units:s.units},window:{start:this.oldest,end},traffic:{frontier:this.frontier,oldest:this.oldest,resources:this.resources,depots:d.stations,stats:{...this.stats,viewFrames:this.frames.length,viewEpisodes:this.episodes.length},halt:this.halt}};
  }

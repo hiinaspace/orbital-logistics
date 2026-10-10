@@ -1,0 +1,47 @@
+{
+  "coldMs": 232.44069699999994,
+  "warmAdmissionMs": [
+    0.5190779999999222,
+    0.35505799999998544,
+    0.501435000000015,
+    0.427810999999906,
+    0.40568000000007487,
+    0.26205799999991086
+  ],
+  "soakMs": 23171.595276,
+  "maxAdvance8UnitsMs": 386.657276,
+  "maxDense": 48072,
+  "maxViewBytes": 6511266,
+  "maxDelta8UnitsBytes": 4567925,
+  "maxFuelBalance": 4.263256414560601e-13,
+  "maxCargoBalance": 1.4932499681208355e-14,
+  "drawingPosition": 1.2710730022063615e-13,
+  "drawingVelocity": 1.0112609991142583e-9,
+  "polylinePixels": 0.2026324032302184,
+  "frames": 2110,
+  "boundaries": 61,
+  "events": 122,
+  "episodes": 22,
+  "resourceAnchors": 21,
+  "runnerNodes": 6577,
+  "delivered": 4.100000000000001,
+  "flightCacheEntries": 2,
+  "flightCacheHits": 164,
+  "flightCacheSerializedBytes": 7601088,
+  "flightCacheNodes": 6577,
+  "denseSamples": 44066,
+  "ships": [
+    {
+      "id": "Tern",
+      "voyages": 82,
+      "stage": "flying",
+      "fuel": 6
+    },
+    {
+      "id": "Ibis",
+      "voyages": 82,
+      "stage": "planned",
+      "fuel": 2.25
+    }
+  ]
+}

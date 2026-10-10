@@ -87,6 +87,9 @@ export class Runner {
   get bundle(): Bundle { return clone(this.#bundle); }
   get eventBoundaries(): EventBoundary[] { return clone(this.#boundaries.filter(e=>e.t<=this.current.t)); }
   get retainedNodes(): number { return this.#nodes.length; }
+  // Diagnostic serialization size of this runner's owned data, not JS heap
+  // allocation or child ephemerides. Query sparingly, after preparation.
+  ownStorageBytes():number {return new TextEncoder().encode(JSON.stringify({bundle:this.#bundle,nodes:this.#nodes,ledger:this.#ledger,boundaries:this.#boundaries})).byteLength;}
   get ledger(): LedgerEntry[] { return clone(this.#ledger.filter(e => e.t <= this.current.t)); }
   get current(): Sample { return this.sample(this.#requestedEpoch); }
   #last(): Node { return this.#nodes[this.#nodes.length - 1]; }

@@ -1,0 +1,341 @@
+{
+  "schemaVersion": 1,
+  "domain": "low-orbit-cache-v1",
+  "id": "orison-shuttle-service",
+  "name": "Orison \u00b7 Low-orbit service",
+  "extent": 1.9,
+  "description": "Tern and Ibis trade supplies between Equator and Crown.",
+  "provenance": "Fictional airless primary and analytical depot. Complete gravity-turn flights reused at compatible phases; shared cargo and fuel stocks with explicit external flows.",
+  "rotating": {
+    "name": "Surface rotating",
+    "rate": 0.1,
+    "phase": 0
+  },
+  "world": {
+    "scenario": {
+      "schemaVersion": 3,
+      "modelVersion": "rk4-canonical-v3",
+      "id": "low-orbit-service",
+      "units": {
+        "length": "Orison radius",
+        "time": "\u221a(R\u00b3/\u03bc)",
+        "mass": "mass unit"
+      },
+      "epoch": 0,
+      "duration": 17,
+      "policy": {
+        "step": 0.0009765625,
+        "maxNodes": 65536,
+        "maxSubdivision": 20
+      },
+      "bodies": [
+        {
+          "id": "Orison",
+          "mu": 1,
+          "radius": 1,
+          "rail": {
+            "kind": "fixed",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ship": {
+        "id": "Tern",
+        "state": [
+          1.000001,
+          0,
+          0,
+          0,
+          0.1000001,
+          0
+        ],
+        "dryMass": 1,
+        "cargoMass": 0,
+        "propellant": 0.5,
+        "tankCapacity": 6,
+        "exhaustVelocity": 3,
+        "engine": {
+          "maxThrust": 32,
+          "maxAcceleration": 1.2
+        }
+      },
+      "logistics": {
+        "modelVersion": "surface-ports-v3",
+        "ports": [
+          {
+            "id": "Equator",
+            "rail": {
+              "kind": "surface",
+              "bodyId": "Orison",
+              "centerHeight": 1e-06,
+              "center": [
+                0,
+                0,
+                0
+              ],
+              "u": [
+                1,
+                0,
+                0
+              ],
+              "v": [
+                0,
+                1,
+                0
+              ],
+              "radius": 1.000001,
+              "rate": 0.1,
+              "phase": 0
+            },
+            "cargo": 0,
+            "cargoCapacity": 1,
+            "propellant": 0,
+            "tankCapacity": 20,
+            "serviceDuration": 0.2
+          },
+          {
+            "id": "Crown",
+            "rail": {
+              "kind": "circular",
+              "center": [
+                0,
+                0,
+                0
+              ],
+              "u": [
+                1,
+                0,
+                0
+              ],
+              "v": [
+                0,
+                1,
+                0
+              ],
+              "radius": 1.4,
+              "rate": 0.6036816105203691,
+              "phase": -0.9385220143071458
+            },
+            "cargo": 0,
+            "cargoCapacity": 1,
+            "propellant": 0,
+            "tankCapacity": 20,
+            "serviceDuration": 0.2
+          }
+        ],
+        "cargoCapacity": 0.05,
+        "capture": {
+          "position": 1e-07,
+          "velocity": 1e-07
+        },
+        "objective": {
+          "destinationId": "Crown",
+          "quota": 0.05,
+          "returnPortId": "Equator",
+          "minPropellant": 0.05,
+          "hardwareCost": 1
+        }
+      }
+    },
+    "program": {
+      "schemaVersion": 4,
+      "id": "shuttle-service-world",
+      "burns": []
+    }
+  },
+  "historyDuration": 128,
+  "sampleStep": 0.0625,
+  "forecastDuration": 12,
+  "stations": [
+    {
+      "id": "Equator",
+      "role": "Surface supply terminal",
+      "berths": 2,
+      "cargo": 0.3,
+      "cargoCapacity": 1,
+      "propellant": 20,
+      "tankCapacity": 20,
+      "cargoRate": 0.01,
+      "propellantRate": 0.5
+    },
+    {
+      "id": "Crown",
+      "role": "Low orbital depot",
+      "berths": 2,
+      "cargo": 0,
+      "cargoCapacity": 1,
+      "propellant": 2,
+      "tankCapacity": 20,
+      "cargoRate": -0.01,
+      "propellantRate": 0.02
+    }
+  ],
+  "templates": [
+    {
+      "id": "Equator-Crown",
+      "source": "Equator",
+      "destination": "Crown",
+      "referenceDeparture": 0.5,
+      "duration": 1.9517666902921245,
+      "cargo": 0.05,
+      "propellant": 6,
+      "arcs": [
+        {
+          "id": "ascent",
+          "start": 0,
+          "end": 1.9517666902921245,
+          "throttle": 1,
+          "direction": [
+            0.9987502603949663,
+            0.04997916927067833,
+            0
+          ],
+          "steering": {
+            "kind": "spherical-smoothstep-v1",
+            "keys": [
+              {
+                "offset": 0.0,
+                "direction": [
+                  0.9987502603949663,
+                  0.04997916927067833,
+                  0
+                ]
+              },
+              {
+                "offset": 0.4879416725730311,
+                "direction": [
+                  0.9696102640546257,
+                  0.2446547278102736,
+                  0
+                ]
+              },
+              {
+                "offset": 0.9758833451460622,
+                "direction": [
+                  0.9778198891598807,
+                  0.20944752174078976,
+                  0
+                ]
+              },
+              {
+                "offset": 1.4638250177190932,
+                "direction": [
+                  -0.0971814543010792,
+                  0.9952666803123308,
+                  0
+                ]
+              },
+              {
+                "offset": 1.9517666902921245,
+                "direction": [
+                  -0.9568202605497104,
+                  -0.29068021776788394,
+                  0
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "provenance": "Accepted low-orbit full gravity-turn seed in primary field."
+    },
+    {
+      "id": "Crown-Equator",
+      "source": "Crown",
+      "destination": "Equator",
+      "referenceDeparture": 13.749399215612783,
+      "duration": 1.9517666902921245,
+      "cargo": 0,
+      "propellant": 2.25,
+      "arcs": [
+        {
+          "id": "descent",
+          "start": 0,
+          "end": 1.9517666902921245,
+          "throttle": 1,
+          "direction": [
+            -0.2431552530887637,
+            -0.9699873828536839,
+            0
+          ],
+          "steering": {
+            "kind": "spherical-smoothstep-v1",
+            "keys": [
+              {
+                "offset": 0.0,
+                "direction": [
+                  -0.2431552530887637,
+                  -0.9699873828536839,
+                  0
+                ]
+              },
+              {
+                "offset": 0.4879416725730311,
+                "direction": [
+                  0.9988475103689626,
+                  -0.04799636475531374,
+                  0
+                ]
+              },
+              {
+                "offset": 0.9758833451460622,
+                "direction": [
+                  0.16098604844953204,
+                  0.9869566820304754,
+                  0
+                ]
+              },
+              {
+                "offset": 1.4638250177190932,
+                "direction": [
+                  0.19655517938084346,
+                  0.9804927646130616,
+                  0
+                ]
+              },
+              {
+                "offset": 1.9517666902921245,
+                "direction": [
+                  0.0006797361520614514,
+                  0.999999768979355,
+                  0
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "provenance": "Time reversed full gravity turn, empty returning ship."
+    }
+  ],
+  "vessels": [
+    {
+      "id": "Tern",
+      "name": "Tern",
+      "color": "#efbf7c",
+      "cargo": "Supplies",
+      "portId": "Equator",
+      "propellant": 0.5,
+      "route": [
+        "Equator-Crown",
+        "Crown-Equator"
+      ]
+    },
+    {
+      "id": "Ibis",
+      "name": "Ibis",
+      "color": "#8bcde0",
+      "cargo": "Supplies",
+      "portId": "Crown",
+      "propellant": 0.5,
+      "route": [
+        "Crown-Equator",
+        "Equator-Crown"
+      ]
+    }
+  ]
+}

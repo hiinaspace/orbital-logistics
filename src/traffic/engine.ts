@@ -1,9 +1,10 @@
+import {WholeFlightCache,type PreparedFlight} from './prepared';
 import {portState} from '../sim/logistics';
-import type {Runner,Sample,EventBoundary} from '../sim/runner';
+import {Runner,type Sample,type EventBoundary} from '../sim/runner';
 import type {ThrustArc} from '../sim/schema';
 import type {ViewSample,ViewerEvent} from '../model-set/model';
 import {resourcesAt,type ResourceAnchor} from './resources';
-import {admitEpisode,nextWindow,validateTraffic,localAt,isSurfaceService,CALENDAR_LIMIT,type TrafficDefinition,type TrafficVessel,type Episode,type EpisodeSource,type TransferTemplate} from './planner';
+import {admitEpisode,nextWindow,validateTraffic,localAt,isSurfaceService,isCachedShuttle,CALENDAR_LIMIT,type TrafficDefinition,type TrafficVessel,type Episode,type EpisodeSource,type TransferTemplate} from './planner';
 export interface FleetFrame {t:number;ships:ViewSample[]}
 export interface FleetBoundary {t:number;before:FleetFrame;after:FleetFrame}
 export interface FleetEvent extends ViewerEvent {shipId:string;episodeId?:string;localEpoch?:number}
@@ -12,14 +13,16 @@ export const DENSE_SAMPLE_BUDGET=65536;
 export interface TrafficDelta {frontier:number;oldest:number;frames:FleetFrame[];current:FleetFrame;boundaries:FleetBoundary[];resources:ResourceAnchor[];episodes:EpisodeRecord[];events:FleetEvent[];stats:Record<string,number>;halt?:string}
 type Stage='attached'|'service'|'waiting'|'planned'|'flying'|'fault'|'unavailable';
 interface Ship extends TrafficVessel {stage:Stage;cargoMass:number;fuel:number;used:number;routeIndex:number;voyage:number;eventAt:number;ready:boolean;reason?:string;windowIndex?:number;episode?:Episode;fault?:ViewSample;delivered:number}
-// Narrow trusted test seam. Production uses the admitted Runner unchanged.
-export interface TrafficHooks {planningWait?:(shipId:string,voyage:number,windowIndex:number)=>string|undefined;episodeAdapter?:(e:Episode)=>Runner}
+// Narrow trusted test seam. Production uses the admitted read-only flight unchanged.
+export interface TrafficHooks {planningWait?:(shipId:string,voyage:number,windowIndex:number)=>string|undefined;episodeAdapter?:(e:Episode)=>PreparedFlight}
 const copy=<T>(x:T):T=>structuredClone(x);
+function freeze(x:object){Object.values(x).forEach(v=>{if(v&&typeof v==='object')freeze(v);});return Object.freeze(x);}
 export class TrafficEngine {
  readonly definition:TrafficDefinition;
+ #flightCache=new WholeFlightCache();
  #ships:Ship[];#frontier=0;#grid=1;#frames:FleetFrame[]=[];#boundaries:FleetBoundary[]=[];#events:FleetEvent[]=[];#records:EpisodeRecord[]=[];#resources:ResourceAnchor[];#anchor:ResourceAnchor;#oldest=0;#halt?:string;
  constructor(value:TrafficDefinition,readonly hooks:TrafficHooks={}) {
-  this.definition=validateTraffic(value);const d=this.definition;
+  this.definition=validateTraffic(value);if(isCachedShuttle(this.definition))freeze(this.definition);const d=this.definition;
   this.#ships=d.vessels.map(v=>({...copy(v),stage:'attached',cargoMass:0,fuel:v.propellant,used:0,routeIndex:0,voyage:0,eventAt:0,ready:false,delivered:0}));
   this.#anchor={t:0,stocks:d.stations.map(p=>({id:p.id,cargo:p.cargo,propellant:p.propellant})),cargoImported:0,cargoExported:0,fuelImported:0,fuelExported:0};
   this.#resources=[copy(this.#anchor)];
@@ -59,10 +62,10 @@ export class TrafficEngine {
    const template=this.#template(s),w=nextWindow(this.definition,template,t,minIndex),wait=this.hooks.planningWait?.(s.id,s.voyage,w.index);
    attempted=w.index;
    if(wait){this.#wait(s,t,wait,true,w.index+1);return;}
-   const episode=admitEpisode(this.definition,template,s.id,s.voyage,t,w,s.cargoMass,s.fuel);
-   if(this.hooks.episodeAdapter){episode.execution=this.hooks.episodeAdapter(episode);episode.execution.advanceTo(episode.bundle.scenario.epoch+episode.bundle.scenario.duration);episode.facts=episode.execution.ledger.filter(e=>e.t>=0 && e.t<=episode.captureLocalEpoch);}
+   const episode=admitEpisode(this.definition,template,s.id,s.voyage,t,w,s.cargoMass,s.fuel,this.#flightCache);
+   if(this.hooks.episodeAdapter){episode.execution=this.hooks.episodeAdapter(episode);if(episode.execution!==episode.runner&&episode.execution instanceof Runner)episode.execution.advanceTo(episode.bundle.scenario.epoch+episode.bundle.scenario.duration);episode.facts=episode.execution.ledger.filter(e=>e.t>=0 && e.t<=episode.captureLocalEpoch);}
    s.episode=episode;s.stage='planned';s.eventAt=episode.departure;s.windowIndex=w.index;s.reason=undefined;
-   const density=isSurfaceService(this.definition)?2048:32,count=Math.ceil(episode.captureLocalEpoch*density);
+   const density=isCachedShuttle(this.definition)?1024:isSurfaceService(this.definition)?2048:32,count=Math.ceil(episode.captureLocalEpoch*density);
    if(count>16384)throw new Error('Episode drawing budget exceeded');
    const times=[...new Set([0,episode.captureLocalEpoch,...Array.from({length:count},(_,i)=>Math.min(i/density,episode.captureLocalEpoch)),...episode.localEpochs,...episode.runner.eventBoundaries.map(b=>b.t).filter(t=>t>=0 && t<=episode.captureLocalEpoch)])].sort((a,b)=>a-b);
    const global=(sample:Sample):ViewSample=>({...copy(sample),t:episode.departure+sample.t,fuelUsed:s.used+sample.fuelUsed!,logistics:{...copy(sample.logistics!),fuelUsed:s.used+sample.fuelUsed!},activity:{kind:sample.logistics?.dockedPortId?'waiting':'flying'}});
@@ -158,7 +161,7 @@ export class TrafficEngine {
   if(this.#records.reduce((n,r)=>n+r.samples.length+(r.executionSamples?.length??0),0)>DENSE_SAMPLE_BUDGET)throw new Error('Retained episode drawing budget exceeded');
  }
  delta(after=-1):TrafficDelta {
-  const active=this.#ships.flatMap(s=>s.episode?[s.episode]:[]),stats:Record<string,number>={frames:this.#frames.length,boundaries:this.#boundaries.length,events:this.#events.length,episodes:this.#records.length,resourceAnchors:this.#resources.length,runnerNodes:active.reduce((n,e)=>n+e.execution.retainedNodes+(e.execution===e.runner?0:e.runner.retainedNodes),0),delivered:this.#ships.reduce((n,s)=>n+s.delivered,0)};
+  const active=this.#ships.flatMap(s=>s.episode?[s.episode]:[]),stats:Record<string,number>={frames:this.#frames.length,boundaries:this.#boundaries.length,events:this.#events.length,episodes:this.#records.length,resourceAnchors:this.#resources.length,runnerNodes:this.#flightCache.stats().flightCacheNodes+active.reduce((n,e)=>n+e.execution.retainedNodes+(e.execution===e.runner?0:e.runner.retainedNodes),0),delivered:this.#ships.reduce((n,s)=>n+s.delivered,0),...this.#flightCache.stats()};
   stats.denseSamples=this.#records.reduce((n,r)=>n+r.samples.length+(r.executionSamples?.length??0),0);
   return copy({frontier:this.#frontier,oldest:this.#oldest,frames:this.#frames.filter(f=>f.t>after),current:this.#frame(this.#frontier),boundaries:this.#boundaries.filter(b=>b.t>=after),resources:[this.#resources[0],...this.#resources.slice(1).filter(r=>r.t>=after)],episodes:this.#records.filter(r=>r.updatedAt>=after),events:this.#events.filter(e=>e.t>=after),stats,...(this.#halt?{halt:this.#halt}:{})});
  }
