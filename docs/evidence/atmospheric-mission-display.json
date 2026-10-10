@@ -1,0 +1,103 @@
+{
+  "work": {
+    "nodes": 15602,
+    "trials": 15640,
+    "evaluations": 200321,
+    "roots": 96,
+    "displaySamples": 15935,
+    "bytes": 7069841
+  },
+  "recoveries": {
+    "kestrel": {
+      "recoveryEpoch": 2.957248312481685,
+      "relativeSpeed": 0.04442172356339321,
+      "waterEnergy": 0.0006521558734005486,
+      "impulse": [
+        -0.006715795869825198,
+        0.028583676869502878,
+        0
+      ],
+      "maxima": {
+        "pressure": 1.1353963277798143,
+        "acceleration": 3.449665993093224,
+        "heat": 0.3014463541119158,
+        "force": 0.34547082431740866
+      },
+      "work": {
+        "trials": 3755,
+        "evaluations": 48920,
+        "roots": 48
+      }
+    },
+    "wren": {
+      "recoveryEpoch": 8.332175956418764,
+      "relativeSpeed": 0.03865899513155402,
+      "waterEnergy": 0.00030548869973804585,
+      "impulse": [
+        0.013424067903596473,
+        -0.008340834293520455,
+        0
+      ],
+      "maxima": {
+        "pressure": 0.22321849445345635,
+        "acceleration": 1.109913265634451,
+        "heat": 0.33547886760667567,
+        "force": 0.14411567975681358
+      },
+      "work": {
+        "trials": 9026,
+        "evaluations": 117429,
+        "roots": 48
+      }
+    }
+  },
+  "capture": {
+    "y": [
+      -0.5012890567692262,
+      1.2534788716063066,
+      0,
+      -0.7991280320253645,
+      -0.31958587135855754,
+      0
+    ],
+    "positionError": 8.459459356138291e-10,
+    "deltaV": 1.5257378951511387e-9,
+    "fuelUsed": 2.655844789289254e-10,
+    "propellantBefore": 0.17220859134553812,
+    "propellantAfter": 0.17220859107995365
+  },
+  "display": [
+    {
+      "id": "kestrel-stack",
+      "maxPositionError": 7.59183374267104e-8,
+      "maxVelocityError": 2.5274897385596927e-7,
+      "pixelsAtMaximumZoom": 0.07591833742671039
+    },
+    {
+      "id": "kestrel",
+      "maxPositionError": 1.0618100702289149e-7,
+      "maxVelocityError": 8.694585018805217e-7,
+      "pixelsAtMaximumZoom": 0.10618100702289149
+    },
+    {
+      "id": "wren",
+      "maxPositionError": 1.0464345798416541e-7,
+      "maxVelocityError": 3.2724345936592783e-7,
+      "pixelsAtMaximumZoom": 0.10464345798416541
+    }
+  ],
+  "finalStocks": [
+    {
+      "id": "Cairn",
+      "cargo": 0.2,
+      "propellant": 1,
+      "occupied": 0
+    },
+    {
+      "id": "Lantern",
+      "cargo": 0.1,
+      "propellant": 1,
+      "occupied": 0
+    }
+  ]
+}

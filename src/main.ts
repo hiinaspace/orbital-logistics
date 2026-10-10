@@ -1,3 +1,5 @@
+import atmosphericLaunch from '../fixtures/model-sets/aster-launch.json';
+import type {AtmosphericMission} from './model-set/atmospheric-mission';
 import atmosphericEntry from '../fixtures/model-sets/aster-entry.json';
 import type {EntryFlight} from './model-set/entry';
 import {densityAt} from './sim/atmosphere';
@@ -43,7 +45,7 @@ import type {State,Vec3} from './sim/schema';
 import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVessel, setEvents, stockAt, isPresent,presenceLabel,type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
-const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,crossingPlanes,steered,maintainedSet] as (ModelSet|StagedFlight|EntryFlight)[];
+const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,crossingPlanes,steered,maintainedSet] as (ModelSet|StagedFlight|EntryFlight|AtmosphericMission)[];
 const trafficSets=[trafficDefinition,surfaceService,maintainedService,flexibleService,networkService] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
@@ -185,7 +187,7 @@ function status(v: VesselView): string {
   if(l?.service&&l.service.cargo===0&&l.service.propellant!==0)return `${l.service.propellant<0?'Delivering fuel':'Refueling'} · ${l.service.portId}`;
   if (l?.service) return `${l.service.cargo < 0 ? 'Unloading' : 'Loading'} · ${l.service.portId}`;
   if (l?.dockedPortId) return `${v.ports.find(p=>p.id===l.dockedPortId)?.rail.kind==='surface'?'On pad':'Docked'} · ${l.dockedPortId}`;
-  if((s.thrust?.force??0)>0)return `Powered flight · ${nextArrival(v)?.portId??''}`;
+  if((s.thrust?.force??0)>0)return 'Powered flight'+(nextArrival(v)?.portId?' · '+nextArrival(v)!.portId:'');
   const dock = nextArrival(v);
   return dock ? `En route · ${dock.portId}` : 'Free flight';
 }
@@ -262,6 +264,7 @@ function updatePanels() {
   }).join('') : '');
   document.querySelectorAll<HTMLButtonElement>('[data-object]').forEach(b => b.onclick = () => select(b.dataset.object!));
   const v = vessel(), key = run.id + ':' + selected;
+  $('launch-view').textContent=run.entry||v?.entry&&t>=(v.entry.activeFrom??0)?'Entry view':'Surface view';
   if (key !== inspectorKey) {
     inspectorKey = key;
     const heading = v?.name ?? selected;
@@ -283,17 +286,17 @@ function updatePanels() {
     if(v.id===run.staging?.separation.parentId)$('readouts').innerHTML+=`<div><dt>Carried payload fuel</dt><dd>${number(run.staging.separation.reservedPayloadFuel)}</dd></div>`;
     if(maintenance){const err=orbitError(s.y,maintenance.reference),baseline=displayPortState(portsOf(run).find(p=>p.id===selected)!,{[selected]:run.maintained![selected].baseline},s.activity?.knownEpoch??t),unmaintained=orbitError(baseline,maintenance.reference);$('readouts').innerHTML=`<div><dt>Maintenance fuel</dt><dd>${s.propellant.toFixed(4)} / ${number(v.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${used.toFixed(4)}</dd></div><div><dt>Orbit error · R</dt><dd>${err.position.toExponential(2)}</dd></div><div><dt>Velocity error</dt><dd>${err.velocity.toExponential(2)}</dd></div><div><dt>Unmaintained error · R</dt><dd>${unmaintained.position.toExponential(2)}</dd></div>`;}
     if(v.ship.engine)$('readouts').innerHTML+=`<div><dt>Thrust</dt><dd>${maintenance?(s.thrust?.force??0).toExponential(2):number(s.thrust?.force??0)} / ${number(v.ship.engine.maxThrust)}</dd></div><div><dt>Thrust acceleration</dt><dd>${maintenance?(s.thrust?.acceleration??0).toExponential(2):number(s.thrust?.acceleration??0)}</dd></div>`;
-    if(v.entry) {
+    if(v.entry||v.aerodynamics) {
       const a=s.aero,body=run.world.bodies[0],r=Math.hypot(...s.y.slice(0,3).map((x,i)=>x-bodyState(body,t)[i]));
       const pressure=a?.dynamicPressure??0,drag=Math.hypot(...(a?.drag??[0,0,0])),lift=Math.hypot(...(a?.lift??[0,0,0]));
       const load=Math.hypot(...[0,1,2].map(i=>(a?.drag[i]??0)+(a?.lift[i]??0)+(s.thrust? s.thrust.force*s.thrust.direction[i]:0)))/(s.mass??1);
-      $('readouts').innerHTML+=`<div><dt>Altitude · R</dt><dd>${(r-body.radius).toFixed(5)}</dd></div><div><dt>Air speed</dt><dd>${Math.hypot(...(a?.relativeVelocity??[0,0,0])).toFixed(4)}</dd></div><div><dt>Density</dt><dd>${(a?.density??0).toExponential(2)}</dd></div><div><dt>Dynamic pressure</dt><dd>${pressure.toFixed(4)}</dd></div><div><dt>Lift / drag</dt><dd>${(drag>0?lift/drag:0).toFixed(3)}</dd></div><div><dt>Flight load</dt><dd>${load.toFixed(3)}</dd></div>${s.entryPhase==='recovered'?`<div><dt>Recovery speed</dt><dd>${run.entry!.relativeSpeed.toFixed(4)}</dd></div>`:''}`;
+      $('readouts').innerHTML+=`<div><dt>Altitude · R</dt><dd>${(r-body.radius).toFixed(5)}</dd></div><div><dt>Air speed</dt><dd>${Math.hypot(...(a?.relativeVelocity??[0,0,0])).toFixed(4)}</dd></div><div><dt>Density</dt><dd>${(a?.density??0).toExponential(2)}</dd></div><div><dt>Dynamic pressure</dt><dd>${pressure.toFixed(4)}</dd></div><div><dt>Lift / drag</dt><dd>${(drag>0?lift/drag:0).toFixed(3)}</dd></div><div><dt>Flight load</dt><dd>${load.toFixed(3)}</dd></div>${s.entryPhase==='recovered'?`<div><dt>Recovery speed</dt><dd>${(run.recoveries?.[v.id]??run.entry!).relativeSpeed.toFixed(4)}</dd></div>`:''}`;
     }
     if(v.ports.some(p=>p.rail.kind==='surface')) {
       const body=run.world.bodies[0],b=bodyState(body,t),dx=s.y[0]-b[0],dy=s.y[1]-b[1],r=Math.hypot(dx,dy),vx=s.y[3]-b[3],vy=s.y[4]-b[4];
       const small=(x:number)=>Math.abs(x)<1e-12?'0.0000':Math.abs(x)<.001?x.toExponential(2):x.toFixed(4);
       const mass=v.ship.dryMass+cargo+s.propellant;
-      $('readouts').innerHTML+=`<div><dt>Altitude · R</dt><dd>${small(r-body.radius)}</dd></div><div><dt>Radial speed</dt><dd>${small((dx*vx+dy*vy)/r)}</dd></div><div><dt>Tangential speed</dt><dd>${small((dx*vy-dy*vx)/r)}</dd></div><div><dt>Thrust / weight</dt><dd>${number((s.thrust?.force??0)/mass/(body.mu/r**2))}</dd></div>`;
+      $('readouts').innerHTML+=`${v.entry||v.aerodynamics?'':`<div><dt>Altitude · R</dt><dd>${small(r-body.radius)}</dd></div>`}<div><dt>Radial speed</dt><dd>${small((dx*vx+dy*vy)/r)}</dd></div><div><dt>Tangential speed</dt><dd>${small((dx*vy-dy*vx)/r)}</dd></div><div><dt>Thrust / weight</dt><dd>${number((s.thrust?.force??0)/mass/(body.mu/r**2))}</dd></div>`;
     }
     $<HTMLButtonElement>('object-frame').disabled=s.activity?.kind==='fault';
     if(s.activity?.reason)$('readouts').innerHTML+=`<div class="fault-reason">${esc(s.activity.reason)}</div>`;
@@ -330,7 +333,7 @@ function updatePanels() {
 }
 function publishState() {
   $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, frame, selected, layers, traffic:traffic?{frontier:traffic.frontier,oldest:traffic.oldest,pending,sequence,live:liveMode,stats:run?.traffic?.stats,halt:traffic.halt,error:liveError}:undefined,
-    staging:run?.staging,entry:run?.entry,aeroVectors,
+    staging:run?.staging,entry:run?.entry,recoveries:run?.recoveries,aeroVectors,
     ships: run?.vessels.map(v => !isPresent(v,t)?({id:v.id,present:false,lifetime:v.lifetime}):({id: v.id,present:true, ...sampleVessel(v, t), ...(v.glyph?{glyph:v.glyph,axis:rocketAxis(v,sampleVessel(v,t),t)}:{}), screen: project(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),occludedBy:occluder(project3(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),spheres)?.id})),
     labels:placedLabels.map(({id,anchor,alpha,left,top})=>({id,anchor,alpha,left,top})),
     maintenance:run?.maintained?Object.fromEntries(Object.entries(run.maintained).map(([id,v])=>[id,{...sampleVessel(v,t),error:orbitError(sampleVessel(v,t).y,run!.stations.find(p=>p.id===id)!.maintenance!.reference)}])):undefined,
@@ -338,7 +341,7 @@ function publishState() {
 }
 function loadSet(id: string) {
   if(currentSet)setSpeeds.set(currentSet,playbackRate);currentSet=id;
-  playbackRate=setSpeeds.get(id)??(['selene-staging','aster-entry'].includes(id)?.1:1);
+  playbackRate=setSpeeds.get(id)??(['selene-staging','aster-entry','aster-launch'].includes(id)?.1:1);
   const speed=$<HTMLInputElement>('speed');speed.max=String(Math.log2(maximumPlaybackRate(id)));playbackRate=Math.min(playbackRate,maximumPlaybackRate(id));speed.value=String(Math.log2(playbackRate));showSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
@@ -357,7 +360,7 @@ function loadSet(id: string) {
     if (e.data.revision !== revision || currentRevision !== revision) return;
     if (e.data.error) { $('load-status').textContent = e.data.error; return; }
     run = e.data.run!; events = setEvents(run); ready = true; selected = Object.keys(run.maintained??{})[0]??run.vessels[0].id;
-    $('launch-view').hidden=!run.entry&&!run.world.ports.some(p=>p.rail.kind==='surface');$('launch-view').textContent=run.entry?'Entry view':'Surface view';document.querySelectorAll<HTMLElement>('.entry-layer').forEach(e=>e.hidden=!run!.entry);
+    $('launch-view').hidden=!run.entry&&!run.world.ports.some(p=>p.rail.kind==='surface');$('launch-view').textContent=run.entry?'Entry view':'Surface view';document.querySelectorAll<HTMLElement>('.entry-layer').forEach(e=>e.hidden=!run!.atmosphere);
     frame = 'inertial'; t = run.id === 'orison-freight' ? 2 : 0; playing = true;
     $<HTMLInputElement>('time').min = String(start()); $<HTMLInputElement>('time').max = String(end());
     $('frame').innerHTML = `<option value="inertial">Inertial</option><option value="rotating">${esc(run.rotating.name)}</option>` +
@@ -489,7 +492,7 @@ function draw() {
       const stop = nextArrival(v)?.t ?? Math.min(end(), t + (run.id === 'lunar-loop' ? 5.58 : 8));
       worldPath([...(isPresent(v,t)?[project3(sampleVessel(v,t).y,t)]:[]), ...v.samples.filter(s => s.t > t && s.t <= stop).map(s => project3(s.y, s.t))], '#b5bdc7', 1, 0.28, [3, 5]);
     }
-    if(layers.plan && isSelected)for(const arc of v.entry?[{id:'terminal-braking',start:v.entry.brakingEpoch,end:v.entry.recovery.t,direction:[0,0,0] as Vec3,throttle:1}]:v.arcs) {
+    if(layers.plan && isSelected)for(const arc of [...v.arcs,...(v.entry?[{id:'terminal-braking',start:v.entry.brakingEpoch,end:v.entry.recovery.t,direction:[0,0,0] as Vec3,throttle:1}]:[])]) {
       const stop=nextArrival(v)?.t??end();
       if(arc.throttle===0 || arc.end<=t || arc.start>=stop || arc.end>end() || isPresent(v,t)&&sampleVessel(v,t).activity?.kind==='fault')continue;
       const curve=[project3(sampleVessel(v,Math.max(start(),arc.start)).y,Math.max(start(),arc.start)),...v.samples.filter(s=>s.t>arc.start && s.t<arc.end).map(s=>project3(s.y,s.t)),project3(sampleVessel(v,arc.end).y,arc.end)];
@@ -602,7 +605,7 @@ $('drag-mode').onclick=()=>{panMode=!panMode;cameraControls();};
 $('tracking').onchange=e=>track((e.target as HTMLSelectElement).value as typeof tracking);
 $('fit').onclick = ()=>{track('off');fit();draw();updatePanels();};
 $('launch-view').onclick=()=>{
-  if(run?.entry){frame='inertial';$<HTMLSelectElement>('frame').value=frame;setCamera('top');track('follow');camera.scale=Math.min(width,height)/.3;updatePanels();return;}
+  if(run?.entry||vessel()?.entry&&t>=(vessel()!.entry!.activeFrom??0)){frame='inertial';$<HTMLSelectElement>('frame').value=frame;setCamera('top');track('follow');camera.scale=Math.min(width,height)/.3;updatePanels();return;}
   const pad=run?.world.ports.find(p=>p.rail.kind==='surface');if(!pad)return;
   track('off');frame=pad.id;$<HTMLSelectElement>('frame').value=frame;
   const theta=pad.rail.kind==='surface'?pad.rail.phase+pad.rail.rate*t:0;

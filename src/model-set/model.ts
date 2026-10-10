@@ -1,6 +1,6 @@
 import {entryForces,recoveredState,type EntryPhysics,type RecoveryPose} from '../sim/entry';
 import {norm,scale,type Vec3 as Vector3} from '../sim/vectors';
-import type {Atmosphere,AeroTelemetry} from '../sim/atmosphere';
+import {aerodynamicForces,type Atmosphere,type AeroTelemetry,type AeroConfiguration} from '../sim/atmosphere';
 import {directionAt} from '../sim/steering';
 import { Runner, type LedgerEntry, type Sample, type EventBoundary } from '../sim/runner';
 import {resourcesAt,type ResourceAnchor,type Depot} from '../traffic/resources';
@@ -18,7 +18,8 @@ export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
 export interface ViewSample extends Sample {activity?:Activity;mass?:number;aero?:AeroTelemetry;axis?:Vector3;entryPhase?:'coast'|'entry'|'braking'|'recovered'}
 export interface VesselView {
- entry?:{physics:EntryPhysics;recovery:RecoveryPose;entryEpoch:number;brakingEpoch:number;heatScale:number};
+ entry?:{physics:EntryPhysics;recovery:RecoveryPose;activeFrom?:number;entryEpoch:number;brakingEpoch:number;heatScale:number};
+ aerodynamics?:{scenario:Scenario;atmosphere:Atmosphere;aero:AeroConfiguration};
  glyph?:'rocket'|'stack';initialAxis?:Vec3;
  inheritedFuelUsed?:number;
  lifetime?:{start:number;end:number;retired?:boolean;parentId?:string};
@@ -33,6 +34,7 @@ export interface VesselRun extends Vessel,VesselView {}
 export interface MaintainedView extends VesselView {baseline:{t:number;y:State}[]}
 export interface SceneView {
  atmosphere?:Atmosphere;entry?:{recoveryEpoch:number;relativeSpeed:number;waterEnergy:number;impulse:Vec3;work:{trials:number;evaluations:number;roots:number};maxima:{pressure:number;acceleration:number;heat:number;force:number}};
+ recoveries?:Record<string,NonNullable<SceneView['entry']>>;
  staging?:{separation:{t:number;parentId:string;children:string[];state:State;beforeMass:number;afterMass:number;momentumBefore:number[];momentumAfter:number[];reservedPayloadFuel:number;boosterFuel:number};initialFuel:number};
  maintained?:Record<string,MaintainedView>;
  schemaVersion:1;id:string;name:string;extent:number;description:string;provenance:string;
@@ -189,14 +191,19 @@ export function sampleVessel(v: VesselView, t: number): ViewSample {
   }
   // Throttle is fixed per arc; steering uses the same physical direction law.
   // Mass and therefore force/acceleration vary smoothly. These are drawing values, never a target or propagation origin.
-  if(sample.thrust && !v.entry) {
+  const entryActive=!!v.entry&&t>=(v.entry.activeFrom??v.samples[0].t);
+  if(sample.thrust && !entryActive) {
     const engine=v.ship.engine!,arc=v.arcs.find(a=>a.id===sample.thrust!.id)!;
     const mass=sample.mass??v.ship.dryMass+(sample.logistics?.cargoMass??v.ship.cargoMass)+sample.propellant;
     sample.thrust.force=Math.min(engine.maxThrust*arc.throttle,(engine.maxAcceleration??Infinity)*mass);
     sample.thrust.direction=directionAt(arc,t-arc.start);
     sample.thrust.acceleration=sample.thrust.force/mass*Math.hypot(...sample.thrust.direction);
   }
-  if(v.entry) {
+  if(v.aerodynamics && !entryActive && !sample.logistics?.dockedPortId) {
+    sample.aero=aerodynamicForces(v.aerodynamics.scenario.bodies[0],v.aerodynamics.atmosphere,v.aerodynamics.aero,t,sample.y);
+    if(sample.thrust)sample.axis=[...sample.thrust.direction];
+  }
+  if(v.entry && entryActive) {
     if(t>=v.entry.recovery.t) {
       sample.y=recoveredState(v.entry.recovery,t);sample.entryPhase='recovered';delete sample.thrust;delete sample.aero;
       const r=sample.y.slice(0,3).map((x,i)=>x-v.entry!.recovery.center[i]) as Vector3;

@@ -1,0 +1,13 @@
+{
+  "tool": "codex exec",
+  "cliVersion": "0.153.4",
+  "model": "gpt-6-astra",
+  "provider": "openai",
+  "reasoningEffort": "xhigh",
+  "sandbox": "read-only",
+  "sessionId": "01a123a8-a58b-7881-bae9-f44230183f24",
+  "exitCode": 0,
+  "report": "astra-review.md",
+  "scope": "architecture advice against 987a0a9, not a final diff audit",
+  "cost": "unavailable on subscription"
+}

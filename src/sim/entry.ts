@@ -1,3 +1,4 @@
+import {atmosphericStep,type FuelState} from './atmospheric-step';
 import {derivative,bodyState} from './dynamics';
 import {aerodynamicForces,densityAt,type Atmosphere,type AeroConfiguration,type AeroTelemetry} from './atmosphere';
 import {cross,dot,norm,scale,subtract,type State,type Vec3} from './vectors';
@@ -5,7 +6,7 @@ import type {Scenario} from './schema';
 
 export interface EntryGuidance {startHeight:number;fullHeight:number;descentSpeed:number;descentGain:number;velocityGain:number}
 export interface EntryPhysics {scenario:Scenario;atmosphere:Atmosphere;aero:AeroConfiguration;guidance:EntryGuidance;recovery:{height:number;maxSpeed:number}}
-export type EntryState=[number,number,number,number,number,number,number];
+export type EntryState=FuelState;
 export interface EntryForces {aero:AeroTelemetry;force:Vec3;axis:Vec3;mass:number;engagement:number}
 export function entryForces(d:EntryPhysics,t:number,z:EntryState):EntryForces {
  const s=d.scenario,body=s.bodies[0],y=z.slice(0,6) as State,mass=s.ship.dryMass+s.ship.cargoMass+z[6];
@@ -32,17 +33,14 @@ export function entryDerivative(d:EntryPhysics,t:number,z:EntryState):EntryState
  return [...rate,-norm(f.force)/d.scenario.ship.exhaustVelocity];
 }
 export function entryStep(d:EntryPhysics,t:number,z:EntryState,h:number,check?:(t:number,z:EntryState)=>void):EntryState {
- const add=(x:EntryState,k:EntryState,dt:number)=>x.map((v,i)=>v+dt*k[i]) as EntryState;
- const rate=(t:number,z:EntryState)=>{check?.(t,z);return entryDerivative(d,t,z);};
- const a=rate(t,z),b=rate(t+h/2,add(z,a,h/2)),c=rate(t+h/2,add(z,b,h/2)),e=rate(t+h,add(z,c,h));
- return z.map((v,i)=>v+h*(a[i]+2*b[i]+2*c[i]+e[i])/6) as EntryState;
+ return atmosphericStep(t,z,h,(t,z)=>entryDerivative(d,t,z),check);
 }
 // Conservative local enclosure: speed can grow by at most allowance; all
 // stages and continuous motion stay in each body's half-clearance ball.
 // Density, relative air speed, aero magnitude, gravity and thrust are bounded
 // there. The self-consistent B*h test makes the speed bound valid, even though
 // quadratic drag is not globally bounded. No assumption of drag helping safety.
-export function entryStepEnvelope(d:EntryPhysics,t:number,z:EntryState,h:number):{half:number;allowance:number;bound:number;safe:boolean} {
+export function entryStepEnvelope(d:Pick<EntryPhysics,'scenario'|'atmosphere'|'aero'>,t:number,z:EntryState,h:number):{half:number;allowance:number;bound:number;safe:boolean} {
  const s=d.scenario,y=z.slice(0,6) as State,body=s.bodies[0],b=bodyState(body,t),r=norm(subtract(y.slice(0,3) as Vec3,b.slice(0,3) as Vec3)),clearance=r-body.radius;
  if(clearance<=0||!Number.isFinite(h)||h<=0)return {half:0,allowance:0,bound:Infinity,safe:false};
  const half=clearance/2,speed=norm(y.slice(3) as Vec3),allowance=.25;

@@ -50,7 +50,7 @@ export interface EntryResult {
  definition:EntryFlight;nodes:EntryNode[];contact:{t:number;before:EntryState;pose:RecoveryPose;relativeSpeed:number;waterEnergy:number;impulse:Vec3};
  entryEpoch:number;brakingEpoch:number;work:{trials:number;evaluations:number;roots:number};maxima:{pressure:number;acceleration:number;heat:number;force:number};view:SceneView;
 }
-export function prepareEntry(value:unknown):EntryResult {
+export function prepareEntry(value:unknown,options:{displayRate?:number}={}):EntryResult {
  const definition=validateEntry(value),d=definition,s=d.scenario,body=s.bodies[0],initial=[...s.ship.state,s.ship.propellant] as EntryState;
  const work={trials:0,evaluations:0,roots:0};
  const nodes:EntryNode[]=[{t:0,z:initial}],maxima={pressure:0,acceleration:0,heat:0,force:0};
@@ -125,7 +125,9 @@ export function prepareEntry(value:unknown):EntryResult {
   {t:brakingEpoch,kind:'thrust-start',id:'terminal-braking',deltaV:0,fuelUsed:0,propellantBefore:s.ship.propellant,propellantAfter:s.ship.propellant},
   {t:actual.t,kind:'thrust-end',id:'terminal-braking',deltaV:s.ship.exhaustVelocity*Math.log((s.ship.dryMass+s.ship.cargoMass+s.ship.propellant)/(s.ship.dryMass+s.ship.cargoMass+actual.before[6])),fuelUsed:s.ship.propellant-actual.before[6],propellantBefore:s.ship.propellant,propellantAfter:actual.before[6]},
   {t:actual.t,kind:'splashdown',id:'ocean-recovery',deltaV:0,fuelUsed:0,propellantBefore:actual.before[6],propellantAfter:actual.before[6],detail:'Ocean dissipates relative impact kinetic energy'}];
- const times=[...new Set([...Array.from({length:Math.ceil(s.duration*2048)+1},(_,i)=>i*s.duration/Math.ceil(s.duration*2048)),...events.map(e=>e.t)])].sort((a,b)=>a-b);
+ const rate=options.displayRate??2048;
+ if(!Number.isFinite(rate)||rate<1||rate>2048)throw new Error('Invalid entry display density');
+ const times=[...new Set([...Array.from({length:Math.ceil(s.duration*rate)+1},(_,i)=>i*s.duration/Math.ceil(s.duration*rate)),...events.map(e=>e.t)])].sort((a,b)=>a-b);
  const vessel:VesselView={id:s.ship.id,name:d.presentation.name,color:d.presentation.color,cargo:'Freight',ship:s.ship,ports:[],cargoCapacity:s.ship.cargoMass,arcs:[],continuousFuel:true,portSamples:{},glyph:'rocket',initialAxis:[0,1,0],entry:metadata,samples:times.map(t=>sample(t)),ledger:events,boundaries:[{t:actual.t,before:sample(actual.t,true),after:sample(actual.t)}]};
  const view:SceneView={schemaVersion:1,id:d.id,name:d.name,extent:d.extent,description:d.description,provenance:d.provenance,stations:[],rotating:d.rotating,vessels:[vessel],portSamples:{},world:{bodies:s.bodies,ports:[],units:s.units},window:{start:0,end:s.duration},atmosphere:d.atmosphere,entry:{recoveryEpoch:actual.t,relativeSpeed:actual.relativeSpeed,waterEnergy:actual.waterEnergy,maxima,impulse:actual.impulse,work}};
  if(new TextEncoder().encode(JSON.stringify(view)).byteLength>12_000_000)throw new Error('Entry display packet budget exceeded');
