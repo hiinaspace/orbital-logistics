@@ -13,6 +13,15 @@ test('direct surface flight supports close inspection, event scrubbing and cache
  await page.screenshot({path:'docs/evidence/direct-surface-launch.png',fullPage:true});
  await page.getByLabel('Simulation time').fill(String(Math.round((launch+1.5)*1000)/1000));await page.getByLabel('Reference frame').selectOption('inertial');await page.getByRole('button',{name:'Fit',exact:true}).click();
  await page.screenshot({path:'docs/evidence/direct-surface-flight.png',fullPage:true});expect((await state(page)).ships[0].thrust).toBeUndefined();
+ const ignition=s.events.filter((e:any)=>e.kind==='thrust-start'&&e.vessel==='Tern')[1].t;
+ await page.getByLabel('Simulation time').fill(String(Math.round((ignition-.5)*1000)/1000));const held=(await state(page)).ships[0].axis;
+ await page.getByLabel('Simulation time').fill(String(Math.round((ignition-.3)*1000)/1000));const turning=(await state(page)).ships[0].axis;
+ expect(Math.hypot(...held.map((v:number,i:number)=>v-turning[i]))).toBeGreaterThan(.01);
+ await page.getByLabel('Simulation time').fill(String(Math.round((ignition-.001)*1000)/1000));const preIgnition=(await state(page)).ships[0];
+ expect(preIgnition.thrust).toBeUndefined();
+ await page.getByLabel('Simulation time').fill(String(Math.round((ignition+.001)*1000)/1000));const firing=(await state(page)).ships[0];
+ expect(firing.axis).toEqual(firing.thrust.direction);expect(Math.hypot(...preIgnition.axis.map((v:number,i:number)=>v-firing.axis[i]))).toBeLessThan(.001);
+ await page.getByLabel('Simulation time').fill(String(Math.round((ignition-.3)*1000)/1000));expect((await state(page)).ships[0].axis).toEqual(turning);
  await page.getByLabel('Simulation time').fill(String(Math.round((arrival+.01)*1000)/1000));expect((await state(page)).ships[0].logistics.dockedPortId).toBe('Meridian');
  await page.getByLabel('Simulation time').fill(String(Math.round((landing-.17)*1000)/1000));await page.getByRole('button',{name:'Surface view',exact:true}).click();
  s=await state(page);const pose=s.ships[0].y;expect(s.ships[0].thrust.acceleration).toBeCloseTo(3,8);

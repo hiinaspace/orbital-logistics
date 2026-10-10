@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "modelVersion": "surface-shuttle-v1",
+  "id": "orison-low-orbit-shuttle",
+  "name": "Orison \u00b7 Low-orbit shuttle",
+  "extent": 1.9,
+  "description": "Tern climbs to Crown and returns to Equator with sustained gravity turns.",
+  "provenance": "Full Orison\u2013Mote flight field; analytical low orbital depot; one smooth finite burn per flight, acceleration capped at 1.2 surface gravities.",
+  "world": {
+    "scenario": {
+      "schemaVersion": 3,
+      "modelVersion": "rk4-canonical-v3",
+      "id": "maintained-relay",
+      "units": {
+        "length": "Orison radius",
+        "time": "\u221a(R\u00b3/\u03bc)",
+        "mass": "mass unit"
+      },
+      "epoch": 0,
+      "duration": 17,
+      "policy": {
+        "step": 0.0009765625,
+        "maxNodes": 65536,
+        "maxSubdivision": 20
+      },
+      "bodies": [
+        {
+          "id": "Orison",
+          "mu": 1,
+          "radius": 1,
+          "rail": {
+            "kind": "fixed",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "id": "Mote",
+          "mu": 0.004,
+          "radius": 0.12,
+          "rail": {
+            "kind": "circular",
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "u": [
+              1,
+              0,
+              0
+            ],
+            "v": [
+              0,
+              1,
+              0
+            ],
+            "radius": 6,
+            "rate": 0.06817732869618864,
+            "phase": 0.4
+          }
+        }
+      ],
+      "ship": {
+        "id": "Tern",
+        "state": [
+          1.000001,
+          0,
+          0,
+          0,
+          0.1000001,
+          0
+        ],
+        "dryMass": 1,
+        "cargoMass": 0.05,
+        "propellant": 6,
+        "tankCapacity": 6,
+        "exhaustVelocity": 3,
+        "engine": {
+          "maxThrust": 32,
+          "maxAcceleration": 1.2
+        }
+      }
+    },
+    "program": {
+      "schemaVersion": 3,
+      "id": "live-field",
+      "burns": []
+    }
+  },
+  "pad": {
+    "id": "Equator",
+    "rail": {
+      "kind": "surface",
+      "bodyId": "Orison",
+      "centerHeight": 1e-06,
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "u": [
+        1,
+        0,
+        0
+      ],
+      "v": [
+        0,
+        1,
+        0
+      ],
+      "radius": 1.000001,
+      "rate": 0.1,
+      "phase": 0
+    },
+    "cargo": 0,
+    "cargoCapacity": 0,
+    "propellant": 0,
+    "tankCapacity": 0,
+    "serviceDuration": 0.5
+  },
+  "depot": {
+    "id": "Crown",
+    "rail": {
+      "kind": "circular",
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "u": [
+        1,
+        0,
+        0
+      ],
+      "v": [
+        0,
+        1,
+        0
+      ],
+      "radius": 1.4,
+      "rate": 0.6036816105203691,
+      "phase": -0.9385220143071458
+    },
+    "cargo": 0,
+    "cargoCapacity": 0,
+    "propellant": 0,
+    "tankCapacity": 0,
+    "serviceDuration": 0.5
+  },
+  "launch": 0.5,
+  "release": 13.749399215612783,
+  "ascent": {
+    "duration": 1.9517666902921245,
+    "keys": [
+      0.0,
+      0.19716358274138746,
+      0.16100991528473124,
+      1.6181314022876176,
+      3.3865303295329157
+    ]
+  },
+  "descent": {
+    "duration": 1.9517666902921245,
+    "keys": [
+      -3.3865303295329157,
+      -1.6181314022876176,
+      -0.16100991528473124,
+      -0.19716358274138746,
+      -0.0
+    ]
+  }
+}
