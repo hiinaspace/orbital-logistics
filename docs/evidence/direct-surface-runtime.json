@@ -1,0 +1,12 @@
+{
+  "preparationMs": 2938.6222470000002,
+  "evaluations": [
+    21,
+    21
+  ],
+  "remaining": 0.5212417014559801,
+  "stationFailed": 0,
+  "physicalNodes": 15419,
+  "viewBytes": 2659779,
+  "delivery": 0
+}

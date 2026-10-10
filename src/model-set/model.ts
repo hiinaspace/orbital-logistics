@@ -8,7 +8,7 @@ import {resourcesAt,type ResourceAnchor,type Depot} from '../traffic/resources';
 import {portState} from '../sim/logistics';
 import { validateBundle, type Bundle, type Port, type Scenario, type Rail, type State, type Vec3, type ThrustArc } from '../sim/schema';
 
-export interface Station { id: string; role: string; berths: number; maintenance?:{reference:Extract<Rail,{kind:'circular'}>;checks:{t:number;outcome:string;before:number[];after?:number[];evaluations:number}[]} }
+export interface Station { inventoryOwner?:'propulsion'; id: string; role: string; berths: number; maintenance?:{reference:Extract<Rail,{kind:'circular'}>;checks:{t:number;outcome:string;before:number[];after?:number[];evaluations:number}[]} }
 export interface Vessel { name: string; color: string; cargo: string; bundle: Bundle }
 export interface ModelSet {
   schemaVersion: 1; id: string; name: string; extent: number;
@@ -19,6 +19,7 @@ export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
 export interface ViewSample extends Sample {activity?:Activity;mass?:number;aero?:AeroTelemetry;axis?:Vector3;entryPhase?:'coast'|'entry'|'braking'|'recovered'}
 export interface VesselView {
+ interpolation?:'hermite';
  surfaceFlights?:SurfaceFlight[];surfaceEngine?:Scenario['ship']['engine'];
  entry?:{physics:EntryPhysics;recovery:RecoveryPose;activeFrom?:number;entryEpoch:number;brakingEpoch:number;heatScale:number};
  aerodynamics?:{scenario:Scenario;atmosphere:Atmosphere;aero:AeroConfiguration};
@@ -109,6 +110,7 @@ export function stockAt(run: SceneView, t: number): Stock[] {
       p.propellant -= e.propellantAfter - e.propellantBefore;
     }
   }
+  for(const station of run.stations)if(station.inventoryOwner==='propulsion'){const owner=run.maintained?.[station.id];if(!owner)throw Error('Station inventory owner missing');stocks.find(p=>p.id===station.id)!.propellant=sampleVessel(owner,t).propellant;}
   return stocks;
 }
 
@@ -247,6 +249,14 @@ export function stateAt(v: VesselView, t: number): State {
   // Every instantaneous event supplies its physical left state. No inverse burn
   // or docking reconstruction is owned by the renderer.
   const endpoint = v.boundaries.find(e=>e.t===b.t)?.before.y ?? b.y;
+  if(v.interpolation==='hermite'){
+    const h=b.t-a.t,y=[...a.y] as State;
+    for(let i=0;i<3;i++){
+      y[i]=(2*u**3-3*u*u+1)*a.y[i]+(u**3-2*u*u+u)*h*a.y[i+3]+(-2*u**3+3*u*u)*endpoint[i]+(u**3-u*u)*h*endpoint[i+3];
+      y[i+3]=(6*u*u-6*u)/h*a.y[i]+(3*u*u-4*u+1)*a.y[i+3]+(-6*u*u+6*u)/h*endpoint[i]+(3*u*u-2*u)*endpoint[i+3];
+    }
+    return y;
+  }
   return a.y.map((x, i) => x + u * (endpoint[i] - x)) as State;
 }
 

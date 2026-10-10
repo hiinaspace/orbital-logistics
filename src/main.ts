@@ -1,3 +1,5 @@
+import directSurface from '../fixtures/model-sets/orison-direct-surface.json';
+import type {DirectSurfaceSet} from './model-set/direct-surface';
 import {surfaceDuration} from './surface-flexible/contracts';
 import atmosphericLaunch from '../fixtures/model-sets/aster-launch.json';
 import type {AtmosphericMission} from './model-set/atmospheric-mission';
@@ -47,7 +49,7 @@ import type {State,Vec3} from './sim/schema';
 import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVessel, setEvents, stockAt, isPresent,presenceLabel,type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
-const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,crossingPlanes,steered,maintainedSet] as (ModelSet|StagedFlight|EntryFlight|AtmosphericMission)[];
+const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,crossingPlanes,steered,maintainedSet,directSurface] as (ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet)[];
 const trafficSets=[trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
@@ -344,7 +346,7 @@ function publishState() {
 }
 function loadSet(id: string) {
   if(currentSet)setSpeeds.set(currentSet,playbackRate);currentSet=id;
-  playbackRate=setSpeeds.get(id)??(['selene-staging','aster-entry','aster-launch'].includes(id)?.1:1);
+  playbackRate=setSpeeds.get(id)??(['selene-staging','aster-entry','aster-launch','orison-direct-surface'].includes(id)?.1:1);
   const speed=$<HTMLInputElement>('speed');speed.max=String(Math.log2(maximumPlaybackRate(id)));playbackRate=Math.min(playbackRate,maximumPlaybackRate(id));speed.value=String(Math.log2(playbackRate));showSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
@@ -362,9 +364,9 @@ function loadSet(id: string) {
   worker.onmessage = (e: MessageEvent<{revision: number; run?: SceneView; error?: string}>) => {
     if (e.data.revision !== revision || currentRevision !== revision) return;
     if (e.data.error) { $('load-status').textContent = e.data.error; return; }
-    run = e.data.run!; events = setEvents(run); ready = true; selected = Object.keys(run.maintained??{})[0]??run.vessels[0].id;
+    run = e.data.run!; events = setEvents(run); ready = true; selected = run.id==='orison-direct-surface'?run.vessels[0].id:Object.keys(run.maintained??{})[0]??run.vessels[0].id;
     $('launch-view').hidden=!run.entry&&!run.world.ports.some(p=>p.rail.kind==='surface');$('launch-view').textContent=run.entry?'Entry view':'Surface view';document.querySelectorAll<HTMLElement>('.entry-layer').forEach(e=>e.hidden=!run!.atmosphere);
-    frame = 'inertial'; t = run.id === 'orison-freight' ? 2 : 0; playing = true;
+    frame = 'inertial'; t = run.id === 'orison-freight' ? 2 : run.id==='orison-direct-surface'?Math.max(0,run.vessels[0].ledger.find(e=>e.kind==='launch')!.t-.1):0; playing = true;
     $<HTMLInputElement>('time').min = String(start()); $<HTMLInputElement>('time').max = String(end());
     $('frame').innerHTML = `<option value="inertial">Inertial</option><option value="rotating">${esc(run.rotating.name)}</option>` +
       [...run.world.bodies.map(b => [b.id, b.id]), ...run.stations.map(s => [s.id, s.id]), ...run.vessels.map(v => [v.id, v.name])].map(([id, name]) => `<option value="${esc(id)}">${esc(name)} centered</option>`).join('');

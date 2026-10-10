@@ -24,8 +24,8 @@ const copy=<T>(v:T):T=>structuredClone(v);
 export class AdaptiveWorld {
  chunks:Chunk[]=[];anchor:Anchor;checks=0;corrected=0;failed=0;evaluations=0;#release?:()=>void;
  dispose(){this.#release?.();this.#release=undefined;}
- constructor(readonly definition:AdaptiveDefinition,anchor?:Anchor,readonly work?:PropagationBudget,readonly originIntervals?:OriginIntervals){const d=definition;this.anchor=copy(anchor??{t:0,y:d.relay.ship.state,fuel:d.relay.ship.propellant,used:0,origin:d.origin.state,baseline:d.relay.ship.state});if(this.anchor.t%8!==0)throw Error('Owner anchor must be a control boundary');this.#release=originIntervals?.watch(this);}
- fork(){const w=new AdaptiveWorld(this.definition,this.anchor,undefined,this.originIntervals);w.chunks=[...this.chunks];w.checks=this.checks;w.corrected=this.corrected;w.failed=this.failed;w.evaluations=this.evaluations;return w;}
+ constructor(readonly definition:AdaptiveDefinition,anchor?:Anchor,readonly work?:PropagationBudget,readonly originIntervals?:OriginIntervals,readonly originPose?:(t:number)=>State){const d=definition;this.anchor=copy(anchor??{t:0,y:d.relay.ship.state,fuel:d.relay.ship.propellant,used:0,origin:d.origin.state,baseline:d.relay.ship.state});if(this.anchor.t%8!==0)throw Error('Owner anchor must be a control boundary');this.#release=originIntervals?.watch(this);}
+ fork(){const w=new AdaptiveWorld(this.definition,this.anchor,undefined,this.originIntervals,this.originPose);w.chunks=[...this.chunks];w.checks=this.checks;w.corrected=this.corrected;w.failed=this.failed;w.evaluations=this.evaluations;return w;}
  get end(){return this.anchor.t;}
  scenario(t:number,duration:number,y:State,fuel:number,visitorFuel?:number,relay=true):Scenario{
   const d=this.definition,s=copy(d.world.scenario);s.epoch=t;s.duration=duration;delete s.logistics;delete s.rendezvous;s.bodies.forEach(b=>b.radius+=.2);
@@ -57,7 +57,8 @@ export class AdaptiveWorld {
     ownershipBounds.push({t:at,before:beforeSample,after:{...beforeSample,propellant:fuel,mass:this.definition.relay.ship.dryMass+(visitorFuel===undefined?0:1.05+visitorFuel)+fuel} as ViewSample});
    }
    const originBundle={scenario:this.scenario(t,8,start.origin,0,undefined,false),program:{schemaVersion:3 as const,id:`adaptive-origin-${t}`,burns:[]}};
-   const origin=this.definition.surface?{sample:(t:number)=>({t,y:groundState(t),propellant:0,burnCursor:0,status:'horizon' as const,detail:''}),advanceTo:(t:number)=>({t,y:groundState(t),propellant:0,burnCursor:0,status:'horizon' as const,detail:''})}:this.originIntervals?.get(originBundle)??new Runner(originBundle),baseline=new Runner({scenario:this.scenario(t,8,start.baseline,this.definition.relay.ship.propellant),program:{schemaVersion:3,id:`adaptive-baseline-${t}`,burns:[]}});
+   const pose=this.originPose??(this.definition.surface?groundState:undefined);
+   const origin=pose?{sample:(t:number)=>({t,y:pose(t),propellant:0,burnCursor:0,status:'horizon' as const,detail:''}),advanceTo:(t:number)=>({t,y:pose(t),propellant:0,burnCursor:0,status:'horizon' as const,detail:''})}:this.originIntervals?.get(originBundle)??new Runner(originBundle),baseline=new Runner({scenario:this.scenario(t,8,start.baseline,this.definition.relay.ship.propellant),program:{schemaVersion:3,id:`adaptive-baseline-${t}`,burns:[]}});
    yield;const o=origin.advanceTo(t+8);yield;const b=baseline.advanceTo(t+8);if(o.status!=='horizon'||b.status!=='horizon')throw Error('Coupled background physical failure');
    const sample=(epoch:number):ViewSample=>{const piece=pieces.find(p=>p.start<=epoch&&p.end>epoch)??pieces.at(-1)!;const a=piece.runner.sample(epoch);return {...a,fuelUsed:piece.used+(a.fuelUsed??0),mass:piece.dryMass+a.propellant} as ViewSample;};
    const times=[...new Set([...Array.from({length:257},(_,i)=>t+i/32),...ledger.map(e=>e.t),...local.map(e=>e.t)])].sort((a,b)=>a-b),boundaries=[...pieces.flatMap(p=>p.runner.eventBoundaries.map(b=>({t:b.t,before:{...b.before,mass:p.dryMass+b.before.propellant,fuelUsed:p.used+(b.before.fuelUsed??0)},after:{...b.after,mass:p.dryMass+b.after.propellant,fuelUsed:p.used+(b.after.fuelUsed??0)}}))),...ownershipBounds].sort((a,b)=>a.t-b.t);
