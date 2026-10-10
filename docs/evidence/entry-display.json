@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "displayChecks": 12000,
+  "maxPositionError": 3.754897721023301e-8,
+  "pixelsAtMaximumZoom": 0.03754897721023301,
+  "maxZoom": 1000000,
+  "samples": 12290,
+  "packetBytes": 6122424,
+  "physicalNodes": 8965,
+  "preparationMs": 1281.5686880000003,
+  "work": {
+    "trials": 8969,
+    "evaluations": 116728,
+    "roots": 48
+  },
+  "fuelUsed": 0.03004856520383606,
+  "impactSpeed": 0.05179327096167347,
+  "waterEnergy": 0.001300968175579245
+}

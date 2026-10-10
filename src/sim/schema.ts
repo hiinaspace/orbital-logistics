@@ -130,6 +130,7 @@ function circularRail(value: Record<string, unknown>, minRadius = 0): Extract<Ra
 export function validateBundle(value: unknown): Bundle {
   const bundle = object(upgradeWire(value)), s = object(bundle.scenario), p = object(bundle.program);
   if (s.schemaVersion !== 3 || ![3,4].includes(p.schemaVersion as number) || s.modelVersion !== MODEL) throw new Error('Unsupported schema/model version');
+  if(s.atmosphere!==undefined || s.aero!==undefined || object(s.ship).aero!==undefined)throw new Error('Atmosphere requires entry-flight-v1');
   const units = object(s.units), policy = object(s.policy), ship = object(s.ship);
   const epoch = finite(s.epoch, 'epoch'), duration = finite(s.duration, 'duration', Number.MIN_VALUE);
   const step = finite(policy.step, 'step', 1 / 65536);

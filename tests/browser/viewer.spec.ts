@@ -48,9 +48,9 @@ test('frames and layers change presentation without changing the fleet, stocks o
   }
   await page.locator('#layers summary').click();
   await page.locator('#layer-orbits').uncheck(); await page.getByRole('button', {name:'Clear view'}).click();
-  expect((await state(page)).layers).toEqual({orbits:false,trails:false,plan:false,labels:false});
+  expect((await state(page)).layers).toEqual({orbits:false,trails:false,plan:false,labels:false,atmosphere:false,aero:false,glow:false});
   await page.getByRole('button', {name:'Clear view'}).click();
-  expect((await state(page)).layers).toEqual({orbits:false,trails:true,plan:true,labels:true});
+  expect((await state(page)).layers).toEqual({orbits:false,trails:true,plan:true,labels:true,atmosphere:true,aero:false,glow:true});
   expect((await state(page)).stocks).toEqual(before.stocks);
 });
 

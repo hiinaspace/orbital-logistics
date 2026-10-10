@@ -1,0 +1,10 @@
+{
+  "model": "gpt-6-astra",
+  "provider": "openai",
+  "sandbox": "read-only",
+  "reasoning effort": "xhigh",
+  "session id": "01a1231a-87c2-72e2-ada1-8f03d7600008",
+  "exitCode": 0,
+  "nonemptyReport": true,
+  "cliVersion": "0.153.4"
+}

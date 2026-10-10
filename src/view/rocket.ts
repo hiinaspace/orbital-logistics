@@ -5,6 +5,7 @@ import type {VesselView,ViewSample} from '../model-set/model';
 // A presentation axis, not a rigid-body attitude or a new propagation state.
 // Queries depend only on mission time, so scrubbing never leaves a stale heading.
 export function rocketAxis(v:VesselView,sample:ViewSample,t:number):Vec3 {
+ if(sample.axis)return [...sample.axis];
  const port=v.ports.find(p=>p.id===sample.logistics?.dockedPortId);
  if(port?.rail.kind==='surface') {
   const r=port.rail,theta=r.phase+r.rate*t;

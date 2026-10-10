@@ -1,3 +1,6 @@
+import {entryForces,recoveredState,type EntryPhysics,type RecoveryPose} from '../sim/entry';
+import {norm,scale,type Vec3 as Vector3} from '../sim/vectors';
+import type {Atmosphere,AeroTelemetry} from '../sim/atmosphere';
 import {directionAt} from '../sim/steering';
 import { Runner, type LedgerEntry, type Sample, type EventBoundary } from '../sim/runner';
 import {resourcesAt,type ResourceAnchor,type Depot} from '../traffic/resources';
@@ -13,8 +16,9 @@ export interface ModelSet {
 }
 export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
-export interface ViewSample extends Sample {activity?:Activity;mass?:number}
+export interface ViewSample extends Sample {activity?:Activity;mass?:number;aero?:AeroTelemetry;axis?:Vector3;entryPhase?:'coast'|'entry'|'braking'|'recovered'}
 export interface VesselView {
+ entry?:{physics:EntryPhysics;recovery:RecoveryPose;entryEpoch:number;brakingEpoch:number;heatScale:number};
  glyph?:'rocket'|'stack';initialAxis?:Vec3;
  inheritedFuelUsed?:number;
  lifetime?:{start:number;end:number;retired?:boolean;parentId?:string};
@@ -28,6 +32,7 @@ export interface VesselView {
 export interface VesselRun extends Vessel,VesselView {}
 export interface MaintainedView extends VesselView {baseline:{t:number;y:State}[]}
 export interface SceneView {
+ atmosphere?:Atmosphere;entry?:{recoveryEpoch:number;relativeSpeed:number;waterEnergy:number;impulse:Vec3;work:{trials:number;evaluations:number;roots:number};maxima:{pressure:number;acceleration:number;heat:number;force:number}};
  staging?:{separation:{t:number;parentId:string;children:string[];state:State;beforeMass:number;afterMass:number;momentumBefore:number[];momentumAfter:number[];reservedPayloadFuel:number;boosterFuel:number};initialFuel:number};
  maintained?:Record<string,MaintainedView>;
  schemaVersion:1;id:string;name:string;extent:number;description:string;provenance:string;
@@ -37,7 +42,7 @@ export interface SceneView {
 }
 export interface SetRun extends SceneView {vessels:VesselRun[]}
 export interface Stock { id: string; cargo: number; propellant: number; occupied: number }
-export type ViewerEvent=Omit<LedgerEntry,'kind'> & {kind:LedgerEntry['kind']|'planning-failed'|'unavailable'|'fault'|'separation'};
+export type ViewerEvent=Omit<LedgerEntry,'kind'> & {kind:LedgerEntry['kind']|'planning-failed'|'unavailable'|'fault'|'separation'|'entry'|'splashdown'};
 export interface SetEvent extends ViewerEvent { vessel: string; color: string }
 
 // A curated set overlays independent test ships. Admission checks shared finite
@@ -184,12 +189,24 @@ export function sampleVessel(v: VesselView, t: number): ViewSample {
   }
   // Throttle is fixed per arc; steering uses the same physical direction law.
   // Mass and therefore force/acceleration vary smoothly. These are drawing values, never a target or propagation origin.
-  if(sample.thrust) {
+  if(sample.thrust && !v.entry) {
     const engine=v.ship.engine!,arc=v.arcs.find(a=>a.id===sample.thrust!.id)!;
     const mass=sample.mass??v.ship.dryMass+(sample.logistics?.cargoMass??v.ship.cargoMass)+sample.propellant;
     sample.thrust.force=Math.min(engine.maxThrust*arc.throttle,(engine.maxAcceleration??Infinity)*mass);
     sample.thrust.direction=directionAt(arc,t-arc.start);
     sample.thrust.acceleration=sample.thrust.force/mass*Math.hypot(...sample.thrust.direction);
+  }
+  if(v.entry) {
+    if(t>=v.entry.recovery.t) {
+      sample.y=recoveredState(v.entry.recovery,t);sample.entryPhase='recovered';delete sample.thrust;delete sample.aero;
+      const r=sample.y.slice(0,3).map((x,i)=>x-v.entry!.recovery.center[i]) as Vector3;
+      sample.axis=scale(r,1/norm(r));
+    } else {
+      const f=entryForces(v.entry.physics,t,[...sample.y,sample.propellant]);
+      sample.aero=f.aero;sample.axis=f.axis;sample.mass=f.mass;
+      sample.entryPhase=t>=v.entry.brakingEpoch?'braking':t>=v.entry.entryEpoch?'entry':'coast';
+      if(norm(f.force)>0)sample.thrust={id:'terminal-braking',force:norm(f.force),acceleration:norm(f.force)/f.mass,direction:scale(f.force,1/norm(f.force))};else delete sample.thrust;
+    }
   }
   return sample;
 }
@@ -205,6 +222,7 @@ function bracket(v: VesselView, t: number): [ViewSample, ViewSample] {
   return [a, b];
 }
 export function stateAt(v: VesselView, t: number): State {
+  if(v.entry && t>=v.entry.recovery.t && t<=v.samples.at(-1)!.t)return recoveredState(v.entry.recovery,t);
   const dense=v.trajectories?.find(p=>t>=p.start && t<p.end && t<=p.through);
   if(dense)return stateAt({...v,trajectories:undefined,samples:dense.samples,boundaries:dense.boundaries},t);
   const [a, b] = bracket(v, t);

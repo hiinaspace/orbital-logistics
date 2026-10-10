@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "oracle": "independent DOP853",
+  "oracleTighteningMaxStateDifference": 8.150879970969527e-11,
+  "contactEpoch": 4.375262238378634,
+  "impactSpeed": 0.05179327095258024,
+  "fuelRemaining": 0.1699514347836831,
+  "waterEnergy": 0.0013009681751056886,
+  "impulse": [
+    -0.02472114456679643,
+    0.043733475821284735,
+    -0.0
+  ],
+  "peak": {
+    "pressure": 0.6539124668208803,
+    "acceleration": 1.3480750848957426,
+    "heat": 0.6258855465049706,
+    "force": 0.5944595543004795
+  },
+  "maxDragPower": 0.0,
+  "maxAbsoluteLiftPower": 5.4544570710349965e-17,
+  "cases": [
+    {
+      "step": 0.001953125,
+      "maxStateError": 2.318881198171141e-11,
+      "eventError": 4.297628919402996e-11,
+      "fuelError": 2.7738505936625302e-11,
+      "nodes": 2256,
+      "elapsedMs": 914.874341
+    },
+    {
+      "step": 0.0009765625,
+      "maxStateError": 1.721212061767119e-11,
+      "eventError": 1.8328449868931784e-11,
+      "fuelError": 1.302707941519543e-11,
+      "nodes": 4489,
+      "elapsedMs": 814.1334889999998
+    },
+    {
+      "step": 0.00048828125,
+      "maxStateError": 1.4243189960794211e-11,
+      "eventError": 1.5718093493433116e-11,
+      "fuelError": 1.2480849687079854e-11,
+      "nodes": 8965,
+      "elapsedMs": 1281.5686880000003
+    }
+  ]
+}

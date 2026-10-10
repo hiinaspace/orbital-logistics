@@ -27,6 +27,11 @@ departure and braking, an acceleration cap and paid fuel. **Orison · maintained
 adds a perturbed station with its own paid maintenance burns and a visiting ship.
 **Orison · maintained service** computes station corrections and repeated paid
 visit/return flights online, with finite tanks and rolling history.
+**Selene · Launch & recovery** follows a two-stage launch, courier delivery and reusable booster return.
+**Aster · Atmospheric arrival** follows Petrel through a rotating atmosphere, bounded lift/drag,
+terminal rocket braking and ocean recovery. **Entry view** follows the close approach;
+Layers adds density shading, optional drag/lift arrows and entry glow. Staging and entry
+start at0.1×; each set remembers its chosen rate within the page session.
 **Surface view** shows the close scale; choose a slower rate for launch or landing,
 then Fit or a ship frame to follow the orbit. Playback starts
 immediately. Click a ship or station to inspect it; overlapping objects open a chooser.
@@ -42,6 +47,8 @@ and use arrow keys to orbit, Shift-arrows to pan. Layers includes a clear view a
 Cargo, propellant, docking and burns come from the simulation ledger. The model details
 are available under About this set. These scenes use normalized fictional systems,
 impulsive or finite-thrust test ships, and prescribed massive bodies; they are not real mission replays.
+
+Atmospheric entry [model](docs/design/entry/model.md) and [validation](docs/evidence/entry.md) document the finite exhibit.
 
 ## Verify and author sets
 

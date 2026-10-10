@@ -1,0 +1,105 @@
+{
+  "kind": "entry-flight-v1",
+  "schemaVersion": 1,
+  "modelVersion": "entry-rk4-v1",
+  "id": "aster-entry",
+  "name": "Aster · Atmospheric arrival",
+  "extent": 1.7,
+  "description": "Petrel returns through Aster’s atmosphere and settles into the ocean.",
+  "provenance": "Fictional normalized world. Exponential co-rotating atmosphere; effective drag area and bounded lift. Point-mass entry guidance, bounded rocket braking and explicit dissipative ocean recovery. Entry glow shows a heating proxy.",
+  "scenario": {
+    "schemaVersion": 3,
+    "modelVersion": "rk4-canonical-v3",
+    "id": "aster-entry",
+    "units": {
+      "length": "Aster radius",
+      "time": "√(R³/μ)",
+      "mass": "mass unit"
+    },
+    "epoch": 0,
+    "duration": 6,
+    "policy": {
+      "step": 0.00048828125,
+      "maxNodes": 32768,
+      "maxSubdivision": 20
+    },
+    "bodies": [
+      {
+        "id": "Aster",
+        "mu": 1,
+        "radius": 1,
+        "rail": {
+          "kind": "fixed",
+          "position": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    ],
+    "ship": {
+      "id": "petrel",
+      "state": [
+        1.5,
+        0,
+        0,
+        0,
+        0.73,
+        0
+      ],
+      "dryMass": 0.6,
+      "cargoMass": 0.2,
+      "propellant": 0.2,
+      "tankCapacity": 0.25,
+      "exhaustVelocity": 3,
+      "engine": {
+        "maxThrust": 1.5,
+        "maxAcceleration": 2
+      }
+    }
+  },
+  "atmosphere": {
+    "bodyId": "Aster",
+    "spin": [
+      0,
+      0,
+      0.03
+    ],
+    "density": 200,
+    "scaleHeight": 0.025,
+    "fadeHeight": 0.16,
+    "topHeight": 0.2
+  },
+  "aero": {
+    "dragArea": 2,
+    "liftToDrag": 0.25,
+    "liftFadeHeight": 0.04
+  },
+  "guidance": {
+    "startHeight": 0.025,
+    "fullHeight": 0.01,
+    "descentSpeed": 0.025,
+    "descentGain": 0.06,
+    "velocityGain": 6
+  },
+  "recovery": {
+    "height": 0.00001,
+    "maxSpeed": 0.06
+  },
+  "limits": {
+    "dynamicPressure": 1,
+    "acceleration": 2,
+    "heatProxy": 2
+  },
+  "presentation": {
+    "name": "Petrel",
+    "color": "#f2bd72",
+    "heatScale": 1
+  },
+  "rotating": {
+    "name": "Atmosphere rotating",
+    "rate": 0.03,
+    "phase": 0
+  }
+}
