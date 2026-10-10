@@ -4,7 +4,7 @@ import {prepareAtmosphericMission} from '../src/model-set/atmospheric-mission';
 import {atmosphericStateAt} from '../src/sim/atmospheric-propulsion';
 import {entryStateAt} from '../src/model-set/entry';
 import {sampleVessel,stockAt} from '../src/model-set/model';
-const definition=JSON.parse(readFileSync('fixtures/model-sets/aster-launch.json','utf8')),cases=[];
+const definition=JSON.parse(readFileSync(process.argv[2]??'fixtures/model-sets/aster-launch.json','utf8')),prefix=process.argv[3]??'atmospheric-mission',cases=[];
 for(const step of [1/512,1/1024,1/2048]){
  const d=structuredClone(definition);d.world.policy.step=step;const started=performance.now(),r=prepareAtmosphericMission(d);
  const legs=Object.fromEntries(['stack','boostback','insertion','deorbit'].map(key=>{
@@ -36,8 +36,8 @@ for(const step of [1/512,1/1024,1/2048]){
    if(position*1e6>.25)throw new Error('Close-view display error exceeded .25px');
    display.push({id:v.id,maxPositionError:position,maxVelocityError:velocity,pixelsAtMaximumZoom:position*1e6});
   }
-  writeFileSync('docs/evidence/atmospheric-mission-display.json',JSON.stringify({work:r.work,recoveries:r.view.recoveries,capture:r.capture,display,finalStocks:stockAt(r.view,12)},null,2)+'\n');
+  writeFileSync(`docs/evidence/${prefix}-display.json`,JSON.stringify({work:r.work,recoveries:r.view.recoveries,capture:r.capture,display,finalStocks:stockAt(r.view,12)},null,2)+'\n');
  }
 }
-writeFileSync('docs/evidence/atmospheric-mission-oracle-input.json',JSON.stringify({definition,cases},null,2)+'\n');
+writeFileSync(`docs/evidence/${prefix}-oracle-input.json`,JSON.stringify({definition,cases},null,2)+'\n');
 console.log(JSON.stringify(cases.map(c=>({step:c.step,work:c.work,capture:c.capture.deltaV,elapsedMs:c.elapsedMs})),null,2));

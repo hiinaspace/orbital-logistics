@@ -1,0 +1,139 @@
+{
+  "oracle": "independent original-state DOP853 branch tree",
+  "tighteningMaxStateDifference": 7.336797835932884e-12,
+  "capture": {
+    "position": 1.784369015102918e-10,
+    "velocity": 3.326266537646674e-10,
+    "fuelUsed": 5.7907110145938334e-11
+  },
+  "maxima": {
+    "stack": {
+      "pressure": 2.2331354055504864,
+      "heat": 0.3393523010774021,
+      "force": 5.000000000000001,
+      "acceleration": 3.0000000000000004
+    },
+    "boostback": {
+      "pressure": 0.0,
+      "heat": 0.0,
+      "force": 2.5619690995298443,
+      "acceleration": 3.0000000000000004
+    },
+    "insertion": {
+      "pressure": 0.0,
+      "heat": 0.0,
+      "force": 1.8000000000000005,
+      "acceleration": 3.000000000000001
+    },
+    "deorbit": {
+      "pressure": 0.0,
+      "heat": 0.0,
+      "force": 1.2668136794992837,
+      "acceleration": 3.000000000000001
+    },
+    "boosterEntry": {
+      "pressure": 1.1349443374977495,
+      "heat": 0.30129198273220953,
+      "force": 0.3448988212997551,
+      "acceleration": 3.4482927144947286
+    },
+    "payloadEntry": {
+      "pressure": 0.22386945038552228,
+      "heat": 0.3389522439107828,
+      "force": 0.14399032756054037,
+      "acceleration": 1.1129849119681472
+    }
+  },
+  "recoveries": {
+    "boosterEntry": {
+      "t": 2.9537361503908333,
+      "fuel": 0.361042238749143,
+      "speed": 0.04446429514082748
+    },
+    "payloadEntry": {
+      "t": 8.331241578119576,
+      "fuel": 0.158890226734127,
+      "speed": 0.0386730910776047
+    }
+  },
+  "cases": [
+    {
+      "step": 0.001953125,
+      "errors": {
+        "stack": 7.44115880024765e-12,
+        "boostback": 7.772699150976337e-12,
+        "insertion": 7.710498906021712e-12,
+        "deorbit": 2.137734433915739e-13,
+        "boosterEntry": {
+          "state": 2.9466049045190346e-10,
+          "contact": 5.937117464327457e-11
+        },
+        "payloadEntry": {
+          "state": 2.9222180231158745e-11,
+          "contact": 1.4349410548675223e-11
+        }
+      },
+      "work": {
+        "nodes": 5822,
+        "trials": 7741,
+        "evaluations": 95829,
+        "roots": 96,
+        "displaySamples": 15926,
+        "bytes": 8003628
+      },
+      "elapsedMs": 1605.2404290000002
+    },
+    {
+      "step": 0.0009765625,
+      "errors": {
+        "stack": 1.0646483694642939e-12,
+        "boostback": 9.955369861813779e-13,
+        "insertion": 9.429124148141454e-13,
+        "deorbit": 3.352873534367973e-14,
+        "boosterEntry": {
+          "state": 4.1159520236533353e-11,
+          "contact": 7.30455695929777e-11
+        },
+        "payloadEntry": {
+          "state": 1.2306246299775836e-11,
+          "contact": 1.9236168213865312e-11
+        }
+      },
+      "work": {
+        "nodes": 8792,
+        "trials": 9797,
+        "evaluations": 123658,
+        "roots": 96,
+        "displaySamples": 15926,
+        "bytes": 8012119
+      },
+      "elapsedMs": 1817.256463
+    },
+    {
+      "step": 0.00048828125,
+      "errors": {
+        "stack": 5.027089855502709e-13,
+        "boostback": 3.5532687903128135e-13,
+        "insertion": 3.7125857943465235e-13,
+        "deorbit": 2.892130979148533e-14,
+        "boosterEntry": {
+          "state": 8.14381895253291e-12,
+          "contact": 2.5567992167907505e-11
+        },
+        "payloadEntry": {
+          "state": 4.4793058151526566e-12,
+          "contact": 4.6984638402136625e-12
+        }
+      },
+      "work": {
+        "nodes": 15590,
+        "trials": 15624,
+        "evaluations": 200156,
+        "roots": 96,
+        "displaySamples": 15926,
+        "bytes": 7984206
+      },
+      "elapsedMs": 2581.16638
+    }
+  ]
+}

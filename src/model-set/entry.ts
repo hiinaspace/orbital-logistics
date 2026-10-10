@@ -5,7 +5,7 @@ import {entryForces,entryStep,entryStepEnvelope,recoveredState,type EntryPhysics
 import type {SceneView,VesselView,ViewSample,ViewerEvent} from './model';
 
 export interface EntryFlight extends EntryPhysics {
- kind:'entry-flight-v1';schemaVersion:1;modelVersion:'entry-rk4-v1';
+ kind:'entry-flight-v1';schemaVersion:1;modelVersion:'entry-rk4-v1'|'entry-rk4-v2';
  id:string;name:string;extent:number;description:string;provenance:string;
  limits:{dynamicPressure:number;acceleration:number;heatProxy:number};
  presentation:{name:string;color:string;heatScale:number};
@@ -18,7 +18,7 @@ const finite=(x:unknown,min=0,max=Infinity)=>{if(typeof x!=='number'||!Number.is
 const vector=(x:unknown):Vec3=>{if(!Array.isArray(x)||x.length!==3)throw new Error('Invalid entry vector');return x.map(v=>finite(v,-Infinity)) as Vec3;};
 export function validateEntry(value:unknown):EntryFlight {
  const d=object(value);
- if(d.kind!=='entry-flight-v1'||d.schemaVersion!==1||d.modelVersion!=='entry-rk4-v1')throw new Error('Unsupported atmospheric entry version');
+ if(d.kind!=='entry-flight-v1'||d.schemaVersion!==1||(d.modelVersion!=='entry-rk4-v1'&&d.modelVersion!=='entry-rk4-v2'))throw new Error('Unsupported atmospheric entry version');
  const keys=(o:Record<string,unknown>,allowed:string[])=>{if(Object.keys(o).some(k=>!allowed.includes(k)))throw new Error('Unknown entry physical field');};
  keys(d,['kind','schemaVersion','modelVersion','id','name','extent','description','provenance','scenario','atmosphere','aero','guidance','recovery','limits','presentation','rotating']);
  const raw=object(d.scenario);
@@ -33,7 +33,7 @@ export function validateEntry(value:unknown):EntryFlight {
  keys(a,['bodyId','spin','density','scaleHeight','fadeHeight','topHeight']);keys(c,['dragArea','liftToDrag','liftFadeHeight']);
  keys(g,['startHeight','fullHeight','descentSpeed','descentGain','velocityGain']);keys(r,['height','maxSpeed']);keys(l,['dynamicPressure','acceleration','heatProxy']);
  const atmosphere={bodyId:text(a.bodyId),spin:vector(a.spin),density:finite(a.density),scaleHeight:finite(a.scaleHeight,1e-6),fadeHeight:finite(a.fadeHeight,1e-6),topHeight:finite(a.topHeight,1e-6)};
- if(atmosphere.bodyId!==scenario.bodies[0].id||atmosphere.spin[0]!==0||atmosphere.spin[1]!==0||scenario.ship.state[2]!==0||scenario.ship.state[5]!==0||norm(atmosphere.spin)>1||atmosphere.fadeHeight>=atmosphere.topHeight||atmosphere.topHeight>scenario.bodies[0].radius)throw new Error('Invalid atmosphere extent/rotation');
+ if(atmosphere.bodyId!==scenario.bodies[0].id||atmosphere.spin[0]!==0||atmosphere.spin[1]!==0||(d.modelVersion==='entry-rk4-v1'&&(scenario.ship.state[2]!==0||scenario.ship.state[5]!==0))||norm(atmosphere.spin)>1||atmosphere.fadeHeight>=atmosphere.topHeight||atmosphere.topHeight>scenario.bodies[0].radius)throw new Error('Invalid atmosphere extent/rotation');
  const aero={dragArea:finite(c.dragArea),liftToDrag:finite(c.liftToDrag,-1,1),liftFadeHeight:finite(c.liftFadeHeight,1e-6)};
  const guidance={startHeight:finite(g.startHeight,1e-6),fullHeight:finite(g.fullHeight,1e-6),descentSpeed:finite(g.descentSpeed,1e-6),descentGain:finite(g.descentGain),velocityGain:finite(g.velocityGain,1e-6)};
  const recovery={height:finite(r.height,1e-6),maxSpeed:finite(r.maxSpeed,1e-6)};
@@ -42,7 +42,7 @@ export function validateEntry(value:unknown):EntryFlight {
  const presentation={name:text(p.name),color:text(p.color),heatScale:finite(p.heatScale,1e-6)};
  if(!/^#[0-9a-f]{6}$/i.test(presentation.color))throw new Error('Invalid entry color');
  const rotating={name:text(rotation.name),rate:finite(rotation.rate,-Infinity),phase:finite(rotation.phase,-Infinity)};
- return {kind:'entry-flight-v1',schemaVersion:1,modelVersion:'entry-rk4-v1',id:text(d.id),name:text(d.name),extent:finite(d.extent,1e-6),description:text(d.description),provenance:text(d.provenance),scenario,atmosphere,aero,guidance,recovery,
+ return {kind:'entry-flight-v1',schemaVersion:1,modelVersion:d.modelVersion as EntryFlight['modelVersion'],id:text(d.id),name:text(d.name),extent:finite(d.extent,1e-6),description:text(d.description),provenance:text(d.provenance),scenario,atmosphere,aero,guidance,recovery,
  limits:{dynamicPressure:finite(l.dynamicPressure,1e-6),acceleration:finite(l.acceleration,1e-6),heatProxy:finite(l.heatProxy,1e-6)},presentation,rotating};
 }
 export interface EntryNode {t:number;z:EntryState}

@@ -1,0 +1,460 @@
+{
+  "schemaVersion": 1,
+  "modelVersion": "atmospheric-mission-v2",
+  "id": "aster-northern-launch",
+  "name": "Aster \u00b7 Northern launch & station visit",
+  "extent": 1.7,
+  "description": "Kestrel launches Wren from Northhaven to an inclined Lantern orbit. Both return to the ocean.",
+  "provenance": "Fictional spherical planet, 26\u00b0 northern pad, real axial air rotation. Prepared full 3D bounded-thrust stages, paid freight capture and ocean recovery.",
+  "stations": [
+    {
+      "id": "Northhaven",
+      "role": "Launch & recovery terminal",
+      "berths": 1
+    },
+    {
+      "id": "Lantern",
+      "role": "Orbital freight depot",
+      "berths": 1
+    }
+  ],
+  "rotating": {
+    "name": "Surface rotating",
+    "rate": 0.03,
+    "phase": 0
+  },
+  "world": {
+    "schemaVersion": 3,
+    "modelVersion": "rk4-canonical-v3",
+    "id": "aster-northern-launch",
+    "units": {
+      "length": "Aster radius",
+      "time": "\u221a(R\u00b3/\u03bc)",
+      "mass": "mass unit"
+    },
+    "epoch": 0,
+    "duration": 12,
+    "policy": {
+      "step": 0.00048828125,
+      "maxNodes": 32768,
+      "maxSubdivision": 20
+    },
+    "bodies": [
+      {
+        "id": "Aster",
+        "mu": 1,
+        "radius": 1,
+        "rail": {
+          "kind": "fixed",
+          "position": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    ],
+    "logistics": {
+      "modelVersion": "surface-ports-v5",
+      "ports": [
+        {
+          "id": "Northhaven",
+          "rail": {
+            "kind": "surface",
+            "bodyId": "Aster",
+            "centerHeight": 1e-05,
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "u": [
+              1,
+              0,
+              0
+            ],
+            "v": [
+              0,
+              1,
+              0
+            ],
+            "radius": 1.00001,
+            "rate": 0.03,
+            "phase": 1.5707963267948966,
+            "latitude": 0.4537856055185257
+          },
+          "cargo": 0.2,
+          "cargoCapacity": 1,
+          "propellant": 1,
+          "tankCapacity": 2,
+          "serviceDuration": 0.3
+        },
+        {
+          "id": "Lantern",
+          "rail": {
+            "kind": "circular",
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "u": [
+              -0.36939517373361175,
+              0.834678193401967,
+              0.40848441718325557
+            ],
+            "v": [
+              -0.9292657670726204,
+              -0.33345231025367517,
+              -0.15898015893004164
+            ],
+            "radius": 1.35,
+            "rate": 0.6375281228324965,
+            "phase": -0.9017370775252436
+          },
+          "cargo": 0,
+          "cargoCapacity": 1,
+          "propellant": 1,
+          "tankCapacity": 2,
+          "serviceDuration": 0.3
+        }
+      ],
+      "cargoCapacity": 0.1,
+      "capture": {
+        "position": 1e-07,
+        "velocity": 1e-07
+      },
+      "objective": {
+        "destinationId": "Lantern",
+        "quota": 0.1,
+        "returnPortId": "Northhaven",
+        "minPropellant": 0,
+        "hardwareCost": 1
+      }
+    }
+  },
+  "separation": {
+    "id": "stage-separation",
+    "t": 0.8999999999999999
+  },
+  "booster": {
+    "id": "kestrel",
+    "name": "Kestrel",
+    "color": "#f2bd72",
+    "dryMass": 0.3,
+    "propellant": 1.55,
+    "tankCapacity": 1.7,
+    "exhaustVelocity": 3,
+    "engine": {
+      "maxThrust": 5,
+      "maxAcceleration": 3
+    }
+  },
+  "payload": {
+    "id": "wren",
+    "name": "Wren",
+    "color": "#85c9c0",
+    "dryMass": 0.25,
+    "cargoMass": 0.1,
+    "propellant": 0.35,
+    "tankCapacity": 0.4,
+    "exhaustVelocity": 3,
+    "engine": {
+      "maxThrust": 1.8,
+      "maxAcceleration": 3
+    }
+  },
+  "stack": {
+    "id": "kestrel-stack",
+    "name": "Kestrel + Wren",
+    "color": "#f2bd72"
+  },
+  "programs": {
+    "stack": {
+      "schemaVersion": 4,
+      "id": "stack-ascent-v1",
+      "burns": [],
+      "thrustArcs": [
+        {
+          "id": "boost",
+          "start": 0.3,
+          "end": 0.8999999999999999,
+          "direction": [
+            -0.008089037213658001,
+            0.8987576453859989,
+            0.4383711467890774
+          ],
+          "throttle": 1,
+          "steering": {
+            "kind": "spherical-smoothstep-v1",
+            "keys": [
+              {
+                "offset": 0.0,
+                "direction": [
+                  -0.008089037213658001,
+                  0.8987576453859989,
+                  0.4383711467890774
+                ]
+              },
+              {
+                "offset": 0.11999999999999997,
+                "direction": [
+                  -0.11880697148086032,
+                  0.8922295951249466,
+                  0.4356733330268447
+                ]
+              },
+              {
+                "offset": 0.23999999999999994,
+                "direction": [
+                  -0.24651944147525537,
+                  0.8706353220263677,
+                  0.42570212709683636
+                ]
+              },
+              {
+                "offset": 0.35999999999999993,
+                "direction": [
+                  -0.3885762436628357,
+                  0.8274970041108435,
+                  0.4052865789147958
+                ]
+              },
+              {
+                "offset": 0.47999999999999987,
+                "direction": [
+                  -0.6044563681192286,
+                  0.7149706979169795,
+                  0.3513536682037325
+                ]
+              },
+              {
+                "offset": 0.5999999999999999,
+                "direction": [
+                  -0.7506731309966505,
+                  0.5925100628681182,
+                  0.29226986810087724
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "operations": [
+        {
+          "id": "on-pad",
+          "kind": "dock",
+          "t": 0,
+          "portId": "Northhaven"
+        },
+        {
+          "id": "lift-off",
+          "kind": "launch",
+          "t": 0.3,
+          "portId": "Northhaven",
+          "thrustArcId": "boost"
+        }
+      ]
+    },
+    "payload": {
+      "schemaVersion": 4,
+      "id": "wren-insertion-v1",
+      "burns": [],
+      "thrustArcs": [
+        {
+          "id": "insertion",
+          "start": 0.8999999999999999,
+          "end": 1.2054092778342822,
+          "direction": [
+            -0.3746325692520593,
+            -0.8307777584416913,
+            -0.41165368227941296
+          ],
+          "throttle": 1,
+          "steering": {
+            "kind": "spherical-smoothstep-v1",
+            "keys": [
+              {
+                "offset": 0.0,
+                "direction": [
+                  -0.3746325692520593,
+                  -0.8307777584416913,
+                  -0.41165368227941296
+                ]
+              },
+              {
+                "offset": 0.07635231945857057,
+                "direction": [
+                  -0.23176438576755054,
+                  -0.8747288832199289,
+                  -0.42559916629453837
+                ]
+              },
+              {
+                "offset": 0.15270463891714114,
+                "direction": [
+                  -0.22828044478693157,
+                  -0.875463002613323,
+                  -0.4259724986230279
+                ]
+              },
+              {
+                "offset": 0.22905695837571172,
+                "direction": [
+                  -0.38941535182786086,
+                  -0.8285240423528856,
+                  -0.4023724580584725
+                ]
+              },
+              {
+                "offset": 0.3054092778342823,
+                "direction": [
+                  -0.5552301527567716,
+                  -0.7498681594668007,
+                  -0.359746050551726
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "deorbit",
+          "start": 3.914427136984771,
+          "end": 3.9325979151246275,
+          "direction": [
+            -0.39069077564595645,
+            0.8267802490560109,
+            0.40471611976302785
+          ],
+          "throttle": 1,
+          "steering": {
+            "kind": "spherical-smoothstep-v1",
+            "keys": [
+              {
+                "offset": 0.0,
+                "direction": [
+                  -0.39069077564595645,
+                  0.8267802490560109,
+                  0.40471611976302785
+                ]
+              },
+              {
+                "offset": 0.01817077813985657,
+                "direction": [
+                  -0.39069077564595645,
+                  0.8267802490560109,
+                  0.40471611976302785
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "operations": [
+        {
+          "id": "delivery-arrival",
+          "kind": "dock",
+          "t": 1.4144271369847712,
+          "portId": "Lantern"
+        },
+        {
+          "id": "unload",
+          "kind": "transfer",
+          "t": 1.4144271369847712,
+          "portId": "Lantern",
+          "cargo": -0.1,
+          "propellant": 0
+        },
+        {
+          "id": "return-departure",
+          "kind": "undock",
+          "t": 3.914427136984771,
+          "portId": "Lantern"
+        }
+      ]
+    },
+    "booster": {
+      "schemaVersion": 4,
+      "id": "kestrel-recovery-v1",
+      "burns": [],
+      "thrustArcs": [
+        {
+          "id": "boostback",
+          "start": 0.8999999999999999,
+          "end": 1.13,
+          "direction": [
+            0.5887289275259203,
+            -0.7255071437159643,
+            -0.3564233919249446
+          ],
+          "throttle": 1,
+          "steering": {
+            "kind": "spherical-smoothstep-v1",
+            "keys": [
+              {
+                "offset": 0.0,
+                "direction": [
+                  0.5887289275259203,
+                  -0.7255071437159643,
+                  -0.3564233919249446
+                ]
+              },
+              {
+                "offset": 0.22999999999999998,
+                "direction": [
+                  0.5887289275259203,
+                  -0.7255071437159643,
+                  -0.3564233919249446
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "operations": []
+    }
+  },
+  "atmosphere": {
+    "bodyId": "Aster",
+    "spin": [
+      0,
+      0,
+      0.03
+    ],
+    "density": 200,
+    "scaleHeight": 0.025,
+    "fadeHeight": 0.16,
+    "topHeight": 0.2
+  },
+  "ascentAero": {
+    "dragArea": 0.015,
+    "liftToDrag": 0,
+    "liftFadeHeight": 0.04
+  },
+  "entryAero": {
+    "dragArea": 2,
+    "liftToDrag": 0.25,
+    "liftFadeHeight": 0.04
+  },
+  "guidance": {
+    "startHeight": 0.025,
+    "fullHeight": 0.01,
+    "descentSpeed": 0.025,
+    "descentGain": 0.06,
+    "velocityGain": 6
+  },
+  "recovery": {
+    "height": 1e-05,
+    "maxSpeed": 0.06
+  },
+  "limits": {
+    "dynamicPressure": 20,
+    "acceleration": 4,
+    "heatProxy": 10
+  },
+  "heatScale": 1,
+  "entryStarts": {
+    "booster": 1.13,
+    "payload": 3.9325979151246275
+  }
+}

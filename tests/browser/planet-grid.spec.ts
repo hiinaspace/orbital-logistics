@@ -1,0 +1,20 @@
+import {test,expect,type Page} from '@playwright/test';
+const state=async(p:Page)=>JSON.parse(await p.locator('#state-json').textContent()??'{}');
+test('planet grids render in solid, see-through, rotating and close surface views',async({page})=>{
+ const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('/');await expect.poll(async()=>(await state(page)).ready).toBe(true);
+ await page.getByLabel('Model set').selectOption('orison-latitude-shuttle');
+ await expect.poll(async()=>{const s=await state(page);return s.ready&&s.set==='orison-latitude-shuttle';}).toBe(true);
+ await page.getByRole('button',{name:'Pause',exact:true}).click();await page.getByLabel('Simulation time').fill('0.2');
+ await page.locator('#layers > summary').click();await page.getByRole('button',{name:'Clear view',exact:true}).click();
+ await page.locator('#layers > summary').click();
+ const pose=(await state(page)).ships[0].y;
+ await page.screenshot({path:'docs/evidence/planet-grid-solid.png',fullPage:true});
+ await page.locator('#layers > summary').click();await page.getByLabel('See-through bodies').check();await page.locator('#layers > summary').click();
+ expect((await state(page)).ships[0].y).toEqual(pose);
+ await page.screenshot({path:'docs/evidence/planet-grid-wireframe.png',fullPage:true});
+ await page.getByLabel('Reference frame').selectOption('rotating');expect((await state(page)).ships[0].y).toEqual(pose);
+ await page.getByLabel('Simulation time').fill('0.51');await page.getByRole('button',{name:'Surface view',exact:true}).click();
+ await page.screenshot({path:'docs/evidence/planet-grid-close.png',fullPage:true});
+ expect(errors).toEqual([]);
+});

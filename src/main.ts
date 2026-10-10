@@ -1,3 +1,5 @@
+import northernAtmosphere from '../fixtures/model-sets/aster-northern-launch.json';
+import {bodySpin,drawPlanetGrid} from './view/planet-grid';
 import latitudeShuttle from '../fixtures/model-sets/orison-latitude-shuttle.json';
 import freightDistrict from '../fixtures/traffic/orison-freight-district.json';
 import {surfaceNormal} from './sim/logistics';
@@ -55,7 +57,7 @@ import type {State,Vec3} from './sim/schema';
 import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVessel, setEvents, stockAt, isPresent,presenceLabel,type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
-const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle] as (ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
+const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle] as (ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
 const trafficSets=[trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
@@ -352,11 +354,11 @@ function publishState() {
 }
 function loadSet(id: string) {
   if(currentSet)setSpeeds.set(currentSet,playbackRate);currentSet=id;
-  playbackRate=setSpeeds.get(id)??(['selene-staging','aster-entry','aster-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
+  playbackRate=setSpeeds.get(id)??(['selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
   const speed=$<HTMLInputElement>('speed');speed.max=String(Math.log2(maximumPlaybackRate(id)));playbackRate=Math.min(playbackRate,maximumPlaybackRate(id));speed.value=String(Math.log2(playbackRate));showSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
-  tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service','orison-flexible-service','orison-relay-network','orison-latitude-shuttle'].includes(id)?'oblique':'top';orient(camera,cameraPreset);if(id==='orison-latitude-shuttle')camera.yaw=1.2;panMode=false;cameraControls();
+  tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service','orison-flexible-service','orison-relay-network','orison-latitude-shuttle','aster-northern-launch'].includes(id)?'oblique':'top';orient(camera,cameraPreset);if(id==='orison-latitude-shuttle')camera.yaw=1.2;if(id==='aster-northern-launch')camera.yaw=2.6;panMode=false;cameraControls();
   worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=true;trafficDirty=false;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
   $('load-status').textContent = 'Preparing scene…';
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
@@ -448,6 +450,7 @@ function draw() {
   for (const body of [...scenario.bodies].sort((a,b)=>project3(bodyState(a,t),t)[2]-project3(bodyState(b,t),t)[2])) {
     const p = project(bodyState(body, t), t), r = Math.max(7, body.radius * camera.scale);
     ctx.beginPath(); ctx.arc(...p, r, 0, Math.PI * 2); ctx.fillStyle = '#192a37';ctx.globalAlpha=seeThroughBodies?.18:1;ctx.fill();ctx.globalAlpha=seeThroughBodies?.45:1;ctx.strokeStyle = '#445c6e'; ctx.lineWidth = 1; ctx.stroke();ctx.globalAlpha=1;
+    drawPlanetGrid(ctx,project3(bodyState(body,t),t),r,bodySpin(run,body),t,v=>cameraVector(camera,transformDirection(run!,v,t,frame)),seeThroughBodies);
     if (selected === body.id) { ctx.beginPath(); ctx.arc(...p, r + 5, 0, Math.PI * 2); ctx.strokeStyle = '#b2c6d2'; ctx.stroke(); }
     if(!occluder(project3(bodyState(body,t),t),spheres.filter(s=>s.id!==body.id)))label(body.id, body.id === 'primary' ? 'Planet' : body.id === 'moon' ? 'Selene' : body.id, p[0] + r, p[1], colors.body);
     hits.push({id:body.id,name:body.id,x:p[0],y:p[1],depth:project3(bodyState(body,t),t)[2],radius:r});
@@ -615,7 +618,18 @@ $('drag-mode').onclick=()=>{panMode=!panMode;cameraControls();};
 $('tracking').onchange=e=>track((e.target as HTMLSelectElement).value as typeof tracking);
 $('fit').onclick = ()=>{track('off');fit();draw();updatePanels();};
 $('launch-view').onclick=()=>{
-  if(run?.entry||vessel()?.entry&&t>=(vessel()!.entry!.activeFrom??0)){frame='inertial';$<HTMLSelectElement>('frame').value=frame;setCamera('top');track('follow');camera.scale=Math.min(width,height)/.3;updatePanels();return;}
+  if(run?.entry||vessel()?.entry&&t>=(vessel()!.entry!.activeFrom??0)){
+   frame='inertial';$<HTMLSelectElement>('frame').value=frame;
+   const entry=vessel()?.entry,spatial=entry&&(entry.physics.scenario.ship.state[2]!==0||entry.physics.scenario.ship.state[5]!==0);
+   setCamera(spatial?'front':'top');
+   if(spatial){
+    const y=sampleVessel(vessel()!,t).y,b=bodyState(run!.world.bodies[0],t),rad=y.slice(0,3).map((x,i)=>x-b[i]),n=Math.hypot(...rad),normal=rad.map(x=>x/n) as Vec3;
+    const equator=Math.hypot(normal[0],normal[1]),east:Vec3=equator>1e-10?[-normal[1]/equator,normal[0]/equator,0]:[0,1,0];
+    const north:Vec3=[-normal[2]*east[1],normal[2]*east[0],normal[0]*east[1]-normal[1]*east[0]];
+    camera.rig={right:east,forward:north,up:normal};cameraPreset='custom';
+   }
+   track('follow');camera.scale=Math.min(width,height)/.3;updatePanels();return;
+  }
   const pad=run?.world.ports.find(p=>p.rail.kind==='surface');if(!pad)return;
   track('off');frame=pad.id;$<HTMLSelectElement>('frame').value=frame;
   const theta=pad.rail.kind==='surface'?pad.rail.phase+pad.rail.rate*t:0;

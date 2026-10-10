@@ -2,6 +2,7 @@
 Frozen station and steering are inputs, never adjusted to production endpoints.
 """
 
+import argparse
 import json
 import math
 from pathlib import Path
@@ -9,7 +10,11 @@ from pathlib import Path
 import numpy as np
 from scipy.integrate import solve_ivp
 
-source = json.loads(Path("docs/evidence/atmospheric-mission-oracle-input.json").read_text())
+parser = argparse.ArgumentParser()
+parser.add_argument("--input", default="docs/evidence/atmospheric-mission-oracle-input.json")
+parser.add_argument("--output", default="docs/evidence/atmospheric-mission-oracle.json")
+args = parser.parse_args()
+source = json.loads(Path(args.input).read_text())
 d = source["definition"]
 body = d["world"]["bodies"][0]
 a = d["atmosphere"]
@@ -26,6 +31,23 @@ def rail(port, t):
     r = port["rail"]
     angle = r["phase"] + r["rate"] * t
     u, v = np.array(r["u"]), np.array(r["v"])
+    if r["kind"] == "surface" and "latitude" in r:
+        latitude = r["latitude"]
+        return np.r_[
+            np.array(r["center"])
+            + r["radius"]
+            * np.array(
+                [
+                    math.cos(latitude) * math.cos(angle),
+                    math.cos(latitude) * math.sin(angle),
+                    math.sin(latitude),
+                ]
+            ),
+            r["radius"]
+            * r["rate"]
+            * math.cos(latitude)
+            * np.array([-math.sin(angle), math.cos(angle), 0]),
+        ]
     return np.r_[
         np.array(r["center"]) + r["radius"] * (u * math.cos(angle) + v * math.sin(angle)),
         r["radius"] * r["rate"] * (-u * math.sin(angle) + v * math.cos(angle)),
@@ -71,6 +93,20 @@ def direction(arc, t):
     lo, hi = keys[k - 1], keys[k]
     f = (elapsed - lo["offset"]) / (hi["offset"] - lo["offset"])
     f = f * f * (3 - 2 * f)
+    if d["modelVersion"] == "atmospheric-mission-v2":
+        # Independent Rodrigues rotation about the great-circle normal.
+        start, end = np.array(lo["direction"]), np.array(hi["direction"])
+        normal = np.cross(start, end)
+        length = np.linalg.norm(normal)
+        if length < 1e-14:
+            return start
+        normal /= length
+        angle = math.atan2(length, np.dot(start, end)) * f
+        return (
+            start * math.cos(angle)
+            + np.cross(normal, start) * math.sin(angle)
+            + normal * np.dot(normal, start) * (1 - math.cos(angle))
+        )
     # Independent planar unwrapped-angle form of the shortest great-circle turn.
     aa, bb = (
         math.atan2(lo["direction"][1], lo["direction"][0]),
@@ -316,7 +352,5 @@ report = {
     },
     "cases": rows,
 }
-Path("docs/evidence/atmospheric-mission-oracle.json").write_text(
-    json.dumps(report, indent=2) + "\n"
-)
+Path(args.output).write_text(json.dumps(report, indent=2) + "\n")
 print(json.dumps(report, indent=2))

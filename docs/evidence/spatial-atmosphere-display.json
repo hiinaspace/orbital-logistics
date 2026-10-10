@@ -1,0 +1,103 @@
+{
+  "work": {
+    "nodes": 15590,
+    "trials": 15624,
+    "evaluations": 200156,
+    "roots": 96,
+    "displaySamples": 15926,
+    "bytes": 7984206
+  },
+  "recoveries": {
+    "kestrel": {
+      "recoveryEpoch": 2.9537361504164013,
+      "relativeSpeed": 0.04446429513647462,
+      "waterEnergy": 0.0006534645601746621,
+      "impulse": [
+        -0.006551618140522665,
+        0.025687745370771342,
+        0.012694541704974374
+      ],
+      "maxima": {
+        "pressure": 1.134947032531968,
+        "acceleration": 3.4483009028062668,
+        "heat": 0.3012932335559441,
+        "force": 0.34494540142833163
+      },
+      "work": {
+        "trials": 3749,
+        "evaluations": 48829,
+        "roots": 48
+      }
+    },
+    "wren": {
+      "recoveryEpoch": 8.331241578114877,
+      "relativeSpeed": 0.038673091077718595,
+      "waterEnergy": 0.00030576974169621216,
+      "impulse": [
+        0.01338060011097608,
+        -0.007481086213611797,
+        -0.0038788410325780367
+      ],
+      "maxima": {
+        "pressure": 0.2238694938484235,
+        "acceleration": 1.1129851280473144,
+        "heat": 0.3389522927056841,
+        "force": 0.14401277899007814
+      },
+      "work": {
+        "trials": 9022,
+        "evaluations": 117391,
+        "roots": 48
+      }
+    }
+  },
+  "capture": {
+    "y": [
+      -0.49868348454037587,
+      1.1268155610926556,
+      0.551453963197395,
+      -0.7997846311273153,
+      -0.28699005430374946,
+      -0.13682833509187992
+    ],
+    "positionError": 1.781427081986493e-10,
+    "deltaV": 3.3234020215967544e-10,
+    "fuelUsed": 5.785724166891201e-11,
+    "propellantBefore": 0.17227122655764737,
+    "propellantAfter": 0.17227122649979013
+  },
+  "display": [
+    {
+      "id": "kestrel-stack",
+      "maxPositionError": 7.593787655219325e-8,
+      "maxVelocityError": 2.527737196176559e-7,
+      "pixelsAtMaximumZoom": 0.07593787655219325
+    },
+    {
+      "id": "kestrel",
+      "maxPositionError": 1.062098366514181e-7,
+      "maxVelocityError": 8.784041629252615e-7,
+      "pixelsAtMaximumZoom": 0.1062098366514181
+    },
+    {
+      "id": "wren",
+      "maxPositionError": 1.0403507115389352e-7,
+      "maxVelocityError": 3.1120215998338125e-7,
+      "pixelsAtMaximumZoom": 0.10403507115389353
+    }
+  ],
+  "finalStocks": [
+    {
+      "id": "Northhaven",
+      "cargo": 0.2,
+      "propellant": 1,
+      "occupied": 0
+    },
+    {
+      "id": "Lantern",
+      "cargo": 0.1,
+      "propellant": 1,
+      "occupied": 0
+    }
+  ]
+}

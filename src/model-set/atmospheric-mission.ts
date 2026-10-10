@@ -11,22 +11,22 @@ import {setEvents,stockAt,type SceneView,type VesselView,type ViewSample,type Vi
 import type {StagedFlight} from './staging';
 
 export interface AtmosphericMission extends Omit<StagedFlight,'modelVersion'> {
- modelVersion:'atmospheric-mission-v1';atmosphere:EntryFlight['atmosphere'];ascentAero:EntryFlight['aero'];entryAero:EntryFlight['aero'];
+ modelVersion:'atmospheric-mission-v1'|'atmospheric-mission-v2';atmosphere:EntryFlight['atmosphere'];ascentAero:EntryFlight['aero'];entryAero:EntryFlight['aero'];
  guidance:EntryFlight['guidance'];recovery:EntryFlight['recovery'];limits:EntryFlight['limits'];heatScale:number;
  entryStarts:{booster:number;payload:number};
 }
-export const isAtmosphericMission=(v:unknown):v is AtmosphericMission=>!!v&&typeof v==='object'&&(v as AtmosphericMission).modelVersion==='atmospheric-mission-v1';
+export const isAtmosphericMission=(v:unknown):v is AtmosphericMission=>!!v&&typeof v==='object'&&['atmospheric-mission-v1','atmospheric-mission-v2'].includes((v as AtmosphericMission).modelVersion);
 const ok=(test:unknown,message:string)=>{if(!test)throw new Error('Atmospheric mission: '+message);};
 const keys=(o:object,allowed:string[])=>ok(!!o&&Object.keys(o).every(k=>allowed.includes(k)),'unknown physical field');
 const shipFields=['id','name','color','dryMass','propellant','tankCapacity','exhaustVelocity','engine'];
 function entryDefinition(d:AtmosphericMission,ship:Scenario['ship'],duration=8):EntryFlight {
  const {logistics:_logistics,rendezvous:_rendezvous,...world}=d.world;
- return {kind:'entry-flight-v1',schemaVersion:1,modelVersion:'entry-rk4-v1',id:ship.id+'-entry',name:d.name,extent:d.extent,description:d.description,provenance:d.provenance,
+ return {kind:'entry-flight-v1',schemaVersion:1,modelVersion:d.modelVersion==='atmospheric-mission-v2'?'entry-rk4-v2':'entry-rk4-v1',id:ship.id+'-entry',name:d.name,extent:d.extent,description:d.description,provenance:d.provenance,
   scenario:{...world,epoch:0,duration,ship},atmosphere:d.atmosphere,aero:d.entryAero,guidance:d.guidance,recovery:d.recovery,limits:d.limits,presentation:{name:ship.id,color:'#85c9c0',heatScale:d.heatScale},rotating:d.rotating};
 }
 export function validateAtmosphericMission(value:unknown):AtmosphericMission {
  ok(isAtmosphericMission(value)&&(value as AtmosphericMission).schemaVersion===1,'unsupported version');
- const d=structuredClone(value as AtmosphericMission);
+ const d=structuredClone(value as AtmosphericMission),spatial=d.modelVersion==='atmospheric-mission-v2';
  keys(d,['schemaVersion','modelVersion','id','name','extent','description','provenance','stations','rotating','world','separation','booster','payload','stack','programs','atmosphere','ascentAero','entryAero','guidance','recovery','limits','heatScale','entryStarts']);
  keys(d.booster,shipFields);keys(d.payload,[...shipFields,'cargoMass']);keys(d.stack,['id','name','color']);keys(d.separation,['id','t']);keys(d.entryStarts,['booster','payload']);keys(d.programs,['stack','booster','payload']);
  keys(d.world,['schemaVersion','modelVersion','id','units','epoch','duration','policy','bodies','logistics']);
@@ -34,9 +34,9 @@ export function validateAtmosphericMission(value:unknown):AtmosphericMission {
  ok(w.epoch===0&&w.duration<=16&&w.duration>=1&&w.policy.step>=1/4096&&w.policy.step<=1/512&&w.policy.maxNodes<=32768,'world/work budget');
  ok(w.bodies.length===1&&w.bodies[0].rail.kind==='fixed'&&ports.length===2&&pad&&depot,'one fixed primary, pad and circular station required');
  keys(w.logistics!,['modelVersion','ports','cargoCapacity','capture','objective']);
- for(const p of ports){keys(p,['id','rail','cargo','cargoCapacity','propellant','tankCapacity','serviceDuration']);keys(p.rail,['kind','bodyId','centerHeight','center','u','v','radius','rate','phase']);}
+ for(const p of ports){keys(p,['id','rail','cargo','cargoCapacity','propellant','tankCapacity','serviceDuration']);keys(p.rail,['kind','bodyId','centerHeight','center','u','v','radius','rate','phase',...(spatial&&p.rail.kind==='surface'?['latitude']:[])]);}
  const body=w.bodies[0],center=body.rail.kind==='fixed'?body.rail.position:[0,0,0] as Vec3;
- ok(pad!.rail.kind==='surface'&&pad!.rail.rate===d.atmosphere.spin[2]&&pad!.rail.phase===Math.PI/2&&pad!.rail.centerHeight===d.recovery.height,'pad/air/water support mismatch');
+ ok(pad!.rail.kind==='surface'&&pad!.rail.rate===d.atmosphere.spin[2]&&(spatial||pad!.rail.phase===Math.PI/2)&&pad!.rail.centerHeight===d.recovery.height&&pad!.rail.radius===body.radius+pad!.rail.centerHeight,'pad/air/water support mismatch');
  ok(depot!.rail.kind==='circular'&&depot!.rail.radius>body.radius+d.atmosphere.topHeight&&JSON.stringify(depot!.rail.center)===JSON.stringify(center),'station must clear atmosphere');
  ok(d.stations.length===2&&new Set(d.stations.map(s=>s.id)).size===2&&d.stations.every(s=>ports.some(p=>p.id===s.id)&&s.berths===1),'invalid berths');
  const ids=[d.stack.id,d.booster.id,d.payload.id];ok(new Set(ids).size===3&&ids.every(id=>id&&!ports.some(p=>p.id===id)&&id!==body.id),'invalid vehicle identities');
@@ -47,12 +47,13 @@ export function validateAtmosphericMission(value:unknown):AtmosphericMission {
   const ship={id:h.id,dryMass:h.dryMass,cargoMass:h===d.payload?d.payload.cargoMass:0,propellant:h.propellant,tankCapacity:h.tankCapacity,exhaustVelocity:h.exhaustVelocity,engine:h.engine,state:[center[0]+body.radius+d.atmosphere.topHeight+.1,center[1],center[2],0,0,0] as State};
   validateEntry(entryDefinition(d,ship));validateEntry({...entryDefinition(d,ship),aero:d.ascentAero});
  }
- ok(center.every(v=>v===0)&&d.ascentAero.liftToDrag===0,'in-plane ascent without lift required');
+ ok(center.every(v=>v===0)&&d.ascentAero.liftToDrag===0,'fixed origin and ascent without lift required');
+ ok(!spatial||w.logistics!.modelVersion==='surface-ports-v5'&&pad!.rail.kind==='surface'&&pad!.rail.latitude!==undefined,'spatial mission requires latitude-aware surface support');
  for(const [key,h] of [['stack',d.booster],['booster',d.booster],['payload',d.payload]] as const){
   const p=d.programs[key];ok(p.schemaVersion===4&&p.burns.length===0,'steered finite program required');
   const validated=validateBundle({scenario:{...w,ship:{...h,state:portState(pad!,0),cargoMass:key==='booster'?0:d.payload.cargoMass}},program:p});
   d.programs[key]=validated.program;
-  ok(p.thrustArcs!.every(a=>a.direction[2]===0&&a.steering?.keys.every(k=>k.direction[2]===0)),'out-of-plane thrust unsupported');
+  ok(p.thrustArcs!.every(a=>a.steering)&&(spatial||p.thrustArcs!.every(a=>a.direction[2]===0&&a.steering?.keys.every(k=>k.direction[2]===0))),'out-of-plane thrust requires spatial mission version');
  }
  const a=d.programs.stack.thrustArcs!,b=d.programs.booster.thrustArcs!,u=d.programs.payload.thrustArcs!,ops=d.programs.payload.operations!;
  ok(a.length===1&&a[0].end===d.separation.t&&a[0].throttle>0&&a[0].start>0,'one launch arc ending at separation required');
