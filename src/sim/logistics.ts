@@ -12,6 +12,10 @@ export function copyLogistics(state: LogisticsState): LogisticsState {
 }
 export function portState(port: Port, t: number): State {
   if((port.rail.kind==='ballistic'||port.rail.kind==='powered'))throw new Error('Ballistic port requires a canonical ephemeris');
+  if(port.rail.kind==='surface' && port.rail.latitude!==undefined){
+    const r=port.rail,a=r.phase+r.rate*t,xy=r.radius*Math.cos(r.latitude!),z=r.radius*Math.sin(r.latitude!);
+    return [r.center[0]+xy*Math.cos(a),r.center[1]+xy*Math.sin(a),r.center[2]+z,-xy*r.rate*Math.sin(a),xy*r.rate*Math.cos(a),0];
+  }
   return bodyState({id: port.id, mu: 0, radius: 0, rail: {...port.rail,kind:'circular'}}, t);
 }
 export function logisticsResult(spec: Logistics, state: LogisticsState, propellant: number, t = state.completedAt ?? Infinity) {
@@ -25,4 +29,9 @@ export function logisticsResult(spec: Logistics, state: LogisticsState, propella
     !empty ? 'Unload remaining cargo' : !fueled ? `Return fuel below ${goal.minPropellant.toFixed(3)}` : state.service ? 'Service in progress' : !onTime ? `Return after deadline ${goal.deadline!.toFixed(3)}` : 'Delivery complete';
   return {delivered, onTime, quota: goal.quota, home, empty, fueled, complete, reason,
     completedAt: complete ? state.completedAt : undefined, propellantUsed: state.fuelUsed, hardwareCost: goal.hardwareCost};
+}
+
+export function surfaceNormal(port:Port,t:number):[number,number,number]{
+ if(port.rail.kind!=='surface')throw Error('Surface normal requires a surface port');
+ const y=portState(port,t),r=port.rail;return y.slice(0,3).map((v,i)=>(v-r.center[i])/r.radius) as [number,number,number];
 }

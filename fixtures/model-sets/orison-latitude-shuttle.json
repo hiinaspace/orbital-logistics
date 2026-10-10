@@ -1,0 +1,338 @@
+{
+  "schemaVersion": 1,
+  "id": "orison-latitude-shuttle",
+  "name": "Orison \u00b7 Northern shuttle",
+  "extent": 1.9,
+  "description": "Northport serves an inclined Crown depot.",
+  "provenance": "Fictional airless primary. Latitude 20 degrees, inclined circular station, offline six-state smooth bounded-thrust launch and landing; explicit loading and refuelling.",
+  "stations": [
+    {
+      "id": "Northport",
+      "role": "Northern surface terminal",
+      "berths": 1
+    },
+    {
+      "id": "Crown",
+      "role": "Inclined low orbital depot",
+      "berths": 1
+    }
+  ],
+  "rotating": {
+    "name": "Surface rotating",
+    "rate": 0.1,
+    "phase": 0
+  },
+  "vessels": [
+    {
+      "name": "Tern",
+      "color": "#efbf7c",
+      "cargo": "Supplies",
+      "glyph": "rocket",
+      "initialAxis": [
+        0.9396926207859084,
+        0,
+        0.3420201433256687
+      ],
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "orison-latitude-witness",
+          "units": {
+            "length": "Orison radius",
+            "time": "\u221a(R\u00b3/\u03bc)",
+            "mass": "mass unit"
+          },
+          "epoch": 0,
+          "duration": 17,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 20
+          },
+          "bodies": [
+            {
+              "id": "Orison",
+              "mu": 1,
+              "radius": 1,
+              "rail": {
+                "kind": "fixed",
+                "position": [
+                  0,
+                  0,
+                  0
+                ]
+              }
+            }
+          ],
+          "ship": {
+            "id": "Tern",
+            "state": [
+              0.9396935604785291,
+              0,
+              0.34202048534581203,
+              0,
+              0.09396935604785292,
+              0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 6,
+            "tankCapacity": 6,
+            "exhaustVelocity": 3,
+            "engine": {
+              "maxThrust": 32,
+              "maxAcceleration": 1.2
+            }
+          },
+          "logistics": {
+            "modelVersion": "surface-ports-v5",
+            "ports": [
+              {
+                "id": "Northport",
+                "rail": {
+                  "kind": "surface",
+                  "bodyId": "Orison",
+                  "centerHeight": 1e-06,
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 1.000001,
+                  "rate": 0.1,
+                  "phase": 0,
+                  "latitude": 0.3490658503988659
+                },
+                "cargo": 0.05,
+                "cargoCapacity": 1,
+                "propellant": 0,
+                "tankCapacity": 20,
+                "serviceDuration": 0.2
+              },
+              {
+                "id": "Crown",
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    0.9385182497011544,
+                    0.04696505655666626,
+                    0.3420201433256687
+                  ],
+                  "v": [
+                    -0.04997916927067833,
+                    0.9987502603949663,
+                    0.0
+                  ],
+                  "radius": 1.4,
+                  "rate": 0.6036816105203691,
+                  "phase": -0.9885220143071458
+                },
+                "cargo": 0,
+                "cargoCapacity": 1,
+                "propellant": 1,
+                "tankCapacity": 20,
+                "serviceDuration": 0.2
+              }
+            ],
+            "cargoCapacity": 0.05,
+            "capture": {
+              "position": 1e-07,
+              "velocity": 1e-07
+            },
+            "objective": {
+              "destinationId": "Crown",
+              "quota": 0.05,
+              "returnPortId": "Northport",
+              "minPropellant": 0.05,
+              "hardwareCost": 1
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 4,
+          "id": "latitude-shuttle",
+          "burns": [],
+          "thrustArcs": [
+            {
+              "id": "ascent",
+              "start": 0.5,
+              "end": 2.454677006919614,
+              "throttle": 1,
+              "direction": [
+                0.9385182497011544,
+                0.04696505655666625,
+                0.3420201433256687
+              ],
+              "steering": {
+                "kind": "spherical-smoothstep-v1",
+                "keys": [
+                  {
+                    "offset": 0.0,
+                    "direction": [
+                      0.9385182497011544,
+                      0.04696505655666625,
+                      0.3420201433256687
+                    ]
+                  },
+                  {
+                    "offset": 0.4886692517299035,
+                    "direction": [
+                      0.9078672935594072,
+                      0.25368554462607573,
+                      0.3337972764012441
+                    ]
+                  },
+                  {
+                    "offset": 0.977338503459807,
+                    "direction": [
+                      0.9178966600548458,
+                      0.20746287078166953,
+                      0.33826746622633874
+                    ]
+                  },
+                  {
+                    "offset": 1.4660077551897106,
+                    "direction": [
+                      -0.0900738913342505,
+                      0.9958365206239586,
+                      -0.014011362941332916
+                    ]
+                  },
+                  {
+                    "offset": 1.954677006919614,
+                    "direction": [
+                      -0.892795485871635,
+                      -0.30483047617642534,
+                      -0.33165433994037385
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "descent",
+              "start": 13.749399215612783,
+              "end": 15.804939824450713,
+              "throttle": 1,
+              "direction": [
+                -0.13754243765754684,
+                -0.9409943778873929,
+                0.3092113494481377
+              ],
+              "steering": {
+                "kind": "spherical-smoothstep-v1",
+                "keys": [
+                  {
+                    "offset": 0.0,
+                    "direction": [
+                      -0.13754243765754684,
+                      -0.9409943778873929,
+                      0.3092113494481377
+                    ]
+                  },
+                  {
+                    "offset": 0.5138851522094825,
+                    "direction": [
+                      0.8959214556490531,
+                      -0.10976843622447725,
+                      0.4304365641026732
+                    ]
+                  },
+                  {
+                    "offset": 1.027770304418965,
+                    "direction": [
+                      0.21663329782604737,
+                      0.9492155455202946,
+                      0.22816630429496068
+                    ]
+                  },
+                  {
+                    "offset": 1.5416554566284475,
+                    "direction": [
+                      0.07016372835728904,
+                      0.9929204359280634,
+                      0.09584393115596282
+                    ]
+                  },
+                  {
+                    "offset": 2.05554060883793,
+                    "direction": [
+                      0.02820059772596412,
+                      0.999369736394194,
+                      -0.02156052567303495
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "operations": [
+            {
+              "id": "support",
+              "t": 0,
+              "kind": "dock",
+              "portId": "Northport"
+            },
+            {
+              "id": "load",
+              "t": 0,
+              "kind": "transfer",
+              "portId": "Northport",
+              "cargo": 0.05,
+              "propellant": 0
+            },
+            {
+              "id": "launch",
+              "t": 0.5,
+              "kind": "launch",
+              "portId": "Northport",
+              "thrustArcId": "ascent"
+            },
+            {
+              "id": "capture",
+              "t": 2.454677006919614,
+              "kind": "dock",
+              "portId": "Crown"
+            },
+            {
+              "id": "unload",
+              "t": 2.4646770069196138,
+              "kind": "transfer",
+              "portId": "Crown",
+              "cargo": -0.05,
+              "propellant": 0.07427795840080265
+            },
+            {
+              "id": "release",
+              "t": 13.749399215612783,
+              "kind": "undock",
+              "portId": "Crown"
+            },
+            {
+              "id": "land",
+              "t": 15.804939824450713,
+              "kind": "land",
+              "portId": "Northport"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

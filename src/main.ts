@@ -1,3 +1,6 @@
+import latitudeShuttle from '../fixtures/model-sets/orison-latitude-shuttle.json';
+import freightDistrict from '../fixtures/traffic/orison-freight-district.json';
+import {surfaceNormal} from './sim/logistics';
 import shuttleService from '../fixtures/traffic/orison-shuttle-service.json';
 import lowOrbitShuttle from '../fixtures/model-sets/orison-low-orbit-shuttle.json';
 import type {SurfaceShuttle} from './model-set/surface-shuttle';
@@ -52,8 +55,8 @@ import type {State,Vec3} from './sim/schema';
 import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVessel, setEvents, stockAt, isPresent,presenceLabel,type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
-const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle] as (ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
-const trafficSets=[trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition)[];
+const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle] as (ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
+const trafficSets=[trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
@@ -301,10 +304,10 @@ function updatePanels() {
       $('readouts').innerHTML+=`<div><dt>Altitude · R</dt><dd>${(r-body.radius).toFixed(5)}</dd></div><div><dt>Air speed</dt><dd>${Math.hypot(...(a?.relativeVelocity??[0,0,0])).toFixed(4)}</dd></div><div><dt>Density</dt><dd>${(a?.density??0).toExponential(2)}</dd></div><div><dt>Dynamic pressure</dt><dd>${pressure.toFixed(4)}</dd></div><div><dt>Lift / drag</dt><dd>${(drag>0?lift/drag:0).toFixed(3)}</dd></div><div><dt>Flight load</dt><dd>${load.toFixed(3)}</dd></div>${s.entryPhase==='recovered'?`<div><dt>Recovery speed</dt><dd>${(run.recoveries?.[v.id]??run.entry!).relativeSpeed.toFixed(4)}</dd></div>`:''}`;
     }
     if(v.ports.some(p=>p.rail.kind==='surface')) {
-      const body=run.world.bodies[0],b=bodyState(body,t),dx=s.y[0]-b[0],dy=s.y[1]-b[1],r=Math.hypot(dx,dy),vx=s.y[3]-b[3],vy=s.y[4]-b[4];
+      const body=run.world.bodies[0],b=bodyState(body,t),relative=s.y.slice(0,3).map((v,i)=>v-b[i]),velocity=s.y.slice(3).map((v,i)=>v-b[i+3]),r=Math.hypot(...relative),radial=relative.reduce((n,v,i)=>n+v*velocity[i],0)/r,tangential=Math.sqrt(Math.max(0,velocity.reduce((n,v)=>n+v*v,0)-radial*radial));
       const small=(x:number)=>Math.abs(x)<1e-12?'0.0000':Math.abs(x)<.001?x.toExponential(2):x.toFixed(4);
       const mass=v.ship.dryMass+cargo+s.propellant;
-      $('readouts').innerHTML+=`${v.entry||v.aerodynamics?'':`<div><dt>Altitude · R</dt><dd>${small(r-body.radius)}</dd></div>`}<div><dt>Radial speed</dt><dd>${small((dx*vx+dy*vy)/r)}</dd></div><div><dt>Tangential speed</dt><dd>${small((dx*vy-dy*vx)/r)}</dd></div><div><dt>Thrust / weight</dt><dd>${number((s.thrust?.force??0)/mass/(body.mu/r**2))}</dd></div>`;
+      $('readouts').innerHTML+=`${v.entry||v.aerodynamics?'':`<div><dt>Altitude · R</dt><dd>${small(r-body.radius)}</dd></div>`}<div><dt>Radial speed</dt><dd>${small(radial)}</dd></div><div><dt>Tangential speed</dt><dd>${small(tangential)}</dd></div><div><dt>Thrust / weight</dt><dd>${number((s.thrust?.force??0)/mass/(body.mu/r**2))}</dd></div>`;
     }
     $<HTMLButtonElement>('object-frame').disabled=s.activity?.kind==='fault';
     if(s.activity?.reason)$('readouts').innerHTML+=`<div class="fault-reason">${esc(s.activity.reason)}</div>`;
@@ -349,11 +352,11 @@ function publishState() {
 }
 function loadSet(id: string) {
   if(currentSet)setSpeeds.set(currentSet,playbackRate);currentSet=id;
-  playbackRate=setSpeeds.get(id)??(['selene-staging','aster-entry','aster-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service'].includes(id)?.1:1);
+  playbackRate=setSpeeds.get(id)??(['selene-staging','aster-entry','aster-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
   const speed=$<HTMLInputElement>('speed');speed.max=String(Math.log2(maximumPlaybackRate(id)));playbackRate=Math.min(playbackRate,maximumPlaybackRate(id));speed.value=String(Math.log2(playbackRate));showSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
-  tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service','orison-flexible-service','orison-relay-network'].includes(id)?'oblique':'top';orient(camera,cameraPreset);panMode=false;cameraControls();
+  tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service','orison-flexible-service','orison-relay-network','orison-latitude-shuttle'].includes(id)?'oblique':'top';orient(camera,cameraPreset);if(id==='orison-latitude-shuttle')camera.yaw=1.2;panMode=false;cameraControls();
   worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=true;trafficDirty=false;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
   $('load-status').textContent = 'Preparing scene…';
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
@@ -540,8 +543,7 @@ function draw() {
     const p:[number,number]=[p3[0],p3[1]];
     icons.push({depth:p3[2],draw:()=>{
     if(port.rail.kind==='surface') {
-      const rail=port.rail,theta=rail.phase+rail.rate*t;
-      const outward=cameraVector(camera,transformDirection(run!,[Math.cos(theta),Math.sin(theta),0],t,frame));
+      const outward=cameraVector(camera,transformDirection(run!,surfaceNormal(port,t),t,frame));
       ctx.save();ctx.translate(...p);ctx.rotate(Math.atan2(-outward[1],outward[0]));
       path([[0,-7],[0,7]],colors.station,2);path([[0,-7],[4,-7]],colors.station,1);path([[0,7],[4,7]],colors.station,1);ctx.restore();
     } else {
@@ -617,7 +619,11 @@ $('launch-view').onclick=()=>{
   const pad=run?.world.ports.find(p=>p.rail.kind==='surface');if(!pad)return;
   track('off');frame=pad.id;$<HTMLSelectElement>('frame').value=frame;
   const theta=pad.rail.kind==='surface'?pad.rail.phase+pad.rail.rate*t:0;
-  setCamera('top');camera.center=[Math.cos(theta)*.075,Math.sin(theta)*.075,0];camera.scale=Math.min(width,height)/.22;updatePanels();
+  if(pad.rail.kind==='surface'&&pad.rail.latitude!==undefined){
+    const normal=surfaceNormal(pad,t),east:Vec3=[-Math.sin(theta),Math.cos(theta),0],north:Vec3=[-Math.sin(pad.rail.latitude)*Math.cos(theta),-Math.sin(pad.rail.latitude)*Math.sin(theta),Math.cos(pad.rail.latitude)];
+    setCamera('front');camera.rig={right:east,forward:north,up:normal};camera.center=normal.map(v=>v*.075) as Vec3;cameraPreset='custom';cameraControls();
+  }else {setCamera('top');camera.center=[Math.cos(theta)*.075,Math.sin(theta)*.075,0];}
+  camera.scale=Math.min(width,height)/.22;updatePanels();
 };
 $('play').onclick=()=>{if(!ready)return;if(!traffic && t>=end())t=start();playing=!playing;if(traffic && !playing){liveMode=false;refreshTraffic();}lastFrame=performance.now();updatePanels();};
 $('live').onclick=goLive;

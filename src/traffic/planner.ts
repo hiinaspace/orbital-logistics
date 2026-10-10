@@ -1,3 +1,4 @@
+import approvedDistrict from '../../fixtures/traffic/orison-freight-district.json';
 import approvedShuttle from '../../fixtures/traffic/orison-shuttle-service.json';
 import {WholeFlightCache,type PreparedFlight} from './prepared';
 import {Runner} from '../sim/runner';
@@ -6,18 +7,21 @@ import {portState} from '../sim/logistics';
 import {massLaw} from '../sim/propulsion';
 import type {Depot} from './resources';
 export const CALENDAR_LIMIT=1_000_000;
-export interface TransferTemplate {id:string;source:string;destination:string;referenceDeparture:number;duration:number;cargo:number;propellant:number;arcs:ThrustArc[];provenance:string}
+export interface TransferTemplate {integrationStep?:number;id:string;source:string;destination:string;referenceDeparture:number;duration:number;cargo:number;propellant:number;arcs:ThrustArc[];provenance:string}
 export interface TrafficVessel {id:string;name:string;color:string;cargo:string;portId:string;propellant:number;route:string[]}
-export interface TrafficDefinition {schemaVersion:1;domain?:'orbital-pair-v1'|'airless-surface-v1'|'low-orbit-cache-v1';id:string;name:string;description:string;provenance:string;extent:number;rotating:{name:string;rate:number;phase:number};world:Bundle;historyDuration:number;sampleStep:number;forecastDuration:number;stations:Depot[];templates:TransferTemplate[];vessels:TrafficVessel[]}
+export interface TrafficDefinition {schemaVersion:1;domain?:'orbital-pair-v1'|'airless-surface-v1'|'low-orbit-cache-v1'|'freight-district-v1';id:string;name:string;description:string;provenance:string;extent:number;rotating:{name:string;rate:number;phase:number};world:Bundle;historyDuration:number;sampleStep:number;forecastDuration:number;stations:Depot[];templates:TransferTemplate[];vessels:TrafficVessel[]}
 export interface Window {index:number;departure:number}
 export interface EpisodeSource {id:string;shipId:string;voyage:number;templateId:string;admittedAt:number;departure:number;arrival:number;captureLocalEpoch:number;arrivalOperationId:string;localEpochs:number[];windowIndex:number;bundle:Bundle}
 export interface Episode extends EpisodeSource {runner:PreparedFlight;execution:PreparedFlight;facts:ReturnType<Runner['snapshot']>['ledger'];nextFact:number}
 const tau=2*Math.PI;
 export const phase=(x:number)=>((x%tau)+tau)%tau;
-export const isCachedShuttle=(d:TrafficDefinition)=>d.domain==='low-orbit-cache-v1';
+export const isDistrict=(d:TrafficDefinition)=>d.domain==='freight-district-v1';
+export const isCachedShuttle=(d:TrafficDefinition)=>d.domain==='low-orbit-cache-v1'||isDistrict(d);
+export const flightCacheLimits=(d:TrafficDefinition)=>isDistrict(d)?{entries:6,nodes:16000,bytes:12_000_000}:undefined;
 export const isSurfaceService=(d:TrafficDefinition)=>d.domain==='airless-surface-v1'||isCachedShuttle(d);
 export function validateTraffic(value:TrafficDefinition):TrafficDefinition {
  const d=structuredClone(value);d.world=validateBundle(d.world);
+ if(isDistrict(d))return validateDistrict(d);
  const s=d.world.scenario,body=s.bodies[0],ports=s.logistics?.ports??[],surface=isSurfaceService(d);
  const rails=ports.every(p=>p.rail.kind!=='ballistic' && p.rail.kind!=='powered' && p.rail.rate>0 && p.rail.center.every(x=>x===0) && p.rail.u.every((x,i)=>x===[1,0,0][i]) && p.rail.v.every((x,i)=>x===[0,1,0][i]));
  const hardware=s.ship.dryMass===1 && s.ship.exhaustVelocity===3 && (surface
@@ -36,6 +40,7 @@ export function validateTraffic(value:TrafficDefinition):TrafficDefinition {
   depot.cargo<0 || depot.cargo>depot.cargoCapacity || depot.propellant<0 || depot.propellant>depot.tankCapacity)throw new Error('Invalid depot');
  if(d.stations.length!==2 || new Set(d.stations.map(p=>p.id)).size!==2 || new Set(d.vessels.map(v=>v.id)).size!==d.vessels.length || new Set(d.templates.map(t=>t.id)).size!==d.templates.length)throw new Error('Invalid traffic identities');
  for(const t of d.templates) {
+  if(t.integrationStep!==undefined)throw Error('Unsupported template integration policy');
   const source=ports.find(p=>p.id===t.source);
   if(!source || !ports.some(p=>p.id===t.destination) || t.source===t.destination || !Number.isFinite(t.referenceDeparture) || t.duration<=0 || t.duration>8 || !Number.isFinite(t.duration) || ![t.cargo,t.propellant].every(Number.isFinite) || t.cargo<0 || t.cargo>s.logistics!.cargoCapacity || t.propellant<0 || t.propellant>s.ship.tankCapacity ||
    t.arcs.length!==(isCachedShuttle(d)?1:surface?8:2) || (source.rail.kind==='surface' || !surface) && t.arcs[0].start!==0 || (!surface && t.arcs.at(-1)!.end!==t.duration))throw new Error('Invalid transfer template');
@@ -50,12 +55,38 @@ export function validateTraffic(value:TrafficDefinition):TrafficDefinition {
  }
  return d;
 }
+// A bounded connected exhibit, with the same immutable flight families and
+// globally owned service/resource transactions as the two-terminal service.
+function validateDistrict(d:TrafficDefinition):TrafficDefinition {
+ const s=d.world.scenario,p=s.logistics!,ports=p.ports,approved=approvedDistrict as unknown as TrafficDefinition;
+ const physics=(v:TrafficDefinition)=>{const w=v.world.scenario;return {bodies:w.bodies,policy:w.policy,dryMass:w.ship.dryMass,exhaustVelocity:w.ship.exhaustVelocity,tankCapacity:w.ship.tankCapacity,engine:w.ship.engine,logistics:w.logistics&&{modelVersion:w.logistics.modelVersion,rails:w.logistics.ports.map(p=>({id:p.id,rail:p.rail})),capture:w.logistics.capture,cargoCapacity:w.logistics.cargoCapacity}};};
+ if(d.schemaVersion!==1||!d.id||!d.name||d.vessels.length!==3||d.stations.length!==4||ports.length!==4||
+  ![d.extent,d.rotating.rate,d.rotating.phase].every(Number.isFinite)||d.extent<=0||d.sampleStep!==1/16||d.historyDuration!==64||d.forecastDuration!==12||
+  JSON.stringify(physics(d))!==JSON.stringify(physics(approved))||JSON.stringify(d.templates)!==JSON.stringify(approved.templates)||
+  d.world.program.burns.length||d.world.program.thrustArcs?.length||d.world.program.operations?.length)throw Error('Unsupported freight district domain');
+ if(new Set(d.stations.map(p=>p.id)).size!==4||new Set(d.vessels.map(v=>v.id)).size!==3)throw Error('Invalid district identities');
+ for(const depot of d.stations){
+  if(!ports.some(p=>p.id===depot.id)||!Number.isInteger(depot.berths)||depot.berths<3||
+   ![depot.cargo,depot.propellant,depot.cargoCapacity,depot.tankCapacity,depot.cargoRate,depot.propellantRate].every(Number.isFinite)||
+   depot.cargo<0||depot.cargo>depot.cargoCapacity||depot.propellant<0||depot.propellant>depot.tankCapacity||depot.cargoCapacity<0||depot.tankCapacity<0||
+   depot.id!=='Equator'&&(depot.cargo!==0||depot.cargoRate>0)||depot.id==='Crown'&&depot.cargoRate!==0)throw Error('Invalid district depot');
+ }
+ for(const v of d.vessels){
+  const route=approved.vessels.find(a=>a.id===v.id);
+  if(!route||!v.name||!/^#[0-9a-f]{6}$/i.test(v.color)||v.portId!==route.portId||JSON.stringify(v.route)!==JSON.stringify(route.route)||
+   !Number.isFinite(v.propellant)||v.propellant<0||v.propellant>s.ship.tankCapacity)throw Error('Unsupported district vessel');
+ }
+ for(const t of d.templates){const step=t.integrationStep??s.policy.step;
+  validateBundle({...d.world,scenario:{...s,epoch:0,duration:Math.ceil(t.duration/step)*step,policy:{...s.policy,step}},program:{schemaVersion:t.arcs.some(a=>a.steering)?4:3,id:'template-validation',burns:[],thrustArcs:t.arcs}});
+ }
+ return d;
+}
 export function nextWindow(d:TrafficDefinition,t:TransferTemplate,after:number,minIndex=-Infinity):Window {
  const from=d.world.scenario.logistics!.ports.find(p=>p.id===t.source)!,to=d.world.scenario.logistics!.ports.find(p=>p.id===t.destination)!;
  if(from.rail.kind==='ballistic' || from.rail.kind==='powered' || to.rail.kind==='ballistic' || to.rail.kind==='powered')throw new Error('Unsupported window rails');
  const period=tau/Math.abs(to.rail.rate-from.rail.rate);
  if(!Number.isFinite(period) || period<=0 || !Number.isFinite(after))throw new Error('Unsupported window');
- let index=Math.max(Math.ceil((after-t.referenceDeparture)/period),minIndex),departure=t.referenceDeparture+index*period;
+ let index=Math.max(Math.floor((after-t.referenceDeparture)/period),minIndex),departure=t.referenceDeparture+index*period;
  if(departure<after){index++;departure=t.referenceDeparture+index*period;}
  if(!Number.isSafeInteger(index) || departure+t.duration>CALENDAR_LIMIT || departure<after)throw new Error('Calendar domain exhausted');
  return {index,departure};
@@ -67,6 +98,7 @@ export function admitEpisode(d:TrafficDefinition,t:TransferTemplate,shipId:strin
  const angle=phase(source.rail.rate*(w.departure-t.referenceDeparture)),c=Math.cos(angle),sn=Math.sin(angle);
  // Private support prelude replays the existing atomic launch without a schema
  // exception. Fleet attachment and resources remain authoritative before local0.
+ s.policy.step=t.integrationStep??s.policy.step;
  s.epoch=source.rail.kind==='surface'?-s.policy.step:0;
  s.duration=Math.ceil((t.duration-s.epoch)/s.policy.step)*s.policy.step;
  s.ship.id=shipId;s.ship.cargoMass=cargo;s.ship.propellant=fuel;
@@ -81,8 +113,8 @@ export function admitEpisode(d:TrafficDefinition,t:TransferTemplate,shipId:strin
   {id:arrivalOperationId,t:t.duration,kind:destination.rail.kind==='surface'?'land':'dock',portId:t.destination}]};
  if(cache&&isCachedShuttle(d)){
   const key=JSON.stringify({world:d.world,template:t});
-  const replay=cache.get(key,b,angle,()=>{const reference=admitEpisode(d,t,'reference',0,0,{index:0,departure:t.referenceDeparture},cargo,fuel).runner;if(!(reference instanceof Runner))throw Error('Missing canonical flight');return reference;});
-  return {id,shipId,voyage,templateId:t.id,admittedAt,departure:w.departure,arrival:w.departure+t.duration,captureLocalEpoch:t.duration,arrivalOperationId,localEpochs:[0,t.duration,...arcs[0].steering!.keys.map(k=>k.offset)],windowIndex:w.index,bundle:b,runner:replay,execution:replay,facts:replay.ledger.filter(e=>e.t>=0&&e.t<=t.duration),nextFact:0};
+  const replay=cache.get(key,b,angle,()=>{const reference=admitEpisode(d,t,'reference',0,0,{index:0,departure:t.referenceDeparture},cargo,fuel).runner;if(!(reference instanceof Runner))throw Error('Missing canonical flight');return reference;},t.source,t.destination);
+  return {id,shipId,voyage,templateId:t.id,admittedAt,departure:w.departure,arrival:w.departure+t.duration,captureLocalEpoch:t.duration,arrivalOperationId,localEpochs:[...new Set([0,t.duration,...arcs.flatMap(a=>[a.start,a.end,...(a.steering?.keys.map(k=>a.start+k.offset)??[])]),...replay.eventBoundaries.map(b=>b.t).filter(epoch=>epoch>=0&&epoch<=t.duration)])].sort((a,b)=>a-b),windowIndex:w.index,bundle:b,runner:replay,execution:replay,facts:replay.ledger.filter(e=>e.t>=0&&e.t<=t.duration),nextFact:0};
  }
  const runner=new Runner(b),terminal=runner.advanceTo(s.epoch+s.duration),arrival=runner.ledger.find(e=>e.id===arrivalOperationId);
  if(terminal.status!=='horizon' || !arrival || arrival.t!==t.duration || arrival.kind!==(destination.rail.kind==='surface'?'land':'dock') || arrival.portId!==t.destination || arrival.positionError!+1e-8>=Math.min(1e-7,s.logistics!.capture.position,destination.rail.kind==='surface'?destination.rail.centerHeight/4:Infinity) || arrival.deltaV+1e-8>=Math.min(1e-7,s.logistics!.capture.velocity) || runner.sample(t.duration).propellant<.05)throw new Error('Powered transfer admission failed');

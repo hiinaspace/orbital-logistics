@@ -1,3 +1,4 @@
+import {surfaceNormal} from '../sim/logistics';
 import {directionAt} from '../sim/steering';
 import type {Vec3} from '../sim/schema';
 import type {VesselView,ViewSample} from '../model-set/model';
@@ -20,8 +21,7 @@ export function rocketAxis(v:VesselView,sample:ViewSample,t:number):Vec3 {
  if(sample.axis)return [...sample.axis];
  const port=v.ports.find(p=>p.id===sample.logistics?.dockedPortId);
  if(port?.rail.kind==='surface') {
-  const r=port.rail,theta=r.phase+r.rate*t;
-  return r.u.map((x,i)=>x*Math.cos(theta)+r.v[i]*Math.sin(theta)) as Vec3;
+  return surfaceNormal(port,t);
  }
  if(sample.thrust)return [...sample.thrust.direction];
  const previous=[...v.arcs].reverse().find(a=>a.start<=t),next=v.arcs.find(a=>a.start>t);

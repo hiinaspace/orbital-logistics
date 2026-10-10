@@ -1,7 +1,7 @@
 import {sampleVessel,type SceneView,type VesselView,type ViewSample} from '../model-set/model';
 import {portState} from '../sim/logistics';
 import type {EventBoundary} from '../sim/runner';
-import {isCachedShuttle,type TrafficDefinition} from './planner';
+import {isCachedShuttle,isDistrict,type TrafficDefinition} from './planner';
 import {DENSE_SAMPLE_BUDGET,type TrafficDelta,type FleetFrame,type FleetBoundary,type FleetEvent,type EpisodeRecord} from './engine';
 import type {ResourceAnchor} from './resources';
 function brackets<T extends {t:number}>(rows:T[],lo:number,hi:number):T[]{
@@ -46,7 +46,7 @@ export class TrafficViewStore {
    const actual=merge(dense,merge(this.frames,[this.current],f=>f.t).map(f=>f.ships[index]),f=>f.t).sort((a,b)=>a.t-b.t);
    const boundaries:EventBoundary[]=merge(records.flatMap(r=>r.executionBoundaries??r.boundaries).filter(b=>b.t<=cursor),this.boundaries.map(b=>({t:b.t,before:b.before.ships[index],after:b.after.ships[index]})),b=>b.t).sort((a,b)=>a.t-b.t);
    const trajectories=records.filter(r=>(!isCachedShuttle(d)||r.source.arrival>=cursor-12)&&r.source.departure<=cursor && (r.executionSamples??r.samples).length>0).map(r=>({start:r.source.departure,end:Math.min(r.source.arrival,r.faultAt??Infinity),through:cursor,samples:r.executionSamples??r.samples,boundaries:r.executionBoundaries??r.boundaries,arcs:r.executionArcs}));
-   const base:VesselView={...v,...(isCachedShuttle(d)?{glyph:'rocket' as const,initialAxis:[1,0,0] as [number,number,number],interpolation:'hermite' as const}:{}),ship:s.ship,ports:s.logistics!.ports,cargoCapacity:s.logistics!.cargoCapacity,arcs,continuousFuel:true,portSamples:{},samples:actual,ledger:this.events.filter(e=>e.shipId===v.id),boundaries,trajectories};
+   const base:VesselView={...v,...(isCachedShuttle(d)?{...(!isDistrict(d)||v.route.some(id=>d.templates.find(t=>t.id===id)?.source==='Equator')?{glyph:'rocket' as const,initialAxis:[1,0,0] as [number,number,number]}:{}),interpolation:'hermite' as const}:{}),ship:s.ship,ports:s.logistics!.ports,cargoCapacity:s.logistics!.cargoCapacity,arcs,continuousFuel:true,portSamples:{},samples:actual,ledger:this.events.filter(e=>e.shipId===v.id),boundaries,trajectories};
    const at=sampleVessel(base,cursor),samples=actual.filter(a=>a.t<cursor);samples.push(at);
    const plan=records.find(r=>r.source.arrival>cursor && (r.faultAt===undefined || r.faultAt>cursor));
    const plannedSamples=plan?new Map(plan.samples.map(p=>[p.t,p])):undefined;

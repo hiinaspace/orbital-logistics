@@ -199,7 +199,9 @@ export class Runner {
         const force=thrustAt(law,n.t),body=s.bodies.find(b=>b.id===surface.bodyId)!;
         const b=bodyState(body,n.t),r=distance(n.y,b),normal=n.y.slice(0,3).map((x,i)=>(x-b[i])/r);
         const gravity=derivative(s,n.t,n.y).slice(3),outward=force/massAt(law,n.t)*dot(directionAt(arc,0),normal as [number,number,number]);
-        const radial=outward+dot(gravity as [number,number,number],normal as [number,number,number])+port.rail.rate**2*r;
+        const relative=n.y.slice(3).map((v,i)=>v-b[i+3]),radialSpeed=dot(relative as [number,number,number],normal as [number,number,number]);
+        const tangentialSquared=relative.reduce((n,v)=>n+v*v,0)-radialSpeed**2;
+        const radial=outward+dot(gravity as [number,number,number],normal as [number,number,number])+Math.max(0,tangentialSquared)/r;
         // Relative radial-distance acceleration, not an extra inertial force.
         const margin=1e-12*Math.max(1,body.mu/r**2,outward);
         if(n.propellant<=0 || force<=0 || !Number.isFinite(radial) || radial<=margin) {

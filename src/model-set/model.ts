@@ -9,7 +9,7 @@ import {portState} from '../sim/logistics';
 import { validateBundle, type Bundle, type Port, type Scenario, type Rail, type State, type Vec3, type ThrustArc } from '../sim/schema';
 
 export interface Station { inventoryOwner?:'propulsion'; id: string; role: string; berths: number; maintenance?:{reference:Extract<Rail,{kind:'circular'}>;checks:{t:number;outcome:string;before:number[];after?:number[];evaluations:number}[]} }
-export interface Vessel { name: string; color: string; cargo: string; bundle: Bundle }
+export interface Vessel { glyph?:'rocket'|'stack';initialAxis?:Vec3; name: string; color: string; cargo: string; bundle: Bundle }
 export interface ModelSet {
   schemaVersion: 1; id: string; name: string; extent: number;
   description: string; provenance: string; stations: Station[]; vessels: Vessel[];

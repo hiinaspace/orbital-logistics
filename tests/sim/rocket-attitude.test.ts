@@ -22,7 +22,7 @@ test('attitude remains physical during thrust and respects explicit axes, surfac
  const v=fixture([0,1,0]),active={...sample,thrust:{id:'next',force:1,acceleration:1,direction:[0,1,0] as [number,number,number]}};
  assert.deepEqual(rocketAxis(v,active,3.1),[0,1,0]);
  assert.deepEqual(rocketAxis(v,{...sample,axis:[0,0,1]},2.7),[0,0,1]);
- const supported=fixture();supported.ports=[{id:'pad',rail:{kind:'surface',phase:0,rate:.1,u:[1,0,0],v:[0,1,0]}} as any];
+ const supported=fixture();supported.ports=[{id:'pad',rail:{kind:'surface',bodyId:'primary',centerHeight:1e-6,center:[0,0,0],radius:1.000001,phase:0,rate:.1,u:[1,0,0],v:[0,1,0]},cargo:0,cargoCapacity:0,propellant:0,tankCapacity:0,serviceDuration:.1}];
  const grounded={...sample,logistics:{dockedPortId:'pad'}} as ViewSample;
  const radial=rocketAxis(supported,grounded,2.7);assert.ok(Math.abs(radial[0]-Math.cos(.27))<1e-12);assert.ok(Math.abs(radial[1]-Math.sin(.27))<1e-12);
  const short=fixture([0,0,1]);short.arcs[1].start=1.2;

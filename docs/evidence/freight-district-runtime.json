@@ -1,0 +1,70 @@
+{
+  "coldMs": 281.57553799999994,
+  "warmAdmissionMs": [
+    0.719522999999981,
+    0.41294200000004366,
+    0.47767499999997654,
+    0.4053680000000668,
+    0.2804319999999052,
+    0.30886499999996886,
+    0.40490699999998014,
+    0.31863399999997455,
+    0.3421180000000277,
+    0.32075700000007146,
+    0.3034850000000233,
+    0.3088149999999814,
+    0.35065399999996316,
+    0.31220199999995657,
+    0.31505700000002435,
+    0.308304000000021,
+    0.3090349999999944,
+    0.3293939999999793
+  ],
+  "soakMs": 18424.722305,
+  "maxAdvance8UnitsMs": 343.695388,
+  "maxDense": 16510,
+  "maxViewBytes": 4930859,
+  "maxDelta8UnitsBytes": 3067172,
+  "maxFuelBalance": 5.684341886080801e-13,
+  "maxCargoBalance": 1.4432899320127035e-15,
+  "resourceWaits": 2,
+  "frames": 1076,
+  "boundaries": 51,
+  "events": 88,
+  "episodes": 15,
+  "resourceAnchors": 13,
+  "runnerNodes": 10897,
+  "delivered": 1.3750000000000004,
+  "unloaded:Equator": 0,
+  "unloaded:Crown": 2.0500000000000007,
+  "unloaded:Meridian": 0.5750000000000002,
+  "unloaded:Lantern": 0.8000000000000004,
+  "flightCacheEntries": 6,
+  "flightCacheHits": 187,
+  "flightCacheSerializedBytes": 10688322,
+  "flightCacheNodes": 10897,
+  "denseSamples": 14507,
+  "ships": [
+    {
+      "id": "Tern",
+      "voyages": 82,
+      "stage": "flying"
+    },
+    {
+      "id": "Ibis",
+      "voyages": 45,
+      "stage": "planned"
+    },
+    {
+      "id": "Wren",
+      "voyages": 63,
+      "stage": "flying"
+    }
+  ],
+  "unloaded": {
+    "Equator": 0,
+    "Crown": 2.0500000000000007,
+    "Meridian": 0.5750000000000002,
+    "Lantern": 0.8000000000000004
+  }
+}

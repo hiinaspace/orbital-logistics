@@ -1,0 +1,174 @@
+{
+  "frontier": 2048,
+  "peakCrownCargo": 1,
+  "resourceWaits": 17,
+  "maxDense": 16510,
+  "maxFuelBalance": 5.684341886080801e-13,
+  "maxCargoBalance": 2.9976021664879227e-15,
+  "checkpoints": [
+    {
+      "t": 512,
+      "ships": [
+        {
+          "id": "Tern",
+          "voyage": 41,
+          "stage": "planned"
+        },
+        {
+          "id": "Ibis",
+          "voyage": 22,
+          "stage": "flying"
+        },
+        {
+          "id": "Wren",
+          "voyage": 32,
+          "stage": "planned"
+        }
+      ],
+      "crownCargo": 0.3249999999999999
+    },
+    {
+      "t": 1024,
+      "ships": [
+        {
+          "id": "Tern",
+          "voyage": 82,
+          "stage": "flying"
+        },
+        {
+          "id": "Ibis",
+          "voyage": 45,
+          "stage": "planned"
+        },
+        {
+          "id": "Wren",
+          "voyage": 63,
+          "stage": "flying"
+        }
+      ],
+      "crownCargo": 0.6749999999999997
+    },
+    {
+      "t": 1536,
+      "ships": [
+        {
+          "id": "Tern",
+          "voyage": 122,
+          "stage": "flying"
+        },
+        {
+          "id": "Ibis",
+          "voyage": 67,
+          "stage": "flying"
+        },
+        {
+          "id": "Wren",
+          "voyage": 95,
+          "stage": "flying"
+        }
+      ],
+      "crownCargo": 1
+    },
+    {
+      "t": 2048,
+      "ships": [
+        {
+          "id": "Tern",
+          "voyage": 149,
+          "stage": "flying"
+        },
+        {
+          "id": "Ibis",
+          "voyage": 90,
+          "stage": "planned"
+        },
+        {
+          "id": "Wren",
+          "voyage": 127,
+          "stage": "flying"
+        }
+      ],
+      "crownCargo": 1
+    }
+  ],
+  "ships": [
+    {
+      "id": "Tern",
+      "stage": "flying",
+      "cargo": 0,
+      "fuel": 2.25,
+      "used": 416.87028214253087,
+      "routeIndex": 1,
+      "voyage": 149,
+      "eventAt": null,
+      "portId": "Crown",
+      "windowIndex": 163,
+      "episode": {
+        "id": "Tern:149",
+        "departure": 2047.0958301329179,
+        "nextFact": 1
+      },
+      "delivered": 3.7499999999999947
+    },
+    {
+      "id": "Ibis",
+      "stage": "planned",
+      "cargo": 0.025,
+      "fuel": 0.8,
+      "used": 8.752972717929724,
+      "routeIndex": 0,
+      "voyage": 90,
+      "eventAt": 2058.7249127234727,
+      "portId": "Crown",
+      "windowIndex": 90,
+      "episode": {
+        "id": "Ibis:90",
+        "departure": 2058.7249127234727,
+        "nextFact": 0
+      },
+      "delivered": 1.125
+    },
+    {
+      "id": "Wren",
+      "stage": "flying",
+      "cargo": 0,
+      "fuel": 0.8,
+      "used": 18.808163118602412,
+      "routeIndex": 1,
+      "voyage": 127,
+      "eventAt": null,
+      "portId": "Lantern",
+      "windowIndex": 127,
+      "episode": {
+        "id": "Wren:127",
+        "departure": 2047.8454702701545,
+        "nextFact": 1
+      },
+      "delivered": 1.5999999999999983
+    }
+  ],
+  "unloaded": {
+    "Equator": 0,
+    "Crown": 3.7499999999999947,
+    "Meridian": 1.125,
+    "Lantern": 1.5999999999999983
+  },
+  "stats": {
+    "frames": 1071,
+    "boundaries": 46,
+    "events": 78,
+    "episodes": 13,
+    "resourceAnchors": 13,
+    "runnerNodes": 10897,
+    "delivered": 2.7249999999999983,
+    "unloaded:Equator": 0,
+    "unloaded:Crown": 3.7499999999999947,
+    "unloaded:Meridian": 1.125,
+    "unloaded:Lantern": 1.5999999999999983,
+    "flightCacheEntries": 6,
+    "flightCacheHits": 363,
+    "flightCacheSerializedBytes": 10688322,
+    "flightCacheNodes": 10897,
+    "denseSamples": 10501
+  }
+}

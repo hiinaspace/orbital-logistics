@@ -1,0 +1,233 @@
+{
+  "ports": [
+    {
+      "id": "Crown",
+      "rail": {
+        "kind": "circular",
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ],
+        "radius": 1.4,
+        "rate": 0.6036816105203691,
+        "phase": -0.9385220143071458
+      },
+      "cargo": 0,
+      "cargoCapacity": 1,
+      "propellant": 0,
+      "tankCapacity": 20,
+      "serviceDuration": 0.2
+    },
+    {
+      "id": "Meridian",
+      "rail": {
+        "kind": "circular",
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ],
+        "radius": 2.1,
+        "rate": 0.32860264730588296,
+        "phase": 0.6384170249488239
+      },
+      "cargo": 0,
+      "cargoCapacity": 1,
+      "propellant": 0,
+      "tankCapacity": 20,
+      "serviceDuration": 0.2
+    },
+    {
+      "id": "Lantern",
+      "rail": {
+        "kind": "circular",
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ],
+        "radius": 2.8,
+        "rate": 0.2134336802382846,
+        "phase": 2.8942818664937433
+      },
+      "cargo": 0,
+      "cargoCapacity": 1,
+      "propellant": 0,
+      "tankCapacity": 20,
+      "serviceDuration": 0.2
+    }
+  ],
+  "templates": [
+    {
+      "id": "Crown-Meridian",
+      "source": "Crown",
+      "destination": "Meridian",
+      "referenceDeparture": 3,
+      "duration": 7.265625,
+      "cargo": 0.025,
+      "propellant": 0.8,
+      "integrationStep": 0.0078125,
+      "arcs": [
+        {
+          "start": 0,
+          "end": 0.8,
+          "id": "pulse-0",
+          "direction": [
+            -0.6156710584656411,
+            0.7880032663433555,
+            0
+          ],
+          "throttle": 0.006265409803490877
+        },
+        {
+          "start": 6.465625,
+          "end": 7.265625,
+          "id": "pulse-1",
+          "direction": [
+            0.8353226057983592,
+            -0.5497600788000517,
+            0
+          ],
+          "throttle": 0.005207869393080602
+        }
+      ],
+      "provenance": "Offline six-state finite-force shooting; primary-only complete certified flight."
+    },
+    {
+      "id": "Meridian-Crown",
+      "source": "Meridian",
+      "destination": "Crown",
+      "referenceDeparture": 1.1924666361692704,
+      "duration": 7.265625,
+      "cargo": 0,
+      "propellant": 0.8,
+      "integrationStep": 0.0078125,
+      "arcs": [
+        {
+          "start": 0,
+          "end": 0.8,
+          "id": "pulse-0",
+          "direction": [
+            0.792622272075474,
+            -0.6097129929810527,
+            0
+          ],
+          "throttle": 0.005289882499639911
+        },
+        {
+          "start": 6.465625,
+          "end": 7.265625,
+          "id": "pulse-1",
+          "direction": [
+            -0.9459619915089237,
+            0.3242775209916206,
+            0
+          ],
+          "throttle": 0.006031038090059386
+        }
+      ],
+      "provenance": "Offline six-state finite-force shooting; primary-only complete certified flight."
+    },
+    {
+      "id": "Crown-Lantern",
+      "source": "Crown",
+      "destination": "Lantern",
+      "referenceDeparture": 7,
+      "duration": 9.5625,
+      "cargo": 0.025,
+      "propellant": 0.8,
+      "integrationStep": 0.0078125,
+      "arcs": [
+        {
+          "start": 0,
+          "end": 0.8,
+          "id": "pulse-0",
+          "direction": [
+            -0.05718293220984705,
+            -0.9983637174216038,
+            0
+          ],
+          "throttle": 0.009989252695195345
+        },
+        {
+          "start": 8.7625,
+          "end": 9.5625,
+          "id": "pulse-1",
+          "direction": [
+            -0.21432600139352465,
+            0.9767621845294088,
+            0
+          ],
+          "throttle": 0.007497712228373768
+        }
+      ],
+      "provenance": "Offline six-state finite-force shooting; primary-only complete certified flight."
+    },
+    {
+      "id": "Lantern-Crown",
+      "source": "Lantern",
+      "destination": "Crown",
+      "referenceDeparture": 3.0824565752156095,
+      "duration": 9.5625,
+      "cargo": 0,
+      "propellant": 0.8,
+      "integrationStep": 0.0078125,
+      "arcs": [
+        {
+          "start": 0,
+          "end": 0.8,
+          "id": "pulse-0",
+          "direction": [
+            -0.33252706794287323,
+            0.9430937117197399,
+            0
+          ],
+          "throttle": 0.007756917797545099
+        },
+        {
+          "start": 8.7625,
+          "end": 9.5625,
+          "id": "pulse-1",
+          "direction": [
+            0.5735186988192458,
+            -0.819192469511701,
+            0
+          ],
+          "throttle": 0.009463968874716474
+        }
+      ],
+      "provenance": "Offline six-state finite-force shooting; primary-only complete certified flight."
+    }
+  ]
+}
