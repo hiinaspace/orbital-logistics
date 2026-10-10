@@ -1,3 +1,4 @@
+import {surfaceCacheStats,type SurfaceFlight} from '../surface-flexible/contracts';
 import type {EventBoundary} from '../sim/runner';
 import type {FleetFrame,FleetBoundary,FleetEvent} from '../traffic/engine';
 import {resourcesAt,type ResourceAnchor} from '../traffic/resources';
@@ -5,15 +6,15 @@ import type {ViewSample,ViewerEvent} from '../model-set/model';
 import type {WorldChunk} from '../maintained/world';
 import {PlanningFailure} from '../maintained/shoot';
 import {AdaptiveWorld,validateAdaptive,type AdaptiveDefinition} from './world';
-import {CoupledTrip,type CoupledPlan} from './plan';
+import {CoupledTrip,tripStart,tripTouchdown,type CoupledPlan} from './plan';
 import {planServiceJob,serviceWork} from './planner';
 const copy=<T>(v:T):T=>structuredClone(v);
 export interface AdaptiveVisit {
- id:string;knownAt:number;departure:number;arrival:number;end:number;plan:CoupledPlan;evaluations:number;
+ id:string;knownAt:number;departure:number;arrival:number;end:number;plan:CoupledPlan;localFlights?:SurfaceFlight[];evaluations:number;
  samples:ViewSample[];boundaries:EventBoundary[];events:ViewerEvent[];updatedAt:number;faultAt?:number;
 }
 export interface AdaptiveDelta {
- domain:'adaptive-relay-v1';frontier:number;oldest:number;current:FleetFrame;frames:FleetFrame[];boundaries:FleetBoundary[];
+ domain:'adaptive-relay-v1'|'surface-flexible-v1';frontier:number;oldest:number;current:FleetFrame;frames:FleetFrame[];boundaries:FleetBoundary[];
  chunks:WorldChunk[];visits:AdaptiveVisit[];events:FleetEvent[];resources:ResourceAnchor[];stats:Record<string,number>;halt?:string;
 }
 export interface AdaptiveHooks {failAt?:'capture'|'transfer'|'release'}
@@ -44,17 +45,17 @@ export class AdaptiveEngine {
    const promoted=this.world.fork();promoted.chunks.push(...tail);promoted.anchor=copy(trip.world.anchor);
    for(const c of tail){promoted.checks++;promoted.evaluations+=c.data.check.evaluations;if(c.data.check.outcome==='correct')promoted.corrected++;if(c.data.check.outcome==='failed')promoted.failed++;}
    this.world=promoted;this.#trip=trip;this.#fact=0;this.#stage='planned';this.#reason=undefined;this.#pairUsed=this.#used;
-   const times=[...new Set([...Array.from({length:Math.ceil((trip.plan.end-trip.plan.schedule.departure)*32)+1},(_,i)=>trip.plan.schedule.departure+i/32),trip.plan.end,...trip.events.map(e=>e.t)])].sort((a,b)=>a-b);
+   const times=[...new Set([...Array.from({length:Math.ceil((trip.plan.end-tripStart(trip.plan))*32)+1},(_,i)=>tripStart(trip.plan)+i/32),trip.plan.end,...trip.events.map(e=>e.t)])].filter(t=>t<=trip.plan.end).sort((a,b)=>a-b);
    const view=(s:ViewSample):ViewSample=>({...s,fuelUsed:this.#pairUsed+(s.fuelUsed??0),...(s.logistics?{logistics:{...s.logistics,fuelUsed:this.#pairUsed+(s.fuelUsed??0)}}:{})});
-   this.#visits.push({id:trip.plan.id,knownAt:t,departure:trip.plan.schedule.departure,arrival:trip.plan.schedule.homeArrival,end:trip.plan.end,plan:copy(trip.plan),evaluations:trip.plan.evaluations,samples:times.map(t=>view(trip.sample(t))),boundaries:trip.boundaries.map(b=>({t:b.t,before:view(b.before),after:view(b.after)})),events:trip.events,updatedAt:t});
+   this.#visits.push({id:trip.plan.id,knownAt:t,departure:tripStart(trip.plan),arrival:tripTouchdown(trip.plan),end:trip.plan.end,plan:copy(trip.plan),...(this.definition.surface?{localFlights:trip.localFlights.map(f=>({...f,used:f.used+this.#pairUsed}))}:{}),evaluations:trip.plan.evaluations,samples:times.map(t=>view(trip.sample(t))),boundaries:trip.boundaries.map(b=>({t:b.t,before:view(b.before),after:view(b.after)})),events:trip.events,updatedAt:t});
    this.#maxSolverWork=Math.max(this.#maxSolverWork,trip.plan.evaluations);this.#ordinal++;
   }catch(error){if(!(error instanceof PlanningFailure))throw error;this.#reason=error.message;this.#planningFailed++;this.#event(t,'planning-failed',`adaptive-retry-${t}`,{detail:`${this.#reason}; retry at ${t+8}`});}finally{this.#trialController+=work.controller.used;this.#trialVisitor+=work.visitor.used;this.#maxOpportunity=Math.max(this.#maxOpportunity,work.controller.used+work.visitor.used);this.#maxTrials=Math.max(this.#maxTrials,work.trials);}
  }
  #sample(t:number,before=false):ViewSample{
   const d=this.definition;
   if(this.#stage==='fault')return {...copy(this.#fault!),t,activity:{kind:'fault',reason:this.#reason,knownEpoch:this.#fault!.t}};
-  if(this.#trip&&t>=this.#trip.plan.schedule.departure&&t<=this.#trip.plan.end){const s=this.#trip.sample(t,before);return {...s,fuelUsed:this.#pairUsed+(s.fuelUsed??0),logistics:{...s.logistics!,fuelUsed:this.#pairUsed+(s.fuelUsed??0)}};}
-  return {t,y:this.world.sample(d.origin.id,t).y,propellant:this.#fuel,fuelUsed:this.#used,burnCursor:0,status:'running',detail:'',logistics:{operationCursor:0,cargoMass:d.world.scenario.ship.cargoMass,fuelUsed:this.#used,ports:[],dockedPortId:d.origin.id,...(this.#stage==='service'?{service:{id:'refuel',portId:d.origin.id,end:this.#serviceEnd,cargo:0,propellant:d.world.scenario.ship.propellant-this.#fuel}}:{})},activity:{kind:this.#stage==='service'?'service':'waiting',reason:this.#reason,...(this.#trip?{nextDeparture:this.#trip.plan.schedule.departure}:{retryAt:this.#control})}};
+  if(this.#trip&&t>=tripStart(this.#trip.plan)&&t<=this.#trip.plan.end){const s=this.#trip.sample(t,before);return {...s,fuelUsed:this.#pairUsed+(s.fuelUsed??0),logistics:{...s.logistics!,fuelUsed:this.#pairUsed+(s.fuelUsed??0)}};}
+  return {t,y:this.world.sample(d.origin.id,t).y,propellant:this.#fuel,fuelUsed:this.#used,burnCursor:0,status:'running',detail:'',logistics:{operationCursor:0,cargoMass:d.world.scenario.ship.cargoMass,fuelUsed:this.#used,ports:[],dockedPortId:d.origin.id,...(this.#stage==='service'?{service:{id:'refuel',portId:d.origin.id,end:this.#serviceEnd,cargo:0,propellant:d.world.scenario.ship.propellant-this.#fuel}}:{})},activity:{kind:this.#stage==='service'?'service':'waiting',reason:this.#reason,...(this.#trip?{nextDeparture:tripStart(this.#trip.plan)}:{retryAt:this.#control})}};
  }
  #frame(t:number,before=false):FleetFrame{return {t,ships:[this.#sample(t,before)]};}
  #commit(t:number){
@@ -62,11 +63,11 @@ export class AdaptiveEngine {
   if(trip&&this.#stage!=='fault'){
    while(trip.events[this.#fact]?.t===t){const e=trip.events[this.#fact++];
     const dependency=e.kind==='dock'&&e.portId===d.relay.id?'capture':e.kind==='transfer'&&e.portId===d.relay.id?'transfer':e.kind==='undock'&&e.portId===d.relay.id?'release':undefined;
-    if(dependency&&dependency===this.hooks.failAt){this.halt=`Coupled ${dependency} failed; dependent station future stopped`;this.#fault=copy(before.ships[0]);this.#haltStation=copy(trip.world.chunks.flatMap(c=>c.data.boundaries).find(b=>b.t===t)?.before??trip.world.sample(d.relay.id,t));this.#reason=this.halt;this.#stage='fault';const record=this.#visits.find(v=>v.id===trip.plan.id)!;record.faultAt=t;record.updatedAt=t;record.samples=record.samples.filter(s=>s.t<t);record.samples.push(copy(this.#fault));record.boundaries=record.boundaries.filter(b=>b.t<t);record.events=record.events.filter(e=>e.t<t);this.#event(t,'fault',`${trip.plan.id}:fault`,{detail:this.halt});break;}
-    this.#event(t,e.kind,e.id,{...e,episodeId:trip.plan.id,localEpoch:e.t-trip.plan.schedule.departure});
-    if(e.kind==='undock'&&e.portId===d.origin.id)this.#stage='flying';
+    if(dependency&&dependency===this.hooks.failAt){this.halt=`Coupled ${dependency} failed; dependent station future stopped`;this.#fault=copy(before.ships[0]);this.#haltStation=copy(trip.world.chunks.flatMap(c=>c.data.boundaries).find(b=>b.t===t)?.before??trip.world.sample(d.relay.id,t));this.#reason=this.halt;this.#stage='fault';const record=this.#visits.find(v=>v.id===trip.plan.id)!;record.faultAt=t;record.updatedAt=t;if(!d.surface){record.samples=record.samples.filter(s=>s.t<t);record.samples.push(copy(this.#fault));record.boundaries=record.boundaries.filter(b=>b.t<t);record.events=record.events.filter(e=>e.t<t);}this.#event(t,'fault',`${trip.plan.id}:fault`,{detail:this.halt});break;}
+    this.#event(t,e.kind,e.id,{...e,episodeId:trip.plan.id,localEpoch:e.t-tripStart(trip.plan)});
+    if((e.kind==='undock'||e.kind==='launch')&&e.portId===d.origin.id)this.#stage='flying';
     if(e.kind==='transfer'&&e.portId===d.relay.id)this.#delivered+=trip.plan.delivery;
-    if(e.kind==='dock'&&e.portId===d.origin.id){this.#fuel=trip.home.propellantAfter;this.#used=this.#pairUsed+trip.burned;this.#stage='service';this.#serviceEnd=trip.plan.end;this.#completed++;this.#event(t,'transfer-start',`${trip.plan.id}:refuel-start`,{portId:d.origin.id});}
+    if((e.kind==='dock'||e.kind==='land')&&e.portId===d.origin.id){this.#fuel=trip.home.propellantAfter;this.#used=this.#pairUsed+trip.burned;this.#stage='service';this.#serviceEnd=trip.plan.end;this.#completed++;this.#event(t,'transfer-start',`${trip.plan.id}:refuel-start`,{portId:d.origin.id});}
    }
   }
   if(this.#stage==='service'&&this.#serviceEnd===t){const stock=resourcesAt(this.#anchor,d.stations,t),origin=stock.stocks.find(p=>p.id===d.origin.id)!,q=d.world.scenario.ship.propellant-this.#fuel;
@@ -98,7 +99,7 @@ export class AdaptiveEngine {
  delta(after=-1):AdaptiveDelta{
   const station=this.#haltStation??this.world.sample(this.definition.relay.id,this.frontier),ship=this.#sample(this.frontier),stock=resourcesAt(this.#anchor,this.definition.stations,this.frontier),origin=stock.stocks.find(p=>p.id===this.definition.origin.id)!;
   const total=origin.propellant+station.propellant+ship.propellant+(station.fuelUsed??0)+(ship.fuelUsed??0),expected=this.definition.stations.find(p=>p.id===this.definition.origin.id)!.propellant+this.definition.relay.ship.propellant+this.definition.world.scenario.ship.propellant+stock.fuelImported;
-  const p:AdaptiveDelta={domain:'adaptive-relay-v1',frontier:this.frontier,oldest:this.oldest,current:this.#frame(this.frontier),frames:this.#frames.filter(f=>f.t>after),boundaries:this.#boundaries.filter(b=>b.t>=after),chunks:this.#chunks.filter(c=>c.knownAt>=after),visits:this.#visits.filter(v=>v.updatedAt>=after),events:this.#events.filter(e=>e.t>=after),resources:[this.#resources[0],...this.#resources.slice(1).filter(r=>r.t>=after)],stats:{frames:this.#frames.length,chunks:this.#chunks.length,physicalChunks:this.world.chunks.length,visits:this.#visits.length,runnerNodes:this.world.nodes+(this.#trip?.nodes??0),maxPromotionNodes:this.#maxNodes,completed:this.#completed,planningFailed:this.#planningFailed,controllerChecks:this.world.checks,controllerCorrected:this.world.corrected,controllerFailed:this.world.failed,controllerEvaluations:this.world.evaluations,maxVisitEvaluations:this.#maxSolverWork,trialControllerEvaluations:this.#trialController,trialVisitorEvaluations:this.#trialVisitor,maxOpportunityEvaluations:this.#maxOpportunity,maxOpportunityTrials:this.#maxTrials,planningPending:this.#job?1:0,stationFuel:station.propellant,stationFuelUsed:station.fuelUsed??0,shipFuelUsed:ship.fuelUsed??0,fuelDelivered:this.#delivered,fuelBalanceError:total-expected},...(this.halt?{halt:this.halt}:{})};
+  const p:AdaptiveDelta={domain:this.definition.domain,frontier:this.frontier,oldest:this.oldest,current:this.#frame(this.frontier),frames:this.#frames.filter(f=>f.t>after),boundaries:this.#boundaries.filter(b=>b.t>=after),chunks:this.#chunks.filter(c=>c.knownAt>=after),visits:this.#visits.filter(v=>v.updatedAt>=after),events:this.#events.filter(e=>e.t>=after),resources:[this.#resources[0],...this.#resources.slice(1).filter(r=>r.t>=after)],stats:{...(this.definition.surface?surfaceCacheStats():{}),frames:this.#frames.length,chunks:this.#chunks.length,physicalChunks:this.world.chunks.length,visits:this.#visits.length,runnerNodes:this.world.nodes+(this.#trip?.nodes??0),maxPromotionNodes:this.#maxNodes,completed:this.#completed,planningFailed:this.#planningFailed,controllerChecks:this.world.checks,controllerCorrected:this.world.corrected,controllerFailed:this.world.failed,controllerEvaluations:this.world.evaluations,maxVisitEvaluations:this.#maxSolverWork,trialControllerEvaluations:this.#trialController,trialVisitorEvaluations:this.#trialVisitor,maxOpportunityEvaluations:this.#maxOpportunity,maxOpportunityTrials:this.#maxTrials,planningPending:this.#job?1:0,stationFuel:station.propellant,stationFuelUsed:station.fuelUsed??0,shipFuelUsed:ship.fuelUsed??0,fuelDelivered:this.#delivered,fuelBalanceError:total-expected},...(this.halt?{halt:this.halt}:{})};
   const bytes=new TextEncoder().encode(JSON.stringify(p)).byteLength;if(bytes>8_000_000)throw Error('Adaptive reply byte budget exceeded');p.stats.packetBytes=bytes;return copy(p);
  }
  snapshot(){const p=this.delta();return {frontier:p.frontier,current:p.current,resources:resourcesAt(this.#anchor,this.definition.stations,this.frontier),stats:p.stats,halt:p.halt};}

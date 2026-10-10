@@ -1,3 +1,4 @@
+import {surfaceDuration} from './surface-flexible/contracts';
 import atmosphericLaunch from '../fixtures/model-sets/aster-launch.json';
 import type {AtmosphericMission} from './model-set/atmospheric-mission';
 import atmosphericEntry from '../fixtures/model-sets/aster-entry.json';
@@ -19,6 +20,7 @@ import type {StagedFlight} from './model-set/staging';
 import surfaceReturn from '../fixtures/model-sets/selene-return.json';
 import trafficDefinition from '../fixtures/traffic/orison-service.json';
 import surfaceService from '../fixtures/traffic/selene-service.json';
+import surfaceFlexible from '../fixtures/traffic/orison-surface-flexible.json';
 import flexibleService from '../fixtures/traffic/orison-flexible-service.json';
 import networkService from '../fixtures/traffic/orison-relay-network.json';
 import {NetworkViewStore} from './network/view';
@@ -46,7 +48,7 @@ import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVesse
 import {transform,transformDirection} from './model-set/frames';
 
 const sets = [freight, lunar, seleneFreight,selenePowered,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,crossingPlanes,steered,maintainedSet] as (ModelSet|StagedFlight|EntryFlight|AtmosphericMission)[];
-const trafficSets=[trafficDefinition,surfaceService,maintainedService,flexibleService,networkService] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition)[];
+const trafficSets=[trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
@@ -160,6 +162,7 @@ function eventLabel(e: SetEvent): string {
   if(e.kind==='separation')return 'Stage separation';
   if(e.kind==='entry')return 'Atmospheric entry';
   if(e.kind==='splashdown')return 'Ocean recovery';
+  if(e.kind==='handoff')return e.id.endsWith('ascent-exit')?'Orbit insertion':'Begin descent';
   if(e.kind==='land')return `Touchdown · ${port}`;
   if (e.kind === 'dock') return `Dock ${port}`;
   if(e.kind==='launch')return `Lift off · ${port}`;
@@ -285,7 +288,7 @@ function updatePanels() {
     $('readouts').innerHTML = `${v.cargoCapacity===0?'':`<div><dt>${esc(v.cargo)}</dt><dd>${number(cargo)} / ${number(v.cargoCapacity ?? cargo)}</dd></div>`}<div><dt>${v.id===run.staging?.separation.parentId?'Booster propellant':'Propellant'}</dt><dd>${number(s.propellant)} / ${number(v.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${number(used)}</dd></div>`;
     if(v.id===run.staging?.separation.parentId)$('readouts').innerHTML+=`<div><dt>Carried payload fuel</dt><dd>${number(run.staging.separation.reservedPayloadFuel)}</dd></div>`;
     if(maintenance){const err=orbitError(s.y,maintenance.reference),baseline=displayPortState(portsOf(run).find(p=>p.id===selected)!,{[selected]:run.maintained![selected].baseline},s.activity?.knownEpoch??t),unmaintained=orbitError(baseline,maintenance.reference);$('readouts').innerHTML=`<div><dt>Maintenance fuel</dt><dd>${s.propellant.toFixed(4)} / ${number(v.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${used.toFixed(4)}</dd></div><div><dt>Orbit error · R</dt><dd>${err.position.toExponential(2)}</dd></div><div><dt>Velocity error</dt><dd>${err.velocity.toExponential(2)}</dd></div><div><dt>Unmaintained error · R</dt><dd>${unmaintained.position.toExponential(2)}</dd></div>`;}
-    if(v.ship.engine)$('readouts').innerHTML+=`<div><dt>Thrust</dt><dd>${maintenance?(s.thrust?.force??0).toExponential(2):number(s.thrust?.force??0)} / ${number(v.ship.engine.maxThrust)}</dd></div><div><dt>Thrust acceleration</dt><dd>${maintenance?(s.thrust?.acceleration??0).toExponential(2):number(s.thrust?.acceleration??0)}</dd></div>`;
+    if(v.ship.engine)$('readouts').innerHTML+=`<div><dt>Thrust</dt><dd>${maintenance?(s.thrust?.force??0).toExponential(2):number(s.thrust?.force??0)} / ${number(v.surfaceEngine&&v.surfaceFlights?.some(f=>t>=f.start&&t<f.start+surfaceDuration)?v.surfaceEngine.maxThrust:v.ship.engine.maxThrust)}</dd></div><div><dt>Thrust acceleration</dt><dd>${maintenance?(s.thrust?.acceleration??0).toExponential(2):number(s.thrust?.acceleration??0)}</dd></div>`;
     if(v.entry||v.aerodynamics) {
       const a=s.aero,body=run.world.bodies[0],r=Math.hypot(...s.y.slice(0,3).map((x,i)=>x-bodyState(body,t)[i]));
       const pressure=a?.dynamicPressure??0,drag=Math.hypot(...(a?.drag??[0,0,0])),lift=Math.hypot(...(a?.lift??[0,0,0]));
@@ -510,7 +513,7 @@ function draw() {
         // Exhaust-side whiskers share the ship's burn schematic convention.
         // A visibility floor and square-root scale show small burns without
         // letting large engines dominate the drawing. Force includes cap taper.
-        const pixels=maintenance?2+7*Math.sqrt(Math.min(1,force/v.ship.engine!.maxThrust)):3+15*Math.sqrt(Math.min(1,force/v.ship.engine!.maxThrust));
+        const pixels=maintenance?2+7*Math.sqrt(Math.min(1,force/(v.surfaceEngine&&v.surfaceFlights?.some(f=>epoch>=f.start&&epoch<f.start+surfaceDuration)?v.surfaceEngine.maxThrust:v.ship.engine!.maxThrust))):3+15*Math.sqrt(Math.min(1,force/(v.surfaceEngine&&v.surfaceFlights?.some(f=>epoch>=f.start&&epoch<f.start+surfaceDuration)?v.surfaceEngine.maxThrust:v.ship.engine!.maxThrust)));
         const tip:ScreenPoint=[point[0]-d[0]*pixels,point[1]+d[1]*pixels,point[2]-d[2]*pixels];
         if(occluder(point,spheres))continue;
         worldPath([point,tip],maintenance?'#85c9c0':'#f0cf8f',maintenance ? .8 : 1,maintenance ? .4 : .75);

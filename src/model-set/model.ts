@@ -1,3 +1,4 @@
+import {surfaceSample,surfaceDuration,type SurfaceFlight} from '../surface-flexible/contracts';
 import {entryForces,recoveredState,type EntryPhysics,type RecoveryPose} from '../sim/entry';
 import {norm,scale,type Vec3 as Vector3} from '../sim/vectors';
 import {aerodynamicForces,type Atmosphere,type AeroTelemetry,type AeroConfiguration} from '../sim/atmosphere';
@@ -18,6 +19,7 @@ export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
 export interface ViewSample extends Sample {activity?:Activity;mass?:number;aero?:AeroTelemetry;axis?:Vector3;entryPhase?:'coast'|'entry'|'braking'|'recovered'}
 export interface VesselView {
+ surfaceFlights?:SurfaceFlight[];surfaceEngine?:Scenario['ship']['engine'];
  entry?:{physics:EntryPhysics;recovery:RecoveryPose;activeFrom?:number;entryEpoch:number;brakingEpoch:number;heatScale:number};
  aerodynamics?:{scenario:Scenario;atmosphere:Atmosphere;aero:AeroConfiguration};
  glyph?:'rocket'|'stack';initialAxis?:Vec3;
@@ -44,7 +46,7 @@ export interface SceneView {
 }
 export interface SetRun extends SceneView {vessels:VesselRun[]}
 export interface Stock { id: string; cargo: number; propellant: number; occupied: number }
-export type ViewerEvent=Omit<LedgerEntry,'kind'> & {kind:LedgerEntry['kind']|'planning-failed'|'unavailable'|'fault'|'separation'|'entry'|'splashdown'};
+export type ViewerEvent=Omit<LedgerEntry,'kind'> & {kind:LedgerEntry['kind']|'planning-failed'|'unavailable'|'fault'|'separation'|'entry'|'splashdown'|'handoff'};
 export interface SetEvent extends ViewerEvent { vessel: string; color: string }
 
 // A curated set overlays independent test ships. Admission checks shared finite
@@ -179,6 +181,7 @@ export function presenceLabel(v:VesselView,t:number):string {
  return t<(v.lifetime?.start??-Infinity)?'Attached to launch stack':'Separated';
 }
 export function sampleVessel(v: VesselView, t: number): ViewSample {
+ const local=v.surfaceFlights?.find(f=>t>=f.start&&t<f.start+surfaceDuration);if(local)return surfaceSample(local,t);
   const dense=v.trajectories?.find(p=>t>=p.start && t<p.end && t<=p.through);
   if(dense)return sampleVessel({...v,trajectories:undefined,samples:dense.samples,boundaries:dense.boundaries,arcs:dense.arcs??v.arcs},t);
   const [a,b] = bracket(v, t),sample={...structuredClone(a),t,y:a.activity?.kind==='fault'?[...a.y] as State:stateAt(v,t)};
@@ -229,6 +232,7 @@ function bracket(v: VesselView, t: number): [ViewSample, ViewSample] {
   return [a, b];
 }
 export function stateAt(v: VesselView, t: number): State {
+ const local=v.surfaceFlights?.find(f=>t>=f.start&&t<f.start+surfaceDuration);if(local)return surfaceSample(local,t).y;
   if(v.entry && t>=v.entry.recovery.t && t<=v.samples.at(-1)!.t)return recoveredState(v.entry.recovery,t);
   const dense=v.trajectories?.find(p=>t>=p.start && t<p.end && t<=p.through);
   if(dense)return stateAt({...v,trajectories:undefined,samples:dense.samples,boundaries:dense.boundaries},t);

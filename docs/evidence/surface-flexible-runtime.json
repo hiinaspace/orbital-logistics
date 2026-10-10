@@ -1,0 +1,255 @@
+{
+  "elapsedMs": 55047.571213,
+  "maxTurnMs": 1217.8519960000049,
+  "maxBalance": 4.263256414560601e-14,
+  "peak": {
+    "runnerNodes": 88916,
+    "frames": 2071,
+    "chunks": 26,
+    "physicalChunks": 10,
+    "visits": 3,
+    "packetBytes": 2092912,
+    "viewBytes": 6603824,
+    "surfaceCacheNodes": 7392,
+    "surfaceCacheBytes": 473088
+  },
+  "stats": {
+    "surfaceCacheNodes": 7392,
+    "surfaceCacheBytes": 473088,
+    "frames": 2068,
+    "chunks": 26,
+    "physicalChunks": 10,
+    "visits": 3,
+    "runnerNodes": 85200,
+    "maxPromotionNodes": 52653,
+    "completed": 15,
+    "planningFailed": 0,
+    "controllerChecks": 137,
+    "controllerCorrected": 107,
+    "controllerFailed": 0,
+    "controllerEvaluations": 676,
+    "maxVisitEvaluations": 26,
+    "trialControllerEvaluations": 1574,
+    "trialVisitorEvaluations": 680,
+    "maxOpportunityEvaluations": 308,
+    "maxOpportunityTrials": 4,
+    "planningPending": 0,
+    "stationFuel": 0.5637114835938997,
+    "stationFuelUsed": 0.8206256645522121,
+    "shipFuelUsed": 81.02325885966378,
+    "fuelDelivered": 0.7843371481461118,
+    "fuelBalanceError": -4.263256414560601e-14,
+    "packetBytes": 6566395
+  },
+  "waits": [],
+  "tours": [
+    {
+      "knownAt": 0,
+      "launch": 13.197230113534692,
+      "touchdown": 70.30276988646531,
+      "end": 72.30276988646531,
+      "schedule": {
+        "departure": 15,
+        "relayArrival": 28.5,
+        "release": 55,
+        "homeArrival": 68.5
+      },
+      "delivery": 0.034102632294459645
+    },
+    {
+      "knownAt": 80,
+      "launch": 84.69723011353469,
+      "touchdown": 134.8027698864653,
+      "end": 136.8027698864653,
+      "schedule": {
+        "departure": 86.5,
+        "relayArrival": 100,
+        "release": 119.5,
+        "homeArrival": 133
+      },
+      "delivery": 0.04212718718281694
+    },
+    {
+      "knownAt": 144,
+      "launch": 149.6972301135347,
+      "touchdown": 206.3027698864653,
+      "end": 208.3027698864653,
+      "schedule": {
+        "departure": 151.5,
+        "relayArrival": 164,
+        "release": 191,
+        "homeArrival": 204.5
+      },
+      "delivery": 0.07380546120016385
+    },
+    {
+      "knownAt": 216,
+      "launch": 220.6972301135347,
+      "touchdown": 278.3027698864653,
+      "end": 280.3027698864653,
+      "schedule": {
+        "departure": 222.5,
+        "relayArrival": 236,
+        "release": 261,
+        "homeArrival": 276.5
+      },
+      "delivery": 0.03595132702460313
+    },
+    {
+      "knownAt": 288,
+      "launch": 291.1972301135347,
+      "touchdown": 343.3027698864653,
+      "end": 345.3027698864653,
+      "schedule": {
+        "departure": 293,
+        "relayArrival": 308,
+        "release": 327.5,
+        "homeArrival": 341.5
+      },
+      "delivery": 0.06442419035584501
+    },
+    {
+      "knownAt": 352,
+      "launch": 356.6972301135347,
+      "touchdown": 414.3027698864653,
+      "end": 416.3027698864653,
+      "schedule": {
+        "departure": 358.5,
+        "relayArrival": 372,
+        "release": 397,
+        "homeArrival": 412.5
+      },
+      "delivery": 0.05717604097306894
+    },
+    {
+      "knownAt": 424,
+      "launch": 427.1972301135347,
+      "touchdown": 479.3027698864653,
+      "end": 481.3027698864653,
+      "schedule": {
+        "departure": 429,
+        "relayArrival": 444,
+        "release": 463.5,
+        "homeArrival": 477.5
+      },
+      "delivery": 0.05315309332956397
+    },
+    {
+      "knownAt": 488,
+      "launch": 492.6972301135347,
+      "touchdown": 551.3027698864653,
+      "end": 553.3027698864653,
+      "schedule": {
+        "departure": 494.5,
+        "relayArrival": 508,
+        "release": 533.5,
+        "homeArrival": 549.5
+      },
+      "delivery": 0.04166452327822101
+    },
+    {
+      "knownAt": 560,
+      "launch": 563.1972301135347,
+      "touchdown": 613.8027698864653,
+      "end": 615.8027698864653,
+      "schedule": {
+        "departure": 565,
+        "relayArrival": 580,
+        "release": 599.5,
+        "homeArrival": 612
+      },
+      "delivery": 0.06893435526707614
+    },
+    {
+      "knownAt": 616,
+      "launch": 621.6972301135347,
+      "touchdown": 678.8027698864653,
+      "end": 680.8027698864653,
+      "schedule": {
+        "departure": 623.5,
+        "relayArrival": 638.5,
+        "release": 663.5,
+        "homeArrival": 677
+      },
+      "delivery": 0.03252756996621764
+    },
+    {
+      "knownAt": 688,
+      "launch": 692.6972301135347,
+      "touchdown": 749.8027698864653,
+      "end": 751.8027698864653,
+      "schedule": {
+        "departure": 694.5,
+        "relayArrival": 708,
+        "release": 735.5,
+        "homeArrival": 748
+      },
+      "delivery": 0.039378531040420106
+    },
+    {
+      "knownAt": 752,
+      "launch": 757.6972301135347,
+      "touchdown": 814.8027698864653,
+      "end": 816.8027698864653,
+      "schedule": {
+        "departure": 759.5,
+        "relayArrival": 774.5,
+        "release": 799.5,
+        "homeArrival": 813
+      },
+      "delivery": 0.07890181970108612
+    },
+    {
+      "knownAt": 824,
+      "launch": 828.6972301135347,
+      "touchdown": 885.8027698864653,
+      "end": 887.8027698864653,
+      "schedule": {
+        "departure": 830.5,
+        "relayArrival": 844,
+        "release": 871.5,
+        "homeArrival": 884
+      },
+      "delivery": 0.0350391642283826
+    },
+    {
+      "knownAt": 888,
+      "launch": 892.6972301135347,
+      "touchdown": 950.8027698864653,
+      "end": 952.8027698864653,
+      "schedule": {
+        "departure": 894.5,
+        "relayArrival": 910,
+        "release": 935.5,
+        "homeArrival": 949
+      },
+      "delivery": 0.06272761866997223
+    },
+    {
+      "knownAt": 960,
+      "launch": 965.6972301135347,
+      "touchdown": 1021.8027698864653,
+      "end": 1023.8027698864653,
+      "schedule": {
+        "departure": 967.5,
+        "relayArrival": 980.5,
+        "release": 1006.5,
+        "homeArrival": 1020
+      },
+      "delivery": 0.06442363363421444
+    },
+    {
+      "knownAt": 1024,
+      "launch": 1029.6972301135347,
+      "touchdown": 1086.8027698864653,
+      "end": 1088.8027698864653,
+      "schedule": {
+        "departure": 1031.5,
+        "relayArrival": 1046.5,
+        "release": 1071.5,
+        "homeArrival": 1085
+      },
+      "delivery": 0.04977159812322307
+    }
+  ]
+}

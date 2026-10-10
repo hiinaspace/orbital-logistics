@@ -1,20 +1,23 @@
+import {groundState,validateSurfaceSpec,type SurfaceSpec} from '../surface-flexible/contracts';
 import {Runner,type EventBoundary} from '../sim/runner';
 import type {OriginIntervals} from '../network/origin';
 import type {Bundle,Scenario,State,ThrustArc} from '../sim/schema';
 import {orbitError,type ViewSample,type ViewerEvent} from '../model-set/model';
 import {validateMaintained,type MaintainedDefinition,type WorldChunk} from '../maintained/world';
 import {shootForcesJob,PlanningFailure,type PropagationBudget} from '../maintained/shoot';
-export type AdaptiveDefinition=Omit<MaintainedDefinition,'domain'>&{domain:'adaptive-relay-v1'};
-export const isAdaptive=(d:{domain?:string}):d is AdaptiveDefinition=>d.domain==='adaptive-relay-v1';
+export type AdaptiveDefinition=Omit<MaintainedDefinition,'domain'>&{domain:'adaptive-relay-v1'|'surface-flexible-v1';surface?:SurfaceSpec};
+export const isAdaptive=(d:{domain?:string}):d is AdaptiveDefinition=>d.domain==='adaptive-relay-v1'||d.domain==='surface-flexible-v1';
 export function validateAdaptive(value:AdaptiveDefinition):AdaptiveDefinition{
  if(!isAdaptive(value))throw Error('Wrong adaptive service version');
- const checked=validateMaintained({...value,domain:'maintained-relay-v1'});return {...checked,domain:'adaptive-relay-v1'};
+ const checked=validateMaintained({...value,domain:'maintained-relay-v1'});
+ if(value.domain==='surface-flexible-v1'){const surface=validateSurfaceSpec(value.surface);if(checked.world.scenario.ship.propellant!==6||checked.world.scenario.ship.tankCapacity!==6||JSON.stringify(checked.origin.state)!==JSON.stringify(groundState(0)))throw Error('Invalid ground service hardware/pose');return {...checked,domain:'surface-flexible-v1',surface};}
+ if(value.surface!==undefined)throw Error('Legacy service cannot own surface contracts');return {...checked,domain:'adaptive-relay-v1'};
 }
 export interface Anchor {t:number;y:State;fuel:number;used:number;origin:State;baseline:State;visitorFuel?:number}
 export interface Ownership {t:number;kind:'capture'|'transfer'|'release';fuel?:number;amount?:number;visitorId:string}
 export interface Control {t:number;arcs:ThrustArc[];check:WorldChunk['check']}
 interface Piece {start:number;end:number;runner:Runner;used:number;visitorFuel?:number;dryMass:number}
-interface Chunk {data:WorldChunk;pieces:Piece[];origin:Runner;baseline:Runner;anchor:Anchor;endAnchor:Anchor;control:Control}
+interface Chunk {data:WorldChunk;pieces:Piece[];origin:{sample(t:number):ViewSample;advanceTo(t:number):ViewSample};baseline:Runner;anchor:Anchor;endAnchor:Anchor;control:Control}
 export const aligned=(t:number)=>Number.isFinite(t)&&Number.isInteger(t*256);
 export const quiet=(t:number)=>aligned(t)&&t%8>=4&&t%8<8;
 const copy=<T>(v:T):T=>structuredClone(v);
@@ -54,7 +57,7 @@ export class AdaptiveWorld {
     ownershipBounds.push({t:at,before:beforeSample,after:{...beforeSample,propellant:fuel,mass:this.definition.relay.ship.dryMass+(visitorFuel===undefined?0:1.05+visitorFuel)+fuel} as ViewSample});
    }
    const originBundle={scenario:this.scenario(t,8,start.origin,0,undefined,false),program:{schemaVersion:3 as const,id:`adaptive-origin-${t}`,burns:[]}};
-   const origin=this.originIntervals?.get(originBundle)??new Runner(originBundle),baseline=new Runner({scenario:this.scenario(t,8,start.baseline,this.definition.relay.ship.propellant),program:{schemaVersion:3,id:`adaptive-baseline-${t}`,burns:[]}});
+   const origin=this.definition.surface?{sample:(t:number)=>({t,y:groundState(t),propellant:0,burnCursor:0,status:'horizon' as const,detail:''}),advanceTo:(t:number)=>({t,y:groundState(t),propellant:0,burnCursor:0,status:'horizon' as const,detail:''})}:this.originIntervals?.get(originBundle)??new Runner(originBundle),baseline=new Runner({scenario:this.scenario(t,8,start.baseline,this.definition.relay.ship.propellant),program:{schemaVersion:3,id:`adaptive-baseline-${t}`,burns:[]}});
    yield;const o=origin.advanceTo(t+8);yield;const b=baseline.advanceTo(t+8);if(o.status!=='horizon'||b.status!=='horizon')throw Error('Coupled background physical failure');
    const sample=(epoch:number):ViewSample=>{const piece=pieces.find(p=>p.start<=epoch&&p.end>epoch)??pieces.at(-1)!;const a=piece.runner.sample(epoch);return {...a,fuelUsed:piece.used+(a.fuelUsed??0),mass:piece.dryMass+a.propellant} as ViewSample;};
    const times=[...new Set([...Array.from({length:257},(_,i)=>t+i/32),...ledger.map(e=>e.t),...local.map(e=>e.t)])].sort((a,b)=>a-b),boundaries=[...pieces.flatMap(p=>p.runner.eventBoundaries.map(b=>({t:b.t,before:{...b.before,mass:p.dryMass+b.before.propellant,fuelUsed:p.used+(b.before.fuelUsed??0)},after:{...b.after,mass:p.dryMass+b.after.propellant,fuelUsed:p.used+(b.after.fuelUsed??0)}}))),...ownershipBounds].sort((a,b)=>a.t-b.t);
@@ -71,7 +74,7 @@ export class AdaptiveWorld {
   const piece=chunk.pieces.find(p=>p.start<=t&&p.end>t)??chunk.pieces.at(-1)!,a=piece.runner.sample(t);return {...a,fuelUsed:piece.used+(a.fuelUsed??0),mass:piece.dryMass+a.propellant} as ViewSample;
  }
  get controls(){return this.chunks.map(c=>copy(c.control));}
- get runners(){return this.chunks.flatMap(c=>[...c.pieces.map(p=>p.runner),c.origin,c.baseline]);}
+ get runners(){return this.chunks.flatMap(c=>[...c.pieces.map(p=>p.runner),...(c.origin instanceof Runner?[c.origin]:[]),c.baseline]);}
  get nodes(){return [...new Set(this.runners)].reduce((n,r)=>n+r.retainedNodes,0);}
  evict(t:number){this.chunks=this.chunks.filter(c=>c.data.end>=t);}
 }

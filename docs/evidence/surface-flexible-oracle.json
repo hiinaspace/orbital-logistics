@@ -1,0 +1,77 @@
+{
+  "station": {
+    "end": 1096,
+    "position": 1.6941178665901338e-11,
+    "velocity": 3.2147773568077625e-12,
+    "fuel": 2.3092638912203256e-14
+  },
+  "surface": [
+    {
+      "leg": "ascent",
+      "epoch": 13.197230113534692,
+      "position": 4.078747114484444e-10,
+      "velocity": 4.3990549350783393e-10,
+      "fuel": 3.9968028886505635e-15,
+      "omittedFieldPosition": 0.0003394929830737326,
+      "omittedFieldVelocity": 0.0004284052171359207
+    },
+    {
+      "leg": "descent",
+      "epoch": 68.5,
+      "position": 4.56868293273159e-11,
+      "velocity": 2.1368682591575388e-10,
+      "fuel": 5.662137425588298e-15,
+      "omittedFieldPosition": 0.00015402806903283908,
+      "omittedFieldVelocity": 0.00019005154471288547
+    },
+    {
+      "leg": "ascent",
+      "epoch": 1029.6972301135347,
+      "position": 5.708759313402258e-12,
+      "velocity": 2.2938370792358493e-10,
+      "fuel": 3.6992631180510216e-13,
+      "omittedFieldPosition": 0.00021073143923765216,
+      "omittedFieldVelocity": 0.00022822427947103894
+    },
+    {
+      "leg": "descent",
+      "epoch": 1085,
+      "position": 1.1734695602162758e-11,
+      "velocity": 2.1305846070680407e-10,
+      "fuel": 1.9895196601282805e-13,
+      "omittedFieldPosition": 0.0001397587926278828,
+      "omittedFieldVelocity": 0.000224889537156798
+    }
+  ],
+  "orbital": [
+    {
+      "epoch": 15,
+      "position": 9.079187330245418e-13,
+      "velocity": 1.580138535779582e-13,
+      "fuel": 1.3322676295501878e-14,
+      "oracleRefinement": 1.9462706826856986e-14
+    },
+    {
+      "epoch": 55,
+      "position": 5.797448140610896e-14,
+      "velocity": 4.022184183655484e-14,
+      "fuel": 8.881784197001252e-15,
+      "oracleRefinement": 1.1209954371511883e-14
+    },
+    {
+      "epoch": 1031.5,
+      "position": 1.0598582320601144e-12,
+      "velocity": 1.9179603428741433e-13,
+      "fuel": 1.199040866595169e-14,
+      "oracleRefinement": 4.320687375408779e-14
+    },
+    {
+      "epoch": 1071.5,
+      "position": 1.678169181242744e-13,
+      "velocity": 8.722468685858536e-14,
+      "fuel": 2.6645352591003757e-15,
+      "oracleRefinement": 3.172375162140793e-14
+    }
+  ],
+  "omittedAccelerationBound": 0.00025
+}
