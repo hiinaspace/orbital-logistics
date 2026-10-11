@@ -429,3 +429,7 @@ The Aster–Selene expedition joins atmospheric ground departure, physical timin
 ## Continuous planet–moon expedition
 
 Aster–Selene · Continuous expedition repeats the accepted finite atmospheric mission with one canonical compilation, exact absolute-epoch rotational reuse, supported ground recovery and paid imported refill. It keeps a rolling history and the shared Live/Pause controls. See [design](design/continuous-apollo/README.md) and [evidence](evidence/continuous-apollo.md).
+
+## Overlapping planet–moon expeditions
+
+**Aster–Selene · Crossings** adds Argosy from Farpoint and the local Wren orbiter. Two independently fuelled expeditions alternate visits to a shared lunar pad; one canonical compilation serves both through validated phase symmetry. Global absolute-epoch local coasting, isolated faults, worker-prepared cycle strips and bounded rolling playback share one fleet publication. See [design](design/overlapping-expeditions/README.md) and [evidence](evidence/crossings.md).

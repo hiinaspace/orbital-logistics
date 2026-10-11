@@ -22,12 +22,14 @@ rec = d["entry"]["recovery"]
 engine = ship["engine"]
 cycle = int(sys.argv[1]) if len(sys.argv) > 1 else 0
 loose = "--loose" in sys.argv
+half_phase = "--phase-half" in sys.argv
 relative_tolerance = 2e-12 if loose else 3e-14
 absolute_tolerance = 2e-13 if loose else 3e-15
 assert 0 <= cycle <= 10000
 period = 2 * math.pi / (rail["rate"] - d["ports"][0]["rail"]["rate"])
-shift = cycle * period
-angle = cycle * d["ports"][0]["rail"]["rate"] * period
+delay = period / 2 if half_phase else 0
+shift = cycle * period + delay
+angle = rail["rate"] * delay + cycle * d["ports"][0]["rail"]["rate"] * period
 
 
 def rotate(vector):
@@ -35,7 +37,10 @@ def rotate(vector):
     return [co * vector[0] - si * vector[1], si * vector[0] + co * vector[1], vector[2]]
 
 
-if cycle:
+if half_phase:
+    d["ports"][0]["rail"]["phase"] += math.pi
+
+if cycle or half_phase:
     for key in ["launch", "ascentEnd", "landing", "liftoff", "entryStart"]:
         d[key] += shift
     for arc in d["arcs"]:
@@ -261,10 +266,10 @@ result["passed"] = bool(
     and minimum_air > 0
     and np.linalg.norm(aero(last, c["dragArea"], c["liftToDrag"])[2]) < rec["maxSpeed"]
 )
-suffix = "-loose" if loose else ""
+suffix = ("-half" if half_phase else "") + ("-loose" if loose else "")
 output = (
     f"docs/evidence/apollo-oracle-cycle-{cycle}{suffix}.json"
-    if cycle or loose
+    if cycle or loose or half_phase
     else "docs/evidence/apollo-oracle.json"
 )
 Path(output).write_text(json.dumps(result, indent=2) + "\n")

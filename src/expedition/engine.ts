@@ -1,5 +1,5 @@
 import {prepareApollo,type ApolloMission} from '../model-set/apollo';
-import type {SceneView,ViewSample,ViewerEvent} from '../model-set/model';
+import type {SceneView,ViewSample,ViewerEvent,VesselView} from '../model-set/model';
 import type {ResourceAnchor,Depot} from '../traffic/resources';
 import {scheduledSample,type ExpeditionSchedule} from './query';
 export interface ExpeditionDefinition {
@@ -8,7 +8,10 @@ export interface ExpeditionDefinition {
 }
 export const isExpedition=(d:unknown):d is ExpeditionDefinition=>!!d&&typeof d==='object'&&(d as ExpeditionDefinition).modelVersion==='apollo-continuous-v1';
 export const EXPEDITION_LEAD=32,HISTORY=128;
+export interface ExpeditionCycleRow {samples:ViewSample[];arcs:import('../sim/schema').ThrustArc[];ledger:ViewerEvent[];boundaries:VesselView['boundaries'];bytes:number}
+export interface PreparedExpeditionCycle {index:number;actorId?:string;templateId:string;row:ExpeditionCycleRow}
 export interface ExpeditionDelta {
+ preparedCycles?:PreparedExpeditionCycle[];
  domain:'apollo-continuous-v1';frontier:number;oldest:number;template?:SceneView;schedule:ExpeditionSchedule;
  current:ViewSample;resources:ResourceAnchor[];events:ViewerEvent[];stats:Record<string,number>;halt?:string;
 }

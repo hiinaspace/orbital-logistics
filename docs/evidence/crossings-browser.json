@@ -1,0 +1,38 @@
+{
+  "elapsedMs": 8483.589193,
+  "simulatedTime": 132.71639999961866,
+  "observedRate": 15.643897527372722,
+  "longTasks": [
+    52,
+    54,
+    72,
+    52,
+    53,
+    56,
+    51,
+    56,
+    51,
+    54,
+    61
+  ],
+  "maximumFrameGapMs": 100.10000000000036,
+  "frameCount": 359,
+  "stats": {
+    "planningPending": 0,
+    "cacheCompilations": 1,
+    "cacheHits": 2,
+    "completedTrips": 2,
+    "refills": 2,
+    "physicsBytes": 32403819,
+    "physicalNodes": 102398,
+    "packetBytes": 3770,
+    "orbiterFault": 0,
+    "workerDrawingBytes": 35104912,
+    "workerDrawingSamples": 103176,
+    "retainedDrawingBytes": 35104912,
+    "retainedDrawingSamples": 108403,
+    "viewCycles": 4,
+    "orbiterSamples": 5227
+  },
+  "errors": []
+}

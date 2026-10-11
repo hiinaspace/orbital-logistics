@@ -1,0 +1,9 @@
+{
+  "through": 320,
+  "maxStateError": 1.409981853495168e-10,
+  "minAtmosphereClearance": 0.21392063830783004,
+  "radiusRange": [
+    1.41392063830783,
+    1.5943982639308085
+  ]
+}

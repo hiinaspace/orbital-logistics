@@ -478,3 +478,7 @@ Implemented a single-vehicle planet–moon round trip with planetary atmosphere,
 ### Continuous Aster–Selene expedition
 
 After the finite user visual gate, implemented a separate authored recurrence wrapper. One background compilation supplies later trips through validated world symmetry. Ground recovery/transport and funded refill are explicit; global ephemerides keep advancing. Bounded display history supports Pause/Play/Live. See docs/design/continuous-apollo/README.md and docs/evidence/continuous-apollo.md.
+
+### Overlapping Aster–Selene activity
+
+The user accepted continuous expedition playback through16×. The next authored exhibit adds a second half-period expedition from an antipodal ground site, plus one full-field passive orbital craft. One mission compilation serves both ships; worker-prepared drawing strips keep recurrence construction off the UI thread. Libration-region visits remain the next proposed integration gate after visual acceptance. See docs/design/overlapping-expeditions/README.md and docs/evidence/crossings.md.

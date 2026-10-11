@@ -41,7 +41,8 @@
     "evidence:moving-selene": "tsx scripts/moving-selene-evidence.ts && uv run --project spikes/numerics python spikes/numerics/moving_selene_oracle.py",
     "evidence:lunar-service": "tsx scripts/lunar-service-evidence.ts && tsx scripts/lunar-service-convergence.ts && uv run --project spikes/numerics python spikes/numerics/lunar_service_oracle.py",
     "evidence:apollo": "tsx scripts/apollo-evidence.ts && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py",
-    "evidence:continuous-apollo": "tsx scripts/continuous-apollo-evidence.ts && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py 2 && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py 17"
+    "evidence:continuous-apollo": "tsx scripts/continuous-apollo-evidence.ts && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py 2 && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py 17",
+    "evidence:crossings": "tsx scripts/crossings-evidence.ts && uv run --project spikes/numerics python spikes/numerics/crossings_oracle.py && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py 0 --phase-half && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py 17 --phase-half"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
