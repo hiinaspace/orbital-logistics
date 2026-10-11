@@ -408,3 +408,15 @@ continuous staged scheduler.
 [Orekit's generated ephemeris interface](https://www.orekit.org/site-orekit-latest/apidocs/org/orekit/propagation/BoundedPropagator.html)
 provides a relevant precedent for querying bounded trajectories after numerical
 integration. No Orekit dependency was added.
+
+## Bounded lunar return profiles — 2026-10-10
+
+Continuous lunar ground service now tries a short deorbit/coast/terminal-braking
+return, with bounded nearby departure choices and the original powered descent as
+fallback. The same northern pad, inclined depot, binary field and synchronous spin
+remain. Candidate selection favors economical, less bent controls without waiting
+for a global optimum; all capture, fuel and clearance checks remain canonical.
+Separate seed families, streamed admission and an actual serialized-node preparation
+allowance keep failures private and bounded. Completed depot physics retires before
+its longer drawing history. See [reviewed design](design/lunar-return/README.md)
+and [comparison and rollout evidence](evidence/lunar-return.md).

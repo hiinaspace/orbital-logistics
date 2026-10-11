@@ -5,10 +5,10 @@
       "errors": [
         {
           "step": 0.0001220703125,
-          "position": 1.7735906652324479e-12,
+          "position": 1.4763156864667913e-12,
           "velocity": 7.593469316639573e-11,
           "fuel": 4.078337667579035e-11,
-          "targetSixState": 6.537590735225981e-12
+          "targetSixState": 6.547989149806502e-12
         }
       ],
       "captures": [
@@ -20,14 +20,15 @@
           "minimumMoonClearance": 1.000000000007939e-06
         },
         {
-          "id": "descent-0",
-          "positionError": 1.5956022300415976e-12,
-          "deltaV": 6.466885847022506e-11,
-          "propellantAfter": 1.0663039179335563,
-          "minimumMoonClearance": 1.0000000548911203e-06
+          "id": "descent-0-1",
+          "positionError": 4.160850694000496e-12,
+          "deltaV": 1.941909343210342e-10,
+          "propellantAfter": 1.4137730683857912,
+          "minimumMoonClearance": 9.999960833631527e-07
         }
       ],
-      "returnFuel": 1.0663039179335563,
+      "returnFuel": 1.4137730683857912,
+      "minimumCoastMoonClearance": 0.005653800402463358,
       "cargo": 0.0,
       "stock": {
         "Northhaven": {
@@ -40,7 +41,7 @@
         }
       },
       "display": {
-        "maxShipPixelsAtMaxZoom": 0.001606667807161904,
+        "maxShipPixelsAtMaxZoom": 0.16127300784505386,
         "maxDepotPixelsAtMaxZoom": 0.12770729080682106
       },
       "id": 0
@@ -50,56 +51,57 @@
       "errors": [
         {
           "step": 0.000244140625,
-          "position": 4.932948267090743e-11,
-          "velocity": 2.280620064525238e-09,
-          "fuel": 4.068367864817901e-10,
-          "targetSixState": 1.712514196914479e-11
+          "position": 3.903206129700037e-11,
+          "velocity": 1.8558729304689762e-09,
+          "fuel": 4.406106590693071e-10,
+          "targetSixState": 1.7125277742477787e-11
         },
         {
           "step": 0.0001220703125,
-          "position": 2.0373654428538926e-12,
-          "velocity": 8.944927237114576e-11,
-          "fuel": 2.913624896905276e-11,
-          "targetSixState": 1.7125133590804784e-11
+          "position": 1.218988201148248e-12,
+          "velocity": 7.584744524938536e-11,
+          "fuel": 2.9196645101592367e-11,
+          "targetSixState": 1.7125114854385646e-11
         },
         {
           "step": 6.103515625e-05,
-          "position": 1.5233355371357381e-12,
-          "velocity": 8.369875927226355e-11,
-          "fuel": 1.3514966923366956e-11,
-          "targetSixState": 1.7125133590804784e-11
+          "position": 1.2918569924392812e-12,
+          "velocity": 7.146314329602714e-11,
+          "fuel": 1.3703260748343382e-11,
+          "targetSixState": 1.7125114854385646e-11
         }
       ],
       "captures": [
         {
           "id": "ascent-1",
-          "positionError": 2.9417741499922063e-12,
-          "deltaV": 1.3594946545154526e-10,
-          "propellantAfter": 2.0287789582524907,
+          "positionError": 2.9699977295615836e-12,
+          "deltaV": 1.3658115781572514e-10,
+          "propellantAfter": 2.028778952565003,
           "minimumMoonClearance": 1.0000000000252862e-06
         },
         {
-          "id": "descent-1",
-          "positionError": 4.899756103174026e-12,
-          "deltaV": 2.541628335855478e-10,
-          "propellantAfter": 0.9424634704612651,
-          "minimumMoonClearance": 9.999952711066407e-07
+          "id": "descent-1-1",
+          "positionError": 3.1995211404233475e-12,
+          "deltaV": 1.5159158782883697e-10,
+          "propellantAfter": 1.3495131813030468,
+          "minimumMoonClearance": 9.999968664242687e-07
         }
       ],
-      "returnFuel": 0.9424634704612651,
+      "returnFuel": 1.3495131813030468,
+      "minimumCoastMoonClearance": 0.005909703690474149,
       "cargo": 0.0,
       "stock": {
         "Northhaven": {
-          "cargo": 0.140185546875,
-          "fuel": 9.888569542931393
+          "cargo": 0.14029541015625002,
+          "fuel": 10.249222287177435
         },
         "Crescent": {
-          "cargo": 0.05128135549954617,
-          "fuel": 1.280528762875575
+          "cargo": 0.05111656057767117,
+          "fuel": 1.2838246556256476
         }
       },
       "display": {
-        "maxShipPixelsAtMaxZoom": 0.001606667807161904,
+        "maxShipPixelsAtMaxZoom": 0.1613335596726975,
         "maxDepotPixelsAtMaxZoom": 0.12770729080682106
       },
       "id": 1
@@ -109,43 +111,44 @@
       "errors": [
         {
           "step": 0.0001220703125,
-          "position": 1.2453784076067141e-11,
-          "velocity": 6.146086481702285e-10,
-          "fuel": 4.610578585584335e-11,
-          "targetSixState": 5.470945465015297e-11
+          "position": 2.7045011240324183e-12,
+          "velocity": 7.639048588247304e-11,
+          "fuel": 4.6558312760680565e-11,
+          "targetSixState": 5.471208725241623e-11
         }
       ],
       "captures": [
         {
           "id": "ascent-4",
-          "positionError": 3.4488186333696504e-12,
-          "deltaV": 1.171898805366345e-10,
-          "propellantAfter": 1.7115041500873098,
+          "positionError": 3.4464838477118353e-12,
+          "deltaV": 1.1712129202244588e-10,
+          "propellantAfter": 1.711504143657308,
           "minimumMoonClearance": 9.999999999420195e-07
         },
         {
-          "id": "descent-4",
-          "positionError": 9.19938368415907e-12,
-          "deltaV": 4.408782007880875e-10,
-          "propellantAfter": 0.3690758747915618,
-          "minimumMoonClearance": 1.0000087028554094e-06
+          "id": "descent-4-1",
+          "positionError": 2.892215649104921e-12,
+          "deltaV": 1.064529388472508e-10,
+          "propellantAfter": 1.0438603266014006,
+          "minimumMoonClearance": 9.999982240986582e-07
         }
       ],
-      "returnFuel": 0.3690758747915618,
+      "returnFuel": 1.0438603266014006,
+      "minimumCoastMoonClearance": 0.005716084620647075,
       "cargo": 0.0,
       "stock": {
         "Northhaven": {
-          "cargo": 0.17548828125,
-          "fuel": 14.619055349802121
+          "cargo": 0.17359619140624993,
+          "fuel": 15.122273683480167
         },
         "Crescent": {
-          "cargo": 0.05,
-          "fuel": 0.331079234068814
+          "cargo": 0.05200034597228752,
+          "fuel": 0.2743165189076304
         }
       },
       "display": {
-        "maxShipPixelsAtMaxZoom": 0.001606667807161904,
-        "maxDepotPixelsAtMaxZoom": 0.12887995386068338
+        "maxShipPixelsAtMaxZoom": 0.16134801347793198,
+        "maxDepotPixelsAtMaxZoom": 0.12854684060777846
       },
       "id": 4
     },
@@ -154,43 +157,44 @@
       "errors": [
         {
           "step": 0.0001220703125,
-          "position": 2.123766284821798e-11,
-          "velocity": 1.0720977987068946e-09,
-          "fuel": 1.3858514336106964e-10,
-          "targetSixState": 1.143083682038143e-10
+          "position": 6.599800809648959e-12,
+          "velocity": 3.746261753027941e-10,
+          "fuel": 1.2560041895426366e-10,
+          "targetSixState": 1.1071522918882878e-10
         }
       ],
       "captures": [
         {
           "id": "ascent-10",
-          "positionError": 4.787971389992996e-12,
-          "deltaV": 1.2927061554990068e-10,
-          "propellantAfter": 2.0524217158063256,
-          "minimumMoonClearance": 9.99999999969775e-07
+          "positionError": 1.394096420857553e-11,
+          "deltaV": 5.801636357692597e-10,
+          "propellantAfter": 2.0673507980252706,
+          "minimumMoonClearance": 1.000000000007939e-06
         },
         {
-          "id": "descent-10",
-          "positionError": 1.7573044820300757e-11,
-          "deltaV": 8.81147334377382e-10,
-          "propellantAfter": 0.5067949519722726,
-          "minimumMoonClearance": 1.0000173280115543e-06
+          "id": "descent-10-1",
+          "positionError": 3.658555991491369e-12,
+          "deltaV": 2.1987141541883885e-10,
+          "propellantAfter": 1.4067178548262445,
+          "minimumMoonClearance": 1.0000029411552647e-06
         }
       ],
-      "returnFuel": 0.5067949519722726,
+      "returnFuel": 1.4067178548262445,
+      "minimumCoastMoonClearance": 0.005644085791900146,
       "cargo": 0.0,
       "stock": {
         "Northhaven": {
-          "cargo": 0.3039794921874999,
-          "fuel": 14.600725339306708
+          "cargo": 0.27166748046874983,
+          "fuel": 15.453896511560927
         },
         "Crescent": {
-          "cargo": 0.05,
-          "fuel": 0.9821652658494986
+          "cargo": 0.05095035964149647,
+          "fuel": 0.030241083244743727
         }
       },
       "display": {
-        "maxShipPixelsAtMaxZoom": 0.001606667807161904,
-        "maxDepotPixelsAtMaxZoom": 0.12887995386068338
+        "maxShipPixelsAtMaxZoom": 0.1640069226834208,
+        "maxDepotPixelsAtMaxZoom": 0.12854684060777846
       },
       "id": 10
     }

@@ -16,41 +16,51 @@ function linear(a:number[][],b:number[]):number[]{
  return m.map(r=>r[n]);
 }
 export interface SteeringSeed {start:number;duration:number;keys:Vec3[]}
-export interface LunarShot {arc:ThrustArc;seed:SteeringSeed;evaluations:number;stages:number;residual:number;minimumRadius:number}
+export interface LunarWorkBudget {evaluations:number;stages:number;maxEvaluations:number;maxStages:number}
+export interface LunarShot {arcs:ThrustArc[];arc:ThrustArc;seed:SteeringSeed;evaluations:number;stages:number;residual:number;minimumRadius:number}
 // Trial-only translating frame. Accepted controls must still pass the inertial
 // canonical Runner, including continuous clearance, mass law and paid capture.
-export function* shootLunar(s:Scenario,start:number,initial:State,target:(t:number)=>State,seed:SteeringSeed,landing:boolean):Generator<void,LunarShot>{
+export function* shootLunar(s:Scenario,start:number,initial:State,target:(t:number)=>State,seed:SteeringSeed,landing:boolean,coast=0,budget?:LunarWorkBudget):Generator<void,LunarShot>{
+ if(coast!==0&&(!landing||coast!==.012))throw Error('Unsupported lunar coast family');
  const pad=s.logistics!.ports.find(p=>p.rail.kind==='surface')!,moon=s.bodies.find(b=>b.id==='moon')!;
  const offset=start-seed.start,ds=seed.keys.map(v=>rotate(v,offset));
  if(!landing)ds[0]=surfaceNormal(pad,start);
  const original=[...ds.flatMap(angles),seed.duration/U],indices=[...(landing?[0,1,2,3,4,5,6,7]:[2,3,4,5,6,7,8,9]),10];
  const base=original.slice(),x=indices.map(i=>base[i]);let evaluations=0,stages=0;
- const arcFor=(controls:number[]):ThrustArc=>{
+ const arcFor=(controls:number[]):ThrustArc[]=>{
   const q=base.slice();indices.forEach((j,i)=>q[j]=controls[i]);
   const end=start+q[10]*U,dirs=Array.from({length:5},(_,i)=>vector(q[2*i],q[2*i+1]));
   if(landing)dirs[4]=surfaceNormal(pad,end);
-  return {id:landing?'descent':'ascent',start,end,direction:dirs[0],throttle:1,steering:{kind:'spherical-smoothstep-v1',keys:dirs.map((direction,i)=>({offset:(end-start)*i/4,direction}))}};
+  if(!coast)return [{id:landing?'descent':'ascent',start,end,direction:dirs[0],throttle:1,steering:{kind:'spherical-smoothstep-v1',keys:dirs.map((direction,i)=>({offset:(end-start)*i/4,direction}))}}];
+  const first=(end-start)*.2,finish=end+coast;
+  dirs[4]=surfaceNormal(pad,finish);
+  return [
+   {id:'deorbit',start,end:start+first,direction:dirs[0],throttle:1,steering:{kind:'spherical-smoothstep-v1',keys:dirs.slice(0,2).map((direction,i)=>({offset:(start+first-start)*i,direction}))}},
+   {id:'terminal',start:start+first+coast,end:finish,direction:dirs[2],throttle:1,steering:{kind:'spherical-smoothstep-v1',keys:dirs.slice(2).map((direction,i)=>({offset:(finish-(start+first+coast))*i/2,direction}))}}];
+
  };
  const inside=(q:number[])=>q.every((v,i)=>Number.isFinite(v)&&Math.abs(v-x[i])<=(i===8?1.5:1.1))&&q.at(-1)!>1.2&&q.at(-1)!<(landing?3.75:3.4);
  const evaluate=(controls:number[],h:number)=>{
-  if(evaluations===720)throw new LunarPlanningFailure('Steering evaluation budget exhausted');evaluations++;
-  const arc=arcFor(controls),c0=bodyState(moon,start);let y=initial.map((v,i)=>(v-c0[i])/(i<3?L:V)),minimum=Math.hypot(...y.slice(0,3));
+  if(evaluations>=(budget?360:720)||budget&&budget.evaluations>=budget.maxEvaluations)throw new LunarPlanningFailure('Steering evaluation budget exhausted');evaluations++;if(budget)budget.evaluations++;
+  const arcs=arcFor(controls),arc=arcs.at(-1)!,c0=bodyState(moon,start);let y=initial.map((v,i)=>(v-c0[i])/(i<3?L:V)),minimum=Math.hypot(...y.slice(0,3));
+  let segment:ThrustArc|undefined;
   const rhs=(tau:number,z:number[])=>{
-   if(stages===3000000)throw new LunarPlanningFailure('Steering integration budget exhausted');stages++;
+   if(stages===3000000||budget&&budget.stages>=budget.maxStages)throw new LunarPlanningFailure('Steering integration budget exhausted');stages++;if(budget)budget.stages++;
    const t=start+tau*U,c=bodyState(moon,t),ca=bodyAcceleration(moon,t),p=z.slice(0,3).map((v,i)=>c[i]+v*L);
    const acc=z.slice(0,3).map(v=>-v/Math.hypot(...z.slice(0,3))**3);
    for(const b of s.bodies)if(b.id!==moon.id){const q=bodyState(b,t).slice(0,3).map((v,i)=>v-p[i]),r=Math.hypot(...q);for(let i=0;i<3;i++)acc[i]+=(b.mu*q[i]/r**3-ca[i])/A;}
-   const d=directionAt(arc,t-start);return [...z.slice(3),...acc.map((v,i)=>v+1.2*d[i])];
+   const active=segment,d=active?directionAt(active,t-active.start):[0,0,0];return [...z.slice(3),...acc.map((v,i)=>v+1.2*d[i])];
   };
-  const duration=(arc.end-start)/U;
-  for(let k=0;k<4;k++){
-   const lo=duration*k/4,hi=duration*(k+1)/4,n=Math.ceil((hi-lo)/h),step=(hi-lo)/n;
+  const cuts=[...new Set([start,...arcs.flatMap(a=>a.steering!.keys.map(k=>a.start+k.offset))])].sort((a,b)=>a-b);
+  for(let k=0;k<cuts.length-1;k++){
+   const lo=(cuts[k]-start)/U,hi=(cuts[k+1]-start)/U,n=Math.ceil((hi-lo)/h),step=(hi-lo)/n;
+   segment=arcs.find(a=>a.start<(cuts[k]+cuts[k+1])/2&&a.end>(cuts[k]+cuts[k+1])/2);
    for(let j=0;j<n;j++){const t=lo+j*step,a=rhs(t,y),b=rhs(t+step/2,y.map((v,i)=>v+step*a[i]/2)),c=rhs(t+step/2,y.map((v,i)=>v+step*b[i]/2)),d=rhs(t+step,y.map((v,i)=>v+step*c[i]));y=y.map((v,i)=>v+step*(a[i]+2*b[i]+2*c[i]+d[i])/6);minimum=Math.min(minimum,Math.hypot(...y.slice(0,3)));}
   }
   const endBody=bodyState(moon,arc.end),goal=target(arc.end).map((v,i)=>(v-endBody[i])/(i<3?L:V)),state=y.map((v,i)=>v-goal[i]);
-  const keys=arc.steering!.keys.map(k=>k.direction),turns=keys.slice(1).map((v,i)=>20*Math.min(0,v.reduce((n,a,j)=>n+a*keys[i][j],0)+.498));
+  const keys=arcs.flatMap(a=>a.steering!.keys.map(k=>k.direction)),turns=keys.slice(1).map((v,i)=>20*Math.min(0,v.reduce((n,a,j)=>n+a*keys[i][j],0)+.498));
   const residual=[...state,50*Math.min(0,minimum-1.000039),...turns];
-  return {arc,state,residual,cost:residual.reduce((n,v)=>n+v*v,0),minimum};
+  return {arcs,arc,state,residual,cost:residual.reduce((n,v)=>n+v*v,0),minimum};
  };
  try {
  let controls=x.slice(),at:ReturnType<typeof evaluate>|undefined;
@@ -71,6 +81,6 @@ export function* shootLunar(s:Scenario,start:number,initial:State,target:(t:numb
   }
   if(Math.hypot(...at.residual)>(step===.005?5e-8:5e-5))throw new LunarPlanningFailure('Steering did not converge');
  }
- const arc=at!.arc;return {arc,seed:{start,duration:arc.end-start,keys:arc.steering!.keys.map(k=>k.direction)},evaluations,stages,residual:Math.hypot(...at!.state),minimumRadius:at!.minimum};
+ const arc=at!.arc;return {arcs:at!.arcs,arc,seed:{start,duration:arc.end-start-coast,keys:at!.arcs.flatMap(a=>a.steering!.keys.map(k=>k.direction))},evaluations,stages,residual:Math.hypot(...at!.state),minimumRadius:at!.minimum};
  }catch(e){if(e instanceof LunarPlanningFailure){e.evaluations=evaluations;e.stages=stages;}throw e;}
 }

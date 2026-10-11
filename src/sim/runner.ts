@@ -41,7 +41,10 @@ export class Runner {
   #boundaries: EventBoundary[] = [];
   #portRunners=new Map<string,Runner>();
   #requestedEpoch: number;
-  constructor(value: unknown) {
+  #nodeStorageLimit?:number;#nodeStorageBytes=0;#lastNodeBytes=0;
+  constructor(value: unknown, preparation?:{maxNodeStorageBytes:number}) {
+    if(preparation&&(!Number.isSafeInteger(preparation.maxNodeStorageBytes)||preparation.maxNodeStorageBytes<4096))throw Error('Invalid preparation node storage allowance');
+    this.#nodeStorageLimit=preparation?.maxNodeStorageBytes;
     this.#bundle = validateBundle(value);
     const s = this.#bundle.scenario;
     this.#requestedEpoch = s.epoch;
@@ -263,12 +266,27 @@ export class Runner {
     if(!Number.isFinite(t) || t<segment.t0 || t>segment.t1)throw new Error('Epoch outside segment');
     return intervalStep(this.#bundle.scenario,segment.t0,segment.y0,t-segment.t0,segment.massLaw);
   }
+  // Optional node-insertion allowance; callers reserve fixed/event/mutable-tail
+  // headroom separately. Events mutate only the latest node;
+  // settle its final size before retaining the next one. No query-time physics
+  // or canonical step changes; the unbounded historical API keeps its behavior.
+  #retain(next:Node):boolean {
+    if(this.#nodeStorageLimit!==undefined){
+      const previous=new TextEncoder().encode(JSON.stringify(this.#last())).byteLength;
+      this.#nodeStorageBytes+=previous-this.#lastNodeBytes;
+      this.#lastNodeBytes=previous;
+      const bytes=new TextEncoder().encode(JSON.stringify(next)).byteLength;
+      if(this.#nodeStorageBytes+bytes+1>this.#nodeStorageLimit){this.#stop('work-limit','retained-node storage budget');return false;}
+      this.#nodeStorageBytes+=bytes+1;this.#lastNodeBytes=bytes;
+    }
+    this.#nodes.push(next);return true;
+  }
   #coast(end: number, depth = 0): boolean {
     const n = this.#last(), s = this.#bundle.scenario, dt = end - n.t;
     if (this.#nodes.length >= s.policy.maxNodes) { this.#stop('work-limit', 'retained-node budget'); return false; }
     if (n.logistics?.dockedPortId) {
       const port = s.logistics!.ports.find(p => p.id === n.logistics!.dockedPortId)!;
-      this.#nodes.push({...n, logistics: copyLogistics(n.logistics), t: end, y: this.portState(port.id, end)}); return true;
+      return this.#retain({...n, logistics: copyLogistics(n.logistics), t: end, y: this.portState(port.id, end)});
     }
     if (!certifiedCoast(s, n.t, n.y, dt,thrustBound(n.activeThrust?.law))) {
       if (depth >= s.policy.maxSubdivision || n.t + dt / 2 === n.t) {
@@ -281,8 +299,7 @@ export class Runner {
     if (y.some(v => !Number.isFinite(v))) { this.#stop('unsupported-approach', 'nonfinite propagation'); return false; }
     const next={ ...n, ...(n.logistics ? {logistics: copyLogistics(n.logistics)} : {}),...propagated,t: end };
     if(next.logistics && n.activeThrust)next.logistics.fuelUsed+=(next.fuelUsed!-n.fuelUsed!);
-    this.#nodes.push(next);
-    return true;
+    return this.#retain(next);
   }
   #ensure(t: number): void {
     const s = this.#bundle.scenario;

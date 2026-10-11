@@ -1,5 +1,9 @@
 # Continuous moving-Selene ground service
 
+This records the original continuous-descent baseline. The current return profile,
+rollout and numerical/browser artifacts are described in [lunar-return.md](lunar-return.md);
+the retained original rollout and saved bundles are in spikes/lunar-return.
+
 Set: **Selene · Lunar ground service**. Northhaven is on the moving Moon at 20° north;
 Crescent is an evolving inclined ballistic depot. Tern solves each occurrence online,
 delivers 0.05 supplies, refuels from explicit depot stocks and lands with paid bounded

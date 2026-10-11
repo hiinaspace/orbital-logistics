@@ -1,0 +1,55 @@
+{
+  "baselineCommit": "6ffa245",
+  "witnesses": [
+    {
+      "id": 0,
+      "baselineReturnDeltaV": 2.371152729470829,
+      "coastingReturnDeltaV": 1.9540912205966876,
+      "reductionPercent": 17.58897702752438,
+      "departureOffset": 0,
+      "coast": 0.012,
+      "baselineDuration": 0.06174876899663617,
+      "coastingDuration": 0.06288779220303875,
+      "coastingSteeringTurn": 3.7818766055911226,
+      "returnFuel": 1.4137730684274359
+    },
+    {
+      "id": 1,
+      "baselineReturnDeltaV": 2.5369915159732144,
+      "coastingReturnDeltaV": 2.1564339570030255,
+      "reductionPercent": 15.000348112090677,
+      "departureOffset": -0.012,
+      "coast": 0.012,
+      "baselineDuration": 0.0660674873951358,
+      "coastingDuration": 0.0681571342969538,
+      "coastingSteeringTurn": 5.923955389977712,
+      "returnFuel": 1.2384472326137155
+    },
+    {
+      "id": 4,
+      "baselineReturnDeltaV": 3.4756598377400336,
+      "coastingReturnDeltaV": 2.4747925376361932,
+      "reductionPercent": 28.796468780864092,
+      "departureOffset": -0.012,
+      "coast": 0.012,
+      "baselineDuration": 0.09051197494114671,
+      "coastingDuration": 0.07644772233427588,
+      "coastingSteeringTurn": 5.514935593994689,
+      "returnFuel": 0.9880160633524188
+    },
+    {
+      "id": 10,
+      "baselineReturnDeltaV": 3.2184703080988015,
+      "coastingReturnDeltaV": 2.177261494242475,
+      "reductionPercent": 32.351046123876905,
+      "departureOffset": 0,
+      "coast": 0.012,
+      "baselineDuration": 0.08381433094007296,
+      "coastingDuration": 0.06869951807923069,
+      "coastingSteeringTurn": 5.050911588937219,
+      "returnFuel": 1.2211397419616081
+    }
+  ],
+  "candidateCount": 60,
+  "acceptedCount": 14
+}

@@ -22,9 +22,11 @@ for(let t=0;t<=64;t+=1/64){
    seen.add(m.id);const runner=new Runner(m.bundle);runner.advanceTo(m.end);
    const grids=[{step:m.bundle.scenario.policy.step,bundle:m.bundle,terminal:runner.sample(m.end),ledger:runner.ledger,
     flights:m.bundle.program.thrustArcs!.map(arc=>({arc,samples:Array.from({length:65},(_,i)=>{const t=arc.start+(arc.end-arc.start)*i/64;return i===64?runner.eventBoundaries.find(b=>b.t===arc.end)!.before:runner.sample(t);})})),
+    coasts:m.bundle.program.thrustArcs!.slice(2).map((arc,j)=>({samples:Array.from({length:33},(_,i)=>{const lo=m.bundle.program.thrustArcs![j+1].end,t=lo+(arc.start-lo)*i/32;return runner.sample(t);})})),
     targetSamples:Array.from({length:65},(_,i)=>{const t=m.start+(m.end-m.start)*i/64;return {t,y:runner.portState('Crescent',t)};})}];
    const v=store.view(Math.max(m.knownAt,store.oldest)).vessels[0];
-   for(const arc of m.bundle.program.thrustArcs!)for(let i=0;i<128;i++){
+   const displaySpans=[...m.bundle.program.thrustArcs!,...m.bundle.program.thrustArcs!.slice(2).map((arc,j)=>({start:m.bundle.program.thrustArcs![j+1].end,end:arc.start}))];
+   for(const arc of displaySpans)for(let i=0;i<128;i++){
     const t=arc.start+(arc.end-arc.start)*(i+.371)/128,a=sampleVessel(v,t).y,b=runner.sample(t).y;
     pixelError=Math.max(pixelError,Math.hypot(...a.slice(0,3).map((x,j)=>x-b[j]))*1e6);
     const p=displayPortState(m.bundle.scenario.logistics!.ports[1],v.portSamples,t),q=runner.portState('Crescent',t);

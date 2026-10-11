@@ -76,6 +76,8 @@ for data in data["cases"]:
     }
     captures = []
     flights = []
+    coasts = []
+    coast_clearance = math.inf
     y = np.array(ship["state"])
     arcs = program["thrustArcs"]
     operations = program["operations"]
@@ -90,8 +92,38 @@ for data in data["cases"]:
     for index, arc in enumerate(arcs):
         if index == 0:
             y = pad_state(pad, bodies, arc["start"])
-        else:
+        elif index == 1:
             y = station.sol(arc["start"])
+        else:
+            # Continue the previous powered state through free flight. No depot
+            # re-seeding, surface attachment or capture at an internal arc end.
+            coast = solve_ivp(
+                lambda t, state: np.r_[state[3:6], gravity(bodies, t, state), 0.0],
+                (arcs[index - 1]["end"], arc["start"]),
+                np.r_[y, fuel],
+                method="DOP853",
+                rtol=2e-13,
+                atol=2e-14,
+                max_step=1 / 32768,
+                dense_output=True,
+            )
+            assert coast.success
+            # Independent clearance witness for the newly introduced free flight.
+            for body in bodies:
+                clearance = float(
+                    np.min(
+                        np.linalg.norm(
+                            coast.y[:3].T - np.array([body_state(body, t)[:3] for t in coast.t]),
+                            axis=1,
+                        )
+                        - body["radius"]
+                    )
+                )
+                assert clearance > 0
+                if body["id"] == "moon":
+                    coast_clearance = min(coast_clearance, clearance)
+            coasts.append(coast)
+            y = coast.y[:6, -1]
         initial = np.r_[y, fuel]
         pieces = []
         current = initial.copy()
@@ -127,40 +159,46 @@ for data in data["cases"]:
         def at(t):
             return next(p for p in pieces if p.t[0] - 1e-15 <= t <= p.t[-1] + 1e-15).sol(t)
 
-        expected = station.sol(arc["end"]) if index == 0 else pad_state(pad, bodies, arc["end"])
-        pos = float(np.linalg.norm(current[:3] - expected[:3]))
-        dv = float(np.linalg.norm(current[3:6] - expected[3:]))
         burn = fuel - current[6]
-        capture = (ship["dryMass"] + cargo + current[6]) * (
-            -math.expm1(-dv / ship["exhaustVelocity"])
-        )
-        used += burn + capture
-        fuel = current[6] - capture
-        assert (
-            pos < s["logistics"]["capture"]["position"]
-            and dv < s["logistics"]["capture"]["velocity"]
-        )
+        used += burn
+        fuel = current[6]
+        y = current[:6]
         minimum = min(
             float(
                 np.min(
                     np.linalg.norm(
-                        p.y[:3].T - np.array([body_state(bodies[1], t)[:3] for t in p.t]), axis=1
+                        piece.y[:3].T - np.array([body_state(bodies[1], t)[:3] for t in piece.t]),
+                        axis=1,
                     )
                     - bodies[1]["radius"]
                 )
             )
-            for p in pieces
+            for piece in pieces
         )
         assert minimum > 0 and fuel > 0
-        captures.append(
-            {
-                "id": arc["id"],
-                "positionError": pos,
-                "deltaV": dv,
-                "propellantAfter": float(fuel),
-                "minimumMoonClearance": minimum,
-            }
-        )
+        # Only actual station arrival and final touchdown perform captures.
+        if index == 0 or index == len(arcs) - 1:
+            expected = station.sol(arc["end"]) if index == 0 else pad_state(pad, bodies, arc["end"])
+            pos = float(np.linalg.norm(current[:3] - expected[:3]))
+            dv = float(np.linalg.norm(current[3:6] - expected[3:]))
+            capture = (ship["dryMass"] + cargo + fuel) * (
+                -math.expm1(-dv / ship["exhaustVelocity"])
+            )
+            used += capture
+            fuel -= capture
+            assert (
+                pos < s["logistics"]["capture"]["position"]
+                and dv < s["logistics"]["capture"]["velocity"]
+            )
+            captures.append(
+                {
+                    "id": arc["id"],
+                    "positionError": pos,
+                    "deltaV": dv,
+                    "propellantAfter": float(fuel),
+                    "minimumMoonClearance": minimum,
+                }
+            )
         flights.append((arc, at, pieces))
         if index == 0:
             unload = next(o for o in operations if o["id"] == "unload")
@@ -177,6 +215,16 @@ for data in data["cases"]:
             for sample in gflight["samples"]:
                 t = sample["t"]
                 truth = next(p for p in pieces if p.t[0] - 1e-15 <= t <= p.t[-1] + 1e-15).sol(t)
+                position = max(
+                    position, float(np.linalg.norm(np.array(sample["y"][:3]) - truth[:3]))
+                )
+                velocity = max(
+                    velocity, float(np.linalg.norm(np.array(sample["y"][3:]) - truth[3:6]))
+                )
+                fuel_error = max(fuel_error, abs(sample["propellant"] - truth[6]))
+        for gcoast, truth_coast in zip(grid.get("coasts", []), coasts, strict=True):
+            for sample in gcoast["samples"]:
+                truth = truth_coast.sol(sample["t"])
                 position = max(
                     position, float(np.linalg.norm(np.array(sample["y"][:3]) - truth[:3]))
                 )
@@ -226,6 +274,7 @@ for data in data["cases"]:
         "errors": errors,
         "captures": captures,
         "returnFuel": float(fuel),
+        "minimumCoastMoonClearance": coast_clearance if coasts else None,
         "cargo": cargo,
         "stock": stock,
         "display": data["view"],

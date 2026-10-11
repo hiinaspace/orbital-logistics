@@ -66,3 +66,33 @@ test('rolling lunar display clips expired dwell events while retaining current i
   assert.ok(Math.hypot(...sampleVessel(v,cursor).y)>0);
  }
 });
+
+test('split lunar return carries paid state and fuel through its free coast',()=>{
+ const e=new LunarEngine(fixture);advance(e,0);const m=e.missions[0],arcs=m.bundle.program.thrustArcs!;
+ assert.equal(arcs.length,3);const deorbit=arcs[1],terminal=arcs[2];
+ assert.ok(Math.abs(terminal.start-deorbit.end-.012)<1e-14);
+ const runner=new Runner(m.bundle);runner.advanceTo(m.end);
+ const before=runner.sample(deorbit.end),middle=runner.sample((deorbit.end+terminal.start)/2),after=runner.sample(terminal.start);
+ assert.equal(before.propellant,middle.propellant);assert.equal(middle.propellant,after.propellant);
+ assert.equal(middle.thrust,undefined);assert.equal(middle.logistics!.dockedPortId,undefined);
+ assert.notDeepEqual(before.y,middle.y);assert.notDeepEqual(middle.y,after.y);
+ assert.equal(runner.ledger.filter(event=>event.kind==='land').length,1);
+ assert.equal(runner.ledger.filter(event=>event.kind==='dock').length,2);
+ assert.equal(runner.sample(m.end).logistics!.dockedPortId,'Northhaven');
+ assert.ok(runner.sample(m.end).propellant>1);
+});
+
+test('completed depot physics retires separately from retained drawing history',()=>{
+ const world=new LunarWorld(validateLunar(fixture));world.extend(1.5);
+ const control=new LunarWorld(validateLunar(fixture));control.extend(2);
+ const before=world.bytes,pose=world.state(.7),drawings=structuredClone(world.chunks.map(c=>c.data));
+ world.retirePhysics(.6);
+ assert.ok(world.bytes<before);assert.deepEqual(world.chunks.map(c=>c.data),drawings);
+ assert.throws(()=>world.state(.4),/outside lease/);assert.deepEqual(world.state(.7),pose);
+ world.extend(2);for(const t of [.5,.7,1.8,1.812345])assert.deepEqual(world.state(t),control.state(t));
+ const s=structuredClone(fixture.source.vessels[0].bundle.scenario),epoch=6000*GRID;
+ s.epoch=epoch;s.duration=2-epoch;const rail=s.logistics!.ports[1].rail;
+ if(rail.kind!=='ballistic')throw Error('target');rail.epoch=epoch;rail.validUntil=2;rail.state=world.state(epoch);
+ const runner=new Runner({scenario:s,program:{schemaVersion:3,id:'retired-lease',burns:[]}});
+ world.assertLease(runner,epoch,2);
+});

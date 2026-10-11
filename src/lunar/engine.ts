@@ -6,6 +6,8 @@ import {sampleVessel,type VesselView,type ViewerEvent} from '../model-set/model'
 import {resourcesAt,type ResourceAnchor} from '../traffic/resources';
 import type {FleetFrame,FleetEvent} from '../traffic/engine';
 import {shootLunar,LunarPlanningFailure,type SteeringSeed} from './shoot';
+import {reserveLunarRunner} from './budget';
+import {lunarReturns,returnShape} from './returns';
 import {LunarWorld,validateLunar,GRID,LUNAR_CALENDAR,type LunarDefinition,type DepotChunk} from './world';
 export interface LunarMission {id:number;knownAt:number;start:number;end:number;bundle:Bundle;samples:Sample[];boundaries:EventBoundary[];ledger:ViewerEvent[];evaluations:number;nodes:number;bytes:number}
 export interface LunarDelta {domain:'lunar-service-v1';frontier:number;oldest:number;current:FleetFrame;anchor:FleetFrame;chunks:DepotChunk[];missions:LunarMission[];events:FleetEvent[];resources:ResourceAnchor[];stats:Record<string,number>;halt?:string}
@@ -17,7 +19,7 @@ export class LunarEngine {
  missions:LunarMission[]=[];events:FleetEvent[]=[];resources:ResourceAnchor[]=[];
  #postedChunks=new Set<number>();#postedMissions=new Set<number>();#postedEvents=new Set<string>();
  #forecast:ResourceAnchor;#fuel:number;#used=0;#ready=0;#retry=0;#job?:Generator<void,LunarMission>;
- #ground!:Sample;#attemptWindow=0;#runner?:Runner;#runnerBytes=0;#runnerNodes=0;#preparationBytes=0;#preparationNodes=0;#delivered=new Set<number>();#seeds:SteeringSeed[];#goals:number[];#count=0;
+ #ground!:Sample;#attemptWindow=0;#runner?:Runner;#runnerBytes=0;#runnerNodes=0;#preparationBytes=0;#preparationNodes=0;#delivered=new Set<number>();#returnSeed?:SteeringSeed;#seeds:SteeringSeed[];#goals:number[];#count=0;
  stats:Record<string,number>={voyages:0,delivered:0,planningFailures:0,evaluations:0,integrationStages:0};
  constructor(value:LunarDefinition){
   this.definition=validateLunar(value);this.world=new LunarWorld(this.definition);this.world.extend(1);
@@ -37,7 +39,7 @@ export class LunarEngine {
  *plan():Generator<void,LunarMission>{
   const d=this.definition,original=d.source.vessels[0].bundle,epoch=Math.ceil(Math.max(this.#ready,this.#retry,0)/GRID)*GRID;
   if(epoch+1>LUNAR_CALENDAR)throw Error('Lunar calendar limit reached');
-  this.world.extend(epoch+1);
+  this.world.retirePhysics(this.frontier);this.world.extend(epoch+1);
   const s=structuredClone(original.scenario),ports=s.logistics!.ports,pad=ports[0],depot=ports[1],rail=depot.rail;
   if(rail.kind!=='ballistic')throw Error('depot');
   const initial=resourcesAt(this.#forecast,d.stations,epoch);s.epoch=epoch;s.duration=1;s.ship.state=portState(pad,epoch);s.ship.propellant=this.#fuel;s.ship.cargoMass=0;
@@ -56,24 +58,43 @@ export class LunarEngine {
    {id:'launch',kind:'launch',t:departure,portId:pad.id,thrustArcId:'ascent'},
    {id:'arrival',kind:'dock',t:ascent.end,portId:depot.id},
    {id:'unload',kind:'transfer',t:ascent.end,portId:depot.id,cargo:-.05,propellant:0}];
+  const outboundBytes=reserveLunarRunner(s,this.world.bytes+this.#runnerBytes);if(outboundBytes===undefined)throw new LunarPlanningFailure('Outbound physical reservation refused');
   yield;
-  let out:Runner|undefined=new Runner({scenario:s,program:{schemaVersion:4,id:'lunar-outbound',burns:[],thrustArcs:[ascent],operations:ops}});
+  let out:Runner|undefined=new Runner({scenario:s,program:{schemaVersion:4,id:'lunar-outbound',burns:[],thrustArcs:[ascent],operations:ops}},{maxNodeStorageBytes:outboundBytes});
   const arrival=out.advanceTo(ascent.end+service);this.#preparationBytes=out.treeStorageBytes();this.#preparationNodes=out.retainedTreeNodes;this.checkPhysical();if(!['running','horizon'].includes(arrival.status)||arrival.logistics?.dockedPortId!==depot.id)throw new LunarPlanningFailure('Outbound physical admission failed: '+arrival.status);
   const topup=Math.max(0,4-arrival.propellant);if(depot.propellant<topup)throw new LunarPlanningFailure('Waiting for Crescent fuel');
   const back=bootstrap?this.#seeds[1].start:this.window(ascent.end+2*service,this.#goals[1]);
-  let descent:ThrustArc;
-  if(bootstrap){descent=structuredClone(original.program.thrustArcs![1]);nextSeeds[1]=seedOf(descent);}
-  else {const shot=yield* shootLunar(s,back,this.world.state(back),t=>portState(pad,t),this.#seeds[1],true);descent=shot.arc;evaluations+=shot.evaluations;this.stats.evaluations+=shot.evaluations;this.stats.integrationStages+=shot.stages;nextSeeds[1]=shot.seed;}
+  // Release the outbound provider before allocating any full-trip candidate.
   out=undefined;this.#preparationBytes=0;this.#preparationNodes=0;
-  const end=Math.ceil((descent.end+.02)/GRID)*GRID; s.duration=end-epoch;rail.validUntil=end;
-  ops.push({id:'top-up',kind:'transfer',t:ascent.end+service,portId:depot.id,cargo:0,propellant:topup},
-   {id:'depart',kind:'undock',t:back,portId:depot.id},{id:'land',kind:'land',t:descent.end,portId:pad.id});
-  ascent.id='ascent-'+this.#count;descent.id='descent-'+this.#count;ops.find(o=>o.kind==='launch')!.thrustArcId=ascent.id;
-  yield;
-  const bundle:Bundle={scenario:s,program:{schemaVersion:4,id:'lunar-service-'+this.#count,burns:[],thrustArcs:[ascent,descent],operations:ops}},runner=new Runner(bundle),last=runner.advanceTo(end);
-  if(last.status!=='horizon'||last.logistics?.dockedPortId!==pad.id||last.propellant<.1)throw new LunarPlanningFailure('Round-trip physical admission failed: '+last.status);
-  this.world.assertLease(runner,epoch,end);
-  const bytes=runner.treeStorageBytes();this.#preparationBytes=bytes;this.#preparationNodes=runner.retainedTreeNodes;this.checkPhysical();if(bytes>32_000_000||runner.retainedTreeNodes>65536)throw new LunarPlanningFailure('Lunar candidate physical budget exceeded');
+  const candidates=yield* lunarReturns(s,back,ascent.end+2*service,t=>this.world.state(t),t=>portState(pad,t),this.#seeds[1],this.#returnSeed,seedOf(original.program.thrustArcs![1]),(count,stages)=>{evaluations+=count;this.stats.evaluations+=count;this.stats.integrationStages+=stages;});
+  if(!candidates.length)throw new LunarPlanningFailure('No bounded lunar return');
+  let runner:Runner|undefined,bundle:Bundle|undefined,last:Sample|undefined,end=0,chosen:typeof candidates[number]|undefined;
+  let fallbackTried=candidates.some(c=>!c.coast);
+  for(let i=0;i<candidates.length||!fallbackTried;i++){
+   runner=undefined;this.#preparationBytes=0;this.#preparationNodes=0;yield;
+   if(i===candidates.length){
+    fallbackTried=true;
+    try {const shot=yield* shootLunar(s,back,this.world.state(back),t=>portState(pad,t),this.#seeds[1],true);evaluations+=shot.evaluations;this.stats.evaluations+=shot.evaluations;this.stats.integrationStages+=shot.stages;candidates.push(returnShape(shot,0,0));}
+    catch(e){if(!(e instanceof LunarPlanningFailure))throw e;this.stats.evaluations+=e.evaluations;this.stats.integrationStages+=e.stages;break;}
+   }
+   const candidate=candidates[i];
+   const descent=candidate.shot.arcs.map((a,i)=>({...a,id:'descent-'+this.#count+'-'+i})),arrivalTime=descent.at(-1)!.end;
+   end=Math.ceil((arrivalTime+.02)/GRID)*GRID;s.duration=end-epoch;rail.validUntil=end;
+   const nodeBytes=reserveLunarRunner(s,this.world.bytes+this.#runnerBytes);if(nodeBytes===undefined)continue;
+   const flightOps=structuredClone(ops);flightOps.push(
+    {id:'top-up',kind:'transfer',t:ascent.end+service,portId:depot.id,cargo:0,propellant:topup},
+    {id:'depart',kind:'undock',t:descent[0].start,portId:depot.id},{id:'land',kind:'land',t:arrivalTime,portId:pad.id});
+   ascent.id='ascent-'+this.#count;flightOps.find(o=>o.kind==='launch')!.thrustArcId=ascent.id;
+   bundle={scenario:s,program:{schemaVersion:4,id:'lunar-service-'+this.#count,burns:[],thrustArcs:[ascent,...descent],operations:flightOps}};
+   runner=new Runner(bundle,{maxNodeStorageBytes:nodeBytes});last=runner.advanceTo(end);
+   const bytes=runner.treeStorageBytes();this.#preparationBytes=bytes;this.#preparationNodes=runner.retainedTreeNodes;this.checkPhysical();
+   if(bytes>32_000_000||runner.retainedTreeNodes>65536){this.stats.physicalRefusals=(this.stats.physicalRefusals??0)+1;continue;}
+   if(last.status!=='horizon'||last.logistics?.dockedPortId!==pad.id||last.propellant<.1){this.stats.physicalRefusals=(this.stats.physicalRefusals??0)+1;continue;}
+   this.world.assertLease(runner,epoch,end);chosen=candidate;break;
+  }
+  if(!runner||!bundle||!last||!chosen)throw new LunarPlanningFailure('Round-trip physical admission failed');
+  const bytes=runner.treeStorageBytes();
+  nextSeeds[1]=chosen.coast?this.#seeds[1]:chosen.shot.seed;
   const times=[...new Set([epoch,end,...Array.from({length:Math.ceil((end-epoch)*4096)},(_,i)=>epoch+i/4096),...runner.ledger.map(e=>e.t),...bundle.program.thrustArcs!.flatMap(a=>Array.from({length:Math.ceil((a.end-a.start)*65536)+1},(_,i)=>a.start+(a.end-a.start)*i/Math.ceil((a.end-a.start)*65536)))])].sort((a,b)=>a-b);
   if(times.length>20000)throw Error('Lunar drawing occurrence budget exceeded');
   const used=this.#used,global=(at:Sample):Sample=>({...at,fuelUsed:used+at.fuelUsed!,logistics:{...at.logistics!,fuelUsed:used+at.fuelUsed!}});
@@ -88,7 +109,7 @@ export class LunarEngine {
    nextResources.push(structuredClone(anchor));
   }
   this.#forecast=resourcesAt(anchor,d.stations,end);this.resources.push(...nextResources);this.#count++;
-  this.#preparationBytes=0;this.#preparationNodes=0;this.#runner=runner;this.#runnerBytes=bytes;this.#runnerNodes=runner.retainedTreeNodes;this.#seeds=nextSeeds;this.#ready=end;this.#fuel=last.propellant;this.#used+=last.fuelUsed!;
+  this.#preparationBytes=0;this.#preparationNodes=0;this.#runner=runner;this.#runnerBytes=bytes;this.#runnerNodes=runner.retainedTreeNodes;this.#seeds=nextSeeds;if(chosen.coast)this.#returnSeed=chosen.shot.seed;this.stats.coastingReturns=(this.stats.coastingReturns??0)+(chosen.coast?1:0);this.stats.returnDeltaV=(this.stats.returnDeltaV??0)+chosen.deltaV;this.stats.returnSteeringTurn=(this.stats.returnSteeringTurn??0)+chosen.turn;this.stats.lastReturnCoast=chosen.coast;this.stats.lastReturnOffset=chosen.offset;this.#ready=end;this.#fuel=last.propellant;this.#used+=last.fuelUsed!;
   return mission;
  }
  current(t=this.frontier):FleetFrame {
@@ -113,7 +134,7 @@ export class LunarEngine {
   this.prune();
   if(this.frontier>=LUNAR_CALENDAR)this.halt='Lunar calendar limit reached';
  }
- private checkPhysical(){const bytes=this.world.bytes+this.#runnerBytes+this.#preparationBytes;this.stats.peakPhysicalBytes=Math.max(this.stats.peakPhysicalBytes??0,bytes);if(bytes>40_000_000)throw Error('Lunar preparation physical budget exceeded');}
+ private checkPhysical(){const bytes=this.world.bytes+this.#runnerBytes+this.#preparationBytes;this.stats.peakPhysicalBytes=Math.max(this.stats.peakPhysicalBytes??0,bytes);if(bytes>40_000_000)throw Error('Lunar preparation physical budget exceeded '+JSON.stringify({world:this.world.bytes,previous:this.#runnerBytes,candidate:this.#preparationBytes,nodes:this.#preparationNodes,epoch:this.frontier}));}
  private prune(){
   // Fold completed facts before evicting their drawing history.
   for(const m of this.missions){
