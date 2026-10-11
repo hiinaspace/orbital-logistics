@@ -9,6 +9,7 @@ const cross=(a:Vec3,b:Vec3):Vec3=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*
 // Use the physical air/support rotation only. An orbital rail's rate is not
 // the body's spin, and a viewer's rotating frame does not define one either.
 export function bodySpin(run:SceneView,body:Body):Vec3 {
+ if(run.solar){const day=365.25*2*Math.PI;if(body.id==='Earth')return [0,day*Math.sin(23.44*Math.PI/180),day*Math.cos(23.44*Math.PI/180)];if(body.id==='Mars')return [0,0,day/1.0275];if(body.id==='Moon')return [0,0,2*Math.PI/.0748];if(body.id==='Jupiter')return [0,0,day/.41354];}
  if(run.atmosphere?.bodyId===body.id)return run.atmosphere.spin;
  const pad=run.world.ports.find(p=>p.rail.kind==='surface'&&p.rail.bodyId===body.id);
  return pad?.rail.kind==='surface'?[0,0,pad.rail.rate]:[0,0,0];

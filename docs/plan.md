@@ -509,3 +509,16 @@ names address the UI nits. See [contract/disposition](design/aster-system/README
 and [validation](evidence/aster-system.md). The next decision is human preference
 for the combined density/activity; additional staged origins or a renderer migration
 are deferred until that gate or measured scaling pressure.
+
+## Solar-scale exhibit — 2026-10-11
+
+After accepting full Aster–Selene service, the user authorized scaling the mass ratios,
+Mars-cycler inspiration, Astra review and proceeding through gates to a full exhibit.
+The separate `solar-transport-v1` prepared domain admits three actual-epoch carrier
+cycles with paid Earth turns and three Earth-gateway/carrier/Mars-gateway deliveries.
+Watch/frame/scrub remains sufficient. [Reviewed contract](design/solar-cycler/README.md)
+and [evidence](evidence/solar-cycler.md) describe the finite 6.566-year history.
+
+Next gate is the owner's pacing/geometry viewing at solar scale. A continuous resource
+calendar and local Earth/Moon/ground activity may follow that acceptance. Exact template
+recurrence is not assumed in the five-body field; Jupiter and Moon retain their own phases.

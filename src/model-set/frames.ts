@@ -1,3 +1,5 @@
+import {solarBodyState} from '../solar/ephemeris';
+import {solarPortState} from '../solar/view';
 import {stagedDisplayOrigin,type StagedVessel} from '../staged-service/query';
 import { bodyState } from '../sim/dynamics';
 import type { State, Vec3 } from '../sim/schema';
@@ -10,8 +12,8 @@ export function transform(run: SceneView, y: State, t: number, frame: string): S
     const body = run.world.bodies.find(b => b.id === frame);
     const port = portsOf(run).find(p => p.id === frame);
     const vessel = run.vessels.find(v => v.id === frame);
-    if (body) origin = bodyState(body, t);
-    else if (port) origin = displayPortState(port,run.portSamples,t);
+    if (body) origin = run.solar?solarBodyState(run.solar,body.id,t):bodyState(body, t);
+    else if (port) origin = run.solar?solarPortState(run.solar,port.id,t):displayPortState(port,run.portSamples,t);
     else if (vessel) origin = vessel.stagedService?stagedDisplayOrigin(vessel as StagedVessel,t):stateAt(vessel, t);
     else throw new Error('Unknown frame');
   }

@@ -1,3 +1,4 @@
+import {solarControl} from '../solar/query';
 import {surfaceNormal} from '../sim/logistics';
 import {directionAt} from '../sim/steering';
 import type {Vec3} from '../sim/schema';
@@ -19,6 +20,13 @@ function turn(from:Vec3,to:Vec3,fraction:number):Vec3 {
 // Queries depend only on mission time, so scrubbing never leaves a stale heading.
 export function rocketAxis(v:VesselView,sample:ViewSample,t:number):Vec3 {
  if(sample.axis)return [...sample.axis];
+ if(v.solar){
+  const previous=[...v.solar.arcs].reverse().find(a=>a.start<=t),next=v.solar.arcs.find(a=>a.start>t);
+  const axis=(a:NonNullable<typeof previous>,early:boolean)=>{const q=solarControl(a,early?a.keys[1][0]:a.keys.at(-2)![0]),n=Math.hypot(...q);return n>1e-10?q.map(x=>x/n) as Vec3:[0,1,0] as Vec3;};
+  const speed=Math.hypot(...v.ship.state.slice(3)),held=previous?axis(previous,false):v.ship.state.slice(3).map(x=>x/speed) as Vec3;
+  if(next){const available=next.start-(previous?.end??v.solar.start),duration=Math.min(2/365.25,available);if(duration>0&&t>next.start-duration)return turn(held,axis(next,true),(t-next.start+duration)/duration);}
+  return held;
+ }
  const port=v.ports.find(p=>p.id===sample.logistics?.dockedPortId);
  if(port?.rail.kind==='surface') {
   return surfaceNormal(port,t);

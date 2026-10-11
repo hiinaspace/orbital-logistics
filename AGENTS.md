@@ -120,6 +120,22 @@ Follow/Chase and selection-pivot orbiting are presentation only; see
 docs/design/camera-tracking.md. Atmosphere, staging, attitude/slew limits and arbitrary
 ground latitude/spin axes remain deferred.
 
+Solar transport is now a separate finite `solar-transport-v1` domain, not an extension
+of old Runner rails. Read docs/design/solar-cycler/README.md and disposition.md plus
+docs/evidence/solar-cycler.md. Sol · Mars cycler has prescribed circular Sun/Earth/Moon/
+Mars/Jupiter ephemerides and full-field forward spacecraft dynamics with indirect
+heliocentric gravity. Inverse curves only seed frozen cubic acceleration controls;
+canonical knots and primary-relative origins preserve the same force law. Actual
+coast endpoints continue into later burns/coasts; capture event-left state/fuel must
+remain distinct from atomic event-right correction and paid residual. Three finite
+visiting taxis carry funded cargo and fuel; attached mass loads the carrier and arrival
+retirement transfers remaining taxi fuel to Mars. This fictional powered cycler is not
+a ballistic Aldrin/Starship mission or self-consistent massive-body N-body system.
+Preserve AU/Julian-year/tonne units, 16MiB artifact/reply and120k aggregate row budgets,
+finite provider validity, 10% fuel reserves and existing day-based presentation.
+The browser never targets a flight from its Hermite drawing interpolation. Continuous
+resupply, true assist optimization and solar local ground service remain future slices.
+
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.
 - Canonical physics steps and event boundaries must not depend on display queries, warp, or scrub frequency.

@@ -1,0 +1,124 @@
+{
+  "burns": [
+    {
+      "vessel": "Wayfarer",
+      "arc": "turn-1",
+      "positionRefinementMeters": 0.000037138183559087685,
+      "velocityRefinementMetersS": 2.662880484626012e-11,
+      "positionOracleMeters": 0.00004697650072665738,
+      "velocityOracleMetersS": 8.679928541600039e-12,
+      "deltaVkmS": 7.946602711930757,
+      "fuelFractionError": 2.220446049250313e-16
+    },
+    {
+      "vessel": "Wayfarer",
+      "arc": "turn-3",
+      "positionRefinementMeters": 0.0000371381823849223,
+      "velocityRefinementMetersS": 5.7267408168012515e-11,
+      "positionOracleMeters": 0.00010642860694465199,
+      "velocityOracleMetersS": 4.3957695707211703e-11,
+      "deltaVkmS": 7.916507989626431,
+      "fuelFractionError": 1.1102230246251565e-15
+    },
+    {
+      "vessel": "Wayfarer",
+      "arc": "turn-5",
+      "positionRefinementMeters": 0.000037138182657689906,
+      "velocityRefinementMetersS": 4.2103835963059716e-11,
+      "positionOracleMeters": 0.00007656232478985849,
+      "velocityOracleMetersS": 3.374879164251049e-11,
+      "deltaVkmS": 7.923002164759463,
+      "fuelFractionError": 2.220446049250313e-16
+    },
+    {
+      "vessel": "Peregrine-1",
+      "arc": "Earth departure",
+      "positionRefinementMeters": 0.000266196141982672,
+      "velocityRefinementMetersS": 3.454511584344708e-10,
+      "positionOracleMeters": 0.00001692271539051779,
+      "velocityOracleMetersS": 1.1120839040525695e-11,
+      "deltaVkmS": 10.551946486249602,
+      "fuelFractionError": 6.661338147750939e-16
+    },
+    {
+      "vessel": "Peregrine-1",
+      "arc": "Mars approach",
+      "positionRefinementMeters": 0.0000944163422042737,
+      "velocityRefinementMetersS": 2.486410137110951e-9,
+      "positionOracleMeters": 0.00006672611131234732,
+      "velocityOracleMetersS": 1.4154994586852218e-9,
+      "deltaVkmS": 19.74642941219623,
+      "fuelFractionError": 2.220446049250313e-16
+    },
+    {
+      "vessel": "Peregrine-2",
+      "arc": "Earth departure",
+      "positionRefinementMeters": 0.00025109143224126524,
+      "velocityRefinementMetersS": 2.768227878696957e-10,
+      "positionOracleMeters": 0.00018136556520412082,
+      "velocityOracleMetersS": 2.2301542682660611e-10,
+      "deltaVkmS": 13.214282738247206,
+      "fuelFractionError": 2.6645352591003757e-15
+    },
+    {
+      "vessel": "Peregrine-2",
+      "arc": "Mars approach",
+      "positionRefinementMeters": 0.000436478000937328,
+      "velocityRefinementMetersS": 8.954553616776755e-9,
+      "positionOracleMeters": 0.0017003156674758046,
+      "velocityOracleMetersS": 3.843610946244825e-8,
+      "deltaVkmS": 12.900182646861003,
+      "fuelFractionError": 1.2212453270876722e-15
+    },
+    {
+      "vessel": "Peregrine-3",
+      "arc": "Earth departure",
+      "positionRefinementMeters": 0.007155211636964436,
+      "velocityRefinementMetersS": 1.297808871205597e-8,
+      "positionOracleMeters": 0.008212873246589838,
+      "velocityOracleMetersS": 1.4481347438370856e-8,
+      "deltaVkmS": 18.312100438850653,
+      "fuelFractionError": 8.104628079763643e-15
+    },
+    {
+      "vessel": "Peregrine-3",
+      "arc": "Mars approach",
+      "positionRefinementMeters": 0.00004152175012150927,
+      "velocityRefinementMetersS": 2.282914516368574e-9,
+      "positionOracleMeters": 0.0004041191122153917,
+      "velocityOracleMetersS": 9.107719389012758e-9,
+      "deltaVkmS": 17.22807995634833,
+      "fuelFractionError": 4.440892098500626e-16
+    }
+  ],
+  "coasts": [
+    {
+      "arc": "coast-0",
+      "positionRefinementMeters": 0.6458730753760817,
+      "velocityRefinementMetersS": 3.973442336172374e-8,
+      "positionOracleMeters": 13.182203823246063,
+      "velocityOracleMetersS": 0.0000022509572183564282
+    },
+    {
+      "arc": "coast-1",
+      "positionRefinementMeters": 3.7784341793106426,
+      "velocityRefinementMetersS": 5.63720113898893e-7,
+      "positionOracleMeters": 0.1564207166057672,
+      "velocityOracleMetersS": 2.778456382313519e-8
+    },
+    {
+      "arc": "coast-2",
+      "positionRefinementMeters": 3.6159346504249554,
+      "velocityRefinementMetersS": 5.382505250594832e-7,
+      "positionOracleMeters": 5.600350297605582,
+      "velocityOracleMetersS": 9.64109538781467e-7
+    },
+    {
+      "arc": "coast-3",
+      "positionRefinementMeters": 0.0005188723919132956,
+      "velocityRefinementMetersS": 4.896551942525116e-11,
+      "positionOracleMeters": 0.08331324210661806,
+      "velocityOracleMetersS": 2.2320995166254992e-8
+    }
+  ]
+}

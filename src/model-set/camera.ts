@@ -30,8 +30,8 @@ export function cameraProjection(c:Camera,width:number,height:number):(p:readonl
 export function pan(c:Camera,dx:number,dy:number):void {
  const a=axes(c);c.center=c.center.map((x,i)=>x-dx/c.scale*a.right[i]+dy/c.scale*a.up[i]) as Vec3;
 }
-export function zoom(c:Camera,factor:number,x:number,y:number):void {
- const before=c.scale;c.scale=Math.max(20,Math.min(1e6,c.scale*factor));
+export function zoom(c:Camera,factor:number,x:number,y:number,maximum=1e6):void {
+ const before=c.scale;c.scale=Math.max(20,Math.min(maximum,c.scale*factor));
  const a=axes(c);c.center=c.center.map((p,i)=>p+x*(1/before-1/c.scale)*a.right[i]-y*(1/before-1/c.scale)*a.up[i]) as Vec3;
 }
 export function orbit(c:Camera,dx:number,dy:number):void {

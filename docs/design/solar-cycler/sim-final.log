@@ -1,0 +1,124 @@
+TAP version 13
+# Subtest: orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility
+ok 1 - orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility
+  ---
+  duration_ms: 2.089048
+  type: 'test'
+  ...
+# Subtest: pan follows screen axes and cursor zoom anchors the same plane point in tilted views
+ok 2 - pan follows screen axes and cursor zoom anchors the same plane point in tilted views
+  ---
+  duration_ms: 1.020384
+  type: 'test'
+  ...
+# Subtest: sphere occlusion distinguishes front/back, limb, silhouette crossings and multiple bodies
+ok 3 - sphere occlusion distinguishes front/back, limb, silhouette crossings and multiple bodies
+  ---
+  duration_ms: 2.67324
+  type: 'test'
+  ...
+# Subtest: chase rigs and selected pivots remain orthonormal and deterministic at degenerate states
+ok 4 - chase rigs and selected pivots remain orthonormal and deterministic at degenerate states
+  ---
+  duration_ms: 6.973738
+  type: 'test'
+  ...
+# Subtest: one-draw projection snapshots camera axes and matches point queries
+ok 5 - one-draw projection snapshots camera axes and matches point queries
+  ---
+  duration_ms: 3.036164
+  type: 'test'
+  ...
+# Subtest: prepared freight conserves shared cargo and accounts for every unit of propellant
+ok 6 - prepared freight conserves shared cargo and accounts for every unit of propellant
+  ---
+  duration_ms: 9.83322
+  type: 'test'
+  ...
+# Subtest: admission rejects incompatible worlds, aggregate overdrafts and berth contention
+ok 7 - admission rejects incompatible worlds, aggregate overdrafts and berth contention
+  ---
+  duration_ms: 798.978977
+  type: 'test'
+  ...
+# Subtest: display interpolation does not anticipate cargo operations or impulses and remains disposable
+ok 8 - display interpolation does not anticipate cargo operations or impulses and remains disposable
+  ---
+  duration_ms: 89.978153
+  type: 'test'
+  ...
+# Subtest: rotating frame includes omega cross r and transforms every epoch independently
+ok 9 - rotating frame includes omega cross r and transforms every epoch independently
+  ---
+  duration_ms: 1.484109
+  type: 'test'
+  ...
+# Subtest: lunar rotating-frame loop closes in the current runner; view changes cannot mutate its program
+ok 10 - lunar rotating-frame loop closes in the current runner; view changes cannot mutate its program
+  ---
+  duration_ms: 124.045803
+  type: 'test'
+  ...
+# Subtest: bidirectional speed has an exact pause, symmetric limits and fine slow-speed resolution
+ok 11 - bidirectional speed has an exact pause, symmetric limits and fine slow-speed resolution
+  ---
+  duration_ms: 19.226469
+  type: 'test'
+  ...
+# Subtest: compiler origin accelerations agree with the independent spatial provider
+ok 12 - compiler origin accelerations agree with the independent spatial provider
+  ---
+  duration_ms: 1.914971
+  type: 'test'
+  ...
+# Subtest: nested solar ephemerides have consistent position, velocity and acceleration
+ok 13 - nested solar ephemerides have consistent position, velocity and acceleration
+  ---
+  duration_ms: 0.574924
+  type: 'test'
+  ...
+# Subtest: finite three-cycle exhibit preserves fuel, cargo and nested-frame epochs
+ok 14 - finite three-cycle exhibit preserves fuel, cargo and nested-frame epochs
+  ---
+  duration_ms: 251.613228
+  type: 'test'
+  ...
+# Subtest: version, row order, exhausted tank and oversized controls reject before display
+ok 15 - version, row order, exhausted tank and oversized controls reject before display
+  ---
+  duration_ms: 586.254723
+  type: 'test'
+  ...
+# Subtest: capture preserves approach left limit and records the paid atomic debit
+ok 16 - capture preserves approach left limit and records the paid atomic debit
+  ---
+  duration_ms: 259.541915
+  type: 'test'
+  ...
+# Subtest: far-field heliocentric acceleration includes all indirect sources and supports 3D
+ok 17 - far-field heliocentric acceleration includes all indirect sources and supports 3D
+  ---
+  duration_ms: 0.457272
+  type: 'test'
+  ...
+# Subtest: crossing-plane witnesses pay two real inclination changes with distinct node axes
+ok 18 - crossing-plane witnesses pay two real inclination changes with distinct node axes
+  ---
+  duration_ms: 291.15017
+  type: 'test'
+  ...
+# Subtest: all spatial view queries leave the immutable scene and event sides unchanged
+ok 19 - all spatial view queries leave the immutable scene and event sides unchanged
+  ---
+  duration_ms: 230.617712
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2027.583175

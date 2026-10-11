@@ -466,3 +466,16 @@ and [evidence](evidence/aster-system.md). Planned markers have fixed epochs and
 timeline labels no longer wrap. Measured CPU projection/reconstruction costs were
 reduced while retaining Canvas/DOM/SVG. This is an authored exhibit, awaiting the
 user's activity/density preference, rather than a general route dispatcher.
+
+## Solar-scale powered cycler — 2026-10-11
+
+**Sol · Mars cycler** adds a finite 2,398-day history with a powered recurring carrier
+and three funded Earth-to-Mars cargo taxis. Prescribed circular Sun/Earth/Moon/Mars/
+Jupiter proportions replace the miniature Aster/Selene field in a separate versioned
+prepared domain. Spacecraft coasts and bounded thrust are forward-integrated throughout;
+actual encounter epochs preserve lunar/Jovian phases. Day-based playback, heliocentric/
+Earth–Sun rotating and local centered views share the existing 3D camera and controls.
+Preparation is off the playback path. This is a fictional powered cycler, with independent
+fuel/capture/resource gates, rather than a real Starship or ballistic Aldrin trajectory.
+[Contract/review](design/solar-cycler/README.md) and [evidence](evidence/solar-cycler.md)
+cover the finite resource calendar, numerical comparisons and production performance.

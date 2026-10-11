@@ -1,3 +1,6 @@
+import solarDefinition from '../fixtures/model-sets/solar-cycler-set.json';
+import {AU_KM,YEAR_SECONDS,solarBodyState} from './solar/ephemeris';
+import {solarPortState,type SolarDefinition} from './solar/view';
 import {viewerProfile} from './view/profile';
 import asterSystem from '../fixtures/model-sets/aster-selene-system.json';
 import {AsterSystemViewStore} from './aster-system/view';
@@ -80,12 +83,13 @@ import {cameraProjection,cameraPoint,cameraVector,orient,pan,zoom,chaseRig,orbit
 import {TrafficViewStore} from './traffic/view';
 import type {TrafficDefinition} from './traffic/planner';
 import type {TrafficDelta} from './traffic/engine';
-import {bodyState} from './sim/dynamics';
+import {bodyState as baseBodyState} from './sim/dynamics';
 import type {State,Vec3} from './sim/schema';
-import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVessel, setEvents, stockAt, isPresent,presenceLabel,type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
+import {orbitError,displayPortState as basePortState,portsOf, sampleVessel as uncachedSampleVessel, setEvents, stockAt, isPresent,presenceLabel,type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
-const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo,stagedApollo] as (StagedApolloMission|ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
+const solarSet={...solarDefinition,artifactUrl:new URL('../fixtures/model-sets/solar-cycler.json',import.meta.url).href} as SolarDefinition;
+const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo,stagedApollo,solarSet] as (SolarDefinition|StagedApolloMission|ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
 const trafficSets=[asterSystem,stagedService,beacon,crossings,expeditionService,trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
@@ -105,6 +109,8 @@ document.body.innerHTML = `
 </main><div id="hit-menu" hidden></div><pre id="state-json" hidden></pre>`;
 
 const canvas = $<HTMLCanvasElement>('space'), ctx = canvas.getContext('2d')!;
+function bodyState(body:import('./sim/schema').Body,epoch:number):State{return run?.solar&&run.world.bodies.some(b=>b.id===body.id)?solarBodyState(run.solar,body.id,epoch):baseBodyState(body,epoch);}
+function displayPortState(port:import('./sim/schema').Port,samples:import('./model-set/model').PortSamples,epoch:number):State{return run?.solar?solarPortState(run.solar,port.id,epoch):basePortState(port,samples,epoch);}
 let run: SceneView | undefined, worker: Worker | undefined, revision = 0;
 let traffic:TrafficViewStore|MaintainedViewStore|AdaptiveViewStore|NetworkViewStore|LunarViewStore|ExpeditionViewStore|ExpeditionFleetViewStore|LibrationViewStore|StagedServiceViewStore|AsterSystemViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='',trafficDirty=false;
 let trafficRequestStart=0;
@@ -198,7 +204,7 @@ function setCamera(preset:CameraPreset) {if(tracking==='chase')tracking='follow'
 function fit() {
   if (!run) return;
   camera.center = [0, 0, 0];
-  camera.scale = Math.min(width, height) / (2 * (run.frameExtents?.[frame]??run.extent) * (frame === 'inertial' || frame === 'rotating' ? 1 : 1.8));
+  camera.scale = Math.min(width, height) / (2 * (run.frameExtents?.[frame]??(run.solar&&run.vessels.some(v=>v.id===frame)?.08:run.extent)) * (frame === 'inertial' || frame === 'rotating' ? 1 : 1.8));
 }
 function seek(time: number, pause = true) {
   if (!ready) return;
@@ -209,6 +215,7 @@ function seek(time: number, pause = true) {
   updatePanels();
 }
 function eventLabel(e: SetEvent): string {
+  if(run?.solar&&e.label)return e.label;
   const port = e.portId ?? '';
   if(e.kind==='burn' && e.id.includes('plane-change'))return 'Plane change';
   if(e.kind==='separation')return e.label??'Stage separation';
@@ -236,6 +243,7 @@ function nextArrival(v: VesselView) { return events.find(e => e.vessel === v.id 
 function status(v: VesselView): string {
   if(!isPresent(v,t))return presenceLabel(v,t);
   const s = sampleVessel(v, t), l = s.logistics;
+  if(v.solar)return s.activity?.reason??'Coasting';
   if(s.activity?.reason==='Ground recovery transport'||s.activity?.reason==='Ocean recovery')return s.activity.reason;
   if(s.entryPhase)return ({coast:'Approaching atmosphere',entry:'Atmospheric braking',braking:'Terminal braking',recovered:'Recovered · Ocean'} as const)[s.entryPhase];
   if(s.activity?.kind==='fault')return `Fault · last seen ${number(s.activity.knownEpoch!)}`;
@@ -306,7 +314,7 @@ function updatePanels() {
   $<HTMLInputElement>('time').value = String(t);
   // Keep the HTML range step anchored to millisecond values as history slides.
   $<HTMLInputElement>('time').min=String(Math.floor(start()*1000)/1000);$<HTMLInputElement>('time').max=String(cursorEnd());
-  $('clock').textContent=traffic?`${number(t)} · head ${number(traffic.frontier)}`:`${number(t)} / ${number(end())}`;
+  $('clock').textContent=run.solar?`Day ${number(t*365.25)}`:traffic?`${number(t)} · head ${number(traffic.frontier)}`:`${number(t)} / ${number(end())}`;
   $('live').textContent=liveMode?'Live':'Return to live';$('live').setAttribute('aria-pressed',String(liveMode));
   $('load-status').textContent = liveError || (traffic?.halt&&t>=traffic.frontier?traffic.halt:(traffic?liveMode?'':playing?'Playing history':'History held':t===end()?'End of scene':''));
   {const origin=[...run.vessels,...Object.values(run.maintained??{})].find(v=>v.id===frame);if(origin && (!isPresent(origin,t)&&!origin.attachment||sampleVessel(origin,t).activity?.kind==='fault')){frame='inertial';$<HTMLSelectElement>('frame').value=frame;}
@@ -343,7 +351,8 @@ function updatePanels() {
     $('readouts').innerHTML = `${v.cargoCapacity===0?'':`<div><dt>${esc(v.cargo)}</dt><dd>${number(cargo)} / ${number(v.cargoCapacity ?? cargo)}</dd></div>`}<div><dt>${v.id===run.staging?.separation.parentId?'Booster propellant':'Propellant'}</dt><dd>${number(s.propellant)} / ${number(v.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${number(used)}</dd></div>`;
     if(v.id===run.staging?.separation.parentId)$('readouts').innerHTML+=`<div><dt>Carried payload fuel</dt><dd>${number(run.staging.separation.reservedPayloadFuel)}</dd></div>`;
     if(maintenance){const err=orbitError(s.y,maintenance.reference),baseline=displayPortState(portsOf(run).find(p=>p.id===selected)!,{[selected]:run.maintained![selected].baseline},s.activity?.knownEpoch??t),unmaintained=orbitError(baseline,maintenance.reference);$('readouts').innerHTML=`<div><dt>Maintenance fuel</dt><dd>${s.propellant.toFixed(4)} / ${number(v.ship.tankCapacity)}</dd></div><div><dt>Fuel used</dt><dd>${used.toFixed(4)}</dd></div><div><dt>Orbit error · R</dt><dd>${err.position.toExponential(2)}</dd></div><div><dt>Velocity error</dt><dd>${err.velocity.toExponential(2)}</dd></div><div><dt>Unmaintained error · R</dt><dd>${unmaintained.position.toExponential(2)}</dd></div>`;}
-    if(v.ship.engine)$('readouts').innerHTML+=`<div><dt>Thrust</dt><dd>${maintenance?(s.thrust?.force??0).toExponential(2):number(s.thrust?.force??0)} / ${number(v.surfaceEngine&&v.surfaceFlights?.some(f=>t>=f.start&&t<f.start+surfaceDuration)?v.surfaceEngine.maxThrust:v.ship.engine.maxThrust)}</dd></div><div><dt>Thrust acceleration</dt><dd>${maintenance?(s.thrust?.acceleration??0).toExponential(2):number(s.thrust?.acceleration??0)}</dd></div>`;
+    if(v.solar)$('readouts').innerHTML+=`<div><dt>Thrust · kN</dt><dd>${number((s.thrust?.force??0)*AU_KM*1000/YEAR_SECONDS**2)}</dd></div><div><dt>Acceleration · m/s²</dt><dd>${((s.thrust?.acceleration??0)*AU_KM*1000/YEAR_SECONDS**2).toFixed(4)}</dd></div>`;
+    else if(v.ship.engine)$('readouts').innerHTML+=`<div><dt>Thrust</dt><dd>${maintenance?(s.thrust?.force??0).toExponential(2):number(s.thrust?.force??0)} / ${number(v.surfaceEngine&&v.surfaceFlights?.some(f=>t>=f.start&&t<f.start+surfaceDuration)?v.surfaceEngine.maxThrust:v.ship.engine.maxThrust)}</dd></div><div><dt>Thrust acceleration</dt><dd>${maintenance?(s.thrust?.acceleration??0).toExponential(2):number(s.thrust?.acceleration??0)}</dd></div>`;
     const aeroReadouts=!!((v.entry||v.aerodynamics)&&((s.aero?.density??0)>0||s.entryPhase));
     if(aeroReadouts) {
       const a=s.aero,body=surfaceReference(v),r=Math.hypot(...s.y.slice(0,3).map((x,i)=>x-bodyState(body,t)[i]));
@@ -358,7 +367,7 @@ function updatePanels() {
       $('readouts').innerHTML+=`${aeroReadouts?'':`<div><dt>Altitude · R</dt><dd>${small((r-body.radius)/body.radius)}</dd></div>`}<div><dt>Radial speed</dt><dd>${small(radial)}</dd></div><div><dt>Tangential speed</dt><dd>${small(tangential)}</dd></div><div><dt>Thrust / weight</dt><dd>${number((s.thrust?.force??0)/mass/(body.mu/r**2))}</dd></div>`;
     }
     $<HTMLButtonElement>('object-frame').disabled=s.activity?.kind==='fault';
-    if(s.activity?.reason)$('readouts').innerHTML+=`<div class="fault-reason">${esc(s.activity.reason)}</div>`;
+    if(s.activity?.reason&&!v.solar)$('readouts').innerHTML+=`<div class="fault-reason">${esc(s.activity.reason)}</div>`;
     if(s.activity?.retryAt!==undefined)$('readouts').innerHTML+=`<div><dt>Retry</dt><dd>${number(s.activity.retryAt)}</dd></div>`;
     const local=s.activity?.kind==='fault'?[0,0,0,0,0,0]:transform(run,s.y,t,frame);
     if(Math.abs(local[2])+Math.abs(local[5])>1e-9)$('readouts').innerHTML+=`<div><dt>Z position</dt><dd>${number(local[2])}</dd></div><div><dt>Z velocity</dt><dd>${number(local[5])}</dd></div>`;
@@ -369,20 +378,20 @@ function updatePanels() {
     const station = run.stations.find(s => s.id === selected), stock = stocks.find(s => s.id === selected);
     const body = run.world.bodies.find(b => b.id === selected);
     $('object-status').textContent = station?.role ?? 'Gravity source';
-    $('readouts').innerHTML = stock ? `<div><dt>Freight stock</dt><dd>${number(stock.cargo)}</dd></div><div><dt>Propellant stock</dt><dd>${number(stock.propellant)}</dd></div><div><dt>Berths</dt><dd>${stock.occupied} / ${station!.berths}</dd></div>` : `<div><dt>Gravitational μ</dt><dd>${number(body!.mu)}</dd></div>`;
+    $('readouts').innerHTML = stock ? `<div><dt>Freight stock</dt><dd>${number(stock.cargo)}</dd></div><div><dt>Propellant stock</dt><dd>${number(stock.propellant)}</dd></div><div><dt>Berths</dt><dd>${stock.occupied} / ${station!.berths}</dd></div>` : `<div><dt>Gravitational μ</dt><dd>${run.solar?body!.mu.toExponential(4):number(body!.mu)}</dd></div>`;
     upcoming = events.find(e => e.portId === selected && e.t > t + 1e-9 && (e.kind === 'dock'||e.kind==='land'||e.kind==='splashdown'));
   }
   $('next-event').hidden = !upcoming;
   if (upcoming) {
     const e = upcoming;
-    $('next-event').textContent = `${eventLabel(e)} · ${number(e.t)} →`;
+    $('next-event').textContent = `${eventLabel(e)} · ${run.solar?'Day '+number(e.t*365.25):number(e.t)} →`;
     $<HTMLButtonElement>('next-event').disabled=!!traffic && e.t>traffic.frontier;
     $('next-event').title=traffic && e.t>traffic.frontier?'Planned · not flown yet':'';
     $('next-event').onclick = () => seek(e.t);
   }
   const relevant = events.filter(e => (v ? e.vessel === selected : e.portId === selected) && e.kind !== 'burn' && e.kind !== 'transfer-start');
   $('schedule').hidden = !relevant.length;
-  html('event-list', relevant.map(e => `<button data-time="${e.t}" ${traffic && e.t>traffic.frontier?'disabled title="Planned · not flown yet"':''} class="event ${e.t <= t ? 'past' : ''}"><span>${number(e.t)}</span>${esc(eventLabel(e))}</button>`).join(''));
+  html('event-list', relevant.map(e => `<button data-time="${e.t}" ${traffic && e.t>traffic.frontier?'disabled title="Planned · not flown yet"':''} class="event ${e.t <= t ? 'past' : ''}"><span>${run!.solar?'D '+number(e.t*365.25):number(e.t)}</span>${esc(eventLabel(e))}</button>`).join(''));
   document.querySelectorAll<HTMLButtonElement>('[data-time]').forEach(b => b.onclick = () => seek(Number(b.dataset.time)));
   const percent = (t - start()) / (end() - start()) * 100;
   document.querySelectorAll<HTMLElement>('.time-cursor').forEach(c => c.style.left = `${percent}%`);
@@ -400,7 +409,7 @@ function publishState() {
 }
 function loadSet(id: string) {
   if(currentSet){setSpeeds.set(currentSet,playbackRate);setResumeSpeeds.set(currentSet,resumeRate);}currentSet=id;
-  playbackRate=setSpeeds.get(id)??(['selene-ground','selene-ground-service'].includes(id)?.01:['aster-selene-staged-expedition','aster-selene-staged-service','aster-selene-beacon','aster-selene-crossings','aster-selene-service','aster-selene-expedition','selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
+  playbackRate=setSpeeds.get(id)??(id==='solar-cycler'?4:['selene-ground','selene-ground-service'].includes(id)?.01:['aster-selene-staged-expedition','aster-selene-staged-service','aster-selene-beacon','aster-selene-crossings','aster-selene-service','aster-selene-expedition','selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
   resumeRate=setResumeSpeeds.get(id)??(playbackRate||1);playbackRate=Math.sign(playbackRate)*Math.min(Math.abs(playbackRate),maximumPlaybackRate(id));resumeRate=Math.sign(resumeRate)*Math.min(Math.abs(resumeRate),maximumPlaybackRate(id));if(playbackRate!==0)resumeRate=playbackRate;syncSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
@@ -409,7 +418,7 @@ function loadSet(id: string) {
   $('load-status').textContent = 'Preparing scene…';
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
   $('state-json').textContent = JSON.stringify({ready, revision});
-  $('launch-view').hidden=true;document.querySelectorAll<HTMLElement>('.entry-layer').forEach(e=>e.hidden=true);
+  $<HTMLInputElement>('time').step='0.001';$('launch-view').hidden=true;document.querySelectorAll<HTMLElement>('.entry-layer').forEach(e=>e.hidden=true);
   $('live').hidden=!continuous;document.querySelector<HTMLElement>('.replay')!.hidden=!!continuous;
   $('restart').title=continuous?'Restart run':'Rewind';
   if(continuous){loadTraffic(continuous);return;}
@@ -418,11 +427,11 @@ function loadSet(id: string) {
   worker.onmessage = (e: MessageEvent<{revision: number; run?: SceneView; error?: string}>) => {
     if (e.data.revision !== revision || currentRevision !== revision) return;
     if (e.data.error) { $('load-status').textContent = e.data.error; return; }
-    run = e.data.run!; events = setEvents(run); ready = true; selected = run.id==='orison-direct-surface'?run.vessels[0].id:Object.keys(run.maintained??{})[0]??run.vessels[0].id;
+    run = e.data.run!; $<HTMLInputElement>('time').step=run.solar?'0.000001':'0.001'; events = setEvents(run); ready = true; selected = run.id==='orison-direct-surface'?run.vessels[0].id:Object.keys(run.maintained??{})[0]??run.vessels[0].id;
     $('launch-view').hidden=!run.entry&&!run.world.ports.some(p=>p.rail.kind==='surface');$('launch-view').textContent=run.entry?'Entry view':'Surface view';document.querySelectorAll<HTMLElement>('.entry-layer').forEach(e=>e.hidden=!run!.atmosphere);
     frame = run.id==='selene-ground'?'moon':'inertial'; t = run.id === 'orison-freight' ? 2 : run.id==='orison-direct-surface'||run.id==='orison-low-orbit-shuttle'?start():0; playing = playbackRate!==0;
     $<HTMLInputElement>('time').min = String(start()); $<HTMLInputElement>('time').max = String(end());
-    $('frame').innerHTML = `<option value="inertial">Inertial</option><option value="rotating">${esc(run.rotating.name)}</option>` +
+    $('frame').innerHTML = `<option value="inertial">${run.solar?'Heliocentric':'Inertial'}</option><option value="rotating">${esc(run.rotating.name)}</option>` +
       [...run.world.bodies.map(b => [b.id, b.id]), ...run.stations.map(s => [s.id, s.id]), ...run.vessels.map(v => [v.id, v.name])].map(([id, name]) => `<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
     $<HTMLSelectElement>('frame').value=frame;
     $('description').textContent = run.description; $('provenance').textContent = run.provenance;
@@ -511,8 +520,9 @@ function draw() {
   hits = [];thrustWhiskers=[];aeroVectors=[];
   const scenario = run.world;
   const labelRequests:Label[]=[];
-  spheres=seeThroughBodies?[]:scenario.bodies.map(body=>({id:body.id,point:project3(bodyState(body,t),t),radius:Math.max(7,body.radius*camera.scale)}));
-  for (const body of [...scenario.bodies].sort((a,b)=>project3(bodyState(a,t),t)[2]-project3(bodyState(b,t),t)[2])) {
+  const displayedBodies=scenario.bodies.filter(b=>{if(!run!.solar||b.id!=='Moon'||selected==='Moon'||frame==='Moon')return true;const m=project(bodyState(b,t),t),e=project(bodyState(scenario.bodies.find(b=>b.id==='Earth')!,t),t);return Math.hypot(m[0]-e[0],m[1]-e[1])>18;});
+  spheres=seeThroughBodies?[]:displayedBodies.map(body=>({id:body.id,point:project3(bodyState(body,t),t),radius:Math.max(7,body.radius*camera.scale)}));
+  for (const body of [...displayedBodies].sort((a,b)=>project3(bodyState(a,t),t)[2]-project3(bodyState(b,t),t)[2])) {
     const p = project(bodyState(body, t), t), r = Math.max(7, body.radius * camera.scale);
     ctx.beginPath(); ctx.arc(...p, r, 0, Math.PI * 2); ctx.fillStyle = '#192a37';ctx.globalAlpha=seeThroughBodies?.18:1;ctx.fill();ctx.globalAlpha=seeThroughBodies?.45:1;ctx.strokeStyle = '#445c6e'; ctx.lineWidth = 1; ctx.stroke();ctx.globalAlpha=1;
     drawPlanetGrid(ctx,project3(bodyState(body,t),t),r,bodySpin(run,body),t,v=>cameraVector(camera,transformDirection(run!,v,t,frame)),seeThroughBodies);
@@ -528,14 +538,15 @@ function draw() {
     for(const ratio of [.1,.01,.001]){const h=-a.scaleHeight*Math.log(ratio);if(h>=a.topHeight)continue;ctx.beginPath();ctx.arc(...p,(body.radius+h)*camera.scale,0,2*Math.PI);ctx.strokeStyle='rgba(128,198,237,.12)';ctx.lineWidth=.7;ctx.stroke();}
   }
   if (layers.orbits) {
+    const frameStart=Math.max(start(),reference?.lifetime?.start??start()),frameEnd=Math.min(end(),reference?.lifetime?.end??end());
     const orbitEpochs = (period: number) => {
-      const duration = Math.min(period, end() - start());
-      const first = Math.max(start(), Math.min(t - duration / 2, end() - duration));
+      const duration = Math.min(period, frameEnd - frameStart);
+      const first = Math.max(frameStart, Math.min(t - duration / 2, frameEnd - duration));
       return Array.from({length: 161}, (_, i) => first + duration * i / 160);
     };
     for (const port of portsOf(run)) {
       if(port.rail.kind==='surface')continue;
-      if((port.rail.kind==='ballistic'||port.rail.kind==='powered')){worldPath(run.portSamples[port.id].filter(s=>Math.abs(s.t-t)<3).map(s=>project3(s.y,s.t)),'#647c8d',.8,.3);continue;}
+      if((port.rail.kind==='ballistic'||port.rail.kind==='powered')){worldPath((run.solar?Array.from({length:129},(_,i)=>{const epoch=Math.max(frameStart,Math.min(frameEnd,t+(i/128-.5)*(port.id==='Earth gateway'?.012:.008)));return {t:epoch,y:displayPortState(port,run!.portSamples,epoch)};}):run.portSamples[port.id].filter(s=>Math.abs(s.t-t)<3)).map(s=>project3(s.y,s.t)),'#647c8d',.8,.3);continue;}
       const period = 2 * Math.PI / port.rail.rate;
       worldPath(orbitEpochs(period).map(epoch => project3(displayPortState(port,run!.portSamples,epoch), epoch)), '#647c8d', 0.8, 0.3);
     }
@@ -546,20 +557,20 @@ function draw() {
       const baseline=project3(displayPortState(portsOf(run).find(p=>p.id===id)!,{[id]:v.baseline},t),t);
       if(!occluder(baseline,spheres)){ctx.beginPath();ctx.arc(baseline[0],baseline[1],4,0,2*Math.PI);ctx.strokeStyle='#b19ab4';ctx.stroke();}
     }
-    for (const body of scenario.bodies.filter(b => b.rail.kind === 'circular')) {
-      const rail = body.rail as Extract<typeof body.rail, {kind: 'circular'}>, period = 2 * Math.PI / Math.abs(rail.rate);
+    for (const body of scenario.bodies.filter(b => b.rail.kind === 'circular'||run!.solar&&b.id!=='Sun')) {
+      const rail = body.rail as Extract<typeof body.rail, {kind: 'circular'}>, period = run.solar?(body.id==='Moon'?.0748:body.id==='Earth'?1:body.id==='Mars'?1.88:11.86):2 * Math.PI / Math.abs(rail.rate);
       worldPath(orbitEpochs(period).map(epoch => project3(bodyState(body, epoch), epoch)), '#647c8d', 0.8, 0.2);
     }
   }
   for (const v of [...run.vessels,...Object.values(run.maintained??{})]) {
     const id = v.id, isSelected = id === selected;
     if (layers.trails) {
-      const trailStart = Math.max(start(), t - (run.id === 'lunar-loop' ? 9 : 12));
+      const trailStart = Math.max(start(), t - (run.playback?.trailSpan??(run.id === 'lunar-loop' ? 9 : 12)));
       let prev: ScreenPoint | undefined,chunk:ScreenPoint[]=[],shade=-1;
       for (const sample of v.samples) {
         if (sample.t < trailStart || sample.t > t || sample.activity?.kind==='fault') continue;
         const p:ScreenPoint = sample.opacity===0?[NaN,NaN,NaN]:project3(sample.y, sample.t);
-        const alpha=Math.round(32*trailOpacity(sample.t,t,start(),isSelected,run.id==='lunar-loop'?9:12));
+        const alpha=Math.round(32*trailOpacity(sample.t,t,start(),isSelected,run.playback?.trailSpan??(run.id==='lunar-loop'?9:12)));
         if(alpha!==shade && chunk.length){worldPath(chunk,v.color,isSelected?1.7:1.1,shade/32);chunk=prev?[prev]:[];}
         chunk.push(p);shade=alpha;
         prev = p;
@@ -568,7 +579,7 @@ function draw() {
       if (prev && isPresent(v,t) && sampleVessel(v,t).activity?.kind!=='fault') worldPath([prev, project3(sampleVessel(v, t).y, t)], v.color, 1.5, 0.75);
     }
     if (layers.plan && isSelected && (!isPresent(v,t)||sampleVessel(v,t).activity?.kind!=='fault')) {
-      const stop = nextArrival(v)?.t ?? Math.min(end(), t + (run.id === 'lunar-loop' ? 5.58 : 8));
+      const stop = nextArrival(v)?.t ?? Math.min(end(), t + (run.playback?.forecastSpan??(run.id === 'lunar-loop' ? 5.58 : 8)));
       worldPath([...(isPresent(v,t)?[project3(sampleVessel(v,t).y,t)]:[]), ...v.samples.filter(s => s.t > t && s.t <= stop).map(s => s.opacity===0?[NaN,NaN,NaN] as ScreenPoint:project3(s.y, s.t))], '#b5bdc7', .6, .09);
       ctx.fillStyle='#b5bdc7';ctx.globalAlpha=.38;ctx.beginPath();
       for(const q of planMarkers(v,t,Math.min(stop,t+32),markerStep(camera.scale,v.ship.state))){const p=project3(q.y,q.t);if(!occluder(p,spheres)){ctx.moveTo(p[0]+1,p[1]);ctx.arc(p[0],p[1],1,0,2*Math.PI);}}
@@ -771,7 +782,7 @@ canvas.onpointerleave=()=>{hovered='';};
 canvas.onpointercancel = () => {drag = undefined;};
 canvas.addEventListener('wheel', e => {
   e.preventDefault();
-  const rect=canvas.getBoundingClientRect();zoom(camera,Math.exp(-e.deltaY*.0015),e.clientX-rect.left-width/2,e.clientY-rect.top-height/2);captureTrackingOffset();
+  const rect=canvas.getBoundingClientRect();zoom(camera,Math.exp(-e.deltaY*.0015),e.clientX-rect.left-width/2,e.clientY-rect.top-height/2,run?.playback?.maxZoom??1e6);captureTrackingOffset();
 }, {passive: false});
 document.addEventListener('pointerdown', e => { if (!canvas.contains(e.target as Node) && !$('hit-menu').contains(e.target as Node)) $('hit-menu').hidden = true; });
 document.addEventListener('keydown', e => {
@@ -816,7 +827,7 @@ function animate(now: number) {
    else {t=Math.max(traffic.oldest,Math.min(traffic.frontier,t+dt*playbackRate));if(playbackRate<0&&t<=traffic.oldest||(traffic.halt||liveError)&&t>=traffic.frontier)playing=false;else if(playbackRate>0&&t>=liveEdge()){traffic.release();desiredTarget=t+playbackLead();liveMode=true;}if(now-lastPanel>100||playbackLead()&&(t>run!.window.end||t>run!.traffic!.frontier))refreshTraffic();}
   }
   if (ready && playing && !traffic) {
-    t = Math.max(start(),Math.min(end(), t + dt * playbackRate));
+    t = Math.max(start(),Math.min(end(), t + dt * playbackRate * (run?.playback?.rateScale??1)));
     if (playbackRate>0&&t>=end()||playbackRate<0&&t<=start()) { if ($<HTMLInputElement>('replay').checked) t = playbackRate>0?start():end(); else playing = false; }
   }
   if(ready && trafficDirty && now-lastPanel>100)refreshTraffic();

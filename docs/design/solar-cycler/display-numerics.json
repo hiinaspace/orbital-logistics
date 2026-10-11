@@ -1,0 +1,103 @@
+{
+  "interpolation": {
+    "Peregrine-1": {
+      "samples": 1461,
+      "maxPositionMeters": 1.428125326395797,
+      "pixelsAtMaxZoom": 9.546428165810764e-05
+    },
+    "Peregrine-2": {
+      "samples": 1431,
+      "maxPositionMeters": 0.6349595231909421,
+      "pixelsAtMaxZoom": 4.244442251883884e-05
+    },
+    "Peregrine-3": {
+      "samples": 1575,
+      "maxPositionMeters": 1.1795065878614759,
+      "pixelsAtMaxZoom": 7.884514547849616e-05
+    },
+    "Wayfarer": {
+      "samples": 14720,
+      "maxPositionMeters": 1.9492336972241187,
+      "pixelsAtMaxZoom": 0.00013029822470756055
+    },
+    "Earth gateway": {
+      "samples": 33296,
+      "maxPositionMeters": 378.77262880118565,
+      "pixelsAtMaxZoom": 0.025319386367521717
+    },
+    "Mars gateway": {
+      "samples": 32750,
+      "maxPositionMeters": 192.77987797685265,
+      "pixelsAtMaxZoom": 0.012886538897565514
+    }
+  },
+  "clearance": [
+    {
+      "minClearanceAU": [
+        0.9819149739111727,
+        0.007214542274418223,
+        0.0047041482977821635,
+        0.0157853728226972,
+        3.0010166118827457
+      ],
+      "intervals": 55041,
+      "numericalAllowanceMeters": 1000
+    },
+    {
+      "minClearanceAU": [
+        0.9906649831418205,
+        0.0006060278701213563,
+        0.0007304680126661119,
+        0.00027663998079157883,
+        4.104757893334011
+      ],
+      "intervals": 1228,
+      "numericalAllowanceMeters": 1000
+    },
+    {
+      "minClearanceAU": [
+        0.990485017743893,
+        0.0006067434386213882,
+        0.002493076101636895,
+        0.00027666851410274604,
+        4.473746419526417
+      ],
+      "intervals": 1198,
+      "numericalAllowanceMeters": 1000
+    },
+    {
+      "minClearanceAU": [
+        0.9904390701395039,
+        0.0002725092073408057,
+        0.0015928800612268175,
+        0.00027687242402001143,
+        4.889269483614451
+      ],
+      "intervals": 1343,
+      "numericalAllowanceMeters": 1000
+    },
+    {
+      "minClearanceAU": [
+        0.9946901967138577,
+        0.0005910725682771931,
+        0.0018967790939104895,
+        0.5231435456338281,
+        4.203353031409864
+      ],
+      "intervals": 78892,
+      "numericalAllowanceMeters": 1000
+    },
+    {
+      "minClearanceAU": [
+        1.5187271350963896,
+        0.5235237692488479,
+        0.5212561562060384,
+        0.0002748992380476895,
+        3.679984896199922
+      ],
+      "intervals": 78345,
+      "numericalAllowanceMeters": 1000
+    }
+  ],
+  "note": "Retained provider dense outputs; midpoints of all exported intervals. Capture event-left endpoint preserved. 1000m certificate allowance, separate from schematic capture bounds."
+}

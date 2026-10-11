@@ -1,0 +1,24 @@
+{
+  "main": "gpt-6.1-sol",
+  "reviews": [
+    {
+      "kind": "architecture",
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "session": "01a12c7d-4ffd-7463-a1bf-341cc60eec17",
+      "exitCode": 0,
+      "report": "astra-review.md",
+      "log": "astra-review.log"
+    },
+    {
+      "kind": "implementation",
+      "model": "gpt-6-astra",
+      "effort": "high",
+      "session": "01a12cac-8059-7713-9d3b-6d59cd615287",
+      "exitCode": 0,
+      "report": "astra-implementation.md",
+      "log": "astra-implementation.log"
+    }
+  ],
+  "cost": "Subscription; per-review monetary cost not reported by CLI"
+}

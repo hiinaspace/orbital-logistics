@@ -1,0 +1,21 @@
+{
+  "results": [
+    {
+      "body": 1,
+      "samples": 2052,
+      "maxPositionMeters": 25.895974236335935,
+      "maxVelocityMetersS": 0.0005497113365150048,
+      "primaryNfev": 387971,
+      "secondaryNfev": 3665222
+    },
+    {
+      "body": 3,
+      "samples": 2052,
+      "maxPositionMeters": 67.88703709496527,
+      "maxVelocityMetersS": 0.0014819270759236676,
+      "primaryNfev": 390002,
+      "secondaryNfev": 3658736
+    }
+  ],
+  "elapsedSeconds": 503.96772535692435
+}

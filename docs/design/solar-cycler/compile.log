@@ -1,0 +1,277 @@
+Compiling physical gateway providers
+  gateways done in 47.6s
+  coast 1: calls=18, endpoint AU=8.13e-12
+  coast 2: calls=18, endpoint AU=1.49e-13
+  coast 3: calls=15, endpoint AU=2.93e-12
+  coast 4: calls=15, endpoint AU=8.06e-13
+  burn 2.1204–2.1504: dv=7.947km/s cap=0.050 evals=34866
+  burn 4.2558–4.2858: dv=7.917km/s cap=0.050 evals=25181
+  burn 6.3912–6.4212: dv=7.923km/s cap=0.050 evals=42614
+Compiling taxi 1
+  burn 0.0000–0.0250: dv=10.552km/s cap=0.192 evals=85190
+  burn 0.3661–0.4261: dv=19.746km/s cap=0.082 evals=52164
+Compiling taxi 2
+  burn 2.1354–2.1604: dv=13.214km/s cap=0.174 evals=97709
+  burn 2.5015–2.5615: dv=12.900km/s cap=0.078 evals=33220
+Compiling taxi 3
+  burn 4.2708–4.2958: dv=18.312km/s cap=0.706 evals=198293
+  burn 4.6369–4.6969: dv=17.228km/s cap=0.095 evals=76417
+{
+  "carrier": {
+    "minClearanceAU": [
+      0.9819149739111727,
+      0.007214542274418223,
+      0.0047041482977821635,
+      0.0157853728226972,
+      3.0010166118827457
+    ],
+    "intervals": 55041,
+    "numericalAllowanceMeters": 1000
+  },
+  "gateways": [
+    {
+      "minClearanceAU": [
+        0.9946901967138577,
+        0.0005910725682771931,
+        0.0018967790939104895,
+        0.5231435456338281,
+        4.203353031409864
+      ],
+      "intervals": 78892,
+      "numericalAllowanceMeters": 1000
+    },
+    {
+      "minClearanceAU": [
+        1.5187271350963896,
+        0.5235237692488479,
+        0.5212561562060384,
+        0.0002748992380476895,
+        3.679984896199922
+      ],
+      "intervals": 78345,
+      "numericalAllowanceMeters": 1000
+    }
+  ],
+  "origins": [
+    {
+      "t": 0.0,
+      "index": 0,
+      "acceleration": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "t": 0.0,
+      "index": 1,
+      "acceleration": [
+        -39.4769264211767,
+        -0.0,
+        -0.0
+      ]
+    },
+    {
+      "t": 0.0,
+      "index": 2,
+      "acceleration": [
+        -53.38076191059116,
+        -11.66385460682813,
+        -1.050205677244467
+      ]
+    },
+    {
+      "t": 0.0,
+      "index": 3,
+      "acceleration": [
+        -9.966461002453341,
+        -13.770071527377748,
+        -0.44477078628501093
+      ]
+    },
+    {
+      "t": 0.0,
+      "index": 4,
+      "acceleration": [
+        1.3732682940589938,
+        -0.4881121775289804,
+        -0.011076814861416177
+      ]
+    },
+    {
+      "t": 0.42,
+      "index": 0,
+      "acceleration": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "t": 0.42,
+      "index": 1,
+      "acceleration": [
+        34.592946430359476,
+        -19.019878467784164,
+        -0.0
+      ]
+    },
+    {
+      "t": 0.42,
+      "index": 2,
+      "acceleration": [
+        36.43902292382218,
+        -1.0080233800202727,
+        1.6217754000294853
+      ]
+    },
+    {
+      "t": 0.42,
+      "index": 3,
+      "acceleration": [
+        11.920158400921641,
+        -12.120214617946187,
+        -0.3914807105285654
+      ]
+    },
+    {
+      "t": 0.42,
+      "index": 4,
+      "acceleration": [
+        1.4471131429031203,
+        -0.1734648581170203,
+        -0.003936468309500388
+      ]
+    },
+    {
+      "t": 2.9,
+      "index": 0,
+      "acceleration": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "t": 2.9,
+      "index": 1,
+      "acceleration": [
+        -31.929517279561328,
+        23.21494445302839,
+        0.0
+      ]
+    },
+    {
+      "t": 2.9,
+      "index": 2,
+      "acceleration": [
+        -48.50937219300589,
+        30.639671586742537,
+        0.6685174713385887
+      ]
+    },
+    {
+      "t": 2.9,
+      "index": 3,
+      "acceleration": [
+        6.040101156873999,
+        15.887003924058082,
+        0.5131473146648184
+      ]
+    },
+    {
+      "t": 2.9,
+      "index": 4,
+      "acceleration": [
+        0.5375260498585172,
+        1.3543866088572247,
+        0.030735331769513253
+      ]
+    },
+    {
+      "t": 6.2,
+      "index": 0,
+      "acceleration": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "t": 6.2,
+      "index": 1,
+      "acceleration": [
+        -12.22666057458836,
+        -37.535802786896745,
+        -0.0
+      ]
+    },
+    {
+      "t": 6.2,
+      "index": 2,
+      "acceleration": [
+        -26.323492981992388,
+        -48.967553325337356,
+        -1.0293071819743391
+      ]
+    },
+    {
+      "t": 6.2,
+      "index": 3,
+      "acceleration": [
+        16.061414528345342,
+        -5.580457859922601,
+        -0.18024776597952785
+      ]
+    },
+    {
+      "t": 6.2,
+      "index": 4,
+      "acceleration": [
+        -1.4277917390035204,
+        0.2925895835735988,
+        0.006639786501600212
+      ]
+    }
+  ],
+  "carrierDeltaVkmS": 23.786112866316582,
+  "taxiDeltaVkmS": [
+    30.29837610030909,
+    26.114465595290103,
+    35.54018060162962
+  ],
+  "interpolation": {
+    "Peregrine-1": {
+      "samples": 1461,
+      "maxPositionMeters": 1.428125326395797,
+      "pixelsAtMaxZoom": 9.546428165810764e-05
+    },
+    "Peregrine-2": {
+      "samples": 1431,
+      "maxPositionMeters": 0.6349595231909421,
+      "pixelsAtMaxZoom": 4.244442251883884e-05
+    },
+    "Peregrine-3": {
+      "samples": 1575,
+      "maxPositionMeters": 1.1795065878614759,
+      "pixelsAtMaxZoom": 7.884514547849616e-05
+    },
+    "Wayfarer": {
+      "samples": 14720,
+      "maxPositionMeters": 1.9492336972241187,
+      "pixelsAtMaxZoom": 0.00013029822470756055
+    },
+    "Earth gateway": {
+      "samples": 33296,
+      "maxPositionMeters": 378.77262880118565,
+      "pixelsAtMaxZoom": 0.025319386367521717
+    },
+    "Mars gateway": {
+      "samples": 32750,
+      "maxPositionMeters": 192.77987797685265,
+      "pixelsAtMaxZoom": 0.012886538897565514
+    }
+  },
+  "elapsedSeconds": 184.6086252280511
+}
+artifact 13.31MB

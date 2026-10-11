@@ -1,3 +1,5 @@
+import {sampleSolar,solarStateAt,type SolarPlayback} from '../solar/query';
+import {solarStockAt,type SolarScene} from '../solar/view';
 import {sampleStagedService,stagedStateAt,stagedServicePresent,stagedServicePresenceLabel,type StagedPlayback,type StagedVessel} from '../staged-service/query';
 import {sampleLibration,type LibrationPlayback} from '../libration/query';
 import {sampleExpedition,type ExpeditionPlayback} from '../expedition/query';
@@ -23,6 +25,7 @@ export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
 export interface ViewSample extends Sample {frameOrigin?:State;opacity?:number;activity?:Activity;mass?:number;aero?:AeroTelemetry;axis?:Vector3;entryPhase?:'coast'|'entry'|'braking'|'recovered'}
 export interface VesselView {
+ solar?:SolarPlayback;
  stagedService?:StagedPlayback;
  attachment?:{before?:string;after?:string};
  libration?:LibrationPlayback;
@@ -44,6 +47,8 @@ export interface VesselView {
 export interface VesselRun extends Vessel,VesselView {}
 export interface MaintainedView extends VesselView {baseline:{t:number;y:State}[]}
 export interface SceneView {
+ solar?:SolarScene;
+ playback?:{rateScale:number;trailSpan:number;forecastSpan:number;maxZoom:number};
  assemblies?:{separations:{t:number;parentId:string;children:string[];state:State;beforeMass:number;afterMass:number;momentumBefore:number[];momentumAfter:number[]}[];dock:{t:number;carrierId:string;partId:string;positionError:number;deltaV:number;fuelUsed:number}};
  frameExtents?:ModelSet['frameExtents'];
  atmosphere?:Atmosphere;entry?:{recoveryEpoch:number;relativeSpeed:number;waterEnergy:number;impulse:Vec3;work:{trials:number;evaluations:number;roots:number};maxima:{pressure:number;acceleration:number;heat:number;force:number}};
@@ -104,6 +109,7 @@ function eventOrder(e: ViewerEvent): number {
   return (e.kind === 'undock' || e.kind==='launch') ? 0 : (e.kind === 'dock' || e.kind==='land') ? 1 : 2;
 }
 export function stockAt(run: SceneView, t: number): Stock[] {
+  if(run.solar)return solarStockAt(run.solar,t);
   const ports=portsOf(run);
   if(run.traffic) {
     const anchor=[...run.traffic.resources].reverse().find(a=>a.t<=t);
@@ -197,10 +203,12 @@ export function isPresent(v:VesselView,t:number):boolean {
  const l=v.lifetime;return !l||t>=l.start&&(l.retired?t<l.end:t<=l.end);
 }
 export function presenceLabel(v:VesselView,t:number):string {
+ if(v.solar)return t<v.solar.start?'Awaiting Earth departure':'Delivered to Mars';
  if(v.stagedService)return stagedServicePresenceLabel(v as StagedVessel,t);
  return t<(v.lifetime?.start??-Infinity)?'Carried by '+(v.attachment?.before??'launch stack'):v.attachment?.after?'Aboard '+v.attachment.after:'Separated';
 }
 export function sampleVessel(v: VesselView, t: number): ViewSample {
+ if(v.solar)return sampleSolar(v.solar,Math.max(v.solar.start,Math.min(v.solar.end,t)));
  if(v.stagedService)return sampleStagedService(v as StagedVessel,t);
  if(v.libration)return sampleLibration(v,t);
  if(v.expedition)return sampleExpedition(v,t);
@@ -257,6 +265,7 @@ function bracket(v: VesselView, t: number): [ViewSample, ViewSample] {
   return [a, b];
 }
 export function stateAt(v: VesselView, t: number): State {
+ if(v.solar)return solarStateAt(v.solar.rows,t,v.solar.captures);
  if(v.stagedService)return stagedStateAt(v as StagedVessel,t);
  if(v.libration)return sampleLibration(v,t).y;
  if(v.expedition)return sampleExpedition(v,t).y;
