@@ -39,10 +39,10 @@ export class LunarViewStore {
   const initial=[...this.#anchors].reverse().find(a=>a.t<=this.oldest)?.ships[0]??this.current.ships[0];
   // Whole admitted trips carry immutable dense strips. Sparse gaps remain
   // attached to the exact rotating pad; only drawing uses interpolation.
-  const rows=this.#streams.samples;
+  const rows=this.#streams.samples.filter(row=>row.t>=this.oldest&&row.t<=end);
   const samples=sorted([...(rows.length&&rows[0].t<=initial.t?[]:[initial]),...rows,...(this.current.t<=cursor?[this.current.ships[0]]:[]),...(this.#held&&this.#held.t<=cursor?[this.#held.ships[0]]:[])]);
   const last=samples.at(-1)!;if(last.t<end)samples.push({...last,t:end,y:portState(pad,end),thrust:undefined,activity:{kind:'waiting'}});
-  const vessel:VesselView={...source.vessels[0],id:s.ship.id,ship:s.ship,ports:s.logistics!.ports,cargoCapacity:.05,arcs:known.flatMap(m=>m.bundle.program.thrustArcs!),continuousFuel:true,portSamples:ports,samples,boundaries:known.flatMap(m=>m.boundaries),ledger:[...known.flatMap(m=>m.ledger.map(e=>({...e,id:m.id+':'+e.id}))),...this.events.filter(e=>e.t<=cursor)]};
+  const vessel:VesselView={...source.vessels[0],id:s.ship.id,ship:s.ship,ports:s.logistics!.ports,cargoCapacity:.05,arcs:known.flatMap(m=>m.bundle.program.thrustArcs!),continuousFuel:true,portSamples:ports,samples,boundaries:known.flatMap(m=>m.boundaries).filter(e=>e.t>=this.oldest&&e.t<=end),ledger:[...known.flatMap(m=>m.ledger.map(e=>({...e,id:m.id+':'+e.id}))),...this.events.filter(e=>e.t<=cursor)].filter(e=>e.t>=this.oldest&&e.t<=end)};
   // Pin the disposable held pose without feeding it to any physical provider.
   const at=sampleVessel(vessel,cursor);vessel.samples=sorted([...samples,at]);
   return {...source,id:d.id,name:d.name,vessels:[vessel],portSamples:ports,world:{bodies:s.bodies,ports:s.logistics!.ports,units:s.units},window:{start:this.oldest,end},traffic:{frontier:this.frontier,oldest:this.oldest,resources:this.resources,depots:d.stations,stats:this.stats,halt:this.halt}};

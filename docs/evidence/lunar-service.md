@@ -75,7 +75,7 @@ case. They cover unsupported domain inputs, depot allocation, canonical lease
 identity, large versus small time advances, work budget 1 versus 128, cumulative
 deliveries, preserved ground fuel, held pose/stocks, later steering IDs and conservation.
 
-The production browser test passed 60 seconds near 0.02× with no page errors or
+The initial production browser test passed 60 seconds near 0.02× with no page errors or
 simulation stops. Its minimum recorded lead was 0.0693 units (about 3.5 seconds at
 that rate); the ship completed repeated delivery/return cycles while planning ran.
 Pause preserves the exact pose; rewind and inertial/rotating/depot/ship/body frame
@@ -90,3 +90,6 @@ non-equatorial landing, atmospheric staging and ocean recoveries.
 [local view](lunar-service-local.png) record this pass.
 [Astra review](../design/lunar-service/astra-review.md) records architecture findings
 and their disposition. Owner viewing remains the aesthetic acceptance gate.
+
+[Rolling-history follow-up](lunar-history.md) records the later timeline freeze,
+retained-window clipping, fade correction and extended browser regression.

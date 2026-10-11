@@ -1,3 +1,4 @@
+import {trailOpacity} from './model-set/trails';
 import northernAtmosphere from '../fixtures/model-sets/aster-northern-launch.json';
 import {bodySpin,drawPlanetGrid} from './view/planet-grid';
 import latitudeShuttle from '../fixtures/model-sets/orison-latitude-shuttle.json';
@@ -218,7 +219,7 @@ function buildTimeline() {
   const template=document.createElement('template');
   template.innerHTML = [...Object.values(run!.maintained??{}),...run!.vessels].map(v => {
     const maintenance=!!run!.maintained?.[v.id];
-    const times = [...new Set([start(), end(), ...v.ledger.map(e => e.t)])].sort((a, b) => a - b);
+    const times = [...new Set([start(), end(), ...v.ledger.map(e => e.t).filter(epoch=>epoch>start()&&epoch<end())])].sort((a, b) => a - b);
     const blocks = times.slice(0, -1).map((a, i) => {
       const b = times[i + 1];if(!isPresent(v,(a+b)/2))return '';const state = sampleVessel(v, (a + b) / 2), l = state.logistics, powered=(state.thrust?.force??0)>0;
       const fill = state.entryPhase?(state.entryPhase==='recovered'?'#35434d':powered?'#e9c485':state.entryPhase==='entry'?'#80c6ed':v.color):maintenance?(powered?'#85c9c0':'#35434d'):l?.service ? '#e9c485' : l?.dockedPortId ? '#35434d' : v.color;
@@ -505,7 +506,7 @@ function draw() {
       for (const sample of v.samples) {
         if (sample.t < trailStart || sample.t > t || sample.activity?.kind==='fault') continue;
         const p = project3(sample.y, sample.t);
-        const alpha=Math.round(32*(isSelected ? 0.7 : 0.4)*Math.exp(-(t-sample.t)/4));
+        const alpha=Math.round(32*trailOpacity(sample.t,t,start(),isSelected,run.id==='lunar-loop'?9:12));
         if(alpha!==shade && chunk.length){worldPath(chunk,v.color,isSelected?1.7:1.1,shade/32);chunk=prev?[prev]:[];}
         chunk.push(p);shade=alpha;
         prev = p;

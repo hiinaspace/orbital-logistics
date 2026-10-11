@@ -1,8 +1,8 @@
 {
   "observations": [
     {
-      "t": 0.029082267810790086,
-      "frontier": 0.12875167864807915,
+      "t": 0.029584839975461387,
+      "frontier": 0.12925225931177028,
       "stats": {
         "voyages": 1,
         "delivered": 0.05,
@@ -17,8 +17,8 @@
       "error": ""
     },
     {
-      "t": 0.04932985827634463,
-      "frontier": 0.1489972776126535,
+      "t": 0.05049360876643781,
+      "frontier": 0.15016102810274667,
       "stats": {
         "voyages": 1,
         "delivered": 0.05,
@@ -33,8 +33,8 @@
       "error": ""
     },
     {
-      "t": 0.07024061856830117,
-      "frontier": 0.16990803790461007,
+      "t": 0.07107178839470321,
+      "frontier": 0.1707392077310121,
       "stats": {
         "voyages": 1,
         "delivered": 0.05,
@@ -49,8 +49,8 @@
       "error": ""
     },
     {
-      "t": 0.09015363686918439,
-      "frontier": 0.18948847554180215,
+      "t": 0.09098480669558644,
+      "frontier": 0.1906542175328755,
       "stats": {
         "voyages": 1,
         "delivered": 0.05,
@@ -65,8 +65,8 @@
       "error": ""
     },
     {
-      "t": 0.10973606600735666,
-      "frontier": 0.2090728961809546,
+      "t": 0.11123239716114097,
+      "frontier": 0.21056723583375875,
       "stats": {
         "voyages": 1,
         "delivered": 0.05,
@@ -81,8 +81,8 @@
       "error": ""
     },
     {
-      "t": 0.12931849514552893,
-      "frontier": 0.22898790598281799,
+      "t": 0.13114541546202418,
+      "frontier": 0.23048224563562214,
       "stats": {
         "voyages": 1,
         "delivered": 0.05,
@@ -97,8 +97,8 @@
       "error": ""
     },
     {
-      "t": 0.1502292554374856,
-      "frontier": 0.24989667477379449,
+      "t": 0.15006467477379457,
+      "frontier": 0.24973408561108362,
       "stats": {
         "voyages": 1,
         "delivered": 0.05,
@@ -113,8 +113,8 @@
       "error": ""
     },
     {
-      "t": 0.17147060489215327,
-      "frontier": 0.2711380242284621,
+      "t": 0.1713060242284622,
+      "frontier": 0.2709754350657513,
       "stats": {
         "voyages": 1,
         "delivered": 0.05,
@@ -129,8 +129,8 @@
       "error": ""
     },
     {
-      "t": 0.19138362319303662,
-      "frontier": 0.29072045336663455,
+      "t": 0.19155361469401677,
+      "frontier": 0.2908884533666345,
       "stats": {
         "voyages": 1,
         "delivered": 0.05,
@@ -145,7 +145,7 @@
       "error": ""
     },
     {
-      "t": 0.21063546316849802,
+      "t": 0.21246238348499324,
       "frontier": 0.30185546875,
       "stats": {
         "voyages": 1,
@@ -161,7 +161,7 @@
       "error": ""
     },
     {
-      "t": 0.23253998244956772,
+      "t": 0.23138164279676365,
       "frontier": 0.30185546875,
       "stats": {
         "voyages": 1,
@@ -177,8 +177,8 @@
       "error": ""
     },
     {
-      "t": 0.25145924176133805,
-      "frontier": 0.35079408043395577,
+      "t": 0.2526249837524115,
+      "frontier": 0.35196181392600945,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -193,8 +193,8 @@
       "error": ""
     },
     {
-      "t": 0.27137425156320144,
-      "frontier": 0.370707098734839,
+      "t": 0.2705484925740885,
+      "frontier": 0.37021392040941714,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -209,8 +209,8 @@
       "error": ""
     },
     {
-      "t": 0.29095468920039336,
-      "frontier": 0.3902915193739913,
+      "t": 0.2914572613650647,
+      "frontier": 0.39112468070137363,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -225,8 +225,8 @@
       "error": ""
     },
     {
-      "t": 0.3131917891451541,
-      "frontier": 0.41252861931875207,
+      "t": 0.3126986108197321,
+      "frontier": 0.4120334494923499,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -241,8 +241,8 @@
       "error": ""
     },
     {
-      "t": 0.33178045929421324,
-      "frontier": 0.431115297966831,
+      "t": 0.33261162912061554,
+      "frontier": 0.43194845929421355,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -257,8 +257,8 @@
       "error": ""
     },
     {
-      "t": 0.35401755923897366,
-      "frontier": 0.45368497857528256,
+      "t": 0.35219405825878786,
+      "frontier": 0.45153088843238587,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -273,8 +273,8 @@
       "error": ""
     },
     {
-      "t": 0.37426315820354794,
-      "frontier": 0.47359799687616577,
+      "t": 0.3721110595616312,
+      "frontier": 0.471445898234249,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -289,8 +289,8 @@
       "error": ""
     },
     {
-      "t": 0.3945087571681226,
-      "frontier": 0.49384558734172046,
+      "t": 0.39434815950639185,
+      "frontier": 0.4936829981790096,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -305,8 +305,8 @@
       "error": ""
     },
     {
-      "t": 0.41575010662278994,
-      "frontier": 0.515086936796388,
+      "t": 0.4149243476336773,
+      "frontier": 0.5142611778072753,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -321,8 +321,8 @@
       "error": ""
     },
     {
-      "t": 0.43566511642465305,
-      "frontier": 0.5350019465982511,
+      "t": 0.43351102628175625,
+      "frontier": 0.5328478564553543,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -337,8 +337,8 @@
       "error": ""
     },
     {
-      "t": 0.45657388521562914,
-      "frontier": 0.555910715389227,
+      "t": 0.4554175370638057,
+      "frontier": 0.5547523757364234,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -353,8 +353,8 @@
       "error": ""
     },
     {
-      "t": 0.47615631435380135,
-      "frontier": 0.5754931445273993,
+      "t": 0.4759957166920711,
+      "frontier": 0.575332546865669,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -369,8 +369,8 @@
       "error": ""
     },
     {
-      "t": 0.4970670746457578,
-      "frontier": 0.5960713241556647,
+      "t": 0.4969044854830475,
+      "frontier": 0.5959087349929544,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -385,8 +385,8 @@
       "error": ""
     },
     {
-      "t": 0.5166495037839297,
-      "frontier": 0.6159843424565474,
+      "t": 0.5158237447948174,
+      "frontier": 0.6151605749684154,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -401,8 +401,8 @@
       "error": ""
     },
     {
-      "t": 0.5368970942494838,
-      "frontier": 0.6362319329221016,
+      "t": 0.5367325135857933,
+      "frontier": 0.6357367630957002,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -417,8 +417,8 @@
       "error": ""
     },
     {
-      "t": 0.558471024367842,
-      "frontier": 0.6578038715394796,
+      "t": 0.5573126847150386,
+      "frontier": 0.6566475233876563,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -433,8 +433,8 @@
       "error": ""
     },
     {
-      "t": 0.5787166233324159,
-      "frontier": 0.6783840426687249,
+      "t": 0.5778908643433036,
+      "frontier": 0.6772257030159214,
       "stats": {
         "voyages": 2,
         "delivered": 0.05,
@@ -449,8 +449,8 @@
       "error": ""
     },
     {
-      "t": 0.5996253921233919,
-      "frontier": 0.6989622222969899,
+      "t": 0.6004585534507748,
+      "frontier": 0.6994628029606816,
       "stats": {
         "voyages": 2,
         "delivered": 0.1,
@@ -465,8 +465,8 @@
       "error": ""
     },
     {
-      "t": 0.6178794901077795,
-      "frontier": 0.7172143287803973,
+      "t": 0.6187146429361429,
+      "frontier": 0.7180494816087607,
       "stats": {
         "voyages": 2,
         "delivered": 0.1,
@@ -481,8 +481,8 @@
       "error": ""
     },
     {
-      "t": 0.6397860008898295,
-      "frontier": 0.7391208395624472,
+      "t": 0.6399559923908107,
+      "frontier": 0.7392908310634284,
       "stats": {
         "voyages": 2,
         "delivered": 0.1,
@@ -497,8 +497,8 @@
       "error": ""
     },
     {
-      "t": 0.6606947696808064,
-      "frontier": 0.7600315998544043,
+      "t": 0.6602035828563657,
+      "frontier": 0.7595384215289834,
       "stats": {
         "voyages": 2,
         "delivered": 0.1,
@@ -513,8 +513,8 @@
       "error": ""
     },
     {
-      "t": 0.6812749408100524,
-      "frontier": 0.7806097794826701,
+      "t": 0.6817755214737442,
+      "frontier": 0.780779770983651,
       "stats": {
         "voyages": 2,
         "delivered": 0.1,
@@ -529,8 +529,8 @@
       "error": ""
     },
     {
-      "t": 0.6998616194581316,
-      "frontier": 0.7991964581307495,
+      "t": 0.7003622001218235,
+      "frontier": 0.7996990302954213,
       "stats": {
         "voyages": 2,
         "delivered": 0.1,
@@ -545,8 +545,8 @@
       "error": ""
     },
     {
-      "t": 0.7224313000665837,
-      "frontier": 0.8217661387392015,
+      "t": 0.7206097905873781,
+      "frontier": 0.8199446292599959,
       "stats": {
         "voyages": 2,
         "delivered": 0.1,
@@ -561,8 +561,8 @@
       "error": ""
     },
     {
-      "t": 0.7413485678773737,
-      "frontier": 0.8403508258863004,
+      "t": 0.7421817292047569,
+      "frontier": 0.8415185593783547,
       "stats": {
         "voyages": 2,
         "delivered": 0.1,
@@ -577,8 +577,8 @@
       "error": ""
     },
     {
-      "t": 0.761594166841948,
-      "frontier": 0.8605984163518549,
+      "t": 0.7637556593231158,
+      "frontier": 0.8630924894967138,
       "stats": {
         "voyages": 2,
         "delivered": 0.1,
@@ -593,8 +593,8 @@
       "error": ""
     },
     {
-      "t": 0.7825049271339045,
-      "frontier": 0.8821723464702135,
+      "t": 0.7843338389513818,
+      "frontier": 0.8836706691249796,
       "stats": {
         "voyages": 2,
         "delivered": 0.1,
@@ -609,8 +609,8 @@
       "error": ""
     },
     {
-      "t": 0.8024179454347878,
-      "frontier": 0.9014221949446947,
+      "t": 0.802920517599461,
+      "frontier": 0.9022553562720788,
       "stats": {
         "voyages": 2,
         "delivered": 0.1,
@@ -625,7 +625,7 @@
       "error": ""
     },
     {
-      "t": 0.8223329552366513,
+      "t": 0.8251576175442221,
       "frontier": 0.9164794921875,
       "stats": {
         "voyages": 2,
@@ -641,24 +641,8 @@
       "error": ""
     },
     {
-      "t": 0.8439048938540299,
-      "frontier": 0.9164794921875,
-      "stats": {
-        "voyages": 2,
-        "delivered": 0.1,
-        "planningFailures": 0,
-        "evaluations": 453,
-        "integrationStages": 333088,
-        "peakPhysicalBytes": 25015934,
-        "runnerNodes": 36919,
-        "physicalBytes": 16899028,
-        "viewBytes": 13939349
-      },
-      "error": ""
-    },
-    {
-      "t": 0.8654808154733687,
-      "frontier": 0.9648156541459865,
+      "t": 0.8444074660187033,
+      "frontier": 0.9321278709748743,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -673,8 +657,8 @@
       "error": ""
     },
     {
-      "t": 0.8860570036006542,
-      "frontier": 0.9853938337742522,
+      "t": 0.8649876371479489,
+      "frontier": 0.9643224758205667,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -689,8 +673,8 @@
       "error": ""
     },
     {
-      "t": 0.9053088435761157,
-      "frontier": 1.0046436822487335,
+      "t": 0.8852332361125235,
+      "frontier": 0.9842374856224303,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -705,8 +689,8 @@
       "error": ""
     },
     {
-      "t": 0.9272153543581656,
-      "frontier": 1.0262196038680724,
+      "t": 0.906805174729902,
+      "frontier": 1.0061439964044803,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -721,8 +705,8 @@
       "error": ""
     },
     {
-      "t": 0.9467957919953578,
-      "frontier": 1.0461326221689558,
+      "t": 0.9270527651954563,
+      "frontier": 1.0260570147053631,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -737,8 +721,8 @@
       "error": ""
     },
     {
-      "t": 0.9683697221137165,
-      "frontier": 1.0677065522873144,
+      "t": 0.9482941146501239,
+      "frontier": 1.0472983641600309,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -753,8 +737,8 @@
       "error": ""
     },
     {
-      "t": 0.9872889814254868,
-      "frontier": 1.0862932309353936,
+      "t": 0.9692028834411004,
+      "frontier": 1.0685397136146983,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -769,8 +753,8 @@
       "error": ""
     },
     {
-      "t": 1.0095260813702478,
-      "frontier": 1.1088629115438458,
+      "t": 0.9894504739066549,
+      "frontier": 1.0881241342538508,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -785,8 +769,8 @@
       "error": ""
     },
     {
-      "t": 1.0304368416622047,
-      "frontier": 1.1294410911721116,
+      "t": 1.010361234198612,
+      "frontier": 1.1096960728712297,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -801,8 +785,8 @@
       "error": ""
     },
     {
-      "t": 1.0506824406267792,
-      "frontier": 1.149686690136686,
+      "t": 1.030606833163186,
+      "frontier": 1.1299436633367839,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -817,8 +801,24 @@
       "error": ""
     },
     {
-      "t": 1.071260620255044,
-      "frontier": 1.170595458927662,
+      "t": 1.0508524321277606,
+      "frontier": 1.1501892623013588,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 20523633
+      },
+      "error": ""
+    },
+    {
+      "t": 1.0710980310923353,
+      "frontier": 1.1704348612659334,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -833,8 +833,8 @@
       "error": ""
     },
     {
-      "t": 1.0925019697097114,
-      "frontier": 1.1915062192196182,
+      "t": 1.0923413720479838,
+      "frontier": 1.1913456215578906,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -849,8 +849,8 @@
       "error": ""
     },
     {
-      "t": 1.1127475686742856,
-      "frontier": 1.2117538096851728,
+      "t": 1.1145784719927447,
+      "frontier": 1.2139133106653626,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -865,8 +865,8 @@
       "error": ""
     },
     {
-      "t": 1.1336583289662425,
-      "frontier": 1.2329931676388604,
+      "t": 1.1334957398035352,
+      "frontier": 1.2328325699771332,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -881,8 +881,8 @@
       "error": ""
     },
     {
-      "t": 1.1532407581044148,
-      "frontier": 1.2525755967770327,
+      "t": 1.153410749605399,
+      "frontier": 1.252084409952595,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -897,8 +897,8 @@
       "error": ""
     },
     {
-      "t": 1.1728211957416073,
-      "frontier": 1.2721580259152054,
+      "t": 1.1753172603874493,
+      "frontier": 1.2746520990600672,
       "stats": {
         "voyages": 3,
         "delivered": 0.1,
@@ -913,24 +913,8 @@
       "error": ""
     },
     {
-      "t": 1.1947277065236572,
-      "frontier": 1.2940645366972554,
-      "stats": {
-        "voyages": 3,
-        "delivered": 0.1,
-        "planningFailures": 0,
-        "evaluations": 545,
-        "integrationStages": 387392,
-        "peakPhysicalBytes": 26929697,
-        "runnerNodes": 38234,
-        "physicalBytes": 25993931,
-        "viewBytes": 14479611
-      },
-      "error": ""
-    },
-    {
-      "t": 1.2159690559783243,
-      "frontier": 1.3149752969892115,
+      "t": 1.195230278688333,
+      "frontier": 1.29423452819824,
       "stats": {
         "voyages": 3,
         "delivered": 0.15000000000000002,
@@ -941,6 +925,726 @@
         "runnerNodes": 38234,
         "physicalBytes": 25993931,
         "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.2164716281430012,
+      "frontier": 1.3154778691538884,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.236719218608556,
+      "frontier": 1.336386637944865,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.2566342284104197,
+      "frontier": 1.3559690670830375,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.2782061670277984,
+      "frontier": 1.3775429972013964,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.298451765992373,
+      "frontier": 1.3977885961659713,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.3186993564579288,
+      "frontier": 1.4177036059678356,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.3392775360861948,
+      "frontier": 1.438614366259793,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.359855715714461,
+      "frontier": 1.458859965224368,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.3801013146790357,
+      "frontier": 1.4794381448526337,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.4000143329799202,
+      "frontier": 1.4993531546544985,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.4212576739355682,
+      "frontier": 1.5205925126081863,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.4411706922364518,
+      "frontier": 1.5221923828125,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 597,
+        "integrationStages": 418112,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 37211,
+        "physicalBytes": 17295834,
+        "viewBytes": 14781049
+      },
+      "error": ""
+    },
+    {
+      "t": 1.4607531213746245,
+      "frontier": 1.5600899515482225,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 43150,
+        "physicalBytes": 27783796,
+        "viewBytes": 22388566
+      },
+      "error": ""
+    },
+    {
+      "t": 1.4816638816665824,
+      "frontier": 1.5810007118401803,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 43150,
+        "physicalBytes": 27783796,
+        "viewBytes": 22388566
+      },
+      "error": ""
+    },
+    {
+      "t": 1.50257265045756,
+      "frontier": 1.601909480631158,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 43150,
+        "physicalBytes": 27783796,
+        "viewBytes": 22388566
+      },
+      "error": ""
+    },
+    {
+      "t": 1.5211613206066197,
+      "frontier": 1.6204981507802179,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 43150,
+        "physicalBytes": 27783796,
+        "viewBytes": 22388566
+      },
+      "error": ""
+    },
+    {
+      "t": 1.5420700893975967,
+      "frontier": 1.6410743389075035,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 43150,
+        "physicalBytes": 27783796,
+        "viewBytes": 22388566
+      },
+      "error": ""
+    },
+    {
+      "t": 1.5629808496895534,
+      "frontier": 1.662315688362171,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 43150,
+        "physicalBytes": 27783796,
+        "viewBytes": 22388566
+      },
+      "error": ""
+    },
+    {
+      "t": 1.5835570378168393,
+      "frontier": 1.6828958594914176,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 43150,
+        "physicalBytes": 27783796,
+        "viewBytes": 22388566
+      },
+      "error": ""
+    },
+    {
+      "t": 1.603804628282394,
+      "frontier": 1.7028068862913208,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 43150,
+        "physicalBytes": 27783796,
+        "viewBytes": 22388566
+      },
+      "error": ""
+    },
+    {
+      "t": 1.6247153885743508,
+      "frontier": 1.7237176465832778,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 43150,
+        "physicalBytes": 27783796,
+        "viewBytes": 22388566
+      },
+      "error": ""
+    },
+    {
+      "t": 1.6449609875389257,
+      "frontier": 1.7442978177125237,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 43150,
+        "physicalBytes": 27783796,
+        "viewBytes": 22388566
+      },
+      "error": ""
+    },
+    {
+      "t": 1.6652065865035008,
+      "frontier": 1.7642108360134077,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 22091605
+      },
+      "error": ""
+    },
+    {
+      "t": 1.684456434977983,
+      "frontier": 1.7837932651515809,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.7056977844326509,
+      "frontier": 1.8047020339425577,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.7269391338873197,
+      "frontier": 1.8262759640609176,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.7478498941792782,
+      "frontier": 1.846854143689185,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.7680974846448332,
+      "frontier": 1.8674323233174512,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.7863515826292218,
+      "frontier": 1.8856884128028197,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.8085886825739832,
+      "frontier": 1.90759293208389,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.8281711117121566,
+      "frontier": 1.9271753612220635,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.8490798805031332,
+      "frontier": 1.9484167106767312,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.8693254794677074,
+      "frontier": 1.9683317204785946,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.8875815689530766,
+      "frontier": 1.9865858184629834,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.9098186688978387,
+      "frontier": 2.0091554990714364,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.9307294291897956,
+      "frontier": 2.0294010980360113,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.9506424474906794,
+      "frontier": 2.0499792776642773,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.9722163776090382,
+      "frontier": 2.071553207782636,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 1.9908050477580983,
+      "frontier": 2.0901398864307157,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 2.0120444057117868,
+      "frontier": 2.1113812358853847,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 2.032955166003745,
+      "frontier": 2.1322919961773428,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 2.0515418446518248,
+      "frontier": 2.1508786748254227,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 691,
+        "integrationStages": 467936,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 39053,
+        "physicalBytes": 26850294,
+        "viewBytes": 15399102
+      },
+      "error": ""
+    },
+    {
+      "t": 2.0741115252602764,
+      "frontier": 2.1548828125,
+      "stats": {
+        "voyages": 4,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 785,
+        "integrationStages": 540752,
+        "peakPhysicalBytes": 27783796,
+        "runnerNodes": 20485,
+        "physicalBytes": 4711245,
+        "viewBytes": 15702273
+      },
+      "error": ""
+    },
+    {
+      "t": 2.0933633652357395,
+      "frontier": 2.1927001954093375,
+      "stats": {
+        "voyages": 5,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 785,
+        "integrationStages": 540752,
+        "peakPhysicalBytes": 28545301,
+        "runnerNodes": 43720,
+        "physicalBytes": 28545301,
+        "viewBytes": 23692331
+      },
+      "error": ""
+    },
+    {
+      "t": 2.112947785874893,
+      "frontier": 2.2122826245475107,
+      "stats": {
+        "voyages": 5,
+        "delivered": 0.2,
+        "planningFailures": 0,
+        "evaluations": 785,
+        "integrationStages": 540752,
+        "peakPhysicalBytes": 28545301,
+        "runnerNodes": 43720,
+        "physicalBytes": 28545301,
+        "viewBytes": 23692331
       },
       "error": ""
     }

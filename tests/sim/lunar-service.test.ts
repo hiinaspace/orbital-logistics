@@ -55,3 +55,14 @@ test('supply refusals retain the physical ground state and leave stocks untouche
  assert.equal(e.current().ships[0].logistics!.dockedPortId,'Northhaven');assert.equal(e.resources.length,1);
  const store=new LunarViewStore(d);store.ingest(e.delta());assert.equal(sampleVessel(store.view(1).vessels[0],1).propellant,6);
 });
+
+test('rolling lunar display clips expired dwell events while retaining current interpolation',()=>{
+ const e=new LunarEngine(fixture),store=new LunarViewStore(fixture);
+ for(let target=0;target<=2;target+=1/64){
+  advance(e,target);store.ingest(e.delta());const cursor=Math.max(store.oldest,target-.1),view=store.view(cursor),v=view.vessels[0];
+  assert.ok(v.samples[0].t>=view.window.start);assert.ok(v.ledger.every(event=>event.t>=view.window.start&&event.t<=view.window.end));
+  const times=[...new Set([view.window.start,view.window.end,...v.ledger.map(event=>event.t)])].sort((a,b)=>a-b);
+  for(let i=0;i<times.length-1;i++)assert.doesNotThrow(()=>sampleVessel(v,(times[i]+times[i+1])/2));
+  assert.ok(Math.hypot(...sampleVessel(v,cursor).y)>0);
+ }
+});
