@@ -1,3 +1,4 @@
+import {ExpeditionEngine,isExpedition,EXPEDITION_LEAD,type ExpeditionDefinition} from '../expedition/engine';
 import {LunarEngine} from '../lunar/engine';
 import {isLunar,LUNAR_LEAD,type LunarDefinition} from '../lunar/world';
 import {TrafficEngine} from './engine';
@@ -9,13 +10,14 @@ import {isMaintained,type MaintainedDefinition} from '../maintained/world';
 import {AdaptiveEngine} from '../adaptive/engine';
 import {isAdaptive,type AdaptiveDefinition} from '../adaptive/world';
 import {adaptivePlaybackLead} from './playback';
-let engine:TrafficEngine|MaintainedEngine|AdaptiveEngine|NetworkEngine|LunarEngine|undefined,generation=0;
-self.onmessage=async(event:MessageEvent<{generation:number;sequence:number;definition?:TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition;target?:number;after?:number}>)=>{
+let engine:TrafficEngine|MaintainedEngine|AdaptiveEngine|NetworkEngine|LunarEngine|ExpeditionEngine|undefined,generation=0;
+self.onmessage=async(event:MessageEvent<{generation:number;sequence:number;definition?:TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition;target?:number;after?:number}>)=>{
  const m=event.data;
  try {
-  if(m.definition){generation=m.generation;engine=isLunar(m.definition)?new LunarEngine(m.definition):isNetwork(m.definition)?new NetworkEngine(m.definition):isAdaptive(m.definition)?new AdaptiveEngine(m.definition):isMaintained(m.definition)?new MaintainedEngine(m.definition):new TrafficEngine(m.definition);}
+  if(m.definition){generation=m.generation;engine=isExpedition(m.definition)?new ExpeditionEngine(m.definition):isLunar(m.definition)?new LunarEngine(m.definition):isNetwork(m.definition)?new NetworkEngine(m.definition):isAdaptive(m.definition)?new AdaptiveEngine(m.definition):isMaintained(m.definition)?new MaintainedEngine(m.definition):new TrafficEngine(m.definition);}
   if(m.generation!==generation || !engine)return;
-  if(engine instanceof LunarEngine||engine instanceof MaintainedEngine||engine instanceof AdaptiveEngine||engine instanceof NetworkEngine) {
+  if(engine instanceof ExpeditionEngine){engine.advanceTo(m.target??EXPEDITION_LEAD);}
+  else if(engine instanceof LunarEngine||engine instanceof MaintainedEngine||engine instanceof AdaptiveEngine||engine instanceof NetworkEngine) {
    // Initial forecasts may take several bounded turns; no partial ready packet.
    while(!engine.initialized&&!engine.halt){engine.advanceTo(0,24);await new Promise(resolve=>setTimeout(resolve,0));}
    if(!engine.initialized)throw Error(engine.halt??'Initial epoch failed');
@@ -23,6 +25,6 @@ self.onmessage=async(event:MessageEvent<{generation:number;sequence:number;defin
    if(m.definition&&engine instanceof LunarEngine)while(engine.frontier<LUNAR_LEAD&&!engine.halt){engine.advanceTo(LUNAR_LEAD,24);await new Promise(resolve=>setTimeout(resolve,0));}
    if(m.target!==undefined)engine.advanceTo(m.target,24);
   }else if(m.target!==undefined)engine.advanceTo(m.target,128);
-  self.postMessage({generation,sequence:m.sequence,delta:engine instanceof LunarEngine?engine.delta():engine.delta(m.after)});
+  self.postMessage({generation,sequence:m.sequence,delta:engine instanceof ExpeditionEngine?engine.delta():engine instanceof LunarEngine?engine.delta():engine.delta(m.after)});
  }catch(error){self.postMessage({generation:m.generation,sequence:m.sequence,error:(error as Error).message});}
 };

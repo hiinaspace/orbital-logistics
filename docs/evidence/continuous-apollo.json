@@ -1,0 +1,24 @@
+{
+  "period": 103.38531648187275,
+  "preparationMs": 3631.508135,
+  "preparationAndRolloutMs": 11528.883747999998,
+  "maxAdvanceMs": 0.22410899999977119,
+  "maxViewMs": 323.25505599999997,
+  "peakRetainedBytes": 35004714,
+  "peakRetainedSamples": 103178,
+  "frontier": 2584,
+  "peakPacket": 7915302,
+  "peakRows": 59334,
+  "peakCycles": 4,
+  "maxBalance": 1.4210854715202004e-14,
+  "stats": {
+    "planningPending": 0,
+    "cacheCompilations": 1,
+    "cacheHits": 24,
+    "completedTrips": 25,
+    "refills": 25,
+    "physicsBytes": 30151944,
+    "physicalNodes": 92153,
+    "packetBytes": 2322
+  }
+}

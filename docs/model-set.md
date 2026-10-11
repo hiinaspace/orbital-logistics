@@ -424,4 +424,8 @@ and [comparison and rollout evidence](evidence/lunar-return.md).
 
 ## Finite planet–moon expedition
 
-The Aster–Selene expedition joins atmospheric ground departure, physical timing orbits, full-field interbody transfers, lunar surface service and atmospheric return in one prepared finite exhibit. It retains exact state/fuel seams and absolute-epoch entry; continuous scheduling remains deferred. See [design](design/apollo/README.md) and [evidence](evidence/apollo.md).
+The Aster–Selene expedition joins atmospheric ground departure, physical timing orbits, full-field interbody transfers, lunar surface service and atmospheric return in one prepared finite exhibit. It retains exact state/fuel seams and absolute-epoch entry; a separate authored continuous wrapper now supplies repeated service. See [design](design/apollo/README.md) and [evidence](evidence/apollo.md).
+
+## Continuous planet–moon expedition
+
+Aster–Selene · Continuous expedition repeats the accepted finite atmospheric mission with one canonical compilation, exact absolute-epoch rotational reuse, supported ground recovery and paid imported refill. It keeps a rolling history and the shared Live/Pause controls. See [design](design/continuous-apollo/README.md) and [evidence](evidence/continuous-apollo.md).

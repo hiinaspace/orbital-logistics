@@ -2,6 +2,7 @@
 
 import json
 import math
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -19,6 +20,38 @@ c = d["entry"]["aero"]
 g = d["entry"]["guidance"]
 rec = d["entry"]["recovery"]
 engine = ship["engine"]
+cycle = int(sys.argv[1]) if len(sys.argv) > 1 else 0
+loose = "--loose" in sys.argv
+relative_tolerance = 2e-12 if loose else 3e-14
+absolute_tolerance = 2e-13 if loose else 3e-15
+assert 0 <= cycle <= 10000
+period = 2 * math.pi / (rail["rate"] - d["ports"][0]["rail"]["rate"])
+shift = cycle * period
+angle = cycle * d["ports"][0]["rail"]["rate"] * period
+
+
+def rotate(vector):
+    co, si = math.cos(angle), math.sin(angle)
+    return [co * vector[0] - si * vector[1], si * vector[0] + co * vector[1], vector[2]]
+
+
+if cycle:
+    for key in ["launch", "ascentEnd", "landing", "liftoff", "entryStart"]:
+        d[key] += shift
+    for arc in d["arcs"]:
+        arc["start"] += shift
+        arc["end"] += shift
+        arc["direction"] = rotate(arc["direction"])
+        for key in arc["steering"]["keys"]:
+            key["direction"] = rotate(key["direction"])
+    for sample in report["samples"]:
+        sample["t"] += shift
+        sample["y"] = rotate(sample["y"][:3]) + rotate(sample["y"][3:])
+    recovery = report["recovery"]
+    recovery["t"] += shift
+    recovery["state"] = (
+        rotate(recovery["state"][:3]) + rotate(recovery["state"][3:6]) + recovery["state"][6:]
+    )
 
 
 def moon(t):
@@ -153,8 +186,8 @@ for end in cuts:
             (t, end),
             z,
             method="DOP853",
-            rtol=2e-12,
-            atol=2e-13,
+            rtol=relative_tolerance,
+            atol=absolute_tolerance,
             max_step=min(0.02, end - t),
             dense_output=True,
         )
@@ -197,8 +230,8 @@ sol = solve_ivp(
     (t, t + 8),
     z,
     method="DOP853",
-    rtol=2e-12,
-    atol=2e-13,
+    rtol=relative_tolerance,
+    atol=absolute_tolerance,
     max_step=0.002,
     events=contact,
 )
@@ -217,9 +250,23 @@ result = dict(
     recoveryStateError=recovery_error,
     remainingFuel=float(last[4]),
 )
-assert max(errors) < 1e-3, result
-assert abs(end - report["recovery"]["t"]) < 1e-3 and recovery_error < 1e-3, result
-assert minimum > 0 and minimum_air > 0, result
-assert result["recoveryRelativeSpeed"] < rec["maxSpeed"], result
-Path("docs/evidence/apollo-oracle.json").write_text(json.dumps(result, indent=2) + "\n")
+
+result["relativeTolerance"] = relative_tolerance
+result["absoluteTolerance"] = absolute_tolerance
+result["passed"] = bool(
+    max(errors) < 1e-3
+    and abs(end - report["recovery"]["t"]) < 1e-3
+    and recovery_error < 1e-3
+    and minimum > 0
+    and minimum_air > 0
+    and np.linalg.norm(aero(last, c["dragArea"], c["liftToDrag"])[2]) < rec["maxSpeed"]
+)
+suffix = "-loose" if loose else ""
+output = (
+    f"docs/evidence/apollo-oracle-cycle-{cycle}{suffix}.json"
+    if cycle or loose
+    else "docs/evidence/apollo-oracle.json"
+)
+Path(output).write_text(json.dumps(result, indent=2) + "\n")
 print(result)
+assert result["passed"], result

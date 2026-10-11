@@ -1,0 +1,17 @@
+{
+  "capture": {
+    "positionError": 9.135932760200587e-09,
+    "velocityCorrection": 3.671879705956805e-08,
+    "fuelCost": 1.86815910349535e-08
+  },
+  "recoveryRelativeSpeed": 0.043299912490130585,
+  "maxReplayError": 4.167384046721567e-05,
+  "clearance": 1.0000000000065512e-05,
+  "vacuumAtmosphereClearance": 0.15771300991968856,
+  "recoveryEpochError": 8.409776461348883e-05,
+  "recoveryStateError": 2.016921570674457e-05,
+  "remainingFuel": 2.115320962124745,
+  "relativeTolerance": 3e-14,
+  "absoluteTolerance": 3e-15,
+  "passed": true
+}

@@ -474,3 +474,7 @@ adapted to a tutorial-derived two-body goal. See
 ### Finite Aster–Selene expedition
 
 Implemented a single-vehicle planet–moon round trip with planetary atmosphere, timing orbits, paid lunar capture and return recovery. The prepared finite exhibit supports scrub, rewind and Replay. Continuous recurrence and staging follow the user visual gate. See docs/design/apollo/README.md and docs/evidence/apollo.md.
+
+### Continuous Aster–Selene expedition
+
+After the finite user visual gate, implemented a separate authored recurrence wrapper. One background compilation supplies later trips through validated world symmetry. Ground recovery/transport and funded refill are explicit; global ephemerides keep advancing. Bounded display history supports Pause/Play/Live. See docs/design/continuous-apollo/README.md and docs/evidence/continuous-apollo.md.

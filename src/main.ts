@@ -1,3 +1,6 @@
+import expeditionService from '../fixtures/model-sets/aster-selene-service.json';
+import {ExpeditionViewStore} from './expedition/view';
+import {isExpedition,EXPEDITION_LEAD,type ExpeditionDefinition,type ExpeditionDelta} from './expedition/engine';
 import apollo from '../fixtures/model-sets/aster-selene-expedition.json';
 import type {ApolloMission} from './model-set/apollo';
 import {trailOpacity} from './model-set/trails';
@@ -66,7 +69,7 @@ import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVesse
 import {transform,transformDirection} from './model-set/frames';
 
 const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo] as (ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
-const trafficSets=[trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition)[];
+const trafficSets=[expeditionService,trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
@@ -86,7 +89,7 @@ document.body.innerHTML = `
 
 const canvas = $<HTMLCanvasElement>('space'), ctx = canvas.getContext('2d')!;
 let run: SceneView | undefined, worker: Worker | undefined, revision = 0;
-let traffic:TrafficViewStore|MaintainedViewStore|AdaptiveViewStore|NetworkViewStore|LunarViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='',trafficDirty=false;
+let traffic:TrafficViewStore|MaintainedViewStore|AdaptiveViewStore|NetworkViewStore|LunarViewStore|ExpeditionViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='',trafficDirty=false;
 let events: SetEvent[] = [], selected = '', frame = 'inertial', t = 0, playing = false;
 let ready = false, width = 900, height = 600;
 const camera:Camera={yaw:0,pitch:Math.PI/2,center:[0,0,0],scale:100};
@@ -119,7 +122,7 @@ function requestTraffic(target:number){
  pending=true;requestedTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,target));
  worker.postMessage({generation:revision,sequence:++sequence,target:requestedTarget,after:traffic.frontier});
 }
-const playbackLead=()=>traffic instanceof LunarViewStore?LUNAR_LEAD:(traffic instanceof AdaptiveViewStore||traffic instanceof NetworkViewStore)?adaptivePlaybackLead:0;
+const playbackLead=()=>traffic instanceof ExpeditionViewStore?EXPEDITION_LEAD:traffic instanceof LunarViewStore?LUNAR_LEAD:(traffic instanceof AdaptiveViewStore||traffic instanceof NetworkViewStore)?adaptivePlaybackLead:0;
 const liveEdge=()=>traffic?bufferedEdge(traffic.frontier,traffic.oldest,playbackLead()):0;
 function goLive(){if(!traffic)return;traffic.release();if(!liveMode)t=Math.max(t,liveEdge());desiredTarget=t+playbackLead();liveMode=!!playbackLead()||!liveError&&!traffic.halt;playing=(!liveError&&!traffic.halt)||t<traffic.frontier;lastFrame=performance.now();refreshTraffic();updatePanels();}
 const vessel = () => run?.vessels.find(v => v.id === selected)??run?.maintained?.[selected];
@@ -130,7 +133,7 @@ function project3(y:State,time:number):ScreenPoint {
 function project(y:State,time:number):[number,number] {const p=project3(y,time);return [p[0],p[1]];}
 function selectedState():State|undefined {
  if(!run)return;
- const v=vessel();if(v){if(!isPresent(v,t))return;const sample=sampleVessel(v,t);if(sample.activity?.kind==='fault'||sample.activity?.kind==='unavailable')return;return sample.y;}
+ const v=vessel();if(v){if(!isPresent(v,t))return;const sample=sampleVessel(v,t);if(sample.activity?.kind==='fault'||sample.activity?.kind==='unavailable')return;return sample.frameOrigin??sample.y;}
  const port=portsOf(run).find(p=>p.id===selected);if(port)return displayPortState(port,run.portSamples,t);
  const body=run.world.bodies.find(b=>b.id===selected);if(body)return bodyState(body,t);
 }
@@ -192,7 +195,7 @@ function eventLabel(e: SetEvent): string {
   if(e.kind==='separation')return 'Stage separation';
   if(e.kind==='entry')return 'Atmospheric entry';
   if(e.kind==='splashdown')return 'Ocean recovery';
-  if(e.kind==='milestone')return e.id;
+  if(e.kind==='milestone')return e.label??e.id;
   if(e.kind==='handoff')return e.id.endsWith('ascent-exit')?'Orbit insertion':'Begin descent';
   if(e.kind==='land')return `Touchdown · ${port}`;
   if (e.kind === 'dock') return `Dock ${port}`;
@@ -213,6 +216,7 @@ function nextArrival(v: VesselView) { return events.find(e => e.vessel === v.id 
 function status(v: VesselView): string {
   if(!isPresent(v,t))return presenceLabel(v,t);
   const s = sampleVessel(v, t), l = s.logistics;
+  if(s.activity?.reason==='Ground recovery transport'||s.activity?.reason==='Ocean recovery')return s.activity.reason;
   if(s.entryPhase)return ({coast:'Approaching atmosphere',entry:'Atmospheric braking',braking:'Terminal braking',recovered:'Recovered · Ocean'} as const)[s.entryPhase];
   if(s.activity?.kind==='fault')return `Fault · last seen ${number(s.activity.knownEpoch!)}`;
   if(run?.maintained?.[v.id])return s.thrust?.force?'Stationkeeping':'Coasting';
@@ -286,7 +290,7 @@ function updatePanels() {
   $('live').textContent=liveMode?'Live':'Return to live';$('live').setAttribute('aria-pressed',String(liveMode));
   $('load-status').textContent = liveError || (traffic?.halt&&t>=traffic.frontier?traffic.halt:(traffic?liveMode?'':playing?'Playing history':'History held':t===end()?'End of scene':''));
   {const origin=[...run.vessels,...Object.values(run.maintained??{})].find(v=>v.id===frame);if(origin && (!isPresent(origin,t)||sampleVessel(origin,t).activity?.kind==='fault')){frame='inertial';$<HTMLSelectElement>('frame').value=frame;}
-   for(const option of $<HTMLSelectElement>('frame').options){const v=[...run.vessels,...Object.values(run.maintained??{})].find(v=>v.id===option.value);option.disabled=!!v && (!isPresent(v,t)||sampleVessel(v,t).activity?.kind==='fault');}}
+   for(const option of $<HTMLSelectElement>('frame').options){const v=[...run.vessels,...Object.values(run.maintained??{})].find(v=>v.id===option.value);option.disabled=!!v && (!isPresent(v,t)||sampleVessel(v,t).activity?.kind==='fault'||sampleVessel(v,t).opacity===0);}}
   $('traffic-count').textContent=String(run.vessels.filter(v=>isPresent(v,t)).length);
   html('fleet', run.vessels.map(v => `<button class="object-row ${selected === v.id ? 'selected' : ''}" data-object="${esc(v.id)}"><i style="background:${v.color}"></i><span><strong>${esc(v.name)}</strong><small>${esc(status(v))}</small></span></button>`).join(''));
   const stocks = stockAt(run, t);
@@ -376,7 +380,7 @@ function publishState() {
 }
 function loadSet(id: string) {
   if(currentSet)setSpeeds.set(currentSet,playbackRate);currentSet=id;
-  playbackRate=setSpeeds.get(id)??(['selene-ground','selene-ground-service'].includes(id)?.01:['aster-selene-expedition','selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
+  playbackRate=setSpeeds.get(id)??(['selene-ground','selene-ground-service'].includes(id)?.01:['aster-selene-service','aster-selene-expedition','selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
   const speed=$<HTMLInputElement>('speed');speed.max=String(Math.log2(maximumPlaybackRate(id)));playbackRate=Math.min(playbackRate,maximumPlaybackRate(id));speed.value=String(Math.log2(playbackRate));showSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
@@ -410,23 +414,23 @@ function loadSet(id: string) {
   worker.postMessage({revision, set});
 }
 
-function loadTraffic(definition:TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition){
- traffic=isLunar(definition)?new LunarViewStore(definition):isNetwork(definition)?new NetworkViewStore(definition):isAdaptive(definition)?new AdaptiveViewStore(definition):isMaintained(definition)?new MaintainedViewStore(definition):new TrafficViewStore(definition);
+function loadTraffic(definition:TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition){
+ traffic=isExpedition(definition)?new ExpeditionViewStore(definition):isLunar(definition)?new LunarViewStore(definition):isNetwork(definition)?new NetworkViewStore(definition):isAdaptive(definition)?new AdaptiveViewStore(definition):isMaintained(definition)?new MaintainedViewStore(definition):new TrafficViewStore(definition);
  worker=new TrafficWorker({name:'continuous-traffic'});
  const generation=revision;pending=true;
- worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta|MaintainedDelta|AdaptiveDelta|NetworkDelta|LunarDelta;error?:string}>)=>{
+ worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta|MaintainedDelta|AdaptiveDelta|NetworkDelta|LunarDelta|ExpeditionDelta;error?:string}>)=>{
   if(generation!==revision || e.data.generation!==revision || e.data.sequence!==sequence)return;
   pending=false;
   if(e.data.error){liveError=`Simulation stopped: ${e.data.error}`;playing=playing&&ready&&!!playbackLead()&&t<traffic!.frontier;if(!playbackLead())liveMode=false;$('load-status').textContent=liveError;updatePanels();return;}
-  const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof LunarViewStore)traffic.ingest(e.data.delta! as LunarDelta,!liveMode || !playing && !first);else if(traffic instanceof NetworkViewStore)traffic.ingest(e.data.delta! as NetworkDelta,!liveMode || !playing && !first);else if(traffic instanceof AdaptiveViewStore)traffic.ingest(e.data.delta! as AdaptiveDelta,!liveMode || !playing && !first);else if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
-  if(first){ready=true;selected=traffic instanceof LunarViewStore?'Tern':traffic instanceof NetworkViewStore?traffic.definition.lanes[0].vessels[0].id:traffic!.definition.vessels[0].id;frame=traffic instanceof LunarViewStore?'moon':'inertial';t=0;playing=true;}
+  const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof ExpeditionViewStore)traffic.ingest(e.data.delta! as ExpeditionDelta,!liveMode || !playing && !first);else if(traffic instanceof LunarViewStore)traffic.ingest(e.data.delta! as LunarDelta,!liveMode || !playing && !first);else if(traffic instanceof NetworkViewStore)traffic.ingest(e.data.delta! as NetworkDelta,!liveMode || !playing && !first);else if(traffic instanceof AdaptiveViewStore)traffic.ingest(e.data.delta! as AdaptiveDelta,!liveMode || !playing && !first);else if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
+  if(first){ready=true;selected=traffic instanceof ExpeditionViewStore?traffic.definition.source.scenario.ship.id:traffic instanceof LunarViewStore?'Tern':traffic instanceof NetworkViewStore?traffic.definition.lanes[0].vessels[0].id:traffic!.definition.vessels[0].id;frame=traffic instanceof LunarViewStore?'moon':'inertial';t=0;playing=true;}
   else if(liveMode && playing && !playbackLead())t=traffic!.frontier;
   // Solver yields often acknowledge an unchanged head. Batch drawing-history
   // assembly with the panel cadence instead of rebuilding it for every reply.
   if(first || previousFrontier!==traffic!.frontier || traffic instanceof LunarViewStore&&(e.data.delta as LunarDelta).missions.length){
    if(first || !playing || t>run!.window.end || performance.now()-lastPanel>100)refreshTraffic();else trafficDirty=true;
   }
-  if(first){$('launch-view').hidden=!run!.world.ports.some(p=>p.rail.kind==='surface');$('frame').innerHTML=`<option value="inertial">Inertial</option><option value="rotating">${esc(run!.rotating.name)}</option>`+[...run!.world.bodies.map(b=>[b.id,b.id]),...run!.stations.map(s=>[s.id,s.id]),...run!.vessels.map(v=>[v.id,v.name])].map(([id,name])=>`<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
+  if(first){document.querySelectorAll<HTMLElement>('.entry-layer').forEach(e=>e.hidden=!run!.atmosphere);$('launch-view').textContent='Surface view';$('launch-view').hidden=!run!.world.ports.some(p=>p.rail.kind==='surface');$('frame').innerHTML=`<option value="inertial">Inertial</option><option value="rotating">${esc(run!.rotating.name)}</option>`+[...run!.world.bodies.map(b=>[b.id,b.id]),...run!.stations.map(s=>[s.id,s.id]),...run!.vessels.map(v=>[v.id,v.name])].map(([id,name])=>`<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
    $<HTMLSelectElement>('frame').value=frame;
    $('description').textContent=run!.description;$('provenance').textContent=run!.provenance;$('traffic-count').textContent=String(run!.vessels.length);$<HTMLButtonElement>('play').disabled=false;fit();}
   if(first)updatePanels();
@@ -466,6 +470,17 @@ function draw() {
   ctx.globalAlpha = 1;
   if (!run || !ready) return;
   const reference=[...run.vessels,...Object.values(run.maintained??{})].find(v=>v.id===frame);if(reference && (!isPresent(reference,t)||sampleVessel(reference,t).activity?.kind==='fault')){frame='inertial';$<HTMLSelectElement>('frame').value=frame;}
+  if(reference?.expedition){
+   const pose=sampleVessel(reference,t);
+   if(pose.opacity===0){
+    // Vessel-centered axes retain their physical meaning. While ground
+    // transport is hidden, change to inertial coordinates and preserve the
+    // camera's world position instead of redefining the physical frame.
+    const origin=pose.frameOrigin??pose.y;
+    camera.center=camera.center.map((x,i)=>x+origin[i]) as Vec3;
+    frame='inertial';$<HTMLSelectElement>('frame').value=frame;
+   }
+  }
   syncTracking();
   hits = [];thrustWhiskers=[];aeroVectors=[];
   const scenario = run.world;
@@ -517,7 +532,7 @@ function draw() {
       let prev: ScreenPoint | undefined,chunk:ScreenPoint[]=[],shade=-1;
       for (const sample of v.samples) {
         if (sample.t < trailStart || sample.t > t || sample.activity?.kind==='fault') continue;
-        const p = project3(sample.y, sample.t);
+        const p:ScreenPoint = sample.opacity===0?[NaN,NaN,NaN]:project3(sample.y, sample.t);
         const alpha=Math.round(32*trailOpacity(sample.t,t,start(),isSelected,run.id==='lunar-loop'?9:12));
         if(alpha!==shade && chunk.length){worldPath(chunk,v.color,isSelected?1.7:1.1,shade/32);chunk=prev?[prev]:[];}
         chunk.push(p);shade=alpha;
@@ -528,9 +543,13 @@ function draw() {
     }
     if (layers.plan && isSelected && (!isPresent(v,t)||sampleVessel(v,t).activity?.kind!=='fault')) {
       const stop = nextArrival(v)?.t ?? Math.min(end(), t + (run.id === 'lunar-loop' ? 5.58 : 8));
-      worldPath([...(isPresent(v,t)?[project3(sampleVessel(v,t).y,t)]:[]), ...v.samples.filter(s => s.t > t && s.t <= stop).map(s => project3(s.y, s.t))], '#b5bdc7', 1, 0.28, [3, 5]);
+      worldPath([...(isPresent(v,t)?[project3(sampleVessel(v,t).y,t)]:[]), ...v.samples.filter(s => s.t > t && s.t <= stop).map(s => s.opacity===0?[NaN,NaN,NaN] as ScreenPoint:project3(s.y, s.t))], '#b5bdc7', 1, 0.28, [3, 5]);
     }
-    if(layers.plan && isSelected)for(const arc of [...v.arcs,...(v.entry?[{id:'terminal-braking',start:v.entry.brakingEpoch,end:v.entry.recovery.t,direction:[0,0,0] as Vec3,throttle:1}]:[])]) {
+    const entryArcs=v.expedition?Array.from({length:Math.floor(end()/v.expedition.period)-Math.floor(start()/v.expedition.period)+1},(_,i)=>{
+      const index=Math.floor(start()/v.expedition!.period)+i,offset=index*v.expedition!.period,e=v.expedition!.template.entry!;
+      return {id:index+':terminal-braking',start:e.brakingEpoch+offset,end:e.recovery.t+offset,direction:[0,0,0] as Vec3,throttle:1};
+    }):v.entry?[{id:'terminal-braking',start:v.entry.brakingEpoch,end:v.entry.recovery.t,direction:[0,0,0] as Vec3,throttle:1}]:[];
+    if(layers.plan && isSelected)for(const arc of [...v.arcs,...entryArcs]) {
       const stop=nextArrival(v)?.t??end();
       if(arc.throttle===0 || arc.end<=t || arc.start>=stop || arc.end>end() || isPresent(v,t)&&sampleVessel(v,t).activity?.kind==='fault')continue;
       const curve=[project3(sampleVessel(v,Math.max(start(),arc.start)).y,Math.max(start(),arc.start)),...v.samples.filter(s=>s.t>arc.start && s.t<arc.end).map(s=>project3(s.y,s.t)),project3(sampleVessel(v,arc.end).y,arc.end)];
@@ -585,7 +604,7 @@ function draw() {
   }
   for (const v of run.vessels) {
     if(!isPresent(v,t))continue;
-    const state=sampleVessel(v,t),epoch=state.activity?.kind==='fault'?state.activity.knownEpoch!:t,p=project(state.y,epoch);
+    const state=sampleVessel(v,t);if(state.opacity===0)continue;const epoch=state.activity?.kind==='fault'?state.activity.knownEpoch!:t,p=project(state.y,epoch);
     if(!p.every(Number.isFinite) || occluder(project3(state.y,epoch),spheres))continue;
     const transformed=transform(run,state.y,epoch,frame),velocity=cameraVector(camera,transformed.slice(3));
     icons.push({depth:project3(state.y,epoch)[2],draw:()=>{
@@ -608,15 +627,15 @@ function draw() {
       const direction=cameraVector(camera,transformDirection(run!,state.thrust.direction,t,frame)),dx=direction[0],dy=-direction[1],length=Math.hypot(dx,dy);
       if(length>1e-10)path([[p[0]-dx*5,p[1]-dy*5],[p[0]-dx*15,p[1]-dy*15]],'#ffe0a0',2,.9);
     }
-    ctx.save();ctx.translate(...p);
+    ctx.save();ctx.globalAlpha=state.opacity??1;ctx.translate(...p);
     if(v.glyph)drawRocket(ctx,v.glyph,v.color,cameraVector(camera,transformDirection(run!,rocketAxis(v,state,t),t,frame)));
     else {
       const angle=Math.hypot(velocity[0],velocity[1])>1e-10?Math.atan2(-velocity[1],velocity[0]):0;
       ctx.rotate(angle);ctx.beginPath();ctx.moveTo(6,0);ctx.lineTo(-4,-3.5);ctx.lineTo(-2,0);ctx.lineTo(-4,3.5);ctx.closePath();ctx.fillStyle=v.color;ctx.fill();
     }
     ctx.restore();
-    if (selected === v.id) { ctx.beginPath(); ctx.arc(...p, 11, 0, Math.PI * 2); ctx.strokeStyle = v.color; ctx.globalAlpha = 0.65; ctx.stroke(); ctx.globalAlpha = 1; }
-    if (!state.logistics?.dockedPortId || selected===v.id) label(v.id, v.name, ...p, v.color);
+    if (selected === v.id) { ctx.beginPath(); ctx.arc(...p, 11, 0, Math.PI * 2); ctx.strokeStyle = v.color; ctx.globalAlpha = 0.65*(state.opacity??1); ctx.stroke(); ctx.globalAlpha = 1; }
+    if ((state.opacity??1)>.5&&(!state.logistics?.dockedPortId || selected===v.id)) label(v.id, v.name, ...p, v.color);
     hits.push({id: v.id, name: v.name, x: p[0], y: p[1],depth:project3(state.y,epoch)[2]});
     }});
   }

@@ -1,0 +1,33 @@
+import {test,expect,type Page} from '@playwright/test';
+const state=async(p:Page)=>JSON.parse(await p.locator('#state-json').textContent()??'{}');
+test('continuous expedition crosses cycles, turns around and retains held history',async({page})=>{
+ test.setTimeout(120000);const errors:string[]=[];page.on('pageerror',e=>{errors.push(e.message);console.error(e.stack);});
+ const ready=async(id:string)=>expect.poll(async()=>{const s=await state(page);return s.ready&&s.set===id;},{timeout:30000}).toBe(true);
+ const pause=async()=>{if((await state(page)).playing)await page.getByRole('button',{name:'Pause',exact:true}).click();};
+ const seek=async(t:number)=>{t=Math.round(t*1000)/1000;await page.getByLabel('Simulation time').fill(String(t));await expect.poll(async()=>(await state(page)).t).toBe(t);};
+ await page.goto('/');await ready('orison-freight');await page.getByLabel('Model set').selectOption('aster-selene-service');await ready('aster-selene-service');await pause();
+ let s=await state(page);expect(s.playbackRate).toBe(.1);expect(s.traffic.stats.cacheCompilations).toBe(1);
+ await seek(.28);await page.getByRole('button',{name:'Play',exact:true}).click();
+ await expect.poll(async()=>(await state(page)).t).toBeGreaterThan(.35);await pause();
+ await page.getByLabel('Playback speed').fill('4');await page.getByRole('button',{name:'Play',exact:true}).click();
+ await expect.poll(async()=>(await state(page)).t,{timeout:30000}).toBeGreaterThan(115);await pause();
+ const period=103.38531648187275;
+ await seek(82.7);expect(['entry','braking']).toContain((await state(page)).ships[0].entryPhase);
+ await seek(period+.5);expect((await state(page)).ships[0].thrust.id).toBe('1:boost');
+ await page.getByRole('button',{name:'Surface view',exact:true}).click();
+ s=await state(page);const held=s.ships[0].y;await page.waitForTimeout(500);expect((await state(page)).ships[0].y).toEqual(held);
+ await page.getByLabel('Reference frame').selectOption('rotating');
+ await page.getByRole('button',{name:'Return to live',exact:true}).click();
+ await expect.poll(async()=>(await state(page)).t,{timeout:30000}).toBeGreaterThan(220);await pause();
+ await seek(period+39.2);expect((await state(page)).ships[0].logistics.dockedPortId).toBe('Tranquility');
+ await seek(period+82.7);await page.getByRole('button',{name:'Entry view',exact:true}).click();
+ expect(['entry','braking']).toContain((await state(page)).ships[0].entryPhase);
+ await page.screenshot({path:'docs/evidence/continuous-apollo-entry.png',fullPage:true});
+ const recovery=(await state(page)).recoveries.Odyssey.recoveryEpoch;
+ await seek(recovery+.5);await page.getByLabel('Reference frame').selectOption('Odyssey');
+ await seek(recovery+2.5);s=await state(page);expect(s.frame).toBe('inertial');expect(s.ships[0].opacity).toBe(0);expect(s.hits.some((h:any)=>h.id==='Odyssey')).toBe(false);expect(s.ships[0].activity.reason).toBe('Ground recovery transport');
+ await seek(2*period-1.5);s=await state(page);expect(s.ships[0].propellant).toBe(6);expect(s.traffic.stats.refills).toBeGreaterThanOrEqual(2);
+ await seek(2*period+.5);s=await state(page);expect(s.ships[0].thrust.id).toBe('2:boost');expect(s.traffic.stats.cacheCompilations).toBe(1);expect(s.traffic.error).toBe('');
+ for(const id of ['aster-selene-expedition','aster-selene-service']){await page.getByLabel('Model set').selectOption(id);await ready(id);}
+ expect(errors).toEqual([]);
+});

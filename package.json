@@ -40,7 +40,8 @@
     "evidence:atmospheric-mission": "tsx scripts/atmospheric-mission-evidence.ts && uv run --project spikes/numerics python spikes/numerics/atmospheric_mission_oracle.py",
     "evidence:moving-selene": "tsx scripts/moving-selene-evidence.ts && uv run --project spikes/numerics python spikes/numerics/moving_selene_oracle.py",
     "evidence:lunar-service": "tsx scripts/lunar-service-evidence.ts && tsx scripts/lunar-service-convergence.ts && uv run --project spikes/numerics python spikes/numerics/lunar_service_oracle.py",
-    "evidence:apollo": "tsx scripts/apollo-evidence.ts && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py"
+    "evidence:apollo": "tsx scripts/apollo-evidence.ts && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py",
+    "evidence:continuous-apollo": "tsx scripts/continuous-apollo-evidence.ts && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py 2 && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py 17"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

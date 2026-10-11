@@ -1,0 +1,708 @@
+{
+  "modelVersion": "apollo-continuous-v1",
+  "schemaVersion": 1,
+  "id": "aster-selene-service",
+  "name": "Aster\u2013Selene \u00b7 Continuous expedition",
+  "description": "Planet\u2013moon expeditions with lunar surface stays and ocean recovery.",
+  "provenance": "An authored timetable with supported ground turnaround and supplied propellant.",
+  "source": {
+    "modelVersion": "apollo-v1",
+    "schemaVersion": 1,
+    "id": "aster-selene-expedition",
+    "name": "Aster\u2013Selene \u00b7 Expedition",
+    "description": "Odyssey flies from Cairn to Tranquility and returns through the atmosphere.",
+    "provenance": "Fictional Apollo-style finite mission. Prepared smooth finite burns, both gravity sources throughout, physical parking orbits, paid lunar capture and ocean recovery.",
+    "extent": 6,
+    "scenario": {
+      "schemaVersion": 3,
+      "modelVersion": "rk4-canonical-v3",
+      "id": "expedition",
+      "units": {
+        "length": "Aster radius",
+        "time": "\u221a(R\u00b3/\u03bc)",
+        "mass": "mass unit"
+      },
+      "epoch": 0,
+      "duration": 87,
+      "policy": {
+        "step": 0.0009765625,
+        "maxNodes": 65536,
+        "maxSubdivision": 20
+      },
+      "bodies": [
+        {
+          "id": "Aster",
+          "mu": 1,
+          "radius": 1,
+          "rail": {
+            "kind": "fixed",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "id": "Selene",
+          "mu": 0.03,
+          "radius": 0.2,
+          "rail": {
+            "kind": "circular",
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "u": [
+              1,
+              0,
+              0
+            ],
+            "v": [
+              0,
+              1,
+              0
+            ],
+            "radius": 5,
+            "rate": 0.09077444574328174,
+            "phase": 1.8689123863023496
+          }
+        }
+      ],
+      "ship": {
+        "id": "Odyssey",
+        "state": [
+          1.00001,
+          0,
+          0,
+          0,
+          0.0300003,
+          0
+        ],
+        "dryMass": 1,
+        "cargoMass": 0,
+        "propellant": 6,
+        "tankCapacity": 6,
+        "exhaustVelocity": 8,
+        "engine": {
+          "maxThrust": 24,
+          "maxAcceleration": 3
+        }
+      }
+    },
+    "arcs": [
+      {
+        "id": "boost",
+        "start": 0.3,
+        "end": 0.78,
+        "direction": [
+          0.9999595002733742,
+          0.008999878500492074,
+          0
+        ],
+        "throttle": 1,
+        "steering": {
+          "kind": "spherical-smoothstep-v1",
+          "keys": [
+            {
+              "offset": 0.0,
+              "direction": [
+                0.9999595002733742,
+                0.008999878500492074,
+                0
+              ]
+            },
+            {
+              "offset": 0.096,
+              "direction": [
+                0.9928086358538663,
+                0.11971220728891936,
+                0
+              ]
+            },
+            {
+              "offset": 0.192,
+              "direction": [
+                0.9689124217106447,
+                0.24740395925452294,
+                0
+              ]
+            },
+            {
+              "offset": 0.28800000000000003,
+              "direction": [
+                0.9210609940028851,
+                0.3894183423086505,
+                0
+              ]
+            },
+            {
+              "offset": 0.384,
+              "direction": [
+                0.7960837985490559,
+                0.6051864057360395,
+                0
+              ]
+            },
+            {
+              "offset": 0.48000000000000004,
+              "direction": [
+                0.6599831458849822,
+                0.7512804051402927,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "insertion",
+        "start": 0.78,
+        "end": 1.1339707793325047,
+        "direction": [
+          -0.4956752290534188,
+          0.8685079546572045,
+          0
+        ],
+        "throttle": 1,
+        "steering": {
+          "kind": "spherical-smoothstep-v1",
+          "keys": [
+            {
+              "offset": 0.0,
+              "direction": [
+                -0.4956752290534188,
+                0.8685079546572045,
+                0
+              ]
+            },
+            {
+              "offset": 0.08849269483312616,
+              "direction": [
+                -0.7436367099000124,
+                0.6685839092358451,
+                0
+              ]
+            },
+            {
+              "offset": 0.17698538966625232,
+              "direction": [
+                -0.9538456075374493,
+                0.30029744751082105,
+                0
+              ]
+            },
+            {
+              "offset": 0.2654780844993785,
+              "direction": [
+                -0.9956394369003243,
+                -0.09328510968426429,
+                0
+              ]
+            },
+            {
+              "offset": 0.35397077933250465,
+              "direction": [
+                -0.9805424171633571,
+                -0.19630733084487972,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "translunar-injection",
+        "start": 13.39510830152844,
+        "end": 13.455479424484414,
+        "direction": [
+          -0.9671725606207464,
+          -0.25412051861726687,
+          0
+        ],
+        "throttle": 1,
+        "steering": {
+          "kind": "spherical-smoothstep-v1",
+          "keys": [
+            {
+              "offset": 0.0,
+              "direction": [
+                -0.9671725606207464,
+                -0.25412051861726687,
+                0
+              ]
+            },
+            {
+              "offset": 0.060371122955974243,
+              "direction": [
+                -0.9937049487381479,
+                0.11202890186605816,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "lunar-orbit-insertion",
+        "start": 29.81629322744725,
+        "end": 29.923779528746707,
+        "direction": [
+          -0.9204451915836284,
+          0.3908716532195417,
+          0
+        ],
+        "throttle": 1,
+        "steering": {
+          "kind": "spherical-smoothstep-v1",
+          "keys": [
+            {
+              "offset": 0.0,
+              "direction": [
+                -0.9204451915836284,
+                0.3908716532195417,
+                0
+              ]
+            },
+            {
+              "offset": 0.05374315064972812,
+              "direction": [
+                0.38882642541417506,
+                0.9213110283176008,
+                0
+              ]
+            },
+            {
+              "offset": 0.10748630129945624,
+              "direction": [
+                0.9578762862865029,
+                -0.2871811626307991,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "lunar-descent",
+        "start": 37.4351867532882,
+        "end": 38.664405090716635,
+        "direction": [
+          0.4927589847625387,
+          -0.8701658364563574,
+          0
+        ],
+        "throttle": 0.2,
+        "steering": {
+          "kind": "spherical-smoothstep-v1",
+          "keys": [
+            {
+              "offset": 0.0,
+              "direction": [
+                0.4927589847625387,
+                -0.8701658364563574,
+                0
+              ]
+            },
+            {
+              "offset": 0.24584366748568698,
+              "direction": [
+                0.9429842296310486,
+                -0.33283741176006315,
+                0
+              ]
+            },
+            {
+              "offset": 0.49168733497137396,
+              "direction": [
+                0.9799324772207598,
+                0.19932972705541188,
+                0
+              ]
+            },
+            {
+              "offset": 0.7375310024570609,
+              "direction": [
+                -0.03805983142138219,
+                0.9992754621385317,
+                0
+              ]
+            },
+            {
+              "offset": 0.9833746699427479,
+              "direction": [
+                -0.5867912650829749,
+                0.8097382362358356,
+                0
+              ]
+            },
+            {
+              "offset": 1.229218337428435,
+              "direction": [
+                0.6338195535317923,
+                0.773480945829152,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "lunar-ascent",
+        "start": 40.664405090716635,
+        "end": 41.5754510612778,
+        "direction": [
+          0.5280626958532607,
+          0.8492053869637113,
+          0
+        ],
+        "throttle": 0.2,
+        "steering": {
+          "kind": "spherical-smoothstep-v1",
+          "keys": [
+            {
+              "offset": 0.0,
+              "direction": [
+                0.5280626958532607,
+                0.8492053869637113,
+                0
+              ]
+            },
+            {
+              "offset": 0.18220919411223377,
+              "direction": [
+                0.6818074671977551,
+                0.7315316655301957,
+                0
+              ]
+            },
+            {
+              "offset": 0.36441838822446754,
+              "direction": [
+                0.4392620481254326,
+                0.898358977846078,
+                0
+              ]
+            },
+            {
+              "offset": 0.5466275823367013,
+              "direction": [
+                -0.39966110473559535,
+                0.9166629704321668,
+                0
+              ]
+            },
+            {
+              "offset": 0.7288367764489351,
+              "direction": [
+                -0.910200997893183,
+                -0.41416680629216757,
+                0
+              ]
+            },
+            {
+              "offset": 0.9110459705611689,
+              "direction": [
+                -0.0806949732008977,
+                -0.9967388430778177,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "transearth-injection",
+        "start": 51.715850814408824,
+        "end": 51.77796402212899,
+        "direction": [
+          0.26938225992264325,
+          -0.9630333317382994,
+          0
+        ],
+        "throttle": 1,
+        "steering": {
+          "kind": "spherical-smoothstep-v1",
+          "keys": [
+            {
+              "offset": 0.0,
+              "direction": [
+                0.26938225992264325,
+                -0.9630333317382994,
+                0
+              ]
+            },
+            {
+              "offset": 0.062113207720166486,
+              "direction": [
+                0.26936119996968616,
+                -0.9630392224363922,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "earth-orbit-insertion",
+        "start": 68.13162828491082,
+        "end": 68.35198912227041,
+        "direction": [
+          -0.2146859540444655,
+          0.9766831324109256,
+          0
+        ],
+        "throttle": 1,
+        "steering": {
+          "kind": "spherical-smoothstep-v1",
+          "keys": [
+            {
+              "offset": 0.0,
+              "direction": [
+                -0.2146859540444655,
+                0.9766831324109256,
+                0
+              ]
+            },
+            {
+              "offset": 0.22036083735959267,
+              "direction": [
+                -0.20161033316106125,
+                0.9794658103081934,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "deorbit",
+        "start": 78.76010028166705,
+        "end": 78.78064371501375,
+        "direction": [
+          0.956814026731394,
+          0.290700736583269,
+          0
+        ],
+        "throttle": 1,
+        "steering": {
+          "kind": "spherical-smoothstep-v1",
+          "keys": [
+            {
+              "offset": 0.0,
+              "direction": [
+                0.956814026731394,
+                0.290700736583269,
+                0
+              ]
+            },
+            {
+              "offset": 0.0205434333467025,
+              "direction": [
+                0.956814026731394,
+                0.290700736583269,
+                0
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "ports": [
+      {
+        "id": "Cairn",
+        "rail": {
+          "kind": "surface",
+          "bodyId": "Aster",
+          "bodyRail": {
+            "kind": "fixed",
+            "position": [
+              0,
+              0,
+              0
+            ]
+          },
+          "latitude": 0,
+          "centerHeight": 1e-05,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "u": [
+            1,
+            0,
+            0
+          ],
+          "v": [
+            0,
+            1,
+            0
+          ],
+          "radius": 1.00001,
+          "rate": 0.03,
+          "phase": 0
+        },
+        "cargo": 0,
+        "cargoCapacity": 1,
+        "propellant": 0,
+        "tankCapacity": 1,
+        "serviceDuration": 0.3
+      },
+      {
+        "id": "Tranquility",
+        "rail": {
+          "kind": "surface",
+          "bodyId": "Selene",
+          "bodyRail": {
+            "kind": "circular",
+            "center": [
+              0,
+              0,
+              0
+            ],
+            "u": [
+              1,
+              0,
+              0
+            ],
+            "v": [
+              0,
+              1,
+              0
+            ],
+            "radius": 5,
+            "rate": 0.09077444574328174,
+            "phase": 1.8689123863023496
+          },
+          "latitude": 0,
+          "centerHeight": 1e-05,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "u": [
+            1,
+            0,
+            0
+          ],
+          "v": [
+            0,
+            1,
+            0
+          ],
+          "radius": 0.20001000000000002,
+          "rate": 0.09077444574328174,
+          "phase": -2.6254250311765337
+        },
+        "cargo": 0,
+        "cargoCapacity": 1,
+        "propellant": 0,
+        "tankCapacity": 1,
+        "serviceDuration": 0.3
+      }
+    ],
+    "launch": 0.3,
+    "ascentEnd": 2.986997142131804,
+    "landing": 38.664405090716635,
+    "liftoff": 40.664405090716635,
+    "entryStart": 78.78064371501375,
+    "entry": {
+      "kind": "entry-flight-v1",
+      "schemaVersion": 1,
+      "modelVersion": "entry-rk4-v3",
+      "atmosphere": {
+        "bodyId": "Aster",
+        "spin": [
+          0,
+          0,
+          0.03
+        ],
+        "density": 200,
+        "scaleHeight": 0.025,
+        "fadeHeight": 0.16,
+        "topHeight": 0.2
+      },
+      "aero": {
+        "dragArea": 10,
+        "liftToDrag": 0.25,
+        "liftFadeHeight": 0.04
+      },
+      "guidance": {
+        "startHeight": 0.025,
+        "fullHeight": 0.01,
+        "descentSpeed": 0.025,
+        "descentGain": 0.06,
+        "velocityGain": 6
+      },
+      "recovery": {
+        "height": 1e-05,
+        "maxSpeed": 0.06
+      },
+      "limits": {
+        "dynamicPressure": 100,
+        "acceleration": 30,
+        "heatProxy": 100
+      },
+      "presentation": {
+        "name": "Odyssey",
+        "color": "#e6c98b",
+        "heatScale": 1
+      },
+      "rotating": {
+        "name": "Atmosphere rotating",
+        "rate": 0.03,
+        "phase": 0
+      }
+    },
+    "milestones": [
+      {
+        "t": 2.986997142131804,
+        "name": "Parking orbit"
+      },
+      {
+        "t": 13.39510830152844,
+        "name": "Translunar departure"
+      },
+      {
+        "t": 29.923779528746707,
+        "name": "Lunar orbit"
+      },
+      {
+        "t": 37.4351867532882,
+        "name": "Descent departure"
+      },
+      {
+        "t": 38.664405090716635,
+        "name": "Lunar landing"
+      },
+      {
+        "t": 40.664405090716635,
+        "name": "Lunar liftoff"
+      },
+      {
+        "t": 41.5754510612778,
+        "name": "Return parking orbit"
+      },
+      {
+        "t": 51.715850814408824,
+        "name": "Transearth departure"
+      },
+      {
+        "t": 68.35198912227041,
+        "name": "Home parking orbit"
+      },
+      {
+        "t": 78.76010028166705,
+        "name": "Deorbit"
+      },
+      {
+        "t": 78.78064371501375,
+        "name": "Entry handoff"
+      }
+    ]
+  },
+  "maxImport": 4
+}

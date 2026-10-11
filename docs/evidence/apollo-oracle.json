@@ -1,14 +1,17 @@
 {
   "capture": {
-    "positionError": 3.446542002708961e-07,
-    "velocityCorrection": 8.593864144646258e-07,
-    "fuelCost": 4.3723395089707384e-07
+    "positionError": 1.7620200823036072e-09,
+    "velocityCorrection": 1.1699329915351678e-08,
+    "fuelCost": 5.952321827122978e-09
   },
-  "recoveryRelativeSpeed": 0.04329991102466872,
-  "maxReplayError": 0.00033173677820588776,
-  "clearance": 9.999999999926734e-06,
-  "vacuumAtmosphereClearance": 0.15771300929204773,
-  "recoveryEpochError": 0.0006660907885560619,
-  "recoveryStateError": 0.00016380029831858378,
-  "remainingFuel": 2.1153206141732706
+  "recoveryRelativeSpeed": 0.04329991253262152,
+  "maxReplayError": 5.3237863359617554e-05,
+  "clearance": 9.998526185078793e-06,
+  "vacuumAtmosphereClearance": 0.15771300993113696,
+  "recoveryEpochError": 0.00010691808166995997,
+  "recoveryStateError": 2.6302821795221032e-05,
+  "remainingFuel": 2.115320972705042,
+  "relativeTolerance": 3e-14,
+  "absoluteTolerance": 3e-15,
+  "passed": true
 }
