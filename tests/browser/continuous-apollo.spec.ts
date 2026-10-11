@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 const state=async(p:Page)=>JSON.parse(await p.locator('#state-json').textContent()??'{}');
 test('continuous expedition crosses cycles, turns around and retains held history',async({page})=>{
  test.setTimeout(120000);const errors:string[]=[];page.on('pageerror',e=>{errors.push(e.message);console.error(e.stack);});
@@ -9,7 +10,7 @@ test('continuous expedition crosses cycles, turns around and retains held histor
  let s=await state(page);expect(s.playbackRate).toBe(.1);expect(s.traffic.stats.cacheCompilations).toBe(1);
  await seek(.28);await page.getByRole('button',{name:'Play',exact:true}).click();
  await expect.poll(async()=>(await state(page)).t).toBeGreaterThan(.35);await pause();
- await page.getByLabel('Playback speed').fill('4');await page.getByRole('button',{name:'Play',exact:true}).click();
+ await setRate(page,16);await page.getByRole('button',{name:'Play',exact:true}).click();
  await expect.poll(async()=>(await state(page)).t,{timeout:30000}).toBeGreaterThan(115);await pause();
  const period=103.38531648187275;
  await seek(82.7);expect(['entry','braking']).toContain((await state(page)).ships[0].entryPhase);

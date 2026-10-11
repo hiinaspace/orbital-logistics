@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {setRate} from './playback-controls';
 import fs from 'node:fs';
 test('libration relay joins continuous expeditions with repeated paid lunar service',async({page})=>{
  test.setTimeout(150000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
@@ -24,7 +25,7 @@ test('libration relay joins continuous expeditions with repeated paid lunar serv
  await page.screenshot({path:'docs/evidence/libration-docked.png',fullPage:true});
  await page.locator('#fleet [data-object="Kestrel"]').click();await seek(23.7);expect((await ship()).thrust.force).toBeGreaterThan(0);
  await seek(24);expect((await ship()).logistics.dockedPortId).toBe('Haven');await seek(30);expect((await ship()).propellant).toBe(6);expect((await ship()).logistics.cargoMass).toBe(.15);
- await seek(0);await page.getByLabel('Reference frame').selectOption('rotating');await page.getByRole('button',{name:'Fit',exact:true}).click();await page.getByLabel('Playback speed').fill('4');
+ await seek(0);await page.getByLabel('Reference frame').selectOption('rotating');await page.getByRole('button',{name:'Fit',exact:true}).click();await setRate(page,16);
  const began=performance.now();await page.evaluate(()=>{(window as any).__libration.active=true;});await page.getByRole('button',{name:'Play',exact:true}).click();
  await expect.poll(async()=>(await state()).t,{timeout:30000}).toBeGreaterThan(120);await pause();await page.evaluate(()=>{(window as any).__libration.active=false;});
  const elapsedMs=performance.now()-began,first=await state(),metrics=await page.evaluate(()=>(window as any).__libration);

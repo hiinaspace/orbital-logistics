@@ -1,0 +1,88 @@
+TAP version 13
+# Subtest: canonical staged mission repeats with three real tanks, bounded prepared views and supported imports
+ok 1 - canonical staged mission repeats with three real tanks, bounded prepared views and supported imports
+  ---
+  duration_ms: 15040.246255
+  type: 'test'
+  ...
+# Subtest: bidirectional speed has an exact pause, symmetric limits and fine slow-speed resolution
+ok 2 - bidirectional speed has an exact pause, symmetric limits and fine slow-speed resolution
+  ---
+  duration_ms: 22.329754
+  type: 'test'
+  ...
+# Subtest: lunar arrival stays in motion and Eagle has a prograde, bounded rendezvous coast
+ok 3 - lunar arrival stays in motion and Eagle has a prograde, bounded rendezvous coast
+  ---
+  duration_ms: 18.523766
+  type: 'test'
+  ...
+# Subtest: staged Apollo splits exact state and conserves independent hardware inventories
+ok 4 - staged Apollo splits exact state and conserves independent hardware inventories
+  ---
+  duration_ms: 3.64794
+  type: 'test'
+  ...
+# Subtest: real passive orbiter rendezvous pays only lander correction and carries its mass home
+ok 5 - real passive orbiter rendezvous pays only lander correction and carries its mass home
+  ---
+  duration_ms: 0.815699
+  type: 'test'
+  ...
+# Subtest: lander capture has independent step-refinement margin
+ok 6 - lander capture has independent step-refinement margin
+  ---
+  duration_ms: 196.703769
+  type: 'test'
+  ...
+# Subtest: presence hides attached duplicate glyphs but preserves tanks and query-order independence
+ok 7 - presence hides attached duplicate glyphs but preserves tanks and query-order independence
+  ---
+  duration_ms: 2.641191
+  type: 'test'
+  ...
+# Subtest: staged domain rejects unknown ownership, tanks and controls crossing topology
+ok 8 - staged domain rejects unknown ownership, tanks and controls crossing topology
+  ---
+  duration_ms: 7.915679
+  type: 'test'
+  ...
+# Subtest: missed/depleted landing cannot publish staged descendants
+ok 9 - missed/depleted landing cannot publish staged descendants
+  ---
+  duration_ms: 1303.838378
+  type: 'test'
+  ...
+# Subtest: three tank recurrence preserves unique ownership, protected fuel, exact seams and paid supported refill
+ok 10 - three tank recurrence preserves unique ownership, protected fuel, exact seams and paid supported refill
+  ---
+  duration_ms: 149.393206
+  type: 'test'
+  ...
+# Subtest: indexed late boundaries rotate canonical state, attitude and aerodynamic vectors together
+ok 11 - indexed late boundaries rotate canonical state, attitude and aerodynamic vectors together
+  ---
+  duration_ms: 7.736651
+  type: 'test'
+  ...
+# Subtest: worker rows preserve a held cursor and resource anchor, bound retention, and stop at the final calendar
+ok 12 - worker rows preserve a held cursor and resource anchor, bound retention, and stop at the final calendar
+  ---
+  duration_ms: 928.875336
+  type: 'test'
+  ...
+# Subtest: unsupported symmetry, undersupplied tanks and unexpected wrapper fields refuse before publication
+ok 13 - unsupported symmetry, undersupplied tanks and unexpected wrapper fields refuse before publication
+  ---
+  duration_ms: 2.65619
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15687.975628

@@ -1,5 +1,10 @@
 # Staged Aster–Selene expedition
 
+The current lunar controls include a [reviewed refinement](../staged-refinement/disposition.md).
+The author and original measurements below describe the initial witness; running
+that author alone regenerates the old controls. Use the refinement reproduction
+instructions for the current programs.
+
 An authored atmospheric launch with a reusable booster, lunar orbiter and
 single-piece lander. Atlas separates from Odyssey/Eagle after the boost;
 Odyssey parks around Selene while Eagle lands at Tranquility, stays for two

@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 async function state(page:Page){return JSON.parse(await page.locator('#state-json').textContent()??'{}');}
 async function ready(page:Page,id:string){await expect.poll(async()=>{const s=await state(page);return s.ready&&s.set===id;},{timeout:30000}).toBe(true);}
 async function pause(page:Page){if((await state(page)).playing)await page.getByRole('button',{name:'Pause',exact:true}).click();}
@@ -20,7 +21,7 @@ test('atmospheric density, physical force arrows, glow, entry tracking and exact
  await page.getByRole('button',{name:'Fit',exact:true}).click();await page.getByLabel('Reference frame').selectOption('inertial');await page.getByLabel('Camera view').selectOption('top');await seek(page,6);
  const final=await state(page);expect(final.ships[0].entryPhase).toBe('recovered');expect(final.ships[0].thrust).toBeUndefined();expect(final.ships[0].aero).toBeUndefined();expect(final.entry.relativeSpeed).toBeLessThan(.06);expect(final.stocks).toEqual([]);await expect(page.locator('#object-status')).toHaveText('Recovered · Ocean');
  await page.locator('#schedule summary').click();await page.locator('[data-time="'+final.entry.recoveryEpoch+'"]').last().click();expect((await state(page)).t).toBe(final.entry.recoveryEpoch);expect((await state(page)).ships[0].entryPhase).toBe('recovered');
- await seek(page,3.9);await page.getByLabel('Playback speed').fill('-1');await page.getByRole('button',{name:'Play',exact:true}).click();
+ await seek(page,3.9);await setRate(page,0.5);await page.getByRole('button',{name:'Play',exact:true}).click();
  await expect.poll(async()=>(await state(page)).ships[0].entryPhase).toBe('recovered');await pause(page);
  await seek(page,4.375);expect((await state(page)).ships[0].entryPhase).toBe('braking');await seek(page,6);expect((await state(page)).ships[0].y).toEqual(final.ships[0].y);
  await page.locator('#restart').click();expect((await state(page)).ships[0].entryPhase).toBe('coast');

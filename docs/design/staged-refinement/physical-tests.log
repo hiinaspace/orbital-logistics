@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: lunar arrival stays in motion and Eagle has a prograde, bounded rendezvous coast
+ok 1 - lunar arrival stays in motion and Eagle has a prograde, bounded rendezvous coast
+  ---
+  duration_ms: 18.177673
+  type: 'test'
+  ...
+# Subtest: staged Apollo splits exact state and conserves independent hardware inventories
+ok 2 - staged Apollo splits exact state and conserves independent hardware inventories
+  ---
+  duration_ms: 2.822435
+  type: 'test'
+  ...
+# Subtest: real passive orbiter rendezvous pays only lander correction and carries its mass home
+ok 3 - real passive orbiter rendezvous pays only lander correction and carries its mass home
+  ---
+  duration_ms: 0.689037
+  type: 'test'
+  ...
+# Subtest: lander capture has independent step-refinement margin
+ok 4 - lander capture has independent step-refinement margin
+  ---
+  duration_ms: 201.956151
+  type: 'test'
+  ...
+# Subtest: presence hides attached duplicate glyphs but preserves tanks and query-order independence
+ok 5 - presence hides attached duplicate glyphs but preserves tanks and query-order independence
+  ---
+  duration_ms: 2.688663
+  type: 'test'
+  ...
+# Subtest: staged domain rejects unknown ownership, tanks and controls crossing topology
+ok 6 - staged domain rejects unknown ownership, tanks and controls crossing topology
+  ---
+  duration_ms: 7.650718
+  type: 'test'
+  ...
+# Subtest: missed/depleted landing cannot publish staged descendants
+ok 7 - missed/depleted landing cannot publish staged descendants
+  ---
+  duration_ms: 1297.351134
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9389.272036

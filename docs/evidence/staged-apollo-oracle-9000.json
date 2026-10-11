@@ -4,36 +4,36 @@
   "clock": "local solver clock with absolute field/support phases",
   "captures": {
     "landing": {
-      "position": 8.108837620822754e-09,
-      "velocity": 5.337148730610668e-09,
-      "fuel": 4.0731085189880987e-10
+      "position": 1.4789647013364632e-08,
+      "velocity": 2.160411358005413e-08,
+      "fuel": 1.6487436161175207e-09
     },
     "dock": {
-      "position": 1.4197452591175433e-07,
-      "velocity": 1.4177874936746055e-07,
-      "fuel": 8.363066872031669e-09
+      "position": 9.875956869659317e-08,
+      "velocity": 1.0586915447108543e-07,
+      "fuel": 7.2047909659985625e-09
     }
   },
-  "maxReplayError": 2.273067470247997e-05,
-  "comparisons": 144,
-  "sampledClearance": 9.99191719158743e-06,
+  "maxReplayError": 2.079553148366664e-05,
+  "comparisons": 142,
+  "sampledClearance": 9.98538701116325e-06,
   "sampledVacuumAtmosphereClearance": 0.15771624124906242,
   "recoveries": {
     "booster": {
       "t": 930470.7211852128,
-      "stateError": 5.593303598061539e-13,
-      "epochError": 2.0244250720224954e-11,
-      "speed": 0.03509645872576583,
-      "fuel": 0.918477698031711
+      "stateError": 4.1914249848673535e-12,
+      "epochError": 7.440714711037799e-12,
+      "speed": 0.035096458725860494,
+      "fuel": 0.9184776980280789
     },
     "orbiter": {
-      "t": 930547.3621514834,
-      "stateError": 1.023150405865536e-05,
-      "epochError": 4.720407399361193e-05,
-      "speed": 0.046432883930901024,
-      "fuel": 2.4745976500644558
+      "t": 930547.3557650944,
+      "stateError": 9.435491438947174e-06,
+      "epochError": 4.322808767653896e-05,
+      "speed": 0.04700845722194575,
+      "fuel": 2.5253963449448844
     }
   },
-  "landerFuel": 0.3218939522452576,
+  "landerFuel": 0.39442984488317506,
   "passed": true
 }

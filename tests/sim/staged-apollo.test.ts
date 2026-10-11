@@ -4,8 +4,34 @@ import fixture from '../../fixtures/model-sets/aster-selene-staged-expedition.js
 import {prepareStagedApollo,validateStagedApollo} from '../../src/model-set/staged-apollo';
 import {sampleVessel,isPresent} from '../../src/model-set/model';
 import {Runner} from '../../src/sim/runner';
+import {bodyState} from '../../src/sim/dynamics';
 const mission=prepareStagedApollo(fixture),d=mission.definition,h=d.hardware;
 const distance=(a:number[],b:number[])=>Math.hypot(...a.map((v,i)=>v-b[i]));
+test('lunar arrival stays in motion and Eagle has a prograde, bounded rendezvous coast',()=>{
+ const insertion=d.programs.orbiterOutbound.at(-1)!;
+ let slowest=Infinity,peakAcceleration=0;
+ for(let i=0;i<=256;i++){
+  const q=mission.sample(h.orbiter.id,insertion.start+(insertion.end-insertion.start)*i/256);
+  slowest=Math.min(slowest,Math.hypot(...q.y.slice(3)));
+  peakAcceleration=Math.max(peakAcceleration,(q.thrust?.force??0)/q.mass!);
+ }
+ assert.ok(slowest>.13);assert.ok(peakAcceleration<.3);
+ const ascent=d.programs.lander.filter(a=>a.start>=d.liftoff),moon=d.world.bodies[1];
+ let excess=-Infinity,minCoastMomentum=Infinity;
+ for(let i=0;i<=512;i++){
+  const t=d.liftoff+(d.lunarDock-d.liftoff)*i/512;
+  const eagle=mission.sample(h.lander.id,t,true).y,odyssey=mission.sample(h.orbiter.id,t,true).y,center=bodyState(moon,t);
+  excess=Math.max(excess,distance(eagle.slice(0,3),center.slice(0,3))-distance(odyssey.slice(0,3),center.slice(0,3)));
+  if(t>ascent[0].end&&t<ascent[1].start){
+   const x=eagle[0]-center[0],y=eagle[1]-center[1],vx=eagle[3]-center[3],vy=eagle[4]-center[4];
+   minCoastMomentum=Math.min(minCoastMomentum,x*vy-y*vx);
+  }
+ }
+ assert.ok(minCoastMomentum>.01);assert.ok(excess<.085);
+ const before=mission.accounts(d.liftoff).parts.lander.propellant,after=mission.accounts(d.lunarDock,true).parts.lander.propellant;
+ const deltaV=h.lander.exhaustVelocity*Math.log((h.lander.dryMass+before)/(h.lander.dryMass+after));
+ assert.ok(deltaV<1.3);
+});
 test('staged Apollo splits exact state and conserves independent hardware inventories',()=>{
  const epochs=[0,d.launch,d.boosterSeparation,d.ascentEnd,d.lunarSeparation,d.landing,d.liftoff,d.lunarDock,d.entryStart,...Object.values(mission.recoveries),d.world.duration];
  const initial=Object.values(h).reduce((n,p)=>n+p.propellant,0);

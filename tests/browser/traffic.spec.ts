@@ -1,12 +1,13 @@
 import {writeFileSync} from 'node:fs';
 import {test,expect,type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 async function state(p:Page){return JSON.parse(await p.locator('#state-json').textContent()??'{}');}
 async function ready(p:Page){await expect.poll(async()=>(await state(p)).ready,{timeout:20000}).toBe(true);}
 async function pause(p:Page){if((await state(p)).playing)await p.getByRole('button',{name:'Pause',exact:true}).click();}
 test('continuous service holds history, returns live, restarts and cancels stale workers',async({page})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/');await ready(page);await page.getByLabel('Model set').selectOption('orison-service');await ready(page);
- await page.getByLabel('Playback speed').fill('4');
+ await setRate(page,16);
  await expect.poll(async()=>(await state(page)).traffic.frontier,{timeout:20000}).toBeGreaterThan(12);
  await pause(page);await expect.poll(async()=>(await state(page)).traffic.pending).toBe(false);
  const held=await state(page);await page.waitForTimeout(300);expect((await state(page)).t).toBe(held.t);expect((await state(page)).traffic.frontier).toBe(held.traffic.frontier);
@@ -14,7 +15,7 @@ test('continuous service holds history, returns live, restarts and cancels stale
  await page.getByLabel('Reference frame').selectOption('rotating');await page.screenshot({path:'docs/evidence/continuous-traffic.png',fullPage:true});
  await page.getByRole('button',{name:'Play',exact:true}).click();await expect.poll(async()=>(await state(page)).t).toBeGreaterThan(2.3);await pause(page);
  await page.getByRole('button',{name:'Return to live'}).click();await expect.poll(async()=>(await state(page)).traffic.frontier).toBeGreaterThan(held.traffic.frontier);
- await pause(page);await page.getByLabel('Playback speed').fill('0');await page.getByTitle('Restart run').click();await ready(page);await pause(page);expect((await state(page)).t).toBeLessThan(2);
+ await pause(page);await setRate(page,1);await page.getByTitle('Restart run').click();await ready(page);await pause(page);expect((await state(page)).t).toBeLessThan(2);
  await page.getByRole('button',{name:'Return to live'}).click();await page.getByLabel('Model set').selectOption('lunar-loop');await ready(page);await pause(page);expect((await state(page)).set).toBe('lunar-loop');expect((await state(page)).traffic).toBeUndefined();await page.waitForTimeout(200);expect((await state(page)).set).toBe('lunar-loop');
  expect(errors).toEqual([]);
 });
@@ -71,15 +72,15 @@ test('continuous surface service lands, rewinds retained history, stays live and
  test.setTimeout(120000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  await page.addInitScript(()=>{const meter={peakMainHeapBytes:0,readings:0};(window as unknown as {surfaceMeter:typeof meter}).surfaceMeter=meter;setInterval(()=>{const m=(performance as Performance&{memory?:{usedJSHeapSize:number}}).memory;if(m){meter.peakMainHeapBytes=Math.max(meter.peakMainHeapBytes,m.usedJSHeapSize);meter.readings++;}},250);});
  await page.goto('/');await ready(page);await page.getByLabel('Model set').selectOption('selene-service');await ready(page);
- await page.getByLabel('Playback speed').fill('4');
+ await setRate(page,16);
  await expect.poll(async()=>(await state(page)).traffic.frontier,{timeout:30000}).toBeGreaterThan(11);await pause(page);await expect.poll(async()=>(await state(page)).traffic.pending).toBe(false);
  await page.getByLabel('Simulation time').fill('9.9');await page.getByRole('button',{name:'Surface view',exact:true}).click();
  const approach=await state(page);expect(approach.frame).toBe('Cairn');expect(approach.ships[0].thrust.force).toBeGreaterThan(0);expect(approach.ships[0].thrust.acceleration).toBeLessThanOrEqual(3);
- await page.getByLabel('Playback speed').fill('-5');await page.screenshot({path:'docs/evidence/continuous-surface.png',fullPage:true});
+ await setRate(page,1 / 32);await page.screenshot({path:'docs/evidence/continuous-surface.png',fullPage:true});
  await page.getByLabel('Simulation time').fill('9.986');await page.locator('#next-event').click();
  expect((await state(page)).ships[0].logistics.dockedPortId).toBe('Cairn');
  expect((await state(page)).events.some((e:{kind:string})=>e.kind==='land')).toBe(true);
- await page.getByLabel('Playback speed').fill('4');await page.getByRole('button',{name:'Return to live'}).click();
+ await setRate(page,16);await page.getByRole('button',{name:'Return to live'}).click();
  await expect.poll(async()=>(await state(page)).traffic.frontier,{timeout:60000}).toBeGreaterThan(150);await pause(page);await expect.poll(async()=>(await state(page)).traffic.pending).toBe(false);
  const head=await state(page);expect(head.traffic.oldest).toBeGreaterThan(20);expect(head.traffic.error).toBe('');expect(head.traffic.stats.episodes).toBeLessThanOrEqual(18);
  const retained=Math.round((head.traffic.frontier-20)*1000)/1000;
@@ -94,7 +95,7 @@ test('continuous surface service lands, rewinds retained history, stays live and
  writeFileSync('docs/evidence/surface-traffic-browser.json',JSON.stringify(report,null,2)+'\n');
  await test.info().attach('retained surface view performance',{body:JSON.stringify(report,null,2),contentType:'application/json'});
  expect(timing.p95FrameMs).toBeLessThan(200);
- await page.getByLabel('Playback speed').fill('0');await page.getByTitle('Restart run').click();await ready(page);await pause(page);expect((await state(page)).set).toBe('selene-service');expect((await state(page)).t).toBeLessThan(2);
+ await setRate(page,1);await page.getByTitle('Restart run').click();await ready(page);await pause(page);expect((await state(page)).set).toBe('selene-service');expect((await state(page)).t).toBeLessThan(2);
  for(const id of ['orison-service','selene-return','selene-service']){await page.getByLabel('Model set').selectOption(id);await ready(page);await pause(page);expect((await state(page)).set).toBe(id);expect((await state(page)).traffic?.error??'').toBe('');}
  expect(errors).toEqual([]);
 });

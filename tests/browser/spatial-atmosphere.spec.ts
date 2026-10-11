@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 const state=async(p:Page)=>JSON.parse(await p.locator('#state-json').textContent()??'{}');
 const ready=async(p:Page,id:string)=>expect.poll(async()=>{const s=await state(p);return s.ready&&s.set===id;},{timeout:30000}).toBe(true);
 async function pause(p:Page){if((await state(p)).playing)await p.getByRole('button',{name:'Pause',exact:true}).click();}
@@ -21,7 +22,7 @@ test('prepared northern atmospheric mission shows latitude, spatial staging, inc
  await seek(page,8.15);await page.getByRole('button',{name:'Entry view',exact:true}).click();s=await state(page);expect(s.camera.preset).toBe('custom');expect(s.camera.rig.up[2]).toBeLessThan(-.2);expect(Math.abs(s.ships[2].y[2])).toBeGreaterThan(.2);expect(s.ships[2].aero.density).toBeGreaterThan(0);expect(s.aeroVectors.some((v:any)=>v.kind==='drag')).toBe(true);
  await page.screenshot({path:'docs/evidence/spatial-atmosphere-entry.png',fullPage:true});
  await seek(page,12);const final=await state(page);expect(final.ships.slice(1).every((s:any)=>s.entryPhase==='recovered'&&s.propellant>.1)).toBe(true);
- await seek(page,8.2);await page.getByLabel('Playback speed').fill('-1');await page.getByRole('button',{name:'Play',exact:true}).click();
+ await seek(page,8.2);await setRate(page,0.5);await page.getByRole('button',{name:'Play',exact:true}).click();
  await expect.poll(async()=>(await state(page)).ships[2].entryPhase).toBe('recovered');await pause(page);
  await seek(page,.91);expect((await state(page)).ships[2].present).toBe(true);await seek(page,12);expect((await state(page)).ships[2].y).toEqual(final.ships[2].y);
  for(const id of ['aster-launch','orison-freight-district','aster-northern-launch']){await page.getByLabel('Model set').selectOption(id);await ready(page,id);await pause(page);}

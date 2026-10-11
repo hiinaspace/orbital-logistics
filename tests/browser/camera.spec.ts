@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 import {readFileSync,writeFileSync} from 'node:fs';
 const powered=JSON.parse(readFileSync('fixtures/model-sets/selene-powered.json','utf8'));
 async function state(p:Page){return JSON.parse(await p.locator('#state-json').textContent()??'{}');}
@@ -45,7 +46,7 @@ test('camera-projected exhaust whiskers and continuous surface history share unc
   const x=cy*d[0]+sy*d[1],y=-sy*sp*d[0]+cy*sp*d[1]+cp*d[2],pixels=3+15*Math.sqrt(w.force/v.bundle.scenario.ship.engine.maxThrust);
   expect(w.to[0]-w.from[0]).toBeCloseTo(-x*pixels,6);expect(w.to[1]-w.from[1]).toBeCloseTo(y*pixels,6);
  }
- await page.getByLabel('Model set').selectOption('selene-service');await ready(page);await page.getByLabel('Playback speed').fill('4');await expect.poll(async()=>(await state(page)).traffic.frontier,{timeout:30000}).toBeGreaterThan(14);await pause(page);await expect.poll(async()=>(await state(page)).traffic.pending).toBe(false);await seek(page,9.9);
+ await page.getByLabel('Model set').selectOption('selene-service');await ready(page);await setRate(page,16);await expect.poll(async()=>(await state(page)).traffic.frontier,{timeout:30000}).toBeGreaterThan(14);await pause(page);await expect.poll(async()=>(await state(page)).traffic.pending).toBe(false);await seek(page,9.9);
  const baseline=await state(page);for(const camera of ['oblique','front','side','top']){await page.getByLabel('Camera view').selectOption(camera);expect(physical(await state(page))).toEqual(physical(baseline));expect((await state(page)).traffic.frontier).toBe(baseline.traffic.frontier);}
  await page.getByLabel('Camera view').selectOption('oblique');const timings=await page.evaluate(async()=>{const xs:number[]=[];let last=performance.now();for(let i=0;i<60;i++)await new Promise<void>(resolve=>requestAnimationFrame(t=>{xs.push(t-last);last=t;resolve();}));xs.sort((a,b)=>a-b);return {median:xs[30],p95:xs[57]};});
  writeFileSync('docs/evidence/spatial-viewer-browser.json',JSON.stringify({frameIntervalsMs:timings,note:'Production installed headless Chrome; continuous surface set, paused historical cursor9.9 in oblique view. Local diagnostic, not hardware-independent guarantee.'},null,2)+'\n');expect(timings.p95).toBeLessThan(200);

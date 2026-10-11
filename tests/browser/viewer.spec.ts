@@ -1,4 +1,5 @@
 import {test, expect, type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 import {readFileSync} from 'node:fs';
 const returnFixture=JSON.parse(readFileSync('fixtures/model-sets/selene-return.json','utf8'));
 async function state(page: Page) { return JSON.parse(await page.locator('#state-json').textContent() ?? '{}'); }
@@ -78,7 +79,7 @@ test('lunar set supports rotating exploration, finite playback and explicit repl
   await expect(page.locator('#fleet .object-row')).toHaveCount(1);
   await page.getByLabel('Reference frame').selectOption('rotating');
   await seek(page, 7); await page.screenshot({path:'test-results/model-set-lunar.png',fullPage:true});
-  await seek(page, 23.99); await page.getByLabel('Playback speed').fill('4'); await page.getByRole('button',{name:'Play',exact:true}).click();
+  await seek(page, 23.99); await setRate(page,16); await page.getByRole('button',{name:'Play',exact:true}).click();
   await expect(page.getByRole('button',{name:'Play',exact:true})).toBeVisible();
   await expect(page.locator('#load-status')).toHaveText('End of scene');
   expect((await state(page)).t).toBe(24);
@@ -135,7 +136,7 @@ test('lunar freight exposes three finite round trips, depot stocks and shared ro
 
 test('continuous playback speed supports intermediate rates without changing physics or pause',async({page})=>{
   await seek(page,8);const before=await state(page);
-  await page.getByLabel('Playback speed').fill('-1');
+  await setRate(page,0.5);
   expect((await state(page)).playbackRate).toBe(.5);
   expect((await state(page)).playing).toBe(false);
   expect((await state(page)).ships).toEqual(before.ships);
@@ -143,7 +144,7 @@ test('continuous playback speed supports intermediate rates without changing phy
   await page.getByRole('button',{name:'Play',exact:true}).click();
   await expect.poll(async()=> (await state(page)).t).toBeGreaterThan(8.05);
   await pause(page);const stopped=await state(page);
-  await page.getByLabel('Playback speed').fill('0');
+  await setRate(page,1);
   expect((await state(page)).playing).toBe(false);expect((await state(page)).t).toBe(stopped.t);
 });
 
@@ -192,13 +193,13 @@ test('surface freight is readable at launch and orbital scales; frames and repla
  expect((await state(page)).frame).toBe('Cairn');expect((await state(page)).camera.scale).toBeGreaterThan(1000);
  await seek(page,.31);await expect(page.locator('#object-status')).toContainText('Powered flight');await expect(page.locator('#readouts')).toContainText('Altitude');
  const launched=await state(page);expect(launched.stocks.find((s:{id:string})=>s.id==='Cairn').occupied).toBe(0);expect(launched.thrustWhiskers.length).toBeGreaterThan(0);
- await page.getByLabel('Playback speed').fill('-10');await expect(page.locator('#speed-value')).toHaveText('0.000977×');expect((await state(page)).playbackRate).toBeGreaterThan(0);
+ await setRate(page,1 / 1024);await expect(page.locator('#speed-value')).toHaveText('0.000977×');expect((await state(page)).playbackRate).toBeGreaterThan(0);
  await seek(page,.55);await page.screenshot({path:'docs/evidence/surface-launch.png',fullPage:true});await seek(page,.31);
  for(const frame of ['swift','rotating','Selene','inertial']){await page.getByLabel('Reference frame').selectOption(frame);const s=await state(page);expect(s.ships.map((v:{y:number[]})=>v.y)).toEqual(launched.ships.map((v:{y:number[]})=>v.y));expect(s.stocks).toEqual(launched.stocks);expect(s.events).toEqual(launched.events);}
  await seek(page,2.1);expect((await state(page)).ships[0].logistics.cargoMass).toBe(0);expect((await state(page)).ships[0].logistics.dockedPortId).toBe('Lantern');
  await page.screenshot({path:'docs/evidence/surface-orbit.png',fullPage:true});
  await seek(page,.31);expect((await state(page)).ships.map(({screen,...s}:{screen:unknown})=>s)).toEqual(launched.ships.map(({screen,...s}:{screen:unknown})=>s));
- await page.getByLabel('Replay',{exact:true}).check();await seek(page,5.99);await page.getByLabel('Playback speed').fill('4');await page.getByRole('button',{name:'Play',exact:true}).click();await expect.poll(async()=>(await state(page)).t).toBeLessThan(5);await pause(page);
+ await page.getByLabel('Replay',{exact:true}).check();await seek(page,5.99);await setRate(page,16);await page.getByRole('button',{name:'Play',exact:true}).click();await expect.poll(async()=>(await state(page)).t).toBeLessThan(5);await pause(page);
  for(const set of ['orison-service','selene-freight','selene-ascent','orison-service','selene-ascent']){await page.getByLabel('Model set').selectOption(set);await ready(page);await pause(page);expect((await state(page)).set).toBe(set);await expect(page.locator('#load-status')).not.toContainText('failed');}
 });
 
@@ -208,7 +209,7 @@ test('surface round trip brakes, lands and unloads; frame changes, rewind and li
  const approach=await state(page);expect(approach.frame).toBe('Cairn');expect(approach.ships[0].logistics.dockedPortId).toBeUndefined();
  expect(approach.ships[0].thrust.acceleration).toBeLessThanOrEqual(3);expect(approach.thrustWhiskers.length).toBeGreaterThan(0);
  await expect(page.locator('#object-status')).toContainText('Powered flight');await expect(page.locator('#next-event')).toContainText('Cairn');
- await page.getByLabel('Playback speed').fill('-5');
+ await setRate(page,1 / 32);
  await page.screenshot({path:'docs/evidence/surface-return.png',fullPage:true});
  for(const frame of ['rotating','swift','inertial','Selene','Cairn']) {
   await page.getByLabel('Reference frame').selectOption(frame);const s=await state(page);

@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {setRate} from './playback-controls';
 import fs from 'node:fs';
 const fixture=JSON.parse(fs.readFileSync('fixtures/model-sets/aster-selene-expedition.json','utf8'));
 test('planet–moon expedition, both surface views, entry, rewind and switching',async({page})=>{
@@ -34,7 +35,7 @@ test('planet–moon expedition, both surface views, entry, rewind and switching'
  await page.screenshot({path:'docs/evidence/apollo-entry.png',fullPage:true});
  await seek(87);const final=(await state()).ships[0];expect(final.entryPhase).toBe('recovered');expect(final.propellant).toBeGreaterThan(2);
  await seek(22);await seek(87);expect((await state()).ships[0].y).toEqual(final.y);
- await seek(0);await page.getByLabel('Playback speed').fill('4');
+ await seek(0);await setRate(page,16);
  await page.getByRole('button',{name:'Play',exact:true}).click();
  await expect.poll(async()=>(await state()).t,{timeout:20000}).toBe(87);
  expect((await state()).playing).toBe(false);expect(errors).toEqual([]);

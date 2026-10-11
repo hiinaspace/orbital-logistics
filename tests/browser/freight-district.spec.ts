@@ -1,10 +1,11 @@
 import {test,expect,type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 import {writeFileSync} from 'node:fs';
 const state=async(p:Page)=>JSON.parse(await p.locator('#state-json').textContent()??'{}');
 const ready=async(p:Page,id?:string)=>expect.poll(async()=>{const s=await state(p);return s.ready&&(!id||s.set===id);},{timeout:60000}).toBe(true);
 async function pause(p:Page){if((await state(p)).playing)await p.getByRole('button',{name:'Pause',exact:true}).click();const a=await state(p);await expect.poll(async()=>(await state(p)).traffic.pending,{timeout:30000}).toBe(false);const b=await state(p);expect(b.t).toBe(a.t);expect(b.ships.map((s:any)=>s.y)).toEqual(a.ships.map((s:any)=>s.y));}
 async function meter(p:Page,rate:number){
- await p.getByLabel('Playback speed').fill(String(Math.log2(rate)));
+ await setRate(p,rate);
  await p.evaluate(()=>{const w=window as any;w.districtMeter={start:performance.now(),epoch:w.orbitalPlayback.epoch,last:performance.now(),maxGapMs:0,stop:false};const tick=(now:number)=>{const m=w.districtMeter;m.maxGapMs=Math.max(m.maxGapMs,now-m.last);m.last=now;if(!m.stop)requestAnimationFrame(tick);};requestAnimationFrame(tick);});
  await p.waitForTimeout(18000);
  return p.evaluate(()=>{const w=window as any,m=w.districtMeter;m.stop=true;return {...m,seconds:(performance.now()-m.start)/1000,effectiveRate:(w.orbitalPlayback.epoch-m.epoch)/((performance.now()-m.start)/1000)};});

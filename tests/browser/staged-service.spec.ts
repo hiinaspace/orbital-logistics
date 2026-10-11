@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {setRate} from './playback-controls';
 import fs from 'node:fs';
 const def=JSON.parse(fs.readFileSync('fixtures/model-sets/aster-selene-staged-service.json','utf8')),d=def.source;
 const period=2*Math.PI/(d.world.bodies[1].rail.rate-d.ports[0].rail.rate);
@@ -15,7 +16,7 @@ test('continuous staged service repeats at16x with protected tanks, held history
  expect((await state()).stocks.find((q:any)=>q.id==='Cairn').occupied).toBe(1);
  await select('Eagle');await expect(page.locator('#readouts')).toContainText('Propellant');
  await seek(22);await select('Odyssey');await page.getByLabel('Reference frame').selectOption('rotating');
- await page.getByLabel('Playback speed').fill('4');await page.getByRole('button',{name:'Play',exact:true}).click();
+ await setRate(page,16);await page.getByRole('button',{name:'Play',exact:true}).click();
  await expect.poll(async()=>(await state()).t,{timeout:60000}).toBeGreaterThan(period+8);await pause();
  let s=await state();expect(s.traffic.error).toBe('');expect(s.traffic.stats.refills).toBeGreaterThanOrEqual(1);
  const held=s.t;await page.waitForTimeout(400);expect((await state()).t).toBe(held);

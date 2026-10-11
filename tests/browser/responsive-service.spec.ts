@@ -1,5 +1,6 @@
 import {writeFileSync} from 'node:fs';
 import {test,expect,type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 const state=async(p:Page)=>JSON.parse(await p.locator('#state-json').textContent()??'{}');
 test('timeline selection survives live worker updates',async({page})=>{
  test.setTimeout(90000);
@@ -38,7 +39,7 @@ test('worker errors drain acknowledged playback, stop at its head and preserve s
  await page.goto('/');await expect.poll(async()=>(await state(page)).ready).toBe(true);
  await page.getByLabel('Model set').selectOption('orison-flexible-service');
  await expect.poll(async()=>{const s=await state(page);return s.ready&&s.set==='orison-flexible-service';},{timeout:60000}).toBe(true);
- await page.getByLabel('Playback speed').fill('2');
+ await setRate(page,4);
  await expect.poll(async()=>(await state(page)).traffic.error).toContain('injected planner failure');
  await expect.poll(async()=>(await state(page)).playing,{timeout:15000}).toBe(false);
  const stopped=await state(page);expect(stopped.t).toBe(stopped.traffic.frontier);expect(stopped.traffic.pending).toBe(false);
@@ -80,7 +81,7 @@ test('retained adaptive history catches up across admissions at fast speed',asyn
  await page.goto('/');await expect.poll(async()=>(await state(page)).ready).toBe(true);
  await page.getByLabel('Model set').selectOption('orison-flexible-service');
  await expect.poll(async()=>{const s=await state(page);return s.ready&&s.set==='orison-flexible-service';},{timeout:60000}).toBe(true);
- await page.getByLabel('Playback speed').fill('2');
+ await setRate(page,4);
  await expect.poll(async()=>(await state(page)).traffic.frontier,{timeout:90000}).toBeGreaterThan(264);
  await page.getByRole('button',{name:'Pause',exact:true}).click();await expect.poll(async()=>(await state(page)).traffic.pending).toBe(false);
  const head=await state(page);expect(head.traffic.oldest).toBeGreaterThan(128);

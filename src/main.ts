@@ -35,7 +35,7 @@ import {densityAt} from './sim/atmosphere';
 import './style.css';
 import PrepareWorker from './model-set/prepare.worker?worker&inline';
 import TrafficWorker from './traffic/traffic.worker?worker&inline';
-import {adaptivePlaybackLead,bufferedEdge,maximumPlaybackRate} from './traffic/playback';
+import {adaptivePlaybackLead,bufferedEdge,maximumPlaybackRate,speedPosition,speedAtPosition} from './traffic/playback';
 import {StableLabels,type Label,type PlacedLabel} from './view/labels';
 import freight from '../fixtures/model-sets/orison-freight.json';
 import lunar from '../fixtures/model-sets/lunar-loop.json';
@@ -93,7 +93,7 @@ document.body.innerHTML = `
       <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><label>View <select id="camera-view" aria-label="Camera view"><option value="top">Top</option><option value="oblique">3D</option><option value="front">Front</option><option value="side">Side</option><option value="custom" hidden>Custom</option></select></label><label>Track <select id="tracking" aria-label="Camera tracking"><option value="off">Off</option><option value="follow">Follow</option><option value="chase">Chase</option></select></label><button id="drag-mode" title="Drag to orbit · Shift-drag to pan" aria-pressed="false">Orbit</button><button id="fit" title="Fit the scene (F)">Fit</button><button id="launch-view" hidden>Surface view</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<label class="entry-layer" hidden><input type="checkbox" id="layer-atmosphere" checked>Atmosphere</label><label class="entry-layer" hidden><input type="checkbox" id="layer-aero">Aerodynamic forces <span style="color:#80c6ed">D</span> / <span style="color:#bb9fee">L</span></label><label class="entry-layer" hidden><input type="checkbox" id="layer-glow" checked>Entry glow</label><label><input type="checkbox" id="see-through">See-through bodies</label><button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
       <div class="viewport"><canvas id="space" tabindex="0" aria-label="Orbital traffic. Drag to pan, scroll to zoom, click a ship or station to inspect."></canvas></div>
       <div id="timelines" aria-label="Ship activity timelines"></div>
-      <div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><label class="speed-control"><input id="speed" type="range" min="-12" max="4" step="0.01" value="0" aria-label="Playback speed" aria-valuetext="1×"><output id="speed-value">1×</output></label><input id="time" type="range" min="0" max="64" value="0" step="0.001" aria-label="Simulation time"><output id="clock">0.00</output><button id="live" hidden>Live</button><label class="replay"><input type="checkbox" id="replay" title="Rewind the prepared scene at the end">Replay</label></div>
+      <div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><label class="speed-control"><span class="speed-track"><input id="speed" type="range" min="-1" max="1" step="0.0001" value="0" title="Reverse ← · 0× pause · → Forward" aria-label="Playback speed" aria-valuetext="1×"></span><output id="speed-value">1×</output></label><input id="time" type="range" min="0" max="64" value="0" step="0.001" aria-label="Simulation time"><output id="clock">0.00</output><button id="live" hidden>Live</button><label class="replay"><input type="checkbox" id="replay" title="Rewind the prepared scene at the end">Replay</label></div>
     </section>
     <aside><div class="section-heading"><h2>Traffic</h2><span id="traffic-count"></span></div><div id="fleet"></div><div class="section-heading" id="station-heading"><h2>Stations</h2></div><div id="stations"></div><section id="inspector"></section><details id="model-details"><summary>About this set</summary><p id="description"></p><p id="provenance"></p><p>Drag to orbit in 3D · Shift-drag or Pan to move · Scroll to zoom · Arrow keys to orbit · Shift-arrows to pan · T for top · F to fit · Space to pause</p></details></aside>
   </div>
@@ -107,8 +107,8 @@ let ready = false, width = 900, height = 600;
 const camera:Camera={yaw:0,pitch:Math.PI/2,center:[0,0,0],scale:100};
 let cameraPreset:CameraPreset|'custom'='top',panMode=false,spheres:Sphere[]=[],seeThroughBodies=false;
 let tracking:'off'|'follow'|'chase'='off',trackingOffset:Vec3=[0,0,0];
-const setSpeeds=new Map<string,number>();let currentSet='';
-let lastFrame = performance.now(), lastPanel = 0, playbackRate = 1;
+const setSpeeds=new Map<string,number>(),setResumeSpeeds=new Map<string,number>();let currentSet='';
+let lastFrame = performance.now(), lastPanel = 0, playbackRate = 1, resumeRate=1;
 let layers = {orbits: true, trails: true, plan: true, labels: true,atmosphere:true,aero:false,glow:true};
 let savedLayers = {...layers}, cleared = false;
 let aeroVectors:{vessel:string;kind:'drag'|'lift';force:number;from:[number,number];to:[number,number]}[]=[];
@@ -130,13 +130,13 @@ const start = () => run!.window.start;
 const cursorEnd=()=>traffic?.frontier??end();
 function refreshTraffic(){if(!traffic)return;trafficDirty=false;run=traffic.view(t);events=setEvents(run);const v=vessel(),chart=document.querySelector('.budget-chart');if(v && chart)chart.outerHTML=fuelGraph(v);buildTimeline();}
 function requestTraffic(target:number){
- if(!traffic || !worker || pending || liveError || traffic.halt || !playing || !liveMode || document.hidden || target<=traffic.frontier)return;
+ if(!traffic || !worker || pending || liveError || traffic.halt || !playing || playbackRate<=0 || !liveMode || document.hidden || target<=traffic.frontier)return;
  pending=true;requestedTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,target));
  worker.postMessage({generation:revision,sequence:++sequence,target:requestedTarget,after:traffic.frontier});
 }
 const playbackLead=()=>traffic instanceof StagedServiceViewStore||traffic instanceof LibrationViewStore||traffic instanceof ExpeditionViewStore||traffic instanceof ExpeditionFleetViewStore?EXPEDITION_LEAD:traffic instanceof LunarViewStore?LUNAR_LEAD:(traffic instanceof AdaptiveViewStore||traffic instanceof NetworkViewStore)?adaptivePlaybackLead:0;
 const liveEdge=()=>traffic?bufferedEdge(traffic.frontier,traffic.oldest,playbackLead()):0;
-function goLive(){if(!traffic)return;traffic.release();if(!liveMode)t=Math.max(t,liveEdge());desiredTarget=t+playbackLead();liveMode=!!playbackLead()||!liveError&&!traffic.halt;playing=(!liveError&&!traffic.halt)||t<traffic.frontier;lastFrame=performance.now();refreshTraffic();updatePanels();}
+function goLive(){if(!traffic)return;if(playbackRate<=0){playbackRate=Math.abs(resumeRate)||1;resumeRate=playbackRate;syncSpeed();}traffic.release();if(!liveMode)t=Math.max(t,liveEdge());desiredTarget=t+playbackLead();liveMode=!!playbackLead()||!liveError&&!traffic.halt;playing=(!liveError&&!traffic.halt)||t<traffic.frontier;lastFrame=performance.now();refreshTraffic();updatePanels();}
 const vessel = () => run?.vessels.find(v => v.id === selected)??run?.maintained?.[selected];
 function project3(y:State,time:number):ScreenPoint {
   const ref=run?.vessels.find(v=>v.id===frame);if(ref&&!ref.attachment&&!isPresent(ref,time))return [NaN,NaN,NaN];
@@ -392,13 +392,13 @@ function publishState() {
     stocks: run ? stockAt(run, t) : [], events, thrustWhiskers, camera: {...camera,preset:cameraPreset,panMode,tracking,trackingOffset}, seeThroughBodies, hits});
 }
 function loadSet(id: string) {
-  if(currentSet)setSpeeds.set(currentSet,playbackRate);currentSet=id;
+  if(currentSet){setSpeeds.set(currentSet,playbackRate);setResumeSpeeds.set(currentSet,resumeRate);}currentSet=id;
   playbackRate=setSpeeds.get(id)??(['selene-ground','selene-ground-service'].includes(id)?.01:['aster-selene-staged-expedition','aster-selene-staged-service','aster-selene-beacon','aster-selene-crossings','aster-selene-service','aster-selene-expedition','selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
-  const speed=$<HTMLInputElement>('speed');speed.max=String(Math.log2(maximumPlaybackRate(id)));playbackRate=Math.min(playbackRate,maximumPlaybackRate(id));speed.value=String(Math.log2(playbackRate));showSpeed();
+  resumeRate=setResumeSpeeds.get(id)??(playbackRate||1);playbackRate=Math.sign(playbackRate)*Math.min(Math.abs(playbackRate),maximumPlaybackRate(id));resumeRate=Math.sign(resumeRate)*Math.min(Math.abs(resumeRate),maximumPlaybackRate(id));if(playbackRate!==0)resumeRate=playbackRate;syncSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
   tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service','orison-flexible-service','orison-relay-network','orison-latitude-shuttle','aster-northern-launch','selene-ground','selene-ground-service'].includes(id)?'oblique':'top';orient(camera,cameraPreset);if(id==='orison-latitude-shuttle'||id==='selene-ground'||id==='selene-ground-service')camera.yaw=1.2;if(id==='aster-northern-launch')camera.yaw=2.6;panMode=false;cameraControls();
-  worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=true;trafficDirty=false;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
+  worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=playbackRate>=0;trafficDirty=false;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
   $('load-status').textContent = 'Preparing scene…';
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
   $('state-json').textContent = JSON.stringify({ready, revision});
@@ -413,7 +413,7 @@ function loadSet(id: string) {
     if (e.data.error) { $('load-status').textContent = e.data.error; return; }
     run = e.data.run!; events = setEvents(run); ready = true; selected = run.id==='orison-direct-surface'?run.vessels[0].id:Object.keys(run.maintained??{})[0]??run.vessels[0].id;
     $('launch-view').hidden=!run.entry&&!run.world.ports.some(p=>p.rail.kind==='surface');$('launch-view').textContent=run.entry?'Entry view':'Surface view';document.querySelectorAll<HTMLElement>('.entry-layer').forEach(e=>e.hidden=!run!.atmosphere);
-    frame = run.id==='selene-ground'?'moon':'inertial'; t = run.id === 'orison-freight' ? 2 : run.id==='orison-direct-surface'||run.id==='orison-low-orbit-shuttle'?start():0; playing = true;
+    frame = run.id==='selene-ground'?'moon':'inertial'; t = run.id === 'orison-freight' ? 2 : run.id==='orison-direct-surface'||run.id==='orison-low-orbit-shuttle'?start():0; playing = playbackRate!==0;
     $<HTMLInputElement>('time').min = String(start()); $<HTMLInputElement>('time').max = String(end());
     $('frame').innerHTML = `<option value="inertial">Inertial</option><option value="rotating">${esc(run.rotating.name)}</option>` +
       [...run.world.bodies.map(b => [b.id, b.id]), ...run.stations.map(s => [s.id, s.id]), ...run.vessels.map(v => [v.id, v.name])].map(([id, name]) => `<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
@@ -436,7 +436,7 @@ function loadTraffic(definition:TrafficDefinition|MaintainedDefinition|AdaptiveD
   pending=false;
   if(e.data.error){liveError=`Simulation stopped: ${e.data.error}`;playing=playing&&ready&&!!playbackLead()&&t<traffic!.frontier;if(!playbackLead())liveMode=false;$('load-status').textContent=liveError;updatePanels();return;}
   const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof StagedServiceViewStore)traffic.ingest(e.data.delta! as StagedServiceDelta,!liveMode || !playing && !first);else if(traffic instanceof LibrationViewStore)traffic.ingest(e.data.delta! as LibrationDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionFleetViewStore)traffic.ingest(e.data.delta! as ExpeditionFleetDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionViewStore)traffic.ingest(e.data.delta! as ExpeditionDelta,!liveMode || !playing && !first);else if(traffic instanceof LunarViewStore)traffic.ingest(e.data.delta! as LunarDelta,!liveMode || !playing && !first);else if(traffic instanceof NetworkViewStore)traffic.ingest(e.data.delta! as NetworkDelta,!liveMode || !playing && !first);else if(traffic instanceof AdaptiveViewStore)traffic.ingest(e.data.delta! as AdaptiveDelta,!liveMode || !playing && !first);else if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
-  if(first){ready=true;selected=traffic instanceof StagedServiceViewStore?traffic.definition.source.stack.id:traffic instanceof LibrationViewStore?traffic.definition.courier.id:traffic instanceof ExpeditionFleetViewStore?traffic.definition.actors[0].id:traffic instanceof ExpeditionViewStore?traffic.definition.source.scenario.ship.id:traffic instanceof LunarViewStore?'Tern':traffic instanceof NetworkViewStore?traffic.definition.lanes[0].vessels[0].id:traffic!.definition.vessels[0].id;frame=traffic instanceof LunarViewStore?'moon':'inertial';t=0;playing=true;}
+  if(first){ready=true;selected=traffic instanceof StagedServiceViewStore?traffic.definition.source.stack.id:traffic instanceof LibrationViewStore?traffic.definition.courier.id:traffic instanceof ExpeditionFleetViewStore?traffic.definition.actors[0].id:traffic instanceof ExpeditionViewStore?traffic.definition.source.scenario.ship.id:traffic instanceof LunarViewStore?'Tern':traffic instanceof NetworkViewStore?traffic.definition.lanes[0].vessels[0].id:traffic!.definition.vessels[0].id;frame=traffic instanceof LunarViewStore?'moon':'inertial';t=0;playing=playbackRate!==0;}
   else if(liveMode && playing && !playbackLead())t=traffic!.frontier;
   // Solver yields often acknowledge an unchanged head. Batch drawing-history
   // assembly with the panel cadence instead of rebuilding it for every reply.
@@ -703,7 +703,7 @@ $('launch-view').onclick=()=>{
   }else {setCamera('top');camera.center=[Math.cos(theta)*.075*surfaceBody.radius,Math.sin(theta)*.075*surfaceBody.radius,0];}
   camera.scale=Math.min(width,height)/(.22*surfaceBody.radius);updatePanels();
 };
-$('play').onclick=()=>{if(!ready)return;if(!traffic && t>=end())t=start();playing=!playing;if(traffic && !playing){liveMode=false;refreshTraffic();}lastFrame=performance.now();updatePanels();};
+$('play').onclick=()=>{if(!ready)return;if(playbackRate===0){playbackRate=resumeRate;syncSpeed();}if(!traffic && !playing){if(playbackRate>0&&t>=end())t=start();else if(playbackRate<0&&t<=start())t=end();}playing=!playing;if(traffic && (!playing||playbackRate<0)){liveMode=false;refreshTraffic();}lastFrame=performance.now();updatePanels();};
 $('live').onclick=goLive;
 $('restart').onclick=()=>{if(ready){if(traffic)loadSet(traffic.definition.id);else seek(start());}};
 $<HTMLInputElement>('time').oninput = e => seek(Number((e.target as HTMLInputElement).value));
@@ -769,14 +769,23 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') $('hit-menu').hidden = true;
 });
 function showSpeed(){
-  const text = `${playbackRate < .01 ? Number(playbackRate.toPrecision(3)) : playbackRate<1 ? playbackRate.toFixed(2) : Number(playbackRate.toFixed(2))}×`;
+  const magnitude=Math.abs(playbackRate);const text = `${playbackRate<0?'−':''}${magnitude===0?'0':magnitude < .01 ? Number(magnitude.toPrecision(3)) : magnitude<1 ? magnitude.toFixed(2) : Number(magnitude.toFixed(2))}×`;
   $('speed-value').textContent = text;
   $('speed').setAttribute('aria-valuetext', text);
 }
+function syncSpeed(){
+ const speed=$<HTMLInputElement>('speed'),maximum=maximumPlaybackRate(currentSet);
+ speed.dataset.maximum=String(maximum);speed.value=String(speedPosition(playbackRate,maximum));showSpeed();
+}
 $<HTMLInputElement>('speed').oninput = () => {
-  playbackRate = Math.min(maximumPlaybackRate(run?.id??''),2 ** Number($<HTMLInputElement>('speed').value));showSpeed();
+  const wasCentered=playbackRate===0;
+  playbackRate=speedAtPosition(Number($<HTMLInputElement>('speed').value),maximumPlaybackRate(currentSet));
+  if(playbackRate!==0){resumeRate=playbackRate;if(wasCentered&&ready)playing=true;}else playing=false;
+  if(traffic&&playbackRate<=0){liveMode=false;if(ready)refreshTraffic();}
+  lastFrame=performance.now();showSpeed();
   if (ready) updatePanels();
 };
+$<HTMLInputElement>('speed').ondblclick=()=>{const speed=$<HTMLInputElement>('speed');speed.value='0';speed.dispatchEvent(new Event('input'));};
 function animate(now: number) {
   // A queued RAF timestamp may precede a Play handler that reset lastFrame.
   const dt = Math.max(0, Math.min(0.1, (now - lastFrame) / 1000)); lastFrame = now;
@@ -786,11 +795,11 @@ function animate(now: number) {
     else desiredTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,desiredTarget)+dt*playbackRate);
     requestTraffic(desiredTarget);
    }
-   else {t=Math.min(traffic.frontier,t+dt*playbackRate);if((traffic.halt||liveError)&&t>=traffic.frontier)playing=false;else if(t>=liveEdge()){traffic.release();desiredTarget=t+playbackLead();liveMode=true;}if(now-lastPanel>100||playbackLead()&&(t>run!.window.end||t>run!.traffic!.frontier))refreshTraffic();}
+   else {t=Math.max(traffic.oldest,Math.min(traffic.frontier,t+dt*playbackRate));if(playbackRate<0&&t<=traffic.oldest||(traffic.halt||liveError)&&t>=traffic.frontier)playing=false;else if(playbackRate>0&&t>=liveEdge()){traffic.release();desiredTarget=t+playbackLead();liveMode=true;}if(now-lastPanel>100||playbackLead()&&(t>run!.window.end||t>run!.traffic!.frontier))refreshTraffic();}
   }
   if (ready && playing && !traffic) {
-    t = Math.min(end(), t + dt * playbackRate);
-    if (t >= end()) { if ($<HTMLInputElement>('replay').checked) t = start(); else playing = false; }
+    t = Math.max(start(),Math.min(end(), t + dt * playbackRate));
+    if (playbackRate>0&&t>=end()||playbackRate<0&&t<=start()) { if ($<HTMLInputElement>('replay').checked) t = playbackRate>0?start():end(); else playing = false; }
   }
   if(ready && trafficDirty && now-lastPanel>100)refreshTraffic();
   draw();

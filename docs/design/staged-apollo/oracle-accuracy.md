@@ -1,5 +1,9 @@
 # Staged Apollo numerical accuracy
 
+The initial witness measurements below are historical. The current fixture and
+JSON reports include the [2026-10-11 refinement](../../evidence/staged-refinement.md),
+with new lunar controls, inventories and measured numerical checks.
+
 The admitted fixture retains canonical step 1/1024. Its independently measured
 full-mission allowance is 1e-4 in state components and recovery epoch. Landing
 and orbiter docking remain separate, much tighter 2e-6 position/velocity gates,

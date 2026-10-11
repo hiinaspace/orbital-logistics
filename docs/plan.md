@@ -486,3 +486,14 @@ The user accepted continuous expedition playback through16×. The next authored 
 ### Beacon relay
 
 The user accepted the overlapping expedition set and authorized the libration-region station, permitting analytical/precomputed motion. The separate Beacon relay exhibit adds an actual-field ideal outer equilibrium and a paid lunar surface courier to Crossings. Shared publication, funded refills, consumed parcels, cached finite thrust and rolling playback are retained. Astra reviewed the provider, resources, storage and terminal-calendar seam. A drifting periodic reference or separate staged expedition can follow the visual gate. See docs/design/libration-service/README.md and docs/evidence/libration.md.
+
+### Staged mission refinement and signed playback
+
+The user accepted finite and continuous booster/orbiter/lander missions plus the
+viewport layout, then requested Astra review and a small aesthetic parameter search.
+The admitted refinement preserves fictional scale, reduces insertion turning and
+acceleration, and replaces Eagle's reverse coast with a lower-cost prograde ascent.
+The wider speed control now has reverse and center0× pause; continuous reverse stays
+within held history. NASA/JPL trace data and Apollo11 event geometry are offline
+references. See docs/evidence/staged-refinement.md and
+ docs/design/staged-refinement/disposition.md.

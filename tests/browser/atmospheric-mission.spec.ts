@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 async function state(page:Page){return JSON.parse(await page.locator('#state-json').textContent()??'{}');}
 async function ready(page:Page,id:string){await expect.poll(async()=>{const s=await state(page);return s.ready&&s.set===id;},{timeout:30000}).toBe(true);}
 async function pause(page:Page){if((await state(page)).playing)await page.getByRole('button',{name:'Pause',exact:true}).click();}
@@ -24,7 +25,7 @@ test('atmospheric stack, boostback, orbital delivery, both recoveries and view s
  await seek(page,12);const final=await state(page);expect(final.ships.slice(1).every((s:any)=>s.entryPhase==='recovered'&&s.propellant>0)).toBe(true);
  await expect(page.locator('#object-status')).toHaveText('Recovered · Ocean');await expect(page.locator('#readouts')).toContainText('0.0387');expect(final.stocks.every((s:any)=>s.occupied===0)).toBe(true);
  // Actual playback crosses terminal guidance and recovery, then deterministic rewind.
- await seek(page,8.2);await page.getByLabel('Playback speed').fill('-1');await page.getByRole('button',{name:'Play',exact:true}).click();
+ await seek(page,8.2);await setRate(page,0.5);await page.getByRole('button',{name:'Play',exact:true}).click();
  await expect.poll(async()=>(await state(page)).ships[2].entryPhase).toBe('recovered');await pause(page);
  await seek(page,1.05);expect((await state(page)).ships[2].thrust.id).toBe('insertion');await seek(page,12);expect((await state(page)).ships[2].y).toEqual(final.ships[2].y);
  for(const id of ['aster-entry','selene-staging','orison-service','aster-launch']){await page.getByLabel('Model set').selectOption(id);await ready(page,id);await pause(page);}

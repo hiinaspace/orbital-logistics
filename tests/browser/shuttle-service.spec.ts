@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 import {writeFileSync} from 'node:fs';
 const state=async(p:Page)=>JSON.parse(await p.locator('#state-json').textContent()??'{}');
 const ready=async(p:Page,id?:string)=>expect.poll(async()=>{const s=await state(p);return s.ready&&(!id||s.set===id);},{timeout:60000}).toBe(true);
@@ -6,7 +7,7 @@ async function pause(p:Page){if((await state(p)).playing)await p.getByRole('butt
 test('cached whole flights operate live with two ships, smooth rockets, close views and retained rewind',async({page})=>{
  test.setTimeout(120000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/');await ready(page);await page.getByLabel('Model set').selectOption('orison-shuttle-service');await ready(page,'orison-shuttle-service');
- expect((await state(page)).playbackRate).toBeCloseTo(.1,3);await page.getByLabel('Playback speed').fill('1');
+ expect((await state(page)).playbackRate).toBeCloseTo(.1,3);await setRate(page,2);
  await page.evaluate(()=>{const w=window as any;w.shuttleMeter={start:performance.now(),epoch:w.orbitalPlayback.epoch,last:performance.now(),maxGapMs:0,stop:false};const tick=(now:number)=>{const m=w.shuttleMeter;m.maxGapMs=Math.max(m.maxGapMs,now-m.last);m.last=now;if(!m.stop)requestAnimationFrame(tick);};requestAnimationFrame(tick);});
  await expect.poll(async()=>(await state(page)).traffic.frontier,{timeout:45000}).toBeGreaterThan(40);
  const meter=await page.evaluate(()=>{const w=window as any,m=w.shuttleMeter;m.stop=true;return {...m,seconds:(performance.now()-m.start)/1000,effectiveRate:(w.orbitalPlayback.epoch-m.epoch)/((performance.now()-m.start)/1000)};});

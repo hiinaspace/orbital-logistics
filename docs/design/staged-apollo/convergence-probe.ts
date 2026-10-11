@@ -35,4 +35,4 @@ const entry=enter('orbiter',d.entryStart,returning.y,returning.fuel,h.lander.dry
 const boost=air('booster',d.boosterSeparation,d.boosterEntryStart,split.y,split.fuel,0,d.dragAreas.booster,d.programs.booster);
 const be=enter('booster',d.boosterEntryStart,boost.y,boost.fuel,0);
 const result={step,rows,capture,dock,entry:{t:entry.contact.t,y:entry.contact.before,speed:entry.contact.relativeSpeed},booster:{t:be.contact.t,y:be.contact.before}};
-fs.writeFileSync('docs/design/staged-apollo/convergence-'+Math.round(1/step)+'.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
+fs.writeFileSync((process.argv[3]??'docs/design/staged-apollo')+'/convergence-'+Math.round(1/step)+'.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));

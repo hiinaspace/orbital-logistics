@@ -437,3 +437,19 @@ Aster–Selene · Continuous expedition repeats the accepted finite atmospheric 
 ## Libration-region relay
 
 **Aster–Selene · Beacon relay** retains Crossings and adds the actual-field outer equilibrium station Beacon plus Kestrel’s cached finite-thrust lunar round trips. Haven funds restored departure loads, and delivered relay parcels are explicitly consumed. Shared rolling playback needs no online station controller. See [design](design/libration-service/README.md) and [evidence](evidence/libration.md).
+
+## Staged missions and reverse playback — 2026-10-11
+
+**Staged expedition** and **Staged service** retain separate booster, orbiter and
+lander inventories through exact state splits, atmospheric recovery, lunar landing
+and paid rendezvous. The continuous wrapper uses one admitted physical mission,
+funded turnaround and bounded retained history. The user accepted these exhibits
+and requested a maneuver aesthetics pass: insertion now uses a gentler continuous
+burn, and the lander ascends into a prograde rendezvous coast. World scale and
+physical gates are preserved. See [current evidence](evidence/staged-refinement.md)
+and [Astra disposition](design/staged-refinement/disposition.md).
+
+The wider speed control spans reverse, center0× pause and forward. Reverse is
+playback of physical history; it does not undo events/resources or integrate the
+canonical service backwards. Live resumes forward. Compact [real mission references](design/mission-reference/README.md)
+are retained for offline comparison, without introducing real missions into the UI.

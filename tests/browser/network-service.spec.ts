@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 import {readFileSync,writeFileSync} from 'node:fs';
 const state=async(page:Page)=>JSON.parse(await page.locator('#state-json').textContent()??'{}');
 async function load(page:Page){await page.goto('/');await expect.poll(async()=>(await state(page)).ready).toBe(true);await page.getByLabel('Model set').selectOption('orison-relay-network');await expect.poll(async()=>{const s=await state(page);return s.ready&&s.set==='orison-relay-network';},{timeout:90000}).toBe(true);}
@@ -11,11 +12,11 @@ test('two maintained lanes preserve selection, paused poses, shared stocks and s
  await page.getByLabel('Simulation time').fill('24.123');const past=await state(page);await page.getByLabel('Reference frame').selectOption('rotating');expect((await state(page)).ships.map((s:any)=>s.y)).toEqual(past.ships.map((s:any)=>s.y));
  await page.getByRole('button',{name:'Return to live'}).click();await expect.poll(async()=>(await state(page)).traffic.frontier).toBeGreaterThan(held.traffic.frontier);
  await page.getByLabel('Model set').selectOption('selene-freight');await expect.poll(async()=>(await state(page)).ready).toBe(true);
- await page.getByLabel('Playback speed').fill('4');await page.getByLabel('Model set').selectOption('orison-relay-network');await expect.poll(async()=>(await state(page)).ready,{timeout:90000}).toBe(true);expect((await state(page)).playbackRate).toBe(2);await expect(page.getByLabel('Playback speed')).toHaveAttribute('max','1');expect((await state(page)).traffic.error).toBe('');expect(errors).toEqual([]);
+ await setRate(page,16);await page.getByLabel('Model set').selectOption('orison-relay-network');await expect.poll(async()=>(await state(page)).ready,{timeout:90000}).toBe(true);expect((await state(page)).playbackRate).toBe(1);await setRate(page,16);expect((await state(page)).playbackRate).toBe(2);await expect(page.getByLabel('Playback speed')).toHaveAttribute('max','1');await expect(page.getByLabel('Playback speed')).toHaveAttribute('data-maximum','2');expect((await state(page)).traffic.error).toBe('');expect(errors).toEqual([]);
  await page.screenshot({path:'docs/design/multiship-service/browser.png',fullPage:true});
 });
 test('live fuel chart replacements keep the time cursor at the displayed epoch',async({page})=>{
- test.setTimeout(90000);await load(page);await page.getByLabel('Playback speed').fill('1');
+ test.setTimeout(90000);await load(page);await setRate(page,2);
  await page.evaluate(()=>{
   const result={replacements:0,invalid:[] as string[]};(window as any).chartCursorWitness=result;
   new MutationObserver(records=>{
@@ -36,7 +37,7 @@ test('measure actual network display frames and committed-buffer continuity',asy
  const rates=process.env.NETWORK_RATES!.split(',').map(Number),through=Number(process.env.NETWORK_THROUGH??160),rows:any[]=[];
  test.setTimeout(rates.reduce((t,r)=>t+(through/r+120)*1000,0));
  for(const rate of rates){const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));const startup=performance.now();await load(page);const startupMs=performance.now()-startup;
-  await page.getByLabel('Playback speed').fill(String(Math.log2(rate)));
+  await setRate(page,rate);
   await page.evaluate(()=>{
    const read=()=> (window as any).orbitalPlayback,m={start:performance.now(),startEpoch:read().epoch,lastEpoch:read().epoch,lastChange:performance.now(),lastFrame:performance.now(),maxHoldMs:0,maxFrameGapMs:0,minLead:Infinity,underflows:0,frames:0,planningFrames:0,frameBins:Array(2048).fill(0),layerToggleMs:0};
    (window as any).networkMeter=m;(window as any).stopNetworkMeter=false;

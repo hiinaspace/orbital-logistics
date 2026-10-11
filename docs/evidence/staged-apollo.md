@@ -1,5 +1,9 @@
 # Staged expedition validation
 
+The initial witness measurements below are historical. The current fixture and
+JSON reports include the [2026-10-11 refinement](staged-refinement.md),
+with new lunar controls, inventories and measured numerical checks.
+
 2026-10-11, natto. The two new selectable exhibits are
 **Aster–Selene · Staged expedition** and **Aster–Selene · Staged service**.
 

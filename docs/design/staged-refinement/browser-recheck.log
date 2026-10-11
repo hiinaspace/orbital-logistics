@@ -1,0 +1,14 @@
+[WebServer] (node:3373603) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+(node:3373628) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser/bidirectional-playback.spec.ts:7:1 › finite scenes reverse physical samples, pause at zero, resume and stop at the beginning (3.6s)
+  ✓  2 tests/browser/bidirectional-playback.spec.ts:26:1 › continuous reverse holds the published head, clamps to retained history and Live resumes forward (12.6s)
+  ✓  3 tests/browser/staged-service.spec.ts:6:1 › continuous staged service repeats at16x with protected tanks, held history and switching (46.3s)
+  ✓  4 tests/browser/viewer.spec.ts:77:1 › lunar set supports rotating exploration, finite playback and explicit replay (1.9s)
+  ✓  5 tests/browser/viewer.spec.ts:188:1 › surface freight is readable at launch and orbital scales; frames and replay preserve the flight (7.4s)
+
+  5 passed (1.3m)

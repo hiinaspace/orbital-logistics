@@ -3,21 +3,21 @@
   "angle": 3.101559494456182,
   "recoveries": {
     "booster": 2.8728483581561624,
-    "orbiter": 79.51386183280101
+    "orbiter": 79.50747146771792
   },
   "spent": {
     "booster": 1.5815223019677296,
-    "orbiter": 1.8011346679952132,
-    "lander": 0.24926521238473565
+    "orbiter": 1.750335973051388,
+    "lander": 0.17672932043805334
   },
   "initialFuel": 7.346891479878904,
   "work": {
-    "physicsBytes": 33929616,
-    "nodes": 101366,
-    "bytes": 15763018
+    "physicsBytes": 30880584,
+    "nodes": 100677,
+    "bytes": 15210107
   },
-  "firstPacketBytes": 28445180,
-  "coldPacketBytes": 54096246,
+  "firstPacketBytes": 27218751,
+  "coldPacketBytes": 51480381,
   "comparison": [
     {
       "actor": "stack",
@@ -329,56 +329,56 @@
     },
     {
       "actor": "stack",
-      "local": 40.664405090716635,
+      "local": 42.18389204156703,
       "positionError": 0,
       "fuelError": 0,
       "massError": 0
     },
     {
       "actor": "booster",
-      "local": 40.664405090716635,
+      "local": 42.18389204156703,
       "positionError": 0,
       "fuelError": 0,
       "massError": 0
     },
     {
       "actor": "orbiter",
-      "local": 40.664405090716635,
+      "local": 42.18389204156703,
       "positionError": 0,
       "fuelError": 0,
       "massError": 0
     },
     {
       "actor": "lander",
-      "local": 40.664405090716635,
+      "local": 42.18389204156703,
       "positionError": 0,
       "fuelError": 0,
       "massError": 0
     },
     {
       "actor": "stack",
-      "local": 44.5,
+      "local": 45.370203094349925,
       "positionError": 0,
       "fuelError": 0,
       "massError": 0
     },
     {
       "actor": "booster",
-      "local": 44.5,
+      "local": 45.370203094349925,
       "positionError": 0,
       "fuelError": 0,
       "massError": 0
     },
     {
       "actor": "orbiter",
-      "local": 44.5,
+      "local": 45.370203094349925,
       "positionError": 0,
       "fuelError": 0,
       "massError": 0
     },
     {
       "actor": "lander",
-      "local": 44.5,
+      "local": 45.370203094349925,
       "positionError": 0,
       "fuelError": 0,
       "massError": 0
@@ -428,14 +428,14 @@
     {
       "actor": "orbiter",
       "local": 55.057971,
-      "positionError": 8.08242361927114e-14,
+      "positionError": 8.171241461241152e-14,
       "fuelError": 0,
       "massError": 0
     },
     {
       "actor": "lander",
       "local": 55.057971,
-      "positionError": 8.08242361927114e-14,
+      "positionError": 8.171241461241152e-14,
       "fuelError": 0,
       "massError": 0
     },
@@ -458,7 +458,7 @@
       "local": 75.03229829406145,
       "positionError": 0,
       "fuelError": 0,
-      "massError": 4.440892098500626e-16
+      "massError": 0
     },
     {
       "actor": "lander",
@@ -469,28 +469,28 @@
     },
     {
       "actor": "stack",
-      "local": 80.01386183280101,
+      "local": 80.00747146771792,
       "positionError": 0,
       "fuelError": 0,
       "massError": 0
     },
     {
       "actor": "booster",
-      "local": 80.01386183280101,
+      "local": 80.00747146771792,
       "positionError": 0,
       "fuelError": 0,
       "massError": 0
     },
     {
       "actor": "orbiter",
-      "local": 80.01386183280101,
+      "local": 80.00747146771792,
       "positionError": 0,
       "fuelError": 0,
       "massError": 0
     },
     {
       "actor": "lander",
-      "local": 80.01386183280101,
+      "local": 80.00747146771792,
       "positionError": 0,
       "fuelError": 0,
       "massError": 0
@@ -499,51 +499,51 @@
   "records": [
     {
       "epoch": 101.38531648187275,
-      "physicsBytes": 33929616,
-      "physicalNodes": 101366,
-      "packetBytes": 12791882,
-      "drawingBytes": 25462264,
-      "drawingSamples": 71117,
+      "physicsBytes": 30880584,
+      "physicalNodes": 100677,
+      "packetBytes": 12124033,
+      "drawingBytes": 24121377,
+      "drawingSamples": 68433,
       "viewCycles": 2,
       "fuelBalanceError": 8.881784197001252e-16
     },
     {
       "epoch": 103.88531648187275,
-      "physicsBytes": 33929616,
-      "physicalNodes": 101366,
-      "packetBytes": 7045,
-      "drawingBytes": 25462264,
-      "drawingSamples": 71117,
+      "physicsBytes": 30880584,
+      "physicalNodes": 100677,
+      "packetBytes": 6804,
+      "drawingBytes": 24121377,
+      "drawingSamples": 68433,
       "viewCycles": 2,
-      "fuelBalanceError": 8.881784197001252e-16
+      "fuelBalanceError": 1.7763568394002505e-15
     },
     {
-      "epoch": 251.2706329637455,
-      "physicsBytes": 33929616,
-      "physicalNodes": 101366,
-      "packetBytes": 12729406,
-      "drawingBytes": 25508308,
-      "drawingSamples": 71116,
+      "epoch": 252.14083605809543,
+      "physicsBytes": 30880584,
+      "physicalNodes": 100677,
+      "packetBytes": 12051600,
+      "drawingBytes": 24163125,
+      "drawingSamples": 68432,
       "viewCycles": 2,
       "fuelBalanceError": 0
     },
     {
       "epoch": 556.9265824093637,
-      "physicsBytes": 33929616,
-      "physicalNodes": 101366,
-      "packetBytes": 25460546,
-      "drawingBytes": 25453810,
-      "drawingSamples": 71116,
+      "physicsBytes": 30880584,
+      "physicalNodes": 100677,
+      "packetBytes": 24088792,
+      "drawingBytes": 24082298,
+      "drawingSamples": 68432,
       "viewCycles": 2,
       "fuelBalanceError": 3.552713678800501e-15
     },
     {
       "epoch": 1315.6560960765346,
-      "physicsBytes": 33929616,
-      "physicalNodes": 101366,
-      "packetBytes": 38333216,
-      "drawingBytes": 38326093,
-      "drawingSamples": 106682,
+      "physicsBytes": 30880584,
+      "physicalNodes": 100677,
+      "packetBytes": 36270262,
+      "drawingBytes": 36263375,
+      "drawingSamples": 102656,
       "viewCycles": 3,
       "fuelBalanceError": 0
     }
@@ -552,9 +552,9 @@
     "epoch": 1000000,
     "halt": "Exhibit calendar ended",
     "refills": 9672,
-    "packetBytes": 21674449,
-    "fuelBalanceError": 7.275957614183426e-12,
-    "drawingBytes": 21667889,
-    "drawingSamples": 60298
+    "packetBytes": 20302364,
+    "fuelBalanceError": 0,
+    "drawingBytes": 20296040,
+    "drawingSamples": 57627
   }
 }

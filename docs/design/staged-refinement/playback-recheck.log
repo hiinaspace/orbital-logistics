@@ -1,0 +1,13 @@
+[WebServer] (node:3376218) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:3376241) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser/bidirectional-playback.spec.ts:7:1 › finite scenes reverse physical samples, pause at zero, resume and stop at the beginning (3.0s)
+  ✓  2 tests/browser/bidirectional-playback.spec.ts:28:1 › continuous reverse holds the published head, clamps to retained history and Live resumes forward (19.4s)
+  ✓  3 tests/browser/network-service.spec.ts:6:1 › two maintained lanes preserve selection, paused poses, shared stocks and set switching (24.8s)
+  ✓  4 tests/browser/planning-throughput.spec.ts:30:1 › set-specific range caps a requested rate and restores each set preference (5.6s)
+
+  4 passed (55.2s)

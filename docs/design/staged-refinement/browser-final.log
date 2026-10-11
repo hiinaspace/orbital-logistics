@@ -1,0 +1,168 @@
+[WebServer] (node:3370842) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 22 tests using 1 worker
+
+(node:3370866) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   1 tests/browser/bidirectional-playback.spec.ts:7:1 › finite scenes reverse physical samples, pause at zero, resume and stop at the beginning (1.1s)
+(node:3371037) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   2 tests/browser/bidirectional-playback.spec.ts:26:1 › continuous reverse holds the published head, clamps to retained history and Live resumes forward (946ms)
+(node:3371200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 tests/browser/responsive-viewer.spec.ts:8:2 › viewer fits 3840×2160 with usable overlays and controls (2.8s)
+  ✓   4 tests/browser/responsive-viewer.spec.ts:8:2 › viewer fits 1440×900 with usable overlays and controls (2.0s)
+  ✓   5 tests/browser/responsive-viewer.spec.ts:8:2 › viewer fits 1024×768 with usable overlays and controls (2.4s)
+  ✓   6 tests/browser/responsive-viewer.spec.ts:8:2 › viewer fits 390×844 with usable overlays and controls (2.2s)
+  ✓   7 tests/browser/responsive-viewer.spec.ts:8:2 › viewer fits 320×640 with usable overlays and controls (2.2s)
+  ✓   8 tests/browser/staged-apollo.spec.ts:4:1 › staged expedition separates, visits surface, rejoins real orbiter and recovers both vehicles (22.0s)
+  ✘   9 tests/browser/staged-service.spec.ts:6:1 › continuous staged service repeats at16x with protected tanks, held history and switching (6.4s)
+(node:3372305) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 tests/browser/viewer.spec.ts:18:1 › freight scene is immediately watchable; shared resources and all ships rewind together (1.7s)
+  ✓  11 tests/browser/viewer.spec.ts:41:1 › frames and layers change presentation without changing the fleet, stocks or events (1.4s)
+  ✓  12 tests/browser/viewer.spec.ts:58:1 › overlapping docked objects open a chooser; panning and zooming preserve selection and time (1.7s)
+  ✘  13 tests/browser/viewer.spec.ts:77:1 › lunar set supports rotating exploration, finite playback and explicit replay (1.5s)
+(node:3372655) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  14 tests/browser/viewer.spec.ts:95:1 › narrow layout keeps the scene and transport usable without horizontal overflow (1.4s)
+  ✓  15 tests/browser/viewer.spec.ts:105:1 › labels retain anchors through scrub, reversal, frames, pause and selection (1.4s)
+  ✓  16 tests/browser/viewer.spec.ts:120:1 › lunar freight exposes three finite round trips, depot stocks and shared rotating frames (4.5s)
+  ✓  17 tests/browser/viewer.spec.ts:137:1 › continuous playback speed supports intermediate rates without changing physics or pause (1.7s)
+  ✓  18 tests/browser/viewer.spec.ts:151:1 › powered freight shows finite acceleration, continuous resources and both completed returns (3.8s)
+  ✓  19 tests/browser/viewer.spec.ts:169:1 › future thrust whiskers follow the plan layer and never mark flown history (5.6s)
+  ✘  20 tests/browser/viewer.spec.ts:188:1 › surface freight is readable at launch and orbital scales; frames and replay preserve the flight (2.2s)
+(node:3373200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  21 tests/browser/viewer.spec.ts:206:1 › surface round trip brakes, lands and unloads; frame changes, rewind and live-set switches preserve it (5.6s)
+  ✓  22 tests/browser/viewer.spec.ts:230:1 › thrust whiskers point along exhaust and taper with capped force in inertial and rotating views (2.3s)
+
+
+  1) tests/browser/bidirectional-playback.spec.ts:7:1 › finite scenes reverse physical samples, pause at zero, resume and stop at the beginning
+
+    Error: locator.fill: Error: Malformed value
+    Call log:
+      - waiting for getByLabel('Playback speed')
+        - locator resolved to <input max="1" min="-1" value="0" id="speed" type="range" step="0.0001" data-maximum="16" aria-valuetext="−2×" aria-label="Playback speed" title="Reverse ← · 0× pause · → Forward"/>
+        - fill("0.0000")
+      - attempting fill action
+        - waiting for element to be visible, enabled and editable
+
+
+       at playback-controls.ts:5
+
+      3 | export async function setRate(page:Page,rate:number){
+      4 |  const slider=page.getByLabel('Playback speed'),maximum=Number(await slider.getAttribute('data-maximum'));
+    > 5 |  await slider.fill(speedPosition(rate,maximum).toFixed(4));
+        |               ^
+      6 | }
+      7 |
+        at setRate (/home/s/code/orbital-logistics/tests/browser/playback-controls.ts:5:15)
+        at /home/s/code/orbital-logistics/tests/browser/bidirectional-playback.spec.ts:14:2
+
+    Error Context: test-results/bidirectional-playback-fin-a74aa-e-and-stop-at-the-beginning/error-context.md
+
+  2) tests/browser/bidirectional-playback.spec.ts:26:1 › continuous reverse holds the published head, clamps to retained history and Live resumes forward
+
+    Error: locator.fill: Error: Malformed value
+    Call log:
+      - waiting for getByLabel('Playback speed')
+        - locator resolved to <input max="1" min="-1" value="0" id="speed" type="range" step="0.0001" data-maximum="16" aria-valuetext="1×" aria-label="Playback speed" title="Reverse ← · 0× pause · → Forward"/>
+        - fill("1.0000")
+      - attempting fill action
+        - waiting for element to be visible, enabled and editable
+
+
+       at playback-controls.ts:5
+
+      3 | export async function setRate(page:Page,rate:number){
+      4 |  const slider=page.getByLabel('Playback speed'),maximum=Number(await slider.getAttribute('data-maximum'));
+    > 5 |  await slider.fill(speedPosition(rate,maximum).toFixed(4));
+        |               ^
+      6 | }
+      7 |
+        at setRate (/home/s/code/orbital-logistics/tests/browser/playback-controls.ts:5:15)
+        at /home/s/code/orbital-logistics/tests/browser/bidirectional-playback.spec.ts:30:2
+
+    Error Context: test-results/bidirectional-playback-con-76da8-ry-and-Live-resumes-forward/error-context.md
+
+  3) tests/browser/staged-service.spec.ts:6:1 › continuous staged service repeats at16x with protected tanks, held history and switching
+
+    Error: locator.fill: Error: Malformed value
+    Call log:
+      - waiting for getByLabel('Playback speed')
+        - locator resolved to <input max="1" min="-1" value="0" id="speed" type="range" step="0.0001" data-maximum="16" aria-valuetext="0.10×" aria-label="Playback speed" title="Reverse ← · 0× pause · → Forward"/>
+        - fill("1.0000")
+      - attempting fill action
+        - waiting for element to be visible, enabled and editable
+
+
+       at playback-controls.ts:5
+
+      3 | export async function setRate(page:Page,rate:number){
+      4 |  const slider=page.getByLabel('Playback speed'),maximum=Number(await slider.getAttribute('data-maximum'));
+    > 5 |  await slider.fill(String(Number(speedPosition(rate,maximum).toFixed(4))));
+        |               ^
+      6 | }
+      7 |
+        at setRate (/home/s/code/orbital-logistics/tests/browser/playback-controls.ts:5:15)
+        at /home/s/code/orbital-logistics/tests/browser/staged-service.spec.ts:19:2
+
+    Error Context: test-results/staged-service-continuous--da7d4--held-history-and-switching/error-context.md
+
+  4) tests/browser/viewer.spec.ts:77:1 › lunar set supports rotating exploration, finite playback and explicit replay
+
+    Error: locator.fill: Error: Malformed value
+    Call log:
+      - waiting for getByLabel('Playback speed')
+        - locator resolved to <input max="1" min="-1" value="0" id="speed" type="range" step="0.0001" data-maximum="16" aria-valuetext="1×" aria-label="Playback speed" title="Reverse ← · 0× pause · → Forward"/>
+        - fill("1.0000")
+      - attempting fill action
+        - waiting for element to be visible, enabled and editable
+
+
+       at playback-controls.ts:5
+
+      3 | export async function setRate(page:Page,rate:number){
+      4 |  const slider=page.getByLabel('Playback speed'),maximum=Number(await slider.getAttribute('data-maximum'));
+    > 5 |  await slider.fill(String(Number(speedPosition(rate,maximum).toFixed(4))));
+        |               ^
+      6 | }
+      7 |
+        at setRate (/home/s/code/orbital-logistics/tests/browser/playback-controls.ts:5:15)
+        at /home/s/code/orbital-logistics/tests/browser/viewer.spec.ts:82:28
+
+    Error Context: test-results/viewer-lunar-set-supports--2bb6c-layback-and-explicit-replay/error-context.md
+
+  5) tests/browser/viewer.spec.ts:188:1 › surface freight is readable at launch and orbital scales; frames and replay preserve the flight
+
+    Error: locator.fill: Error: Malformed value
+    Call log:
+      - waiting for getByLabel('Playback speed')
+        - locator resolved to <input max="1" min="-1" value="0" id="speed" type="range" step="0.0001" data-maximum="16" aria-valuetext="0.000977×" aria-label="Playback speed" title="Reverse ← · 0× pause · → Forward"/>
+        - fill("1.0000")
+      - attempting fill action
+        - waiting for element to be visible, enabled and editable
+
+
+       at playback-controls.ts:5
+
+      3 | export async function setRate(page:Page,rate:number){
+      4 |  const slider=page.getByLabel('Playback speed'),maximum=Number(await slider.getAttribute('data-maximum'));
+    > 5 |  await slider.fill(String(Number(speedPosition(rate,maximum).toFixed(4))));
+        |               ^
+      6 | }
+      7 |
+        at setRate (/home/s/code/orbital-logistics/tests/browser/playback-controls.ts:5:15)
+        at /home/s/code/orbital-logistics/tests/browser/viewer.spec.ts:202:77
+
+    Error Context: test-results/viewer-surface-freight-is--87c97--replay-preserve-the-flight/error-context.md
+
+  5 failed
+    tests/browser/bidirectional-playback.spec.ts:7:1 › finite scenes reverse physical samples, pause at zero, resume and stop at the beginning
+    tests/browser/bidirectional-playback.spec.ts:26:1 › continuous reverse holds the published head, clamps to retained history and Live resumes forward
+    tests/browser/staged-service.spec.ts:6:1 › continuous staged service repeats at16x with protected tanks, held history and switching
+    tests/browser/viewer.spec.ts:77:1 › lunar set supports rotating exploration, finite playback and explicit replay
+    tests/browser/viewer.spec.ts:188:1 › surface freight is readable at launch and orbital scales; frames and replay preserve the flight
+  17 passed (1.4m)

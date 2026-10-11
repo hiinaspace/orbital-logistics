@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {setRate} from './playback-controls';
 import fs from 'node:fs';
 test('overlapping expeditions and a local orbiter keep playing at sixteen times speed',async({page})=>{
  test.setTimeout(150000);const errors:string[]=[];page.on('pageerror',e=>{errors.push(e.message);console.error(e.stack);});
@@ -17,7 +18,7 @@ test('overlapping expeditions and a local orbiter keep playing at sixteen times 
  expect(s.ships.find((v:any)=>v.id==='Argosy').logistics.dockedPortId).toBe('Farpoint');
  await select('Argosy');await page.getByRole('button',{name:'Surface view',exact:true}).click();expect((await state()).frame).toBe('Farpoint');
  await page.getByLabel('Reference frame').selectOption('inertial');await page.getByRole('button',{name:'Fit',exact:true}).click();await page.getByLabel('Camera view').selectOption('oblique');
- await page.getByLabel('Playback speed').fill('4');
+ await setRate(page,16);
  const began=performance.now();await page.evaluate(()=>{(window as any).__crossings.active=true;});await page.getByRole('button',{name:'Play',exact:true}).click();
  await expect.poll(async()=>(await state()).t,{timeout:30000}).toBeGreaterThan(120);await pause();await page.evaluate(()=>{(window as any).__crossings.active=false;});
  const elapsedMs=performance.now()-began,first=await state(),metrics=await page.evaluate(()=>(window as any).__crossings);

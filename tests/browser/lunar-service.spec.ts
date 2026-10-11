@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 import {writeFileSync} from 'node:fs';
 const state=async(p:Page)=>JSON.parse(await p.locator('#state-json').textContent()??'{}');
 const ready=async(p:Page,id?:string)=>expect.poll(async()=>{const s=await state(p);return s.ready&&(!id||s.set===id);},{timeout:60000}).toBe(true);
@@ -6,7 +7,7 @@ test('continuous lunar ground service plays, rewinds and changes frames without 
  test.setTimeout(180000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/');await ready(page);await page.getByLabel('Model set').selectOption('selene-ground-service');await ready(page,'selene-ground-service');
  let s=await state(page);expect(s.frame).toBe('moon');expect(s.playbackRate).toBe(.01);
- await page.getByLabel('Playback speed').fill('-5.65');
+ await setRate(page,2 ** -5.65);
  const observations:any[]=[];const start=Date.now();
  while(Date.now()-start<105000){await page.waitForTimeout(1000);s=await state(page);observations.push({t:s.t,frontier:s.traffic.frontier,stats:s.traffic.stats,error:s.traffic.error});expect(s.traffic.error).toBe('');}
  expect(s.t).toBeGreaterThan(1.8);expect(s.traffic.stats.voyages).toBeGreaterThanOrEqual(2);expect(s.traffic.stats.delivered).toBeGreaterThanOrEqual(.15);

@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {setRate} from './playback-controls';
 import {readFileSync} from 'node:fs';
 const d=JSON.parse(readFileSync('fixtures/model-sets/selene-staging.json','utf8'));
 async function state(page:Page){return JSON.parse(await page.locator('#state-json').textContent()??'{}');}
@@ -46,6 +47,6 @@ test('launch assembly splits into paid delivery and booster recovery; lifetime, 
  await page.locator('[data-select="wren"]').click();await page.getByLabel('Reference frame').selectOption('wren');await page.getByLabel('Camera tracking').selectOption('chase');await seek(page,1.2);await seek(page,.6);expect((await state(page)).frame).toBe('inertial');expect((await state(page)).camera.tracking).toBe('off');await seek(page,4);expect((await state(page)).ships.map(({id,present,y,propellant,logistics}:any)=>({id,present,y,propellant,logistics}))).toEqual(final.ships.map(({id,present,y,propellant,logistics}:any)=>({id,present,y,propellant,logistics})));
  await page.locator('[data-select="kestrel-stack"]').click();await seek(page,.6);await page.locator('#next-event').click();expect((await state(page)).t).toBe(d.separation.t);expect((await state(page)).ships.map((s:any)=>s.present)).toEqual([false,true,true]);
  await page.locator('#restart').click();expect((await state(page)).t).toBe(0);expect((await state(page)).ships.map((s:any)=>s.present)).toEqual([true,false,false]);
- await page.getByLabel('Playback speed').fill('-2');
+ await setRate(page,0.25);
  await page.getByLabel('Model set').selectOption('orison-service');await ready(page,'orison-service');await pause(page);expect((await state(page)).playbackRate).toBe(1);await page.getByLabel('Model set').selectOption('selene-staging');await ready(page,'selene-staging');await pause(page);await seek(page,0);expect((await state(page)).ships.map((s:any)=>s.present)).toEqual([true,false,false]);expect((await state(page)).playbackRate).toBe(.25);expect(errors).toEqual([]);
 });

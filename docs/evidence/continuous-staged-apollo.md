@@ -1,5 +1,9 @@
 # Staged service recurrence
 
+The initial witness measurements below are historical. The current fixture and
+JSON reports include the [2026-10-11 refinement](staged-refinement.md),
+with new lunar controls, inventories and measured numerical checks.
+
 `Aster–Selene · Staged service` repeats the admitted finite staged mission using
 one cached physical context and the unchanged global world rails. Atlas, Odyssey
 and Eagle keep their identities, dry hardware, tanks and cumulative consumption.
