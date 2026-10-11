@@ -49,7 +49,7 @@ export interface SceneView {
 }
 export interface SetRun extends SceneView {vessels:VesselRun[]}
 export interface Stock { id: string; cargo: number; propellant: number; occupied: number }
-export type ViewerEvent=Omit<LedgerEntry,'kind'> & {kind:LedgerEntry['kind']|'planning-failed'|'unavailable'|'fault'|'separation'|'entry'|'splashdown'|'handoff'};
+export type ViewerEvent=Omit<LedgerEntry,'kind'> & {kind:LedgerEntry['kind']|'planning-failed'|'unavailable'|'fault'|'separation'|'entry'|'splashdown'|'handoff'|'milestone'};
 export interface SetEvent extends ViewerEvent { vessel: string; color: string }
 
 // A curated set overlays independent test ships. Admission checks shared finite

@@ -43,11 +43,25 @@ export function entryStep(d:EntryPhysics,t:number,z:EntryState,h:number,check?:(
 export function entryStepEnvelope(d:Pick<EntryPhysics,'scenario'|'atmosphere'|'aero'>,t:number,z:EntryState,h:number):{half:number;allowance:number;bound:number;safe:boolean} {
  const s=d.scenario,y=z.slice(0,6) as State,body=s.bodies[0],b=bodyState(body,t),r=norm(subtract(y.slice(0,3) as Vec3,b.slice(0,3) as Vec3)),clearance=r-body.radius;
  if(clearance<=0||!Number.isFinite(h)||h<=0)return {half:0,allowance:0,bound:Infinity,safe:false};
- const half=clearance/2,speed=norm(y.slice(3) as Vec3),allowance=.25;
+ let half=clearance/2;
+ // Every gravity source participates in the clearance and force enclosure.
+ // Circular rail travel is bounded over the entire interval, not sampled.
+ for(const other of s.bodies){
+  const q=bodyState(other,t),distance=norm(subtract(y.slice(0,3) as Vec3,q.slice(0,3) as Vec3));
+  const travel=other.rail.kind==='circular'?other.rail.radius*Math.abs(other.rail.rate)*h*(norm(other.rail.u)+norm(other.rail.v)):0;
+  half=Math.min(half,(distance-other.radius-travel)/2);
+ }
+ if(half<=0)return {half:0,allowance:0,bound:Infinity,safe:false};
+ const speed=norm(y.slice(3) as Vec3),allowance=.25;
  const relativeBound=speed+allowance+norm(d.atmosphere.spin)*(r+half);
  const density=densityAt(d.atmosphere,clearance-half),nonfuel=s.ship.dryMass+s.ship.cargoMass;
  const aero=.5*density*d.aero.dragArea*relativeBound**2*(1+Math.abs(d.aero.liftToDrag))/nonfuel;
- const bound=body.mu/(body.radius+half)**2+s.ship.engine!.maxThrust/nonfuel+aero;
+ const gravity=s.bodies.reduce((sum,other)=>{
+  const distance=norm(subtract(y.slice(0,3) as Vec3,bodyState(other,t).slice(0,3) as Vec3));
+  const travel=other.rail.kind==='circular'?other.rail.radius*Math.abs(other.rail.rate)*h*(norm(other.rail.u)+norm(other.rail.v)):0;
+  return sum+other.mu/(distance-half-travel)**2;
+ },0);
+ const bound=gravity+s.ship.engine!.maxThrust/nonfuel+aero;
  return {half,allowance,bound,safe:bound*h<allowance && speed*h+bound*h*h/2<half};
 }
 export interface RecoveryPose {t:number;y:State;spin:Vec3;center:Vec3}

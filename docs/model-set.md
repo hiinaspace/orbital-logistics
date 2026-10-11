@@ -420,3 +420,8 @@ Separate seed families, streamed admission and an actual serialized-node prepara
 allowance keep failures private and bounded. Completed depot physics retires before
 its longer drawing history. See [reviewed design](design/lunar-return/README.md)
 and [comparison and rollout evidence](evidence/lunar-return.md).
+
+
+## Finite planet–moon expedition
+
+The Aster–Selene expedition joins atmospheric ground departure, physical timing orbits, full-field interbody transfers, lunar surface service and atmospheric return in one prepared finite exhibit. It retains exact state/fuel seams and absolute-epoch entry; continuous scheduling remains deferred. See [design](design/apollo/README.md) and [evidence](evidence/apollo.md).

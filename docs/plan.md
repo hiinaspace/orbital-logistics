@@ -469,3 +469,8 @@ and a 5x seed burn entering the moon surface. The user clarified tutorial-first
 after reviewer launch; its prepared-moon opening recommendation is therefore
 adapted to a tutorial-derived two-body goal. See
 [evidence/review-disposition.md](evidence/review-disposition.md) for every disposition.
+
+
+### Finite Aster–Selene expedition
+
+Implemented a single-vehicle planet–moon round trip with planetary atmosphere, timing orbits, paid lunar capture and return recovery. The prepared finite exhibit supports scrub, rewind and Replay. Continuous recurrence and staging follow the user visual gate. See docs/design/apollo/README.md and docs/evidence/apollo.md.

@@ -5,7 +5,7 @@ import {entryForces,entryStep,entryStepEnvelope,recoveredState,type EntryPhysics
 import type {SceneView,VesselView,ViewSample,ViewerEvent} from './model';
 
 export interface EntryFlight extends EntryPhysics {
- kind:'entry-flight-v1';schemaVersion:1;modelVersion:'entry-rk4-v1'|'entry-rk4-v2';
+ kind:'entry-flight-v1';schemaVersion:1;modelVersion:'entry-rk4-v1'|'entry-rk4-v2'|'entry-rk4-v3';
  id:string;name:string;extent:number;description:string;provenance:string;
  limits:{dynamicPressure:number;acceleration:number;heatProxy:number};
  presentation:{name:string;color:string;heatScale:number};
@@ -18,7 +18,7 @@ const finite=(x:unknown,min=0,max=Infinity)=>{if(typeof x!=='number'||!Number.is
 const vector=(x:unknown):Vec3=>{if(!Array.isArray(x)||x.length!==3)throw new Error('Invalid entry vector');return x.map(v=>finite(v,-Infinity)) as Vec3;};
 export function validateEntry(value:unknown):EntryFlight {
  const d=object(value);
- if(d.kind!=='entry-flight-v1'||d.schemaVersion!==1||(d.modelVersion!=='entry-rk4-v1'&&d.modelVersion!=='entry-rk4-v2'))throw new Error('Unsupported atmospheric entry version');
+ if(d.kind!=='entry-flight-v1'||d.schemaVersion!==1||(d.modelVersion!=='entry-rk4-v1'&&d.modelVersion!=='entry-rk4-v2'&&d.modelVersion!=='entry-rk4-v3'))throw new Error('Unsupported atmospheric entry version');
  const keys=(o:Record<string,unknown>,allowed:string[])=>{if(Object.keys(o).some(k=>!allowed.includes(k)))throw new Error('Unknown entry physical field');};
  keys(d,['kind','schemaVersion','modelVersion','id','name','extent','description','provenance','scenario','atmosphere','aero','guidance','recovery','limits','presentation','rotating']);
  const raw=object(d.scenario);
@@ -26,9 +26,9 @@ export function validateEntry(value:unknown):EntryFlight {
  keys(raw,['schemaVersion','modelVersion','id','units','epoch','duration','policy','bodies','ship']);
  keys(object(raw.policy),['step','maxNodes','maxSubdivision']);keys(object(raw.ship),['id','state','dryMass','cargoMass','propellant','tankCapacity','exhaustVelocity','engine']);keys(object(object(raw.ship).engine),['maxThrust','maxAcceleration']);
  if(!Array.isArray(raw.bodies))throw new Error('Invalid entry bodies');
- for(const body of raw.bodies){keys(object(body),['id','mu','radius','rail']);keys(object(object(body).rail),['kind','position']);}
+ for(const body of raw.bodies){keys(object(body),['id','mu','radius','rail']);keys(object(object(body).rail),d.modelVersion==='entry-rk4-v3'?['kind','position','center','u','v','radius','rate','phase']:['kind','position']);}
  const scenario=validateBundle({scenario:raw,program:{schemaVersion:3,id:'entry-validation',burns:[]}}).scenario;
- if(scenario.bodies.length!==1||scenario.bodies[0].rail.kind!=='fixed'||!scenario.ship.engine||scenario.epoch!==0||scenario.duration>8||scenario.policy.maxNodes>32768||scenario.policy.step>1/512)throw new Error('Unsupported entry world/work budget');
+ if((d.modelVersion==='entry-rk4-v3'?scenario.bodies.length!==2||scenario.bodies[1].rail.kind!=='circular':scenario.bodies.length!==1)||scenario.bodies[0].rail.kind!=='fixed'||!scenario.ship.engine||(d.modelVersion!=='entry-rk4-v3'&&scenario.epoch!==0)||scenario.duration>8||scenario.policy.maxNodes>32768||scenario.policy.step>1/512)throw new Error('Unsupported entry world/work budget');
  const a=object(d.atmosphere),c=object(d.aero),g=object(d.guidance),r=object(d.recovery),l=object(d.limits),p=object(d.presentation),rotation=object(d.rotating);
  keys(a,['bodyId','spin','density','scaleHeight','fadeHeight','topHeight']);keys(c,['dragArea','liftToDrag','liftFadeHeight']);
  keys(g,['startHeight','fullHeight','descentSpeed','descentGain','velocityGain']);keys(r,['height','maxSpeed']);keys(l,['dynamicPressure','acceleration','heatProxy']);
@@ -53,7 +53,7 @@ export interface EntryResult {
 export function prepareEntry(value:unknown,options:{displayRate?:number}={}):EntryResult {
  const definition=validateEntry(value),d=definition,s=d.scenario,body=s.bodies[0],initial=[...s.ship.state,s.ship.propellant] as EntryState;
  const work={trials:0,evaluations:0,roots:0};
- const nodes:EntryNode[]=[{t:0,z:initial}],maxima={pressure:0,acceleration:0,heat:0,force:0};
+ const nodes:EntryNode[]=[{t:s.epoch,z:initial}],maxima={pressure:0,acceleration:0,heat:0,force:0};
  let contact:EntryResult['contact']|undefined,entryEpoch=Infinity,brakingEpoch=Infinity;
  const altitude=(z:EntryState)=>norm(subtract(z.slice(0,3) as Vec3,bodyState(body,0).slice(0,3) as Vec3))-body.radius;
  const check=(t:number,z:EntryState)=>{
@@ -103,7 +103,7 @@ export function prepareEntry(value:unknown,options:{displayRate?:number}={}):Ent
   nodes.push({t:end,z});
  };
  for(let i=1;i<=Math.round(s.duration/s.policy.step)&&!contact;i++) {
-  integrate(i*s.policy.step);
+  integrate(s.epoch+i*s.policy.step);
   const n=nodes.at(-1)!,f=entryForces(d,n.t,n.z);
   if(entryEpoch===Infinity&&f.aero.density>0)entryEpoch=n.t;
   if(brakingEpoch===Infinity&&f.engagement>0)brakingEpoch=n.t;
@@ -116,7 +116,7 @@ export function prepareEntry(value:unknown,options:{displayRate?:number}={}):Ent
  const sample=(t:number,before=false):ViewSample=>{
   const z=entryStateAt({definition:d,nodes,contact:actual},t,before),recovered=!before&&t>=actual.t;
   const f=entryForces(d,Math.min(t,actual.t),z);
-  return {t,y:recovered?recoveredState(actual.pose,t):z.slice(0,6) as State,propellant:z[6],fuelUsed:s.ship.propellant-z[6],mass:s.ship.dryMass+s.ship.cargoMass+z[6],burnCursor:0,status:t===s.duration?'horizon':'running',detail:'',
+  return {t,y:recovered?recoveredState(actual.pose,t):z.slice(0,6) as State,propellant:z[6],fuelUsed:s.ship.propellant-z[6],mass:s.ship.dryMass+s.ship.cargoMass+z[6],burnCursor:0,status:t===s.epoch+s.duration?'horizon':'running',detail:'',
    entryPhase:recovered?'recovered':t>=brakingEpoch?'braking':t>=entryEpoch?'entry':'coast',axis:recovered?scale(subtract(recoveredState(actual.pose,t).slice(0,3) as Vec3,actual.pose.center),1/norm(subtract(actual.pose.y.slice(0,3) as Vec3,actual.pose.center))):f.axis,
    ...(recovered?{}:{aero:f.aero,...(norm(f.force)>0?{thrust:{id:'terminal-braking',force:norm(f.force),acceleration:norm(f.force)/f.mass,direction:scale(f.force,1/norm(f.force))}}:{})})};
  };
@@ -127,14 +127,14 @@ export function prepareEntry(value:unknown,options:{displayRate?:number}={}):Ent
   {t:actual.t,kind:'splashdown',id:'ocean-recovery',deltaV:0,fuelUsed:0,propellantBefore:actual.before[6],propellantAfter:actual.before[6],detail:'Ocean dissipates relative impact kinetic energy'}];
  const rate=options.displayRate??2048;
  if(!Number.isFinite(rate)||rate<1||rate>2048)throw new Error('Invalid entry display density');
- const times=[...new Set([...Array.from({length:Math.ceil(s.duration*rate)+1},(_,i)=>i*s.duration/Math.ceil(s.duration*rate)),...events.map(e=>e.t)])].sort((a,b)=>a-b);
+ const times=[...new Set([...Array.from({length:Math.ceil(s.duration*rate)+1},(_,i)=>s.epoch+i*s.duration/Math.ceil(s.duration*rate)),...events.map(e=>e.t)])].sort((a,b)=>a-b);
  const vessel:VesselView={id:s.ship.id,name:d.presentation.name,color:d.presentation.color,cargo:'Freight',ship:s.ship,ports:[],cargoCapacity:s.ship.cargoMass,arcs:[],continuousFuel:true,portSamples:{},glyph:'rocket',initialAxis:[0,1,0],entry:metadata,samples:times.map(t=>sample(t)),ledger:events,boundaries:[{t:actual.t,before:sample(actual.t,true),after:sample(actual.t)}]};
- const view:SceneView={schemaVersion:1,id:d.id,name:d.name,extent:d.extent,description:d.description,provenance:d.provenance,stations:[],rotating:d.rotating,vessels:[vessel],portSamples:{},world:{bodies:s.bodies,ports:[],units:s.units},window:{start:0,end:s.duration},atmosphere:d.atmosphere,entry:{recoveryEpoch:actual.t,relativeSpeed:actual.relativeSpeed,waterEnergy:actual.waterEnergy,maxima,impulse:actual.impulse,work}};
+ const view:SceneView={schemaVersion:1,id:d.id,name:d.name,extent:d.extent,description:d.description,provenance:d.provenance,stations:[],rotating:d.rotating,vessels:[vessel],portSamples:{},world:{bodies:s.bodies,ports:[],units:s.units},window:{start:s.epoch,end:s.epoch+s.duration},atmosphere:d.atmosphere,entry:{recoveryEpoch:actual.t,relativeSpeed:actual.relativeSpeed,waterEnergy:actual.waterEnergy,maxima,impulse:actual.impulse,work}};
  if(new TextEncoder().encode(JSON.stringify(view)).byteLength>12_000_000)throw new Error('Entry display packet budget exceeded');
  return {definition:d,nodes,contact:actual,entryEpoch,brakingEpoch,work,maxima,view};
 }
 export function entryStateAt(run:Pick<EntryResult,'definition'|'nodes'|'contact'>,t:number,before=false):EntryState {
- if(!Number.isFinite(t)||t<0||t>run.definition.scenario.duration)throw new Error('Entry epoch outside exhibit');
+ if(!Number.isFinite(t)||t<run.definition.scenario.epoch||t>run.definition.scenario.epoch+run.definition.scenario.duration)throw new Error('Entry epoch outside exhibit');
  if(t>=run.contact.t)return [...(!before?recoveredState(run.contact.pose,t):run.contact.before.slice(0,6) as State),run.contact.before[6]];
  let lo=0,hi=run.nodes.length-1;while(lo<hi){const mid=Math.ceil((lo+hi)/2);if(run.nodes[mid].t<=t)lo=mid;else hi=mid-1;}
  const n=run.nodes[lo];return t===n.t?[...n.z]:entryStep(run.definition,n.t,n.z,t-n.t);
