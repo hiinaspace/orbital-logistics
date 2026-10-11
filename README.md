@@ -27,6 +27,9 @@ departure and braking, an acceleration cap and paid fuel. **Orison · maintained
 adds a perturbed station with its own paid maintenance burns and a visiting ship.
 **Orison · maintained service** computes station corrections and repeated paid
 visit/return flights online, with finite tanks and rolling history.
+**Selene · Lunar ground service** repeats northern-pad launches and landings around
+the moving Moon, solving each visit to the evolving inclined depot. It starts at
+0.01×, supports held history and Live, and runs a validated 64-unit calendar.
 **Selene · Launch & recovery** follows a two-stage launch, courier delivery and reusable booster return.
 **Aster · Atmospheric arrival** follows Petrel through a rotating atmosphere, bounded lift/drag,
 terminal rocket braking and ocean recovery. **Entry view** follows the close approach;
@@ -68,12 +71,17 @@ npm run evidence:spatial-viewer
 npm run evidence:steering
 npm run evidence:stationkeeping
 npm run evidence:maintained-service
+npm run evidence:lunar-service
 npx tsx scripts/stationkeeping-fixture.ts --check
 npx tsx scripts/steering-fixture.ts --check
 npx tsx scripts/spatial-viewer-fixture.ts --check
 npx tsx scripts/model-set-fixtures.ts --check
 uv run --project spikes/numerics --group dev --group plots pre-commit run --config spikes/numerics/.pre-commit-config.yaml --all-files
 ```
+
+[Continuous lunar ground-service evidence](docs/evidence/lunar-service.md) and its
+[Astra-reviewed contract](docs/design/lunar-service/README.md) cover moving-body launches,
+actual ballistic targets, online six-state solves, paid returns and bounded rewind.
 
 [Continuous maintained-service evidence](docs/evidence/maintained-service.md) and its
 [Astra-reviewed contract](docs/design/maintained-service/README.md) cover online

@@ -1,0 +1,949 @@
+{
+  "observations": [
+    {
+      "t": 0.029082267810790086,
+      "frontier": 0.12875167864807915,
+      "stats": {
+        "voyages": 1,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 0,
+        "integrationStages": 0,
+        "peakPhysicalBytes": 22231168,
+        "runnerNodes": 26653,
+        "physicalBytes": 22231168,
+        "viewBytes": 6345079
+      },
+      "error": ""
+    },
+    {
+      "t": 0.04932985827634463,
+      "frontier": 0.1489972776126535,
+      "stats": {
+        "voyages": 1,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 0,
+        "integrationStages": 0,
+        "peakPhysicalBytes": 22231168,
+        "runnerNodes": 26653,
+        "physicalBytes": 22231168,
+        "viewBytes": 6345079
+      },
+      "error": ""
+    },
+    {
+      "t": 0.07024061856830117,
+      "frontier": 0.16990803790461007,
+      "stats": {
+        "voyages": 1,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 0,
+        "integrationStages": 0,
+        "peakPhysicalBytes": 22231168,
+        "runnerNodes": 26653,
+        "physicalBytes": 22231168,
+        "viewBytes": 6345079
+      },
+      "error": ""
+    },
+    {
+      "t": 0.09015363686918439,
+      "frontier": 0.18948847554180215,
+      "stats": {
+        "voyages": 1,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 0,
+        "integrationStages": 0,
+        "peakPhysicalBytes": 22231168,
+        "runnerNodes": 26653,
+        "physicalBytes": 22231168,
+        "viewBytes": 6345079
+      },
+      "error": ""
+    },
+    {
+      "t": 0.10973606600735666,
+      "frontier": 0.2090728961809546,
+      "stats": {
+        "voyages": 1,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 0,
+        "integrationStages": 0,
+        "peakPhysicalBytes": 22231168,
+        "runnerNodes": 26653,
+        "physicalBytes": 22231168,
+        "viewBytes": 6345079
+      },
+      "error": ""
+    },
+    {
+      "t": 0.12931849514552893,
+      "frontier": 0.22898790598281799,
+      "stats": {
+        "voyages": 1,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 0,
+        "integrationStages": 0,
+        "peakPhysicalBytes": 22231168,
+        "runnerNodes": 26653,
+        "physicalBytes": 22231168,
+        "viewBytes": 6345079
+      },
+      "error": ""
+    },
+    {
+      "t": 0.1502292554374856,
+      "frontier": 0.24989667477379449,
+      "stats": {
+        "voyages": 1,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 0,
+        "integrationStages": 0,
+        "peakPhysicalBytes": 22231168,
+        "runnerNodes": 26653,
+        "physicalBytes": 22231168,
+        "viewBytes": 6345079
+      },
+      "error": ""
+    },
+    {
+      "t": 0.17147060489215327,
+      "frontier": 0.2711380242284621,
+      "stats": {
+        "voyages": 1,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 0,
+        "integrationStages": 0,
+        "peakPhysicalBytes": 22231168,
+        "runnerNodes": 26653,
+        "physicalBytes": 22231168,
+        "viewBytes": 6345079
+      },
+      "error": ""
+    },
+    {
+      "t": 0.19138362319303662,
+      "frontier": 0.29072045336663455,
+      "stats": {
+        "voyages": 1,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 0,
+        "integrationStages": 0,
+        "peakPhysicalBytes": 22231168,
+        "runnerNodes": 26653,
+        "physicalBytes": 22231168,
+        "viewBytes": 6345079
+      },
+      "error": ""
+    },
+    {
+      "t": 0.21063546316849802,
+      "frontier": 0.30185546875,
+      "stats": {
+        "voyages": 1,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 0,
+        "integrationStages": 0,
+        "peakPhysicalBytes": 22231168,
+        "runnerNodes": 12291,
+        "physicalBytes": 2807123,
+        "viewBytes": 6644125
+      },
+      "error": ""
+    },
+    {
+      "t": 0.23253998244956772,
+      "frontier": 0.30185546875,
+      "stats": {
+        "voyages": 1,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 316,
+        "integrationStages": 246720,
+        "peakPhysicalBytes": 22231168,
+        "runnerNodes": 28754,
+        "physicalBytes": 14938117,
+        "viewBytes": 6644125
+      },
+      "error": ""
+    },
+    {
+      "t": 0.25145924176133805,
+      "frontier": 0.35079408043395577,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.27137425156320144,
+      "frontier": 0.370707098734839,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.29095468920039336,
+      "frontier": 0.3902915193739913,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.3131917891451541,
+      "frontier": 0.41252861931875207,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.33178045929421324,
+      "frontier": 0.431115297966831,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.35401755923897366,
+      "frontier": 0.45368497857528256,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.37426315820354794,
+      "frontier": 0.47359799687616577,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.3945087571681226,
+      "frontier": 0.49384558734172046,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.41575010662278994,
+      "frontier": 0.515086936796388,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.43566511642465305,
+      "frontier": 0.5350019465982511,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.45657388521562914,
+      "frontier": 0.555910715389227,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.47615631435380135,
+      "frontier": 0.5754931445273993,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.4970670746457578,
+      "frontier": 0.5960713241556647,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.5166495037839297,
+      "frontier": 0.6159843424565474,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.5368970942494838,
+      "frontier": 0.6362319329221016,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.558471024367842,
+      "frontier": 0.6578038715394796,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.5787166233324159,
+      "frontier": 0.6783840426687249,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.05,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.5996253921233919,
+      "frontier": 0.6989622222969899,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.6178794901077795,
+      "frontier": 0.7172143287803973,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.6397860008898295,
+      "frontier": 0.7391208395624472,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.6606947696808064,
+      "frontier": 0.7600315998544043,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.6812749408100524,
+      "frontier": 0.7806097794826701,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.6998616194581316,
+      "frontier": 0.7991964581307495,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.7224313000665837,
+      "frontier": 0.8217661387392015,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.7413485678773737,
+      "frontier": 0.8403508258863004,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.761594166841948,
+      "frontier": 0.8605984163518549,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.7825049271339045,
+      "frontier": 0.8821723464702135,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.8024179454347878,
+      "frontier": 0.9014221949446947,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 34347,
+        "physicalBytes": 25015934,
+        "viewBytes": 13336628
+      },
+      "error": ""
+    },
+    {
+      "t": 0.8223329552366513,
+      "frontier": 0.9164794921875,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 400,
+        "integrationStages": 303840,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 20485,
+        "physicalBytes": 4691914,
+        "viewBytes": 13939349
+      },
+      "error": ""
+    },
+    {
+      "t": 0.8439048938540299,
+      "frontier": 0.9164794921875,
+      "stats": {
+        "voyages": 2,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 453,
+        "integrationStages": 333088,
+        "peakPhysicalBytes": 25015934,
+        "runnerNodes": 36919,
+        "physicalBytes": 16899028,
+        "viewBytes": 13939349
+      },
+      "error": ""
+    },
+    {
+      "t": 0.8654808154733687,
+      "frontier": 0.9648156541459865,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 20523633
+      },
+      "error": ""
+    },
+    {
+      "t": 0.8860570036006542,
+      "frontier": 0.9853938337742522,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 20523633
+      },
+      "error": ""
+    },
+    {
+      "t": 0.9053088435761157,
+      "frontier": 1.0046436822487335,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 20523633
+      },
+      "error": ""
+    },
+    {
+      "t": 0.9272153543581656,
+      "frontier": 1.0262196038680724,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 20523633
+      },
+      "error": ""
+    },
+    {
+      "t": 0.9467957919953578,
+      "frontier": 1.0461326221689558,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 20523633
+      },
+      "error": ""
+    },
+    {
+      "t": 0.9683697221137165,
+      "frontier": 1.0677065522873144,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 20523633
+      },
+      "error": ""
+    },
+    {
+      "t": 0.9872889814254868,
+      "frontier": 1.0862932309353936,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 20523633
+      },
+      "error": ""
+    },
+    {
+      "t": 1.0095260813702478,
+      "frontier": 1.1088629115438458,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 20523633
+      },
+      "error": ""
+    },
+    {
+      "t": 1.0304368416622047,
+      "frontier": 1.1294410911721116,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 20523633
+      },
+      "error": ""
+    },
+    {
+      "t": 1.0506824406267792,
+      "frontier": 1.149686690136686,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 20523633
+      },
+      "error": ""
+    },
+    {
+      "t": 1.071260620255044,
+      "frontier": 1.170595458927662,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 14777695
+      },
+      "error": ""
+    },
+    {
+      "t": 1.0925019697097114,
+      "frontier": 1.1915062192196182,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 14777695
+      },
+      "error": ""
+    },
+    {
+      "t": 1.1127475686742856,
+      "frontier": 1.2117538096851728,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 14777695
+      },
+      "error": ""
+    },
+    {
+      "t": 1.1336583289662425,
+      "frontier": 1.2329931676388604,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 42331,
+        "physicalBytes": 26929697,
+        "viewBytes": 14777695
+      },
+      "error": ""
+    },
+    {
+      "t": 1.1532407581044148,
+      "frontier": 1.2525755967770327,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.1728211957416073,
+      "frontier": 1.2721580259152054,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.1947277065236572,
+      "frontier": 1.2940645366972554,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.1,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    },
+    {
+      "t": 1.2159690559783243,
+      "frontier": 1.3149752969892115,
+      "stats": {
+        "voyages": 3,
+        "delivered": 0.15000000000000002,
+        "planningFailures": 0,
+        "evaluations": 545,
+        "integrationStages": 387392,
+        "peakPhysicalBytes": 26929697,
+        "runnerNodes": 38234,
+        "physicalBytes": 25993931,
+        "viewBytes": 14479611
+      },
+      "error": ""
+    }
+  ],
+  "errors": []
+}
