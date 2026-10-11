@@ -1,0 +1,109 @@
+TAP version 13
+# three-cycle cold packet bytes 59245578
+# full-service bounds {"maxBytes":52490726,"maxNodes":167984,"maxPacket":31230497,"frontier":1025,"stats":{"planningPending":0,"cacheCompilations":2,"cacheHits":9,"completedTrips":10,"refills":9,"physicsBytes":52497365,"physicalNodes":167984,"packetBytes":660080,"workerDrawingBytes":43345970,"workerDrawingSamples":123592,"courierCompilations":1,"courierTrips":32,"courierRefills":32,"parcelsDelivered":4.8,"courierCycles":6,"courierDrawingBytes":4478635,"courierDrawingSamples":10254,"candidatePhysicalNodes":172082,"candidatePhysicsBytes":53419066,"cacheTemplateDrawingBytes":15953034,"orbiterFaults":0,"retainedDrawingBytes":43362095,"retainedDrawingSamples":123656,"viewCycles":3,"viewSamples":75204}}
+# Solace h/2 worst six-state residual 1.5918111273549584e-10
+# Subtest: full service preserves shared resources, stage ownership, bounded rollouts and held history
+ok 1 - full service preserves shared resources, stage ownership, bounded rollouts and held history
+  ---
+  duration_ms: 42602.100615
+  type: 'test'
+  ...
+# Subtest: publication rejection poisons private engines and invalid ingestion leaves visible backing intact
+ok 2 - publication rejection poisons private engines and invalid ingestion leaves visible backing intact
+  ---
+  duration_ms: 11221.373221
+  type: 'test'
+  ...
+# Subtest: passive fault is isolated and retains invalid physical/frame epochs after history eviction
+ok 3 - passive fault is isolated and retains invalid physical/frame epochs after history eviction
+  ---
+  duration_ms: 11038.243897
+  type: 'test'
+  ...
+# Subtest: new inclined Selene satellite converges against a finer canonical rollout
+ok 4 - new inclined Selene satellite converges against a finer canonical rollout
+  ---
+  duration_ms: 8443.427853
+  type: 'test'
+  ...
+# Subtest: prepared plan markers retain epochs and positions through clipping, extension, eviction and reverse
+ok 5 - prepared plan markers retain epochs and positions through clipping, extension, eviction and reverse
+  ---
+  duration_ms: 13087.386216
+  type: 'test'
+  ...
+# Subtest: orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility
+ok 6 - orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility
+  ---
+  duration_ms: 3.637688
+  type: 'test'
+  ...
+# Subtest: pan follows screen axes and cursor zoom anchors the same plane point in tilted views
+ok 7 - pan follows screen axes and cursor zoom anchors the same plane point in tilted views
+  ---
+  duration_ms: 2.301183
+  type: 'test'
+  ...
+# Subtest: sphere occlusion distinguishes front/back, limb, silhouette crossings and multiple bodies
+ok 8 - sphere occlusion distinguishes front/back, limb, silhouette crossings and multiple bodies
+  ---
+  duration_ms: 3.157665
+  type: 'test'
+  ...
+# Subtest: chase rigs and selected pivots remain orthonormal and deterministic at degenerate states
+ok 9 - chase rigs and selected pivots remain orthonormal and deterministic at degenerate states
+  ---
+  duration_ms: 11.815966
+  type: 'test'
+  ...
+# Subtest: one-draw projection snapshots camera axes and matches point queries
+ok 10 - one-draw projection snapshots camera axes and matches point queries
+  ---
+  duration_ms: 4.649754
+  type: 'test'
+  ...
+# Subtest: libration relay shares the fleet clock with funded, paid periodic lunar visits
+ok 11 - libration relay shares the fleet clock with funded, paid periodic lunar visits
+  ---
+  duration_ms: 47634.466896
+  type: 'test'
+  ...
+# Subtest: actual-field station certification rejects false targets and courier controls converge
+ok 12 - actual-field station certification rejects false targets and courier controls converge
+  ---
+  duration_ms: 2614.576911
+  type: 'test'
+  ...
+# Subtest: three tank recurrence preserves unique ownership, protected fuel, exact seams and paid supported refill
+ok 13 - three tank recurrence preserves unique ownership, protected fuel, exact seams and paid supported refill
+  ---
+  duration_ms: 153.724579
+  type: 'test'
+  ...
+# Subtest: indexed late boundaries rotate canonical state, attitude and aerodynamic vectors together
+ok 14 - indexed late boundaries rotate canonical state, attitude and aerodynamic vectors together
+  ---
+  duration_ms: 14.783963
+  type: 'test'
+  ...
+# Subtest: worker rows preserve a held cursor and resource anchor, bound retention, and stop at the final calendar
+ok 15 - worker rows preserve a held cursor and resource anchor, bound retention, and stop at the final calendar
+  ---
+  duration_ms: 1722.407852
+  type: 'test'
+  ...
+# Subtest: unsupported symmetry, undersupplied tanks and unexpected wrapper fields refuse before publication
+ok 16 - unsupported symmetry, undersupplied tanks and unexpected wrapper fields refuse before publication
+  ---
+  duration_ms: 4.589781
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 87416.620091

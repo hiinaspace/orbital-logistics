@@ -1,0 +1,1333 @@
+{
+  "results": [
+    {
+      "id": "aster-selene-staged-service",
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "mode": "frozen",
+      "before": 20,
+      "after": 20,
+      "frontier": 32.01832,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 1,
+        "cacheHits": 0,
+        "completedTrips": 0,
+        "refills": 0,
+        "physicsBytes": 30898610,
+        "physicalNodes": 100677,
+        "packetBytes": 4844,
+        "workerDrawingBytes": 11996161,
+        "workerDrawingSamples": 34217,
+        "retainedDrawingBytes": 11996161,
+        "retainedDrawingSamples": 34217,
+        "viewCycles": 1,
+        "viewSamples": 23854,
+        "cacheTemplateBytes": 15205679
+      },
+      "dom": 287,
+      "svg": 29,
+      "heap": 43818092,
+      "tasks": {
+        "n": 0,
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over200": 0
+      },
+      "timings": {
+        "draw": {
+          "n": 210,
+          "mean": 3.3909523810659135,
+          "p95": 4.899999976158142,
+          "p99": 5.300000071525574,
+          "max": 6.900000095367432,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 209,
+          "mean": 16.666028708133965,
+          "p95": 16.700000000000728,
+          "p99": 16.80000000000109,
+          "max": 16.80000000000109,
+          "over200": 0
+        },
+        "panels": {
+          "n": 31,
+          "mean": 1.067741940098424,
+          "p95": 1.4000000953674316,
+          "p99": 1.4000000953674316,
+          "max": 1.5,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-staged-service",
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "mode": "bodies",
+      "before": 20,
+      "after": 20,
+      "frontier": 32.01832,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 1,
+        "cacheHits": 0,
+        "completedTrips": 0,
+        "refills": 0,
+        "physicsBytes": 30898610,
+        "physicalNodes": 100677,
+        "packetBytes": 4844,
+        "workerDrawingBytes": 11996161,
+        "workerDrawingSamples": 34217,
+        "retainedDrawingBytes": 11996161,
+        "retainedDrawingSamples": 34217,
+        "viewCycles": 1,
+        "viewSamples": 23854,
+        "cacheTemplateBytes": 15205679
+      },
+      "dom": 287,
+      "svg": 29,
+      "heap": 45546902,
+      "tasks": {
+        "n": 0,
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over200": 0
+      },
+      "timings": {
+        "draw": {
+          "n": 210,
+          "mean": 0.7076190454619271,
+          "p95": 1,
+          "p99": 1.1999999284744263,
+          "max": 1.4000000953674316,
+          "over200": 0
+        },
+        "panels": {
+          "n": 31,
+          "mean": 1.5161290245671426,
+          "p95": 2.899999976158142,
+          "p99": 3.0999999046325684,
+          "max": 4.299999952316284,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 209,
+          "mean": 16.665550239234452,
+          "p95": 16.799999999999272,
+          "p99": 16.80000000000109,
+          "max": 16.80000000000109,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-staged-service",
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "mode": "inertial-1x",
+      "before": 20,
+      "after": 30.051500000023783,
+      "frontier": 62.03480000002378,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 1,
+        "cacheHits": 0,
+        "completedTrips": 0,
+        "refills": 0,
+        "physicsBytes": 30898610,
+        "physicalNodes": 100677,
+        "packetBytes": 4932,
+        "workerDrawingBytes": 11996161,
+        "workerDrawingSamples": 34217,
+        "retainedDrawingBytes": 11996161,
+        "retainedDrawingSamples": 34217,
+        "viewCycles": 1,
+        "viewSamples": 34173,
+        "cacheTemplateBytes": 15205679
+      },
+      "dom": 316,
+      "svg": 36,
+      "heap": 69002134,
+      "tasks": {
+        "n": 11,
+        "mean": 55.36363636363637,
+        "p95": 59,
+        "p99": 59,
+        "max": 59,
+        "over200": 0
+      },
+      "timings": {
+        "workerTurnaround": {
+          "n": 416,
+          "mean": 17.869951920154,
+          "p95": 33.09999990463257,
+          "p99": 38.40000009536743,
+          "max": 47.799999952316284,
+          "over200": 0
+        },
+        "ingestion": {
+          "n": 416,
+          "mean": 0.061538463028577656,
+          "p95": 0.19999992847442627,
+          "p99": 0.20000004768371582,
+          "max": 0.20000004768371582,
+          "over200": 0
+        },
+        "draw": {
+          "n": 415,
+          "mean": 14.641927710211421,
+          "p95": 27.399999976158142,
+          "p99": 32.300000071525574,
+          "max": 40.799999952316284,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 414,
+          "mean": 24.113526570048304,
+          "p95": 50.099999999998545,
+          "p99": 66.70000000000073,
+          "max": 83.39999999999964,
+          "over200": 0
+        },
+        "refresh": {
+          "n": 191,
+          "mean": 10.94031413625048,
+          "p95": 19.299999952316284,
+          "p99": 21.600000023841858,
+          "max": 23.700000047683716,
+          "over200": 0
+        },
+        "panels": {
+          "n": 82,
+          "mean": 1.374390243030176,
+          "p95": 2.100000023841858,
+          "p99": 2.600000023841858,
+          "max": 5.399999976158142,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-staged-service",
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "mode": "rotating-16x",
+      "before": 30.21810000002378,
+      "after": 190.4789000000239,
+      "frontier": 222.21170000002397,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 1,
+        "cacheHits": 2,
+        "completedTrips": 2,
+        "refills": 2,
+        "physicsBytes": 30898610,
+        "physicalNodes": 100677,
+        "packetBytes": 7068,
+        "workerDrawingBytes": 36154243,
+        "workerDrawingSamples": 102649,
+        "retainedDrawingBytes": 36154243,
+        "retainedDrawingSamples": 102649,
+        "viewCycles": 3,
+        "viewSamples": 57057,
+        "cacheTemplateBytes": 15205679
+      },
+      "dom": 353,
+      "svg": 61,
+      "heap": 117998506,
+      "tasks": {
+        "n": 3,
+        "mean": 53,
+        "p95": 54,
+        "p99": 54,
+        "max": 54,
+        "over200": 0
+      },
+      "timings": {
+        "workerTurnaround": {
+          "n": 435,
+          "mean": 16.27678161516957,
+          "p95": 19.899999976158142,
+          "p99": 24.199999928474426,
+          "max": 722.5,
+          "over200": 2
+        },
+        "ingestion": {
+          "n": 435,
+          "mean": 0.06896551641924628,
+          "p95": 0.10000002384185791,
+          "p99": 0.20000004768371582,
+          "max": 4.600000023841858,
+          "over200": 0
+        },
+        "refresh": {
+          "n": 170,
+          "mean": 12.449411760358249,
+          "p95": 18.299999952316284,
+          "p99": 22,
+          "max": 26.899999976158142,
+          "over200": 0
+        },
+        "draw": {
+          "n": 492,
+          "mean": 11.69796748108011,
+          "p95": 18.899999976158142,
+          "p99": 22.600000023841858,
+          "max": 25.5,
+          "over200": 0
+        },
+        "panels": {
+          "n": 86,
+          "mean": 1.0906976752502973,
+          "p95": 1.5,
+          "p99": 1.7999999523162842,
+          "max": 6.300000071525574,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 491,
+          "mean": 20.36558044806518,
+          "p95": 33.400000000001455,
+          "p99": 50,
+          "max": 83.29999999999927,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-system",
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "mode": "frozen",
+      "before": 20,
+      "after": 20,
+      "frontier": 32.2334,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 2,
+        "cacheHits": 0,
+        "completedTrips": 0,
+        "refills": 0,
+        "physicsBytes": 52459520,
+        "physicalNodes": 167984,
+        "packetBytes": 648755,
+        "workerDrawingBytes": 15388512,
+        "workerDrawingSamples": 43954,
+        "courierCompilations": 1,
+        "courierTrips": 1,
+        "courierRefills": 1,
+        "parcelsDelivered": 0.15,
+        "courierCycles": 3,
+        "courierDrawingBytes": 2235700,
+        "courierDrawingSamples": 5127,
+        "candidatePhysicalNodes": 167984,
+        "candidatePhysicsBytes": 52459520,
+        "cacheTemplateDrawingBytes": 15947751,
+        "orbiterFaults": 0,
+        "retainedDrawingBytes": 15388515,
+        "retainedDrawingSamples": 43954,
+        "viewCycles": 1,
+        "viewSamples": 31902
+      },
+      "dom": 364,
+      "svg": 52,
+      "heap": 57179739,
+      "tasks": {
+        "n": 0,
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over200": 0
+      },
+      "timings": {
+        "draw": {
+          "n": 210,
+          "mean": 4.36761904727845,
+          "p95": 5.600000023841858,
+          "p99": 6.5,
+          "max": 6.899999976158142,
+          "over200": 0
+        },
+        "panels": {
+          "n": 31,
+          "mean": 1.3870967703480874,
+          "p95": 1.5,
+          "p99": 1.7999999523162842,
+          "max": 1.9000000953674316,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 209,
+          "mean": 16.666028708133958,
+          "p95": 16.700000000004366,
+          "p99": 16.80000000000291,
+          "max": 16.80000000000291,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-system",
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "mode": "bodies",
+      "before": 20,
+      "after": 20,
+      "frontier": 32.2334,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 2,
+        "cacheHits": 0,
+        "completedTrips": 0,
+        "refills": 0,
+        "physicsBytes": 52459520,
+        "physicalNodes": 167984,
+        "packetBytes": 648755,
+        "workerDrawingBytes": 15388512,
+        "workerDrawingSamples": 43954,
+        "courierCompilations": 1,
+        "courierTrips": 1,
+        "courierRefills": 1,
+        "parcelsDelivered": 0.15,
+        "courierCycles": 3,
+        "courierDrawingBytes": 2235700,
+        "courierDrawingSamples": 5127,
+        "candidatePhysicalNodes": 167984,
+        "candidatePhysicsBytes": 52459520,
+        "cacheTemplateDrawingBytes": 15947751,
+        "orbiterFaults": 0,
+        "retainedDrawingBytes": 15388515,
+        "retainedDrawingSamples": 43954,
+        "viewCycles": 1,
+        "viewSamples": 31902
+      },
+      "dom": 364,
+      "svg": 52,
+      "heap": 53046502,
+      "tasks": {
+        "n": 0,
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over200": 0
+      },
+      "timings": {
+        "draw": {
+          "n": 210,
+          "mean": 0.717619047846113,
+          "p95": 1.0999999046325684,
+          "p99": 1.1999999284744263,
+          "max": 1.2000000476837158,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 209,
+          "mean": 16.666507177033505,
+          "p95": 16.700000000004366,
+          "p99": 16.80000000000291,
+          "max": 16.80000000000291,
+          "over200": 0
+        },
+        "panels": {
+          "n": 30,
+          "mean": 1.9699999928474425,
+          "p95": 3.100000023841858,
+          "p99": 3.299999952316284,
+          "max": 3.399999976158142,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-system",
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "mode": "inertial-1x",
+      "before": 20,
+      "after": 29.821300000071446,
+      "frontier": 61.73800000007144,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 2,
+        "cacheHits": 0,
+        "completedTrips": 0,
+        "refills": 0,
+        "physicsBytes": 52471233,
+        "physicalNodes": 167984,
+        "packetBytes": 560275,
+        "workerDrawingBytes": 15774876,
+        "workerDrawingSamples": 45490,
+        "courierCompilations": 1,
+        "courierTrips": 2,
+        "courierRefills": 1,
+        "parcelsDelivered": 0.3,
+        "courierCycles": 3,
+        "courierDrawingBytes": 2235700,
+        "courierDrawingSamples": 5127,
+        "candidatePhysicalNodes": 167984,
+        "candidatePhysicsBytes": 52471233,
+        "cacheTemplateDrawingBytes": 15947751,
+        "orbiterFaults": 0,
+        "retainedDrawingBytes": 15774879,
+        "retainedDrawingSamples": 45490,
+        "viewCycles": 1,
+        "viewSamples": 45372
+      },
+      "dom": 402,
+      "svg": 68,
+      "heap": 92571659,
+      "tasks": {
+        "n": 40,
+        "mean": 68.65,
+        "p95": 82,
+        "p99": 85,
+        "max": 107,
+        "over200": 0
+      },
+      "timings": {
+        "draw": {
+          "n": 295,
+          "mean": 15.20067796303054,
+          "p95": 28.59999990463257,
+          "p99": 36.5,
+          "max": 54.300000071525574,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 294,
+          "mean": 33.955442176870754,
+          "p95": 83.30000000000291,
+          "p99": 133.29999999999563,
+          "max": 150,
+          "over200": 0
+        },
+        "workerTurnaround": {
+          "n": 128,
+          "mean": 61.86718749534339,
+          "p95": 124.79999995231628,
+          "p99": 149.80000007152557,
+          "max": 235,
+          "over200": 1
+        },
+        "ingestion": {
+          "n": 128,
+          "mean": 1.247656250372529,
+          "p95": 2,
+          "p99": 2.899999976158142,
+          "max": 3.299999952316284,
+          "over200": 0
+        },
+        "refresh": {
+          "n": 129,
+          "mean": 26.20077519731004,
+          "p95": 39.199999928474426,
+          "p99": 43.300000071525574,
+          "max": 48.89999997615814,
+          "over200": 0
+        },
+        "panels": {
+          "n": 82,
+          "mean": 2.3463414645776517,
+          "p95": 3.5999999046325684,
+          "p99": 4.899999976158142,
+          "max": 5.300000071525574,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-system",
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "mode": "rotating-16x",
+      "before": 30.138000000071443,
+      "after": 174.00360000007154,
+      "frontier": 174.00360000007154,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 2,
+        "cacheHits": 1,
+        "completedTrips": 1,
+        "refills": 1,
+        "physicsBytes": 52480331,
+        "physicalNodes": 167984,
+        "packetBytes": 574228,
+        "workerDrawingBytes": 31198585,
+        "workerDrawingSamples": 89057,
+        "courierCompilations": 1,
+        "courierTrips": 5,
+        "courierRefills": 5,
+        "parcelsDelivered": 0.8999999999999999,
+        "courierCycles": 6,
+        "courierDrawingBytes": 4474942,
+        "courierDrawingSamples": 10254,
+        "candidatePhysicalNodes": 167984,
+        "candidatePhysicsBytes": 52480331,
+        "cacheTemplateDrawingBytes": 15947751,
+        "orbiterFaults": 0,
+        "retainedDrawingBytes": 31198588,
+        "retainedDrawingSamples": 89057,
+        "viewCycles": 2,
+        "viewSamples": 64651
+      },
+      "dom": 463,
+      "svg": 99,
+      "heap": 116571060,
+      "tasks": {
+        "n": 19,
+        "mean": 57.421052631578945,
+        "p95": 67,
+        "p99": 67,
+        "max": 76,
+        "over200": 0
+      },
+      "timings": {
+        "workerTurnaround": {
+          "n": 112,
+          "mean": 66.30000000340598,
+          "p95": 110.20000004768372,
+          "p99": 142.80000007152557,
+          "max": 819.4000000953674,
+          "over200": 1
+        },
+        "ingestion": {
+          "n": 112,
+          "mean": 1.4160714319774084,
+          "p95": 2.200000047683716,
+          "p99": 2.600000023841858,
+          "max": 3.399999976158142,
+          "over200": 0
+        },
+        "refresh": {
+          "n": 132,
+          "mean": 28.479545450571813,
+          "p95": 37,
+          "p99": 38.60000002384186,
+          "max": 39.90000009536743,
+          "over200": 0
+        },
+        "draw": {
+          "n": 372,
+          "mean": 10.834946237584596,
+          "p95": 17.699999928474426,
+          "p99": 20.799999952316284,
+          "max": 31.700000047683716,
+          "over200": 0
+        },
+        "panels": {
+          "n": 84,
+          "mean": 1.6666666638283503,
+          "p95": 2.399999976158142,
+          "p99": 2.6999999284744263,
+          "max": 2.899999976158142,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 371,
+          "mean": 26.9530997304582,
+          "p95": 66.69999999999709,
+          "p99": 83.30000000000291,
+          "max": 100.09999999999127,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-staged-service",
+      "size": {
+        "width": 3840,
+        "height": 2160
+      },
+      "mode": "frozen",
+      "before": 20,
+      "after": 20,
+      "frontier": 45.86559999999986,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 1,
+        "cacheHits": 0,
+        "completedTrips": 0,
+        "refills": 0,
+        "physicsBytes": 30898610,
+        "physicalNodes": 100677,
+        "packetBytes": 4937,
+        "workerDrawingBytes": 11996161,
+        "workerDrawingSamples": 34217,
+        "retainedDrawingBytes": 11996161,
+        "retainedDrawingSamples": 34217,
+        "viewCycles": 1,
+        "viewSamples": 30560,
+        "cacheTemplateBytes": 15205679
+      },
+      "dom": 304,
+      "svg": 34,
+      "heap": 51746153,
+      "tasks": {
+        "n": 0,
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over200": 0
+      },
+      "timings": {
+        "draw": {
+          "n": 211,
+          "mean": 5.43459715605912,
+          "p95": 7,
+          "p99": 7.5,
+          "max": 11.899999976158142,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 210,
+          "mean": 16.666190476190447,
+          "p95": 16.70000000001164,
+          "p99": 16.80000000000291,
+          "max": 16.80000000000291,
+          "over200": 0
+        },
+        "panels": {
+          "n": 31,
+          "mean": 1.0709677280918244,
+          "p95": 1.399999976158142,
+          "p99": 1.399999976158142,
+          "max": 1.399999976158142,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-staged-service",
+      "size": {
+        "width": 3840,
+        "height": 2160
+      },
+      "mode": "bodies",
+      "before": 20,
+      "after": 20,
+      "frontier": 45.86559999999986,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 1,
+        "cacheHits": 0,
+        "completedTrips": 0,
+        "refills": 0,
+        "physicsBytes": 30898610,
+        "physicalNodes": 100677,
+        "packetBytes": 4937,
+        "workerDrawingBytes": 11996161,
+        "workerDrawingSamples": 34217,
+        "retainedDrawingBytes": 11996161,
+        "retainedDrawingSamples": 34217,
+        "viewCycles": 1,
+        "viewSamples": 30560,
+        "cacheTemplateBytes": 15205679
+      },
+      "dom": 304,
+      "svg": 34,
+      "heap": 62079067,
+      "tasks": {
+        "n": 0,
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over200": 0
+      },
+      "timings": {
+        "draw": {
+          "n": 211,
+          "mean": 0.6729857808605755,
+          "p95": 0.9000000953674316,
+          "p99": 1.100000023841858,
+          "max": 1.899999976158142,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 210,
+          "mean": 16.665714285714298,
+          "p95": 16.70000000001164,
+          "p99": 16.80000000000291,
+          "max": 16.80000000000291,
+          "over200": 0
+        },
+        "panels": {
+          "n": 31,
+          "mean": 2.535483867891373,
+          "p95": 3.5,
+          "p99": 3.700000047683716,
+          "max": 4.200000047683716,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-staged-service",
+      "size": {
+        "width": 3840,
+        "height": 2160
+      },
+      "mode": "inertial-1x",
+      "before": 20.05,
+      "after": 30.066200000000023,
+      "frontier": 62.04950000000002,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 1,
+        "cacheHits": 0,
+        "completedTrips": 0,
+        "refills": 0,
+        "physicsBytes": 30898610,
+        "physicalNodes": 100677,
+        "packetBytes": 4933,
+        "workerDrawingBytes": 11996161,
+        "workerDrawingSamples": 34217,
+        "retainedDrawingBytes": 11996161,
+        "retainedDrawingSamples": 34217,
+        "viewCycles": 1,
+        "viewSamples": 34173,
+        "cacheTemplateBytes": 15205679
+      },
+      "dom": 316,
+      "svg": 36,
+      "heap": 56375818,
+      "tasks": {
+        "n": 0,
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over200": 0
+      },
+      "timings": {
+        "workerTurnaround": {
+          "n": 377,
+          "mean": 22.515384618420182,
+          "p95": 26.700000047683716,
+          "p99": 31.5,
+          "max": 37.200000047683716,
+          "over200": 0
+        },
+        "ingestion": {
+          "n": 377,
+          "mean": 0.045623341352933285,
+          "p95": 0.10000002384185791,
+          "p99": 0.19999992847442627,
+          "max": 0.2999999523162842,
+          "over200": 0
+        },
+        "draw": {
+          "n": 377,
+          "mean": 14.05888594461689,
+          "p95": 17.5,
+          "p99": 21.799999952316284,
+          "max": 27.300000071525574,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 376,
+          "mean": 26.59441489361702,
+          "p95": 33.40000000000873,
+          "p99": 50,
+          "max": 50.10000000000582,
+          "over200": 0
+        },
+        "refresh": {
+          "n": 217,
+          "mean": 6.541935477388619,
+          "p95": 8.599999904632568,
+          "p99": 9.200000047683716,
+          "max": 10.699999928474426,
+          "over200": 0
+        },
+        "panels": {
+          "n": 81,
+          "mean": 0.9185185123372961,
+          "p95": 1.1999999284744263,
+          "p99": 1.399999976158142,
+          "max": 1.399999976158142,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-staged-service",
+      "size": {
+        "width": 3840,
+        "height": 2160
+      },
+      "mode": "rotating-16x",
+      "before": 30.38280000000003,
+      "after": 191.442,
+      "frontier": 222.91080000000005,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 1,
+        "cacheHits": 2,
+        "completedTrips": 2,
+        "refills": 2,
+        "physicsBytes": 30898610,
+        "physicalNodes": 100677,
+        "packetBytes": 7065,
+        "workerDrawingBytes": 36154243,
+        "workerDrawingSamples": 102649,
+        "retainedDrawingBytes": 36154243,
+        "retainedDrawingSamples": 102649,
+        "viewCycles": 3,
+        "viewSamples": 57101,
+        "cacheTemplateBytes": 15205679
+      },
+      "dom": 353,
+      "svg": 61,
+      "heap": 118860189,
+      "tasks": {
+        "n": 1,
+        "mean": 50,
+        "p95": 50,
+        "p99": 50,
+        "max": 50,
+        "over200": 0
+      },
+      "timings": {
+        "workerTurnaround": {
+          "n": 351,
+          "mean": 23.0410256419766,
+          "p95": 24.300000071525574,
+          "p99": 25.399999976158142,
+          "max": 698.6999999284744,
+          "over200": 2
+        },
+        "ingestion": {
+          "n": 351,
+          "mean": 0.04672364835385923,
+          "p95": 0.10000002384185791,
+          "p99": 0.19999992847442627,
+          "max": 1.399999976158142,
+          "over200": 0
+        },
+        "draw": {
+          "n": 397,
+          "mean": 12.042821159591002,
+          "p95": 16.600000023841858,
+          "p99": 18.100000023841858,
+          "max": 20.200000047683716,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 396,
+          "mean": 25.209090909090918,
+          "p95": 49.89999999999418,
+          "p99": 50,
+          "max": 83.30000000000291,
+          "over200": 0
+        },
+        "refresh": {
+          "n": 208,
+          "mean": 9.130769229852236,
+          "p95": 11.899999976158142,
+          "p99": 12.5,
+          "max": 17.700000047683716,
+          "over200": 0
+        },
+        "panels": {
+          "n": 81,
+          "mean": 0.9592592554327882,
+          "p95": 1.399999976158142,
+          "p99": 1.600000023841858,
+          "max": 1.899999976158142,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-system",
+      "size": {
+        "width": 3840,
+        "height": 2160
+      },
+      "mode": "frozen",
+      "before": 20,
+      "after": 20,
+      "frontier": 40.26559999999986,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 2,
+        "cacheHits": 0,
+        "completedTrips": 0,
+        "refills": 0,
+        "physicsBytes": 52465796,
+        "physicalNodes": 167984,
+        "packetBytes": 661852,
+        "workerDrawingBytes": 15517463,
+        "workerDrawingSamples": 44466,
+        "courierCompilations": 1,
+        "courierTrips": 1,
+        "courierRefills": 1,
+        "parcelsDelivered": 0.15,
+        "courierCycles": 3,
+        "courierDrawingBytes": 2235700,
+        "courierDrawingSamples": 5127,
+        "candidatePhysicalNodes": 172082,
+        "candidatePhysicsBytes": 53380342,
+        "cacheTemplateDrawingBytes": 15947751,
+        "orbiterFaults": 0,
+        "retainedDrawingBytes": 15517466,
+        "retainedDrawingSamples": 44466,
+        "viewCycles": 1,
+        "viewSamples": 33499
+      },
+      "dom": 372,
+      "svg": 56,
+      "heap": 70482145,
+      "tasks": {
+        "n": 0,
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over200": 0
+      },
+      "timings": {
+        "draw": {
+          "n": 211,
+          "mean": 6.257819907360167,
+          "p95": 7.199999928474426,
+          "p99": 8.600000023841858,
+          "max": 9,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 210,
+          "mean": 16.665714285714298,
+          "p95": 16.70000000001164,
+          "p99": 16.80000000000291,
+          "max": 16.80000000000291,
+          "over200": 0
+        },
+        "panels": {
+          "n": 30,
+          "mean": 1.2800000111262004,
+          "p95": 1.5,
+          "p99": 1.5,
+          "max": 1.5,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-system",
+      "size": {
+        "width": 3840,
+        "height": 2160
+      },
+      "mode": "bodies",
+      "before": 20,
+      "after": 20,
+      "frontier": 40.26559999999986,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 2,
+        "cacheHits": 0,
+        "completedTrips": 0,
+        "refills": 0,
+        "physicsBytes": 52465796,
+        "physicalNodes": 167984,
+        "packetBytes": 661852,
+        "workerDrawingBytes": 15517463,
+        "workerDrawingSamples": 44466,
+        "courierCompilations": 1,
+        "courierTrips": 1,
+        "courierRefills": 1,
+        "parcelsDelivered": 0.15,
+        "courierCycles": 3,
+        "courierDrawingBytes": 2235700,
+        "courierDrawingSamples": 5127,
+        "candidatePhysicalNodes": 172082,
+        "candidatePhysicsBytes": 53380342,
+        "cacheTemplateDrawingBytes": 15947751,
+        "orbiterFaults": 0,
+        "retainedDrawingBytes": 15517466,
+        "retainedDrawingSamples": 44466,
+        "viewCycles": 1,
+        "viewSamples": 33499
+      },
+      "dom": 372,
+      "svg": 56,
+      "heap": 65961919,
+      "tasks": {
+        "n": 0,
+        "mean": 0,
+        "p95": 0,
+        "p99": 0,
+        "max": 0,
+        "over200": 0
+      },
+      "timings": {
+        "draw": {
+          "n": 211,
+          "mean": 0.6369668256615011,
+          "p95": 0.8999999761581421,
+          "p99": 0.9000000953674316,
+          "max": 1.100000023841858,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 210,
+          "mean": 16.66619047619052,
+          "p95": 16.70000000001164,
+          "p99": 16.80000000000291,
+          "max": 16.80000000000291,
+          "over200": 0
+        },
+        "panels": {
+          "n": 31,
+          "mean": 2.7322580622088526,
+          "p95": 3,
+          "p99": 3.0999999046325684,
+          "max": 3.5,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-system",
+      "size": {
+        "width": 3840,
+        "height": 2160
+      },
+      "mode": "inertial-1x",
+      "before": 20.00060000004768,
+      "after": 30.083600000047714,
+      "frontier": 61.96690000004773,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 2,
+        "cacheHits": 0,
+        "completedTrips": 0,
+        "refills": 0,
+        "physicsBytes": 52471233,
+        "physicalNodes": 167984,
+        "packetBytes": 556251,
+        "workerDrawingBytes": 15774876,
+        "workerDrawingSamples": 45490,
+        "courierCompilations": 1,
+        "courierTrips": 2,
+        "courierRefills": 1,
+        "parcelsDelivered": 0.3,
+        "courierCycles": 3,
+        "courierDrawingBytes": 2235700,
+        "courierDrawingSamples": 5127,
+        "candidatePhysicalNodes": 167984,
+        "candidatePhysicsBytes": 52471233,
+        "cacheTemplateDrawingBytes": 15947751,
+        "orbiterFaults": 0,
+        "retainedDrawingBytes": 15774879,
+        "retainedDrawingSamples": 45490,
+        "viewCycles": 1,
+        "viewSamples": 45379
+      },
+      "dom": 402,
+      "svg": 68,
+      "heap": 79169943,
+      "tasks": {
+        "n": 20,
+        "mean": 54.95,
+        "p95": 59,
+        "p99": 59,
+        "max": 59,
+        "over200": 0
+      },
+      "timings": {
+        "draw": {
+          "n": 232,
+          "mean": 16.858189658358178,
+          "p95": 25.300000071525574,
+          "p99": 27.5,
+          "max": 31.299999952316284,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 231,
+          "mean": 43.28831168831165,
+          "p95": 83.30000000000291,
+          "p99": 83.40000000000873,
+          "max": 83.40000000002328,
+          "over200": 0
+        },
+        "workerTurnaround": {
+          "n": 155,
+          "mean": 47.128387093544006,
+          "p95": 81.79999995231628,
+          "p99": 85.90000009536743,
+          "max": 140.69999992847443,
+          "over200": 0
+        },
+        "ingestion": {
+          "n": 155,
+          "mean": 1.8161290314889724,
+          "p95": 2.5,
+          "p99": 2.700000047683716,
+          "max": 4.200000047683716,
+          "over200": 0
+        },
+        "refresh": {
+          "n": 159,
+          "mean": 18.487421385147286,
+          "p95": 21.40000009536743,
+          "p99": 23.899999976158142,
+          "max": 28,
+          "over200": 0
+        },
+        "panels": {
+          "n": 79,
+          "mean": 1.516455694089962,
+          "p95": 2.100000023841858,
+          "p99": 2.3000000715255737,
+          "max": 2.5,
+          "over200": 0
+        }
+      },
+      "error": ""
+    },
+    {
+      "id": "aster-selene-system",
+      "size": {
+        "width": 3840,
+        "height": 2160
+      },
+      "mode": "rotating-16x",
+      "before": 30.48350000004771,
+      "after": 155.5507000000479,
+      "frontier": 155.5507000000479,
+      "stats": {
+        "planningPending": 0,
+        "cacheCompilations": 2,
+        "cacheHits": 1,
+        "completedTrips": 1,
+        "refills": 1,
+        "physicsBytes": 52487077,
+        "physicalNodes": 167984,
+        "packetBytes": 614799,
+        "workerDrawingBytes": 31237861,
+        "workerDrawingSamples": 89215,
+        "courierCompilations": 1,
+        "courierTrips": 5,
+        "courierRefills": 4,
+        "parcelsDelivered": 0.75,
+        "courierCycles": 6,
+        "courierDrawingBytes": 4475315,
+        "courierDrawingSamples": 10254,
+        "candidatePhysicalNodes": 167984,
+        "candidatePhysicsBytes": 52487077,
+        "cacheTemplateDrawingBytes": 15947751,
+        "orbiterFaults": 0,
+        "retainedDrawingBytes": 31237864,
+        "retainedDrawingSamples": 89215,
+        "viewCycles": 2,
+        "viewSamples": 75564
+      },
+      "dom": 481,
+      "svg": 109,
+      "heap": 136917045,
+      "tasks": {
+        "n": 45,
+        "mean": 54.733333333333334,
+        "p95": 63,
+        "p99": 64,
+        "max": 71,
+        "over200": 0
+      },
+      "timings": {
+        "workerTurnaround": {
+          "n": 93,
+          "mean": 80.30967741884211,
+          "p95": 124.60000002384186,
+          "p99": 180.5,
+          "max": 817.7999999523163,
+          "over200": 1
+        },
+        "ingestion": {
+          "n": 93,
+          "mean": 2.884946237328232,
+          "p95": 4.400000095367432,
+          "p99": 4.899999976158142,
+          "max": 4.899999976158142,
+          "over200": 0
+        },
+        "draw": {
+          "n": 254,
+          "mean": 11.290944884142538,
+          "p95": 17.799999952316284,
+          "p99": 19.800000071525574,
+          "max": 21.700000047683716,
+          "over200": 0
+        },
+        "frameGap": {
+          "n": 253,
+          "mean": 39.32648221343876,
+          "p95": 66.70000000001164,
+          "p99": 83.39999999999418,
+          "max": 83.39999999999418,
+          "over200": 0
+        },
+        "refresh": {
+          "n": 146,
+          "mean": 28.24452054990481,
+          "p95": 35.39999997615814,
+          "p99": 39.10000002384186,
+          "max": 45.09999990463257,
+          "over200": 0
+        },
+        "panels": {
+          "n": 77,
+          "mean": 1.525974025974026,
+          "p95": 2,
+          "p99": 2.100000023841858,
+          "max": 3.299999952316284,
+          "over200": 0
+        }
+      },
+      "error": ""
+    }
+  ],
+  "errors": []
+}

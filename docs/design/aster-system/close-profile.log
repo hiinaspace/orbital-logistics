@@ -1,0 +1,14 @@
+[
+  {
+    size: { width: 1440, height: 900 },
+    tracking: 'follow',
+    fps: 59.42811208084518,
+    maxGap: 33.400000000001455
+  },
+  {
+    size: { width: 3840, height: 2160 },
+    tracking: 'chase',
+    fps: 23.94276813015636,
+    maxGap: 83.29999999999927
+  }
+]

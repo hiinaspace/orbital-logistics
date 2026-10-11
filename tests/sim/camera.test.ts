@@ -44,3 +44,8 @@ test('chase rigs and selected pivots remain orthonormal and deterministic at deg
   orbitAround(c,pivot,74,-31);close(cameraPoint(c,pivot,800,600),before);
  }
 });
+
+test('one-draw projection snapshots camera axes and matches point queries',async()=>{
+ const {cameraProjection}=await import('../../src/model-set/camera');
+ for(const preset of ['top','oblique','front','side'] as const){const c=camera();orient(c,preset);c.center=[1,-2,3];const projection=cameraProjection(c,1440,900);for(const y of [[2,3,4],[-4,1,-2],[0,0,0]])close(projection(y),cameraPoint(c,y,1440,900));const before=projection([4,5,6]);c.center[0]+=2;orbit(c,50,10);close(projection([4,5,6]),before);}
+});

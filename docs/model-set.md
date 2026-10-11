@@ -453,3 +453,16 @@ The wider speed control spans reverse, center0× pause and forward. Reverse is
 playback of physical history; it does not undo events/resources or integrate the
 canonical service backwards. Live resumes forward. Compact [real mission references](design/mission-reference/README.md)
 are retained for offline comparison, without introducing real missions into the UI.
+
+## Combined Aster–Selene exhibit — 2026-10-11
+
+**Aster–Selene · full service** combines the refined staged launch/lunar landing/
+rendezvous/recovery recurrence with Kestrel's funded Haven–Beacon service and two
+canonical free satellites, Wren and inclined lunar Solace. Four distinct terminals
+and seven selectable assembly/stage/craft lanes share one rolling clock and resource
+history. Prepared clocks remain independent; the composition publishes atomically
+and isolates passive satellite faults. See [design and Astra disposition](design/aster-system/README.md)
+and [evidence](evidence/aster-system.md). Planned markers have fixed epochs and
+timeline labels no longer wrap. Measured CPU projection/reconstruction costs were
+reduced while retaining Canvas/DOM/SVG. This is an authored exhibit, awaiting the
+user's activity/density preference, rather than a general route dispatcher.

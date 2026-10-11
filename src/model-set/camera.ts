@@ -20,6 +20,13 @@ export function cameraPoint(c:Camera,p:readonly number[],width:number,height:num
  const v=cameraVector(c,p.slice(0,3).map((x,i)=>x-c.center[i]));
  return [width/2+v[0]*c.scale,height/2-v[1]*c.scale,v[2]*c.scale];
 }
+// A disposable projection for one draw. Snapshotting the mutable camera once
+// avoids recomputing its trigonometry and allocating axes for every vertex.
+export function cameraProjection(c:Camera,width:number,height:number):(p:readonly number[])=>ScreenPoint {
+ const a=axes(c),center=[...c.center],scale=c.scale;
+ return p=>{const x=p[0]-center[0],y=p[1]-center[1],z=p[2]-center[2];
+  return [width/2+(x*a.right[0]+y*a.right[1]+z*a.right[2])*scale,height/2-(x*a.up[0]+y*a.up[1]+z*a.up[2])*scale,(x*a.toward[0]+y*a.toward[1]+z*a.toward[2])*scale];};
+}
 export function pan(c:Camera,dx:number,dy:number):void {
  const a=axes(c);c.center=c.center.map((x,i)=>x-dx/c.scale*a.right[i]+dy/c.scale*a.up[i]) as Vec3;
 }

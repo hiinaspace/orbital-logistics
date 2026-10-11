@@ -2,7 +2,7 @@ import {Runner,type Sample} from '../sim/runner';
 import type {Scenario,State} from '../sim/schema';
 import type {ViewSample} from '../model-set/model';
 export interface OrbiterDefinition {id:string;name:string;color:string;state:State}
-export interface OrbiterDelta {samples:ViewSample[];end:number;nodes:number;physicsBytes:number;fault?:ViewSample}
+export interface OrbiterDelta {samples:ViewSample[];end:number;nodes:number;physicsBytes:number;drawingBytes:number;drawingSamples:number;fault?:ViewSample}
 // Eight-unit anchored ownership. Only canonical endpoints initialize successors.
 export class OrbiterStream {
  end=0;fault?:ViewSample;#state:State;#chunks:{start:number;end:number;runner:Runner;bytes:number}[]=[];#rows:ViewSample[]=[];
@@ -26,11 +26,12 @@ export class OrbiterStream {
   const chunk=this.#chunks.find(c=>t>=c.start&&t<=c.end);if(!chunk)throw Error('Orbiter physics outside retained chunks');
   return chunk.runner.sample(t);
  }
+ storage(){return {nodes:this.#chunks.reduce((n,c)=>n+c.runner.retainedNodes,0),bytes:this.#chunks.reduce((n,c)=>n+c.bytes,0)};}
  delta(after:number,oldest:number,frontier:number):OrbiterDelta{
   let i=0;while(i+1<this.#rows.length&&this.#rows[i+1].t<=oldest)i++;this.#rows=this.#rows.slice(i);
   this.#chunks=this.#chunks.filter(c=>c.end>=frontier);
   const nodes=this.#chunks.reduce((n,c)=>n+c.runner.retainedNodes,0),physicsBytes=this.#chunks.reduce((n,c)=>n+c.bytes,0);
   if(this.#rows.length>5400||nodes>20000||physicsBytes>8_000_000)throw Error('Orbiter retained budget');
-  return {samples:this.#rows.filter(q=>q.t>=after),end:this.end,nodes,physicsBytes,fault:this.fault};
+  return {samples:this.#rows.filter(q=>q.t>=after),end:this.end,nodes,physicsBytes,drawingBytes:new TextEncoder().encode(JSON.stringify(this.#rows)).byteLength,drawingSamples:this.#rows.length,fault:this.fault};
  }
 }

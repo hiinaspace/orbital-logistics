@@ -10,6 +10,13 @@ export class StagedServiceViewStore {
  #template?:SceneView;#templates?:Record<StagedActor,VesselView>;#schedule?:StagedSchedule;#templateBytes=0;
  #resources:ResourceAnchor[]=[];#events:StagedServiceDelta['events']=[];#cycles=new Map<number,PreparedStagedCycle>();#exported=new Set<number>();
  constructor(readonly definition:StagedServiceDefinition,readonly requirePrepared=false){}
+ // Shared immutable drawing rows; ingestion mutates only the fork's containers.
+ fork(){
+  const s=new StagedServiceViewStore(this.definition,this.requirePrepared);
+  Object.assign(s,{frontier:this.frontier,oldest:this.oldest,watermark:this.watermark,halt:this.halt,stats:{...this.stats},current:this.current,accounts:this.accounts});
+  s.#template=this.#template;s.#templates=this.#templates;s.#schedule=this.#schedule;s.#templateBytes=this.#templateBytes;
+  s.#resources=[...this.#resources];s.#events=[...this.#events];s.#cycles=new Map(this.#cycles);s.#exported=new Set(this.#exported);return s;
+ }
  ingest(p:StagedServiceDelta,held=false){
   if(p.domain!=='staged-continuous-v1'||!Number.isFinite(p.frontier)||!Number.isFinite(p.oldest)||p.frontier<this.frontier||p.oldest>p.frontier||p.oldest<0||p.frontier>p.schedule.maxEpoch)throw Error('Wrong staged expedition worker packet');
   if(p.template){
@@ -28,6 +35,12 @@ export class StagedServiceViewStore {
   this.#resources=[...new Map([...this.#resources,...p.resources].map(r=>[r.t,r])).values()].sort((a,b)=>a.t-b.t);
   this.#events=[...new Map([...this.#events,...p.events].map(e=>[e.id,e])).values()];
   if(!held)this.release();
+ }
+ validatePrepared(){
+  if(!this.#template||!this.#schedule)throw Error('Missing staged cache');
+  const p=this.#schedule,first=Math.floor(this.oldest/p.period),last=Math.floor(Math.min(p.maxEpoch,this.frontier+STAGED_LEAD)/p.period);
+  for(let i=first;i<=last;i++)if(!this.#cycles.has(i))throw Error('Missing worker-prepared staged cycle');
+  const bytes=[...this.#cycles.values()].reduce((n,c)=>n+c.bytes,0),samples=[...this.#cycles.values()].reduce((n,c)=>n+STAGED_ACTORS.reduce((m,k)=>m+c.rows[k].samples.length,0),0);if(bytes>84_000_000||samples>240000)throw Error('Staged retained drawing budget');return {bytes,samples};
  }
  release(){
   this.oldest=this.watermark;let i=0;while(i+1<this.#resources.length&&this.#resources[i+1].t<=this.oldest)i++;this.#resources=this.#resources.slice(i);
@@ -70,7 +83,9 @@ export class StagedServiceViewStore {
   if(retainedBytes>84_000_000||retainedSamples>240000)throw Error('Staged expedition retained drawing budget');
   const vessels=STAGED_ACTORS.map(id=>{
    const base=this.#templates![id],at=(t:number)=>stagedDrawingSample(p,this.#templates!,id,t),rows=cycles.map(c=>c.rows[id]);
-   const samples=[...new Map([...rows.flatMap(r=>r.samples).filter(q=>q.t>this.oldest&&q.t<end),at(this.oldest),at(cursor),at(end)].map(q=>[q.t,q])).values()].sort((a,b)=>a.t-b.t);
+   const samples:ViewSample[]=[];
+   for(const row of rows)for(const q of row.samples)if(q.t>this.oldest&&q.t<end){if(samples.at(-1)?.t===q.t)samples[samples.length-1]=q;else samples.push(q);}
+   for(const q of [at(this.oldest),at(cursor),at(end)]){let lo=0,hi=samples.length;while(lo<hi){const mid=(lo+hi)>>>1;if(samples[mid].t<q.t)lo=mid+1;else hi=mid;}if(samples[lo]?.t===q.t)samples[lo]=q;else samples.splice(lo,0,q);}
    const result:StagedVessel={...base,stagedService:{schedule:p,templates:this.#templates!,id},samples,arcs:rows.flatMap(r=>r.arcs).filter(a=>a.end>=this.oldest&&a.start<=end),
     ledger:[...rows.flatMap(r=>r.ledger).filter(e=>e.t>=this.oldest&&e.t<=end),...this.#events.filter(e=>e.shipId===base.id&&e.t>=this.oldest&&e.t<=cursor)],
     boundaries:rows.flatMap(r=>r.boundaries).filter(b=>b.t>=this.oldest&&b.t<=end)};

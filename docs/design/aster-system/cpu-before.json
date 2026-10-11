@@ -1,0 +1,352 @@
+[
+  {
+    "us": 1124333,
+    "frame": {
+      "functionName": "(program)",
+      "scriptId": "0",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1
+    }
+  },
+  {
+    "us": 662565,
+    "frame": {
+      "functionName": "Fi",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 25843
+    }
+  },
+  {
+    "us": 615161,
+    "frame": {
+      "functionName": "",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 63603
+    }
+  },
+  {
+    "us": 577827,
+    "frame": {
+      "functionName": "Pi",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 25405
+    }
+  },
+  {
+    "us": 388122,
+    "frame": {
+      "functionName": "Mt",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 137852
+    }
+  },
+  {
+    "us": 345394,
+    "frame": {
+      "functionName": "",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 30632
+    }
+  },
+  {
+    "us": 344845,
+    "frame": {
+      "functionName": "",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 63603
+    }
+  },
+  {
+    "us": 289920,
+    "frame": {
+      "functionName": "",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 137820
+    }
+  },
+  {
+    "us": 255696,
+    "frame": {
+      "functionName": "(garbage collector)",
+      "scriptId": "0",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1
+    }
+  },
+  {
+    "us": 252727,
+    "frame": {
+      "functionName": "jt",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 137804
+    }
+  },
+  {
+    "us": 246379,
+    "frame": {
+      "functionName": "",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 9436
+    }
+  },
+  {
+    "us": 242242,
+    "frame": {
+      "functionName": "Ft",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 138295
+    }
+  },
+  {
+    "us": 207708,
+    "frame": {
+      "functionName": "Vt",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 139217
+    }
+  },
+  {
+    "us": 198477,
+    "frame": {
+      "functionName": "(idle)",
+      "scriptId": "0",
+      "url": "",
+      "lineNumber": -1,
+      "columnNumber": -1
+    }
+  },
+  {
+    "us": 187186,
+    "frame": {
+      "functionName": "br",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 747988
+    }
+  },
+  {
+    "us": 174898,
+    "frame": {
+      "functionName": "",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 9436
+    }
+  },
+  {
+    "us": 158477,
+    "frame": {
+      "functionName": "Bi",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 41477
+    }
+  },
+  {
+    "us": 79760,
+    "frame": {
+      "functionName": "",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 29564
+    }
+  },
+  {
+    "us": 74413,
+    "frame": {
+      "functionName": "",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 29542
+    }
+  },
+  {
+    "us": 69227,
+    "frame": {
+      "functionName": "Ti",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 6342
+    }
+  },
+  {
+    "us": 58597,
+    "frame": {
+      "functionName": "n",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 9393
+    }
+  },
+  {
+    "us": 56718,
+    "frame": {
+      "functionName": "",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 137820
+    }
+  },
+  {
+    "us": 53899,
+    "frame": {
+      "functionName": "r",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 31561
+    }
+  },
+  {
+    "us": 44360,
+    "frame": {
+      "functionName": "s",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 139954
+    }
+  },
+  {
+    "us": 41816,
+    "frame": {
+      "functionName": "",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 1740
+    }
+  },
+  {
+    "us": 39864,
+    "frame": {
+      "functionName": "Mi.wr.onmessage",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 22866
+    }
+  },
+  {
+    "us": 37538,
+    "frame": {
+      "functionName": "Mt",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 137852
+    }
+  },
+  {
+    "us": 35695,
+    "frame": {
+      "functionName": "n",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 9393
+    }
+  },
+  {
+    "us": 35661,
+    "frame": {
+      "functionName": "jt",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 137804
+    }
+  },
+  {
+    "us": 33686,
+    "frame": {
+      "functionName": "",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 10040
+    }
+  },
+  {
+    "us": 33589,
+    "frame": {
+      "functionName": "rt",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 53734
+    }
+  },
+  {
+    "us": 29399,
+    "frame": {
+      "functionName": "Q",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 1712
+    }
+  },
+  {
+    "us": 28490,
+    "frame": {
+      "functionName": "br",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 747988
+    }
+  },
+  {
+    "us": 28084,
+    "frame": {
+      "functionName": "$",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 12,
+      "columnNumber": 10383
+    }
+  },
+  {
+    "us": 25292,
+    "frame": {
+      "functionName": "rt",
+      "scriptId": "4",
+      "url": "http://127.0.0.1:4178/assets/index-DG0ql8Cc.js",
+      "lineNumber": 0,
+      "columnNumber": 53734
+    }
+  }
+]

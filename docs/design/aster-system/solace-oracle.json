@@ -1,0 +1,8 @@
+{
+  "method": "DOP853",
+  "through": 128,
+  "samples": 257,
+  "worst_six_state_residual": 1.730189325144238e-10,
+  "rtol": 2e-12,
+  "atol": 2e-13
+}

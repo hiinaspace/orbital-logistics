@@ -497,3 +497,15 @@ The wider speed control now has reverse and center0× pause; continuous reverse 
 within held history. NASA/JPL trace data and Apollo11 event geometry are offline
 references. See docs/evidence/staged-refinement.md and
  docs/design/staged-refinement/disposition.md.
+
+### Full Aster–Selene service
+
+The user accepted staged refinement/signed playback and authorized combining it
+with terminals, relay freight and free satellites, with Astra review and browser
+profiling. `aster-system-v1` now joins one staged cache, the shared funded courier
+provider, and two canonical free-flight streams behind complete publication and
+aggregate storage gates. Fixed-epoch planned markers and single-line timeline
+names address the UI nits. See [contract/disposition](design/aster-system/README.md)
+and [validation](evidence/aster-system.md). The next decision is human preference
+for the combined density/activity; additional staged origins or a renderer migration
+are deferred until that gate or measured scaling pressure.
