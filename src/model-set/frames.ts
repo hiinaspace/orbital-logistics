@@ -1,3 +1,4 @@
+import {stagedDisplayOrigin,type StagedVessel} from '../staged-service/query';
 import { bodyState } from '../sim/dynamics';
 import type { State, Vec3 } from '../sim/schema';
 import { displayPortState, portsOf, stateAt, type SceneView } from './model';
@@ -11,7 +12,7 @@ export function transform(run: SceneView, y: State, t: number, frame: string): S
     const vessel = run.vessels.find(v => v.id === frame);
     if (body) origin = bodyState(body, t);
     else if (port) origin = displayPortState(port,run.portSamples,t);
-    else if (vessel) origin = stateAt(vessel, t);
+    else if (vessel) origin = vessel.stagedService?stagedDisplayOrigin(vessel as StagedVessel,t):stateAt(vessel, t);
     else throw new Error('Unknown frame');
   }
   const c = Math.cos(angle), s = Math.sin(angle), x = y[0] - origin[0], yy = y[1] - origin[1];

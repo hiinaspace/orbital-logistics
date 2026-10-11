@@ -1,0 +1,34 @@
+{
+  "environment": "natto, local headless Chrome, 1440x900, 16x continuous staged service",
+  "method": "Five-second requestAnimationFrame windows; inertial followed by Eagle-centered Follow; all normal layers enabled. Separate browser tab, no physics timing inputs changed.",
+  "before": {
+    "inertial": {
+      "wallMs": 5056,
+      "simulationAdvance": 80.7984,
+      "frames": 291,
+      "maximumGapMs": 50
+    },
+    "Eagle": {
+      "wallMs": 5657,
+      "simulationAdvance": 32.2672,
+      "frames": 18,
+      "maximumGapMs": 466.7
+    }
+  },
+  "after": {
+    "inertial": {
+      "wallMs": 5046,
+      "simulationAdvance": 79.9968,
+      "frames": 297,
+      "maximumGapMs": 50
+    },
+    "Eagle": {
+      "wallMs": 5093,
+      "simulationAdvance": 82.3952,
+      "frames": 172,
+      "maximumGapMs": 83.3
+    }
+  },
+  "change": "Position-only staged frame origins and binary indexed seam lookup; full force/fuel telemetry remains available for inspector and propulsion visuals.",
+  "scope": "Bounded local browser measurement, not a hardware-independent FPS guarantee."
+}

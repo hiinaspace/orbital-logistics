@@ -1,0 +1,37 @@
+{
+  "cycle": 0,
+  "captures": {
+    "landing": {
+      "position": 1.6338428404086531e-09,
+      "velocity": 1.7056899821178785e-08,
+      "fuel": 1.3017175916386598e-09
+    },
+    "dock": {
+      "position": 1.3318367176299532e-07,
+      "velocity": 1.35299057402461e-07,
+      "fuel": 7.980850925412905e-09
+    }
+  },
+  "maxReplayError": 2.636151224130398e-05,
+  "comparisons": 144,
+  "sampledClearance": 9.999999999926734e-06,
+  "sampledVacuumAtmosphereClearance": 0.15771624125094824,
+  "recoveries": {
+    "booster": {
+      "t": 2.872848358174676,
+      "stateError": 1.6725232310221827e-12,
+      "epochError": 1.851363506943926e-11,
+      "speed": 0.03509645872595473,
+      "fuel": 0.9184776980310576
+    },
+    "orbiter": {
+      "t": 79.51380588679628,
+      "stateError": 1.5151591300929801e-05,
+      "epochError": 5.5946004735574206e-05,
+      "speed": 0.046432883941483545,
+      "fuel": 2.474597650504847
+    }
+  },
+  "landerFuel": 0.3218939517330378,
+  "passed": false
+}

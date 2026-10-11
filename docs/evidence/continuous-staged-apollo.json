@@ -1,0 +1,560 @@
+{
+  "period": 103.38531648187275,
+  "angle": 3.101559494456182,
+  "recoveries": {
+    "booster": 2.8728483581561624,
+    "orbiter": 79.51386183280101
+  },
+  "spent": {
+    "booster": 1.5815223019677296,
+    "orbiter": 1.8011346679952132,
+    "lander": 0.24926521238473565
+  },
+  "initialFuel": 7.346891479878904,
+  "work": {
+    "physicsBytes": 33929616,
+    "nodes": 101366,
+    "bytes": 15763018
+  },
+  "firstPacketBytes": 28445180,
+  "coldPacketBytes": 54096246,
+  "comparison": [
+    {
+      "actor": "stack",
+      "local": 0,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 0,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 0,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 0,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 0.5,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 0.5,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 0.5,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 0.5,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 0.512345,
+      "positionError": 1.672273430841642e-14,
+      "fuelError": 2.8106620364454216e-8,
+      "massError": 2.810662014240961e-8
+    },
+    {
+      "actor": "booster",
+      "local": 0.512345,
+      "positionError": 1.672273430841642e-14,
+      "fuelError": 2.8106620364454216e-8,
+      "massError": 2.810662058649882e-8
+    },
+    {
+      "actor": "orbiter",
+      "local": 0.512345,
+      "positionError": 1.672273430841642e-14,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 0.512345,
+      "positionError": 1.672273430841642e-14,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 2,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 2,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 2,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 2,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 2.234567,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 2.234567,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 2.234567,
+      "positionError": 2.220446049250313e-16,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 2.234567,
+      "positionError": 2.220446049250313e-16,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 8,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 8,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 8,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 8,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 8.008991,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 8.008991,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 8.008991,
+      "positionError": 1.9097834424997018e-11,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 8.008991,
+      "positionError": 1.9097834424997018e-11,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 28,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 28,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 28,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 28,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 28.123456,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 28.123456,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 28.123456,
+      "positionError": 6.439293542825908e-13,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 28.123456,
+      "positionError": 6.439293542825908e-13,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 37.4351867532882,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 37.4351867532882,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 37.4351867532882,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 37.4351867532882,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 38.664405090716635,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 38.664405090716635,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 38.664405090716635,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 38.664405090716635,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 40.664405090716635,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 40.664405090716635,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 40.664405090716635,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 40.664405090716635,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 44.5,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 44.5,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 44.5,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 44.5,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 55,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 55,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 55,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 55,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 55.057971,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 55.057971,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 55.057971,
+      "positionError": 8.08242361927114e-14,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 55.057971,
+      "positionError": 8.08242361927114e-14,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 75.03229829406145,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 75.03229829406145,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 75.03229829406145,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 4.440892098500626e-16
+    },
+    {
+      "actor": "lander",
+      "local": 75.03229829406145,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "stack",
+      "local": 80.01386183280101,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "booster",
+      "local": 80.01386183280101,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "orbiter",
+      "local": 80.01386183280101,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    },
+    {
+      "actor": "lander",
+      "local": 80.01386183280101,
+      "positionError": 0,
+      "fuelError": 0,
+      "massError": 0
+    }
+  ],
+  "records": [
+    {
+      "epoch": 101.38531648187275,
+      "physicsBytes": 33929616,
+      "physicalNodes": 101366,
+      "packetBytes": 12791882,
+      "drawingBytes": 25462264,
+      "drawingSamples": 71117,
+      "viewCycles": 2,
+      "fuelBalanceError": 8.881784197001252e-16
+    },
+    {
+      "epoch": 103.88531648187275,
+      "physicsBytes": 33929616,
+      "physicalNodes": 101366,
+      "packetBytes": 7045,
+      "drawingBytes": 25462264,
+      "drawingSamples": 71117,
+      "viewCycles": 2,
+      "fuelBalanceError": 8.881784197001252e-16
+    },
+    {
+      "epoch": 251.2706329637455,
+      "physicsBytes": 33929616,
+      "physicalNodes": 101366,
+      "packetBytes": 12729406,
+      "drawingBytes": 25508308,
+      "drawingSamples": 71116,
+      "viewCycles": 2,
+      "fuelBalanceError": 0
+    },
+    {
+      "epoch": 556.9265824093637,
+      "physicsBytes": 33929616,
+      "physicalNodes": 101366,
+      "packetBytes": 25460546,
+      "drawingBytes": 25453810,
+      "drawingSamples": 71116,
+      "viewCycles": 2,
+      "fuelBalanceError": 3.552713678800501e-15
+    },
+    {
+      "epoch": 1315.6560960765346,
+      "physicsBytes": 33929616,
+      "physicalNodes": 101366,
+      "packetBytes": 38333216,
+      "drawingBytes": 38326093,
+      "drawingSamples": 106682,
+      "viewCycles": 3,
+      "fuelBalanceError": 0
+    }
+  ],
+  "terminal": {
+    "epoch": 1000000,
+    "halt": "Exhibit calendar ended",
+    "refills": 9672,
+    "packetBytes": 21674449,
+    "fuelBalanceError": 7.275957614183426e-12,
+    "drawingBytes": 21667889,
+    "drawingSamples": 60298
+  }
+}

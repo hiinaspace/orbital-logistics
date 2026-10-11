@@ -1,0 +1,39 @@
+{
+  "cycle": 17,
+  "absoluteEpoch": 1757.5503801918367,
+  "clock": "local solver clock with absolute field/support phases",
+  "captures": {
+    "landing": {
+      "position": 1.6561987334789075e-09,
+      "velocity": 1.7144807186758232e-08,
+      "fuel": 1.3084263467633559e-09
+    },
+    "dock": {
+      "position": 1.3310463048800428e-07,
+      "velocity": 1.3523129248897868e-07,
+      "fuel": 7.976853693697981e-09
+    }
+  },
+  "maxReplayError": 2.7037173077212873e-05,
+  "comparisons": 144,
+  "sampledClearance": 1.0000000000065512e-05,
+  "sampledVacuumAtmosphereClearance": 0.15771624125094047,
+  "recoveries": {
+    "booster": {
+      "t": 1760.4232285500134,
+      "stateError": 1.5866197244918112e-12,
+      "epochError": 2.0508483800085742e-11,
+      "speed": 0.03509645872577441,
+      "fuel": 0.9184776980317018
+    },
+    "orbiter": {
+      "t": 1837.0641860453882,
+      "stateError": 1.1216346690323675e-05,
+      "epochError": 5.597924958067324e-05,
+      "speed": 0.04643288394143101,
+      "fuel": 2.474597650506348
+    }
+  },
+  "landerFuel": 0.32189395173032626,
+  "passed": true
+}

@@ -1,0 +1,94 @@
+{
+  "note": "Actual fixed-primary field, no softened gravity; offline witness LOI state. Sampled min radii are feasibility only, not canonical interval clearance admission.",
+  "initial": {
+    "name": "Lunar orbit",
+    "t": 29.923779528746707,
+    "state": [
+      -0.5897114364477916,
+      -4.61245492347289,
+      0.15980143375772177,
+      -0.020430927527452063,
+      3.807727757000971
+    ]
+  },
+  "results": [
+    {
+      "through": 41.5754510612778,
+      "actualEnd": 41.5754510612778,
+      "minLunarRadius": 0.32820762914701923,
+      "maxLunarRadius": 0.3685913051494986,
+      "collision": false,
+      "endState": [
+        4.145722100427713,
+        -3.301076636378177,
+        0.5526449744722309,
+        0.46886991962678215
+      ]
+    },
+    {
+      "through": 45.0,
+      "actualEnd": 45.0,
+      "minLunarRadius": 0.32820762960433986,
+      "maxLunarRadius": 0.38681894470256956,
+      "collision": false,
+      "endState": [
+        4.8041240597282835,
+        -1.2481428796206575,
+        -0.11759890055470174,
+        0.45647903527148304
+      ]
+    },
+    {
+      "through": 48.0,
+      "actualEnd": 48.0,
+      "minLunarRadius": 0.2982370200677843,
+      "maxLunarRadius": 0.38681894007243894,
+      "collision": false,
+      "endState": [
+        4.8574082010392345,
+        -0.5581460430970397,
+        0.312414798380587,
+        0.288547146906716
+      ]
+    },
+    {
+      "through": 51.715850814408824,
+      "actualEnd": 51.715850814408824,
+      "minLunarRadius": 0.2982370377424198,
+      "maxLunarRadius": 0.4104336378714924,
+      "collision": false,
+      "endState": [
+        5.05615789259116,
+        1.7073735729831003,
+        -0.31666215871616565,
+        0.5927735240106466
+      ]
+    },
+    {
+      "through": 60.0,
+      "actualEnd": 60.0,
+      "minLunarRadius": 0.266691568820128,
+      "maxLunarRadius": 0.4371137091134535,
+      "collision": false,
+      "endState": [
+        2.600549560361324,
+        4.727597280565309,
+        -0.6192497839963531,
+        0.24847969035322923
+      ]
+    },
+    {
+      "through": 80.0,
+      "actualEnd": 80.0,
+      "minLunarRadius": 0.23368425535705467,
+      "maxLunarRadius": 0.4536997822422548,
+      "collision": false,
+      "endState": [
+        -4.609274763301122,
+        1.2783255431842406,
+        0.1240805138996526,
+        -0.13156980522266293
+      ]
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import {sampleStagedService,stagedStateAt,stagedServicePresent,stagedServicePresenceLabel,type StagedPlayback,type StagedVessel} from '../staged-service/query';
 import {sampleLibration,type LibrationPlayback} from '../libration/query';
 import {sampleExpedition,type ExpeditionPlayback} from '../expedition/query';
 import {surfaceSample,surfaceDuration,type SurfaceFlight} from '../surface-flexible/contracts';
@@ -22,6 +23,8 @@ export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
 export interface ViewSample extends Sample {frameOrigin?:State;opacity?:number;activity?:Activity;mass?:number;aero?:AeroTelemetry;axis?:Vector3;entryPhase?:'coast'|'entry'|'braking'|'recovered'}
 export interface VesselView {
+ stagedService?:StagedPlayback;
+ attachment?:{before?:string;after?:string};
  libration?:LibrationPlayback;
  expedition?:ExpeditionPlayback;
  interpolation?:'hermite';
@@ -41,6 +44,7 @@ export interface VesselView {
 export interface VesselRun extends Vessel,VesselView {}
 export interface MaintainedView extends VesselView {baseline:{t:number;y:State}[]}
 export interface SceneView {
+ assemblies?:{separations:{t:number;parentId:string;children:string[];state:State;beforeMass:number;afterMass:number;momentumBefore:number[];momentumAfter:number[]}[];dock:{t:number;carrierId:string;partId:string;positionError:number;deltaV:number;fuelUsed:number}};
  frameExtents?:ModelSet['frameExtents'];
  atmosphere?:Atmosphere;entry?:{recoveryEpoch:number;relativeSpeed:number;waterEnergy:number;impulse:Vec3;work:{trials:number;evaluations:number;roots:number};maxima:{pressure:number;acceleration:number;heat:number;force:number}};
  recoveries?:Record<string,NonNullable<SceneView['entry']>>;
@@ -189,12 +193,15 @@ export function prepareSet(value: ModelSet): SetRun {
 
 // Presence is distinct from retained endpoint data used by histories and events.
 export function isPresent(v:VesselView,t:number):boolean {
+ if(v.stagedService)return stagedServicePresent(v as StagedVessel,t);
  const l=v.lifetime;return !l||t>=l.start&&(l.retired?t<l.end:t<=l.end);
 }
 export function presenceLabel(v:VesselView,t:number):string {
- return t<(v.lifetime?.start??-Infinity)?'Attached to launch stack':'Separated';
+ if(v.stagedService)return stagedServicePresenceLabel(v as StagedVessel,t);
+ return t<(v.lifetime?.start??-Infinity)?'Carried by '+(v.attachment?.before??'launch stack'):v.attachment?.after?'Aboard '+v.attachment.after:'Separated';
 }
 export function sampleVessel(v: VesselView, t: number): ViewSample {
+ if(v.stagedService)return sampleStagedService(v as StagedVessel,t);
  if(v.libration)return sampleLibration(v,t);
  if(v.expedition)return sampleExpedition(v,t);
  const local=v.surfaceFlights?.find(f=>t>=f.start&&t<f.start+surfaceDuration);if(local)return surfaceSample(local,t);
@@ -250,6 +257,7 @@ function bracket(v: VesselView, t: number): [ViewSample, ViewSample] {
   return [a, b];
 }
 export function stateAt(v: VesselView, t: number): State {
+ if(v.stagedService)return stagedStateAt(v as StagedVessel,t);
  if(v.libration)return sampleLibration(v,t).y;
  if(v.expedition)return sampleExpedition(v,t).y;
  const local=v.surfaceFlights?.find(f=>t>=f.start&&t<f.start+surfaceDuration);if(local)return surfaceSample(local,t).y;
