@@ -745,7 +745,8 @@ $<HTMLInputElement>('speed').oninput = () => {
   if (ready) updatePanels();
 };
 function animate(now: number) {
-  const dt = Math.min(0.1, (now - lastFrame) / 1000); lastFrame = now;
+  // A queued RAF timestamp may precede a Play handler that reset lastFrame.
+  const dt = Math.max(0, Math.min(0.1, (now - lastFrame) / 1000)); lastFrame = now;
   if(ready && playing && traffic && !document.hidden){
    if(liveMode){
     if(playbackLead()){t=Math.min(traffic.frontier,t+dt*playbackRate);desiredTarget=t+playbackLead();if((traffic.halt||liveError)&&t>=traffic.frontier)playing=false;if(now-lastPanel>100||t>run!.window.end||t>run!.traffic!.frontier)refreshTraffic();}

@@ -29,6 +29,19 @@ test('entry absolute epoch keeps the compensated circular ephemeris',()=>{
 });
 test('finite expedition keeps exact seams, paid capture, recovery and rewind',()=>{
  const r=prepareApollo(fixture),d=r.definition,v=r.view.vessels[0];
+ // Exercise interpolation immediately before and after every physical seam.
+ for(const boundary of v.boundaries){
+  for(const t of [boundary.t-1e-7,boundary.t,boundary.t+1e-7]){
+   const q=sampleVessel(v,t);assert.ok(Number.isFinite(q.fuelUsed));
+   if(q.logistics)assert.equal(q.logistics.fuelUsed,q.fuelUsed);
+  }
+ }
+ assert.equal(sampleVessel(v,d.launch-1e-7).logistics?.dockedPortId,d.ports[0].id);
+ assert.equal(sampleVessel(v,d.launch).logistics?.dockedPortId,undefined);
+ // Older prepared packets may omit a release boundary; optional docking metadata
+ // must not crash fuel interpolation at their support-to-flight transition.
+ const withoutLaunch={...v,boundaries:v.boundaries.filter(b=>b.t!==d.launch)};
+ assert.ok(Number.isFinite(sampleVessel(withoutLaunch,d.launch-1e-7).logistics?.fuelUsed));
  const upper=r.ascent.nodes.at(-1)!.z,first=r.outbound.sample(d.ascentEnd);
  assert.deepEqual(first.y,upper.slice(0,6));assert.equal(first.propellant,upper[6]);
  const entryInitial=r.returning.sample(d.entryStart);assert.deepEqual(r.entry.nodes[0].z,[...entryInitial.y,entryInitial.propellant]);

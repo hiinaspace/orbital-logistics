@@ -200,7 +200,9 @@ export function sampleVessel(v: VesselView, t: number): ViewSample {
     sample.propellant=a.propellant+u*(endpoint.propellant-a.propellant);
     if(a.mass!==undefined)sample.mass=a.mass+u*((endpoint as ViewSample).mass!-a.mass);
     sample.fuelUsed=a.fuelUsed+u*(endpoint.fuelUsed!-a.fuelUsed);
-    if(sample.logistics)sample.logistics.fuelUsed=a.logistics!.fuelUsed+u*(endpoint.logistics!.fuelUsed-a.logistics!.fuelUsed);
+    if(sample.logistics)sample.logistics.fuelUsed=endpoint.logistics
+      ?a.logistics!.fuelUsed+u*(endpoint.logistics.fuelUsed-a.logistics!.fuelUsed)
+      :sample.fuelUsed;
   }
   // Throttle is fixed per arc; steering uses the same physical direction law.
   // Mass and therefore force/acceleration vary smoothly. These are drawing values, never a target or propagation origin.

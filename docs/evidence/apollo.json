@@ -701,9 +701,9 @@
   "work": {
     "physicsBytes": 30151944,
     "nodes": 92153,
-    "bytes": 7913349
+    "bytes": 7914051
   },
-  "preparationMs": 3734.62277,
+  "preparationMs": 3550.202705,
   "capture": {
     "y": [
       3.217034197896704,
