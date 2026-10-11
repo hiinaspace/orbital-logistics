@@ -51,6 +51,7 @@ export function prepareApollo(value:unknown){
   }
  }
  const moonRail=s.bodies[1].rail;
+ if(moonRail.kind!=='circular')throw Error('Apollo: circular Moon required');
  ok(moonRail.kind==='circular'&&moonRail.center.every(x=>x===0)&&moonRail.u.join(',')==='1,0,0'&&moonRail.v.join(',')==='0,1,0'&&moonRail.radius>s.bodies[0].radius+s.bodies[1].radius+2e-5,'support separation');
  const release=(port:Port,t:number,fuel:number)=>{
   const a=d.arcs.find(a=>a.start===t);ok(a,'release burn');
@@ -113,7 +114,7 @@ export function prepareApollo(value:unknown){
  }
  const ordered=[...times].sort((a,b)=>a-b);ok(ordered.length<=40000,'display sample budget');
  const view:SceneView={schemaVersion:1,id:d.id,name:d.name,description:d.description,provenance:d.provenance,extent:d.extent,frameExtents:{Aster:2.2,Selene:.7,Cairn:.015,Tranquility:.015},
-  stations:d.ports.map(p=>({id:p.id,role:'Surface terminal',berths:1})),rotating:d.entry.rotating,world:{bodies:s.bodies,ports:d.ports,units:s.units},portSamples:{},window:{start:0,end},atmosphere:d.entry.atmosphere,
+  stations:d.ports.map(p=>({id:p.id,role:'Surface terminal',berths:1})),rotating:{name:'Aster–Selene rotating',rate:moonRail.rate,phase:moonRail.phase},world:{bodies:s.bodies,ports:d.ports,units:s.units},portSamples:{},window:{start:0,end},atmosphere:d.entry.atmosphere,
   vessels:[{id:s.ship.id,name:'Odyssey',color:'#e6c98b',cargo:'Expedition',cargoCapacity:0,ship:s.ship,ports:d.ports,portSamples:{},arcs:d.arcs,glyph:'rocket',continuousFuel:true,interpolation:'hermite',
    samples:ordered.map(t=>{const q=sample(t);delete q.aero;return q;}),ledger,boundaries:[{t:d.launch,before:sample(d.launch,true),after:sample(d.launch)},{t:d.landing,before:sample(d.landing,true),after:sample(d.landing)},{t:d.liftoff,before:sample(d.liftoff,true),after:sample(d.liftoff)},{t:entry.contact.t,before:sample(entry.contact.t,true),after:sample(entry.contact.t)}],
    aerodynamics:{scenario:s,atmosphere:d.entry.atmosphere,aero:ascent.definition.aero},

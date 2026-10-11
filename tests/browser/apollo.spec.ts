@@ -19,7 +19,10 @@ test('planet–moon expedition, both surface views, entry, rewind and switching'
  await seek(.5);expect((await state()).ships[0].thrust.id).toBe('boost');
  await page.getByRole('button',{name:'Surface view',exact:true}).click();expect((await state()).frame).toBe('Cairn');
  await page.screenshot({path:'docs/evidence/apollo-launch.png',fullPage:true});
- await seek(22);await page.getByLabel('Reference frame').selectOption('inertial');await page.getByRole('button',{name:'Fit',exact:true}).click();
+ await seek(22);await page.getByLabel('Reference frame').selectOption('rotating');
+ expect(await page.getByLabel('Reference frame').locator('option:checked').textContent()).toBe('Aster–Selene rotating');
+ expect((await state()).frame).toBe('rotating');
+ await page.getByLabel('Reference frame').selectOption('inertial');await page.getByRole('button',{name:'Fit',exact:true}).click();
  await page.getByLabel('Camera view').selectOption('oblique');await page.screenshot({path:'docs/evidence/apollo-transfer.png',fullPage:true});
  await seek(fixture.landing+.5);expect((await state()).ships[0].logistics.dockedPortId).toBe('Tranquility');
  await page.getByRole('button',{name:'Surface view',exact:true}).click();expect((await state()).frame).toBe('Tranquility');

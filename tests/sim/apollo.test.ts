@@ -6,6 +6,8 @@ import {prepareApollo,type ApolloMission} from '../../src/model-set/apollo';
 import {prepareEntry,type EntryFlight} from '../../src/model-set/entry';
 import {sampleVessel,stockAt} from '../../src/model-set/model';
 import {Runner} from '../../src/sim/runner';
+import {bodyState} from '../../src/sim/dynamics';
+import {transform} from '../../src/model-set/frames';
 import {portState} from '../../src/sim/logistics';
 
 test('Apollo phase admission rejects silent dropped burns and invalid support',()=>{
@@ -42,6 +44,11 @@ test('finite expedition keeps exact seams, paid capture, recovery and rewind',()
  // must not crash fuel interpolation at their support-to-flight transition.
  const withoutLaunch={...v,boundaries:v.boundaries.filter(b=>b.t!==d.launch)};
  assert.ok(Number.isFinite(sampleVessel(withoutLaunch,d.launch-1e-7).logistics?.fuelUsed));
+ for(const t of [0,22,r.view.window.end]){
+  const moon=transform(r.view,bodyState(d.scenario.bodies[1],t),t,'rotating');
+  assert.ok(Math.abs(moon[0]-5)<1e-13);
+  assert.ok(Math.max(...moon.slice(1).map(Math.abs))<1e-13);
+ }
  const upper=r.ascent.nodes.at(-1)!.z,first=r.outbound.sample(d.ascentEnd);
  assert.deepEqual(first.y,upper.slice(0,6));assert.equal(first.propellant,upper[6]);
  const entryInitial=r.returning.sample(d.entryStart);assert.deepEqual(r.entry.nodes[0].z,[...entryInitial.y,entryInitial.propellant]);

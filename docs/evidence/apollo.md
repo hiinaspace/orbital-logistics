@@ -4,7 +4,7 @@ Input: `fixtures/model-sets/aster-selene-expedition.json`.
 Independent replay: `spikes/numerics/apollo_oracle.py`.
 Retained reports: `apollo.json` and `apollo-oracle.json`.
 
-Preparation retains 92,153 physical nodes, 30,151,944 serialized physical bytes and a 7,914,051-byte display packet. It measured about 3–4 seconds on natto. Odyssey starts with 6 fuel units and recovers at t=83.559592 with 2.115321 remaining. Independent dense observations find at least 0.157713 clearance above atmospheric top during vacuum flight; runtime interval certificates guard crossings between observations.
+Preparation retains 92,153 physical nodes, 30,151,944 serialized physical bytes and a 7,914,087-byte display packet. It measured about 3–4 seconds on natto. Odyssey starts with 6 fuel units and recovers at t=83.559592 with 2.115321 remaining. Independent dense observations find at least 0.157713 clearance above atmospheric top during vacuum flight; runtime interval certificates guard crossings between observations.
 
 Runtime lunar landing residual: position 5.85e-8, velocity 1.29e-7, paid fuel 6.56e-8. Independent continuous replay reaches position 3.45e-7 and velocity 8.59e-7 against the same support provider and pays its own correction. Admission reserves position 5e-7 and velocity 1e-6 numerical allowance inside 2e-6 limits. Independent observed solid-body clearance is 1e-5.
 
@@ -25,3 +25,13 @@ Accelerated rewind/resume also reproduced a queued RAF timestamp preceding the
 Play handler clock reset. Elapsed presentation time is now clamped to zero
 instead of querying before the prepared mission begins. The updated browser
 regression passes, along with 25 related simulation tests and independent replay.
+
+The viewer's rotating frame now follows the Moon's rail rate and phase rather
+than the atmospheric spin. Tests keep the Moon stationary across the mission
+and exercise that frame in the browser.
+
+A read-only recurrence probe gives T=103.38531648 for the relative Moon/pad
+period and rotation 3.10155949 radians. Sampled production body, pad and gravity
+queries at t+T match rotated queries at t to <1e-14. This supports a future
+symmetry-based reuse design; it does not certify repeated powered missions,
+resource turnaround or continuous playback.
