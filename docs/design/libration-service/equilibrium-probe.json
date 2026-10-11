@@ -1,0 +1,15 @@
+{
+  "root": 6.123129239772423,
+  "scalarResidual": 3.469446951953614e-18,
+  "maxVectorResidual": 7.076311083754595e-17,
+  "maxPositionCovarianceError": 8.304812393333805e-11,
+  "covarianceByOffset": [
+    0.0,
+    8.43769498715119e-15,
+    1.5143442055887135e-13,
+    1.0786371795745708e-11,
+    8.304812393333805e-11
+  ],
+  "minMoonSurfaceClearance": 0.9231292397724229,
+  "minAtmosphereClearance": 4.923129239772423
+}

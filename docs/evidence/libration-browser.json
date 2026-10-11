@@ -1,0 +1,33 @@
+{
+  "elapsedMs": 8140.027375999998,
+  "simulatedTime": 127.89119999961902,
+  "observedRate": 15.711396791697846,
+  "longTasks": [
+    52
+  ],
+  "maximumFrameGapMs": 83.30000000000109,
+  "frameCount": 425,
+  "stats": {
+    "planningPending": 0,
+    "cacheCompilations": 2,
+    "cacheHits": 2,
+    "completedTrips": 2,
+    "refills": 2,
+    "physicsBytes": 49388128,
+    "physicalNodes": 149215,
+    "packetBytes": 8648,
+    "orbiterFault": 0,
+    "workerDrawingBytes": 39580227,
+    "workerDrawingSamples": 113430,
+    "courierCompilations": 1,
+    "courierTrips": 5,
+    "courierRefills": 5,
+    "parcelsDelivered": 0.75,
+    "courierCycles": 6,
+    "courierDrawingBytes": 4475315,
+    "courierDrawingSamples": 10254,
+    "retainedDrawingBytes": 39580227,
+    "retainedDrawingSamples": 118563
+  },
+  "errors": []
+}

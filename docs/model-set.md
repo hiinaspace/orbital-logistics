@@ -433,3 +433,7 @@ Aster–Selene · Continuous expedition repeats the accepted finite atmospheric 
 ## Overlapping planet–moon expeditions
 
 **Aster–Selene · Crossings** adds Argosy from Farpoint and the local Wren orbiter. Two independently fuelled expeditions alternate visits to a shared lunar pad; one canonical compilation serves both through validated phase symmetry. Global absolute-epoch local coasting, isolated faults, worker-prepared cycle strips and bounded rolling playback share one fleet publication. See [design](design/overlapping-expeditions/README.md) and [evidence](evidence/crossings.md).
+
+## Libration-region relay
+
+**Aster–Selene · Beacon relay** retains Crossings and adds the actual-field outer equilibrium station Beacon plus Kestrel’s cached finite-thrust lunar round trips. Haven funds restored departure loads, and delivered relay parcels are explicitly consumed. Shared rolling playback needs no online station controller. See [design](design/libration-service/README.md) and [evidence](evidence/libration.md).

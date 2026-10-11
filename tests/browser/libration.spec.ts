@@ -1,0 +1,40 @@
+import {test,expect} from '@playwright/test';
+import fs from 'node:fs';
+test('libration relay joins continuous expeditions with repeated paid lunar service',async({page})=>{
+ test.setTimeout(150000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>{
+  const metrics=(window as any).__libration={active:false,tasks:[] as number[],gaps:[] as number[]};
+  new PerformanceObserver(list=>{if(metrics.active)metrics.tasks.push(...list.getEntries().map(e=>e.duration));}).observe({entryTypes:['longtask']});
+  let last=performance.now();const tick=(now:number)=>{if(metrics.active)metrics.gaps.push(now-last);last=now;requestAnimationFrame(tick);};requestAnimationFrame(tick);
+ });
+ const state=async()=>JSON.parse(await page.locator('#state-json').textContent()??'{}');
+ const ready=async(id:string)=>expect.poll(async()=>{const s=await state();return s.ready&&s.set===id;},{timeout:40000}).toBe(true);
+ const pause=async()=>{if((await state()).playing)await page.getByRole('button',{name:'Pause',exact:true}).click();};
+ const seek=async(t:number)=>{await page.getByLabel('Simulation time').fill(String(t));await expect.poll(async()=>(await state()).t).toBe(t);};
+ const ship=async()=> (await state()).ships.find((v:any)=>v.id==='Kestrel');
+ await page.goto('/');await ready('orison-freight');await page.getByLabel('Model set').selectOption('aster-selene-beacon');await ready('aster-selene-beacon');await pause();
+ expect((await state()).ships.length).toBe(4);expect((await state()).playbackRate).toBe(.1);
+ expect((await ship()).logistics.dockedPortId).toBe('Haven');expect((await ship()).logistics.cargoMass).toBe(.15);
+ await seek(1.3);expect((await ship()).thrust.acceleration).toBeCloseTo(1.2,10);
+ await page.getByRole('button',{name:'Surface view',exact:true}).click();expect((await state()).frame).toBe('Haven');
+ await page.getByLabel('Camera view').selectOption('oblique');await page.screenshot({path:'docs/evidence/libration-launch.png',fullPage:true});
+ await seek(11.5);expect((await ship()).logistics.dockedPortId).toBe('Beacon');expect((await ship()).logistics.cargoMass).toBe(.15);
+ await seek(12);expect((await ship()).logistics.cargoMass).toBe(0);
+ await page.locator('#stations [data-object="Beacon"]').click();await page.getByRole('button',{name:'View from here',exact:true}).click();expect((await state()).frame).toBe('Beacon');
+ await page.screenshot({path:'docs/evidence/libration-docked.png',fullPage:true});
+ await page.locator('#fleet [data-object="Kestrel"]').click();await seek(23.7);expect((await ship()).thrust.force).toBeGreaterThan(0);
+ await seek(24);expect((await ship()).logistics.dockedPortId).toBe('Haven');await seek(30);expect((await ship()).propellant).toBe(6);expect((await ship()).logistics.cargoMass).toBe(.15);
+ await seek(0);await page.getByLabel('Reference frame').selectOption('rotating');await page.getByRole('button',{name:'Fit',exact:true}).click();await page.getByLabel('Playback speed').fill('4');
+ const began=performance.now();await page.evaluate(()=>{(window as any).__libration.active=true;});await page.getByRole('button',{name:'Play',exact:true}).click();
+ await expect.poll(async()=>(await state()).t,{timeout:30000}).toBeGreaterThan(120);await pause();await page.evaluate(()=>{(window as any).__libration.active=false;});
+ const elapsedMs=performance.now()-began,first=await state(),metrics=await page.evaluate(()=>(window as any).__libration);
+ await seek(3*32+11.5);expect((await ship()).logistics.dockedPortId).toBe('Beacon');
+ const held=(await state()).ships.map((v:any)=>v.y);await page.waitForTimeout(600);expect((await state()).ships.map((v:any)=>v.y)).toEqual(held);
+ await page.getByRole('button',{name:'Return to live',exact:true}).click();await expect.poll(async()=>(await state()).t,{timeout:30000}).toBeGreaterThan(260);await pause();
+ await seek(8*32+1.3);expect((await ship()).thrust.id).toBe('Kestrel:8:surface-boost');await page.getByLabel('Reference frame').selectOption('rotating');await page.getByRole('button',{name:'Fit',exact:true}).click();
+ await page.screenshot({path:'docs/evidence/libration-overview.png',fullPage:true});
+ const s=await state();expect(s.traffic.error).toBe('');expect(s.traffic.stats.courierTrips).toBeGreaterThanOrEqual(8);expect(s.traffic.stats.courierCompilations).toBe(1);expect(s.traffic.stats.orbiterFault).toBe(0);
+ for(const id of ['aster-selene-crossings','aster-selene-expedition','aster-selene-beacon']){await page.getByLabel('Model set').selectOption(id);await ready(id);await pause();}
+ expect(errors).toEqual([]);
+ fs.writeFileSync('docs/evidence/libration-browser.json',JSON.stringify({elapsedMs,simulatedTime:first.t,observedRate:first.t/(elapsedMs/1000),longTasks:metrics.tasks,maximumFrameGapMs:Math.max(...metrics.gaps),frameCount:metrics.gaps.length,stats:first.traffic.stats,errors},null,2)+'\n');
+});

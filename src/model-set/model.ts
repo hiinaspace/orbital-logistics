@@ -1,3 +1,4 @@
+import {sampleLibration,type LibrationPlayback} from '../libration/query';
 import {sampleExpedition,type ExpeditionPlayback} from '../expedition/query';
 import {surfaceSample,surfaceDuration,type SurfaceFlight} from '../surface-flexible/contracts';
 import {entryForces,recoveredState,type EntryPhysics,type RecoveryPose} from '../sim/entry';
@@ -21,6 +22,7 @@ export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
 export interface ViewSample extends Sample {frameOrigin?:State;opacity?:number;activity?:Activity;mass?:number;aero?:AeroTelemetry;axis?:Vector3;entryPhase?:'coast'|'entry'|'braking'|'recovered'}
 export interface VesselView {
+ libration?:LibrationPlayback;
  expedition?:ExpeditionPlayback;
  interpolation?:'hermite';
  surfaceFlights?:SurfaceFlight[];surfaceEngine?:Scenario['ship']['engine'];
@@ -193,6 +195,7 @@ export function presenceLabel(v:VesselView,t:number):string {
  return t<(v.lifetime?.start??-Infinity)?'Attached to launch stack':'Separated';
 }
 export function sampleVessel(v: VesselView, t: number): ViewSample {
+ if(v.libration)return sampleLibration(v,t);
  if(v.expedition)return sampleExpedition(v,t);
  const local=v.surfaceFlights?.find(f=>t>=f.start&&t<f.start+surfaceDuration);if(local)return surfaceSample(local,t);
   const dense=v.trajectories?.find(p=>t>=p.start && t<p.end && t<=p.through);
@@ -247,6 +250,7 @@ function bracket(v: VesselView, t: number): [ViewSample, ViewSample] {
   return [a, b];
 }
 export function stateAt(v: VesselView, t: number): State {
+ if(v.libration)return sampleLibration(v,t).y;
  if(v.expedition)return sampleExpedition(v,t).y;
  const local=v.surfaceFlights?.find(f=>t>=f.start&&t<f.start+surfaceDuration);if(local)return surfaceSample(local,t).y;
   if(v.entry && t>=v.entry.recovery.t && t<=v.samples.at(-1)!.t)return recoveredState(v.entry.recovery,t);

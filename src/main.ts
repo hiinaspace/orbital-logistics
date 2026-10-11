@@ -1,3 +1,6 @@
+import beacon from '../fixtures/model-sets/aster-selene-beacon.json';
+import {LibrationViewStore} from './libration/view';
+import {isLibration,type LibrationDefinition,type LibrationDelta} from './libration/engine';
 import crossings from '../fixtures/model-sets/aster-selene-crossings.json';
 import {ExpeditionFleetViewStore} from './expedition/fleet-view';
 import {isExpeditionFleet,type ExpeditionFleetDefinition,type ExpeditionFleetDelta} from './expedition/fleet';
@@ -73,7 +76,7 @@ import {orbitError,displayPortState,portsOf, sampleVessel as uncachedSampleVesse
 import {transform,transformDirection} from './model-set/frames';
 
 const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo] as (ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
-const trafficSets=[crossings,expeditionService,trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition)[];
+const trafficSets=[beacon,crossings,expeditionService,trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
@@ -93,7 +96,7 @@ document.body.innerHTML = `
 
 const canvas = $<HTMLCanvasElement>('space'), ctx = canvas.getContext('2d')!;
 let run: SceneView | undefined, worker: Worker | undefined, revision = 0;
-let traffic:TrafficViewStore|MaintainedViewStore|AdaptiveViewStore|NetworkViewStore|LunarViewStore|ExpeditionViewStore|ExpeditionFleetViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='',trafficDirty=false;
+let traffic:TrafficViewStore|MaintainedViewStore|AdaptiveViewStore|NetworkViewStore|LunarViewStore|ExpeditionViewStore|ExpeditionFleetViewStore|LibrationViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='',trafficDirty=false;
 let events: SetEvent[] = [], selected = '', frame = 'inertial', t = 0, playing = false;
 let ready = false, width = 900, height = 600;
 const camera:Camera={yaw:0,pitch:Math.PI/2,center:[0,0,0],scale:100};
@@ -126,7 +129,7 @@ function requestTraffic(target:number){
  pending=true;requestedTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,target));
  worker.postMessage({generation:revision,sequence:++sequence,target:requestedTarget,after:traffic.frontier});
 }
-const playbackLead=()=>traffic instanceof ExpeditionViewStore||traffic instanceof ExpeditionFleetViewStore?EXPEDITION_LEAD:traffic instanceof LunarViewStore?LUNAR_LEAD:(traffic instanceof AdaptiveViewStore||traffic instanceof NetworkViewStore)?adaptivePlaybackLead:0;
+const playbackLead=()=>traffic instanceof LibrationViewStore||traffic instanceof ExpeditionViewStore||traffic instanceof ExpeditionFleetViewStore?EXPEDITION_LEAD:traffic instanceof LunarViewStore?LUNAR_LEAD:(traffic instanceof AdaptiveViewStore||traffic instanceof NetworkViewStore)?adaptivePlaybackLead:0;
 const liveEdge=()=>traffic?bufferedEdge(traffic.frontier,traffic.oldest,playbackLead()):0;
 function goLive(){if(!traffic)return;traffic.release();if(!liveMode)t=Math.max(t,liveEdge());desiredTarget=t+playbackLead();liveMode=!!playbackLead()||!liveError&&!traffic.halt;playing=(!liveError&&!traffic.halt)||t<traffic.frontier;lastFrame=performance.now();refreshTraffic();updatePanels();}
 const vessel = () => run?.vessels.find(v => v.id === selected)??run?.maintained?.[selected];
@@ -384,7 +387,7 @@ function publishState() {
 }
 function loadSet(id: string) {
   if(currentSet)setSpeeds.set(currentSet,playbackRate);currentSet=id;
-  playbackRate=setSpeeds.get(id)??(['selene-ground','selene-ground-service'].includes(id)?.01:['aster-selene-crossings','aster-selene-service','aster-selene-expedition','selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
+  playbackRate=setSpeeds.get(id)??(['selene-ground','selene-ground-service'].includes(id)?.01:['aster-selene-beacon','aster-selene-crossings','aster-selene-service','aster-selene-expedition','selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
   const speed=$<HTMLInputElement>('speed');speed.max=String(Math.log2(maximumPlaybackRate(id)));playbackRate=Math.min(playbackRate,maximumPlaybackRate(id));speed.value=String(Math.log2(playbackRate));showSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
@@ -418,16 +421,16 @@ function loadSet(id: string) {
   worker.postMessage({revision, set});
 }
 
-function loadTraffic(definition:TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition){
- traffic=isExpeditionFleet(definition)?new ExpeditionFleetViewStore(definition):isExpedition(definition)?new ExpeditionViewStore(definition):isLunar(definition)?new LunarViewStore(definition):isNetwork(definition)?new NetworkViewStore(definition):isAdaptive(definition)?new AdaptiveViewStore(definition):isMaintained(definition)?new MaintainedViewStore(definition):new TrafficViewStore(definition);
+function loadTraffic(definition:TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition){
+ traffic=isLibration(definition)?new LibrationViewStore(definition):isExpeditionFleet(definition)?new ExpeditionFleetViewStore(definition):isExpedition(definition)?new ExpeditionViewStore(definition):isLunar(definition)?new LunarViewStore(definition):isNetwork(definition)?new NetworkViewStore(definition):isAdaptive(definition)?new AdaptiveViewStore(definition):isMaintained(definition)?new MaintainedViewStore(definition):new TrafficViewStore(definition);
  worker=new TrafficWorker({name:'continuous-traffic'});
  const generation=revision;pending=true;
- worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta|MaintainedDelta|AdaptiveDelta|NetworkDelta|LunarDelta|ExpeditionDelta|ExpeditionFleetDelta;error?:string}>)=>{
+ worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta|MaintainedDelta|AdaptiveDelta|NetworkDelta|LunarDelta|ExpeditionDelta|ExpeditionFleetDelta|LibrationDelta;error?:string}>)=>{
   if(generation!==revision || e.data.generation!==revision || e.data.sequence!==sequence)return;
   pending=false;
   if(e.data.error){liveError=`Simulation stopped: ${e.data.error}`;playing=playing&&ready&&!!playbackLead()&&t<traffic!.frontier;if(!playbackLead())liveMode=false;$('load-status').textContent=liveError;updatePanels();return;}
-  const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof ExpeditionFleetViewStore)traffic.ingest(e.data.delta! as ExpeditionFleetDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionViewStore)traffic.ingest(e.data.delta! as ExpeditionDelta,!liveMode || !playing && !first);else if(traffic instanceof LunarViewStore)traffic.ingest(e.data.delta! as LunarDelta,!liveMode || !playing && !first);else if(traffic instanceof NetworkViewStore)traffic.ingest(e.data.delta! as NetworkDelta,!liveMode || !playing && !first);else if(traffic instanceof AdaptiveViewStore)traffic.ingest(e.data.delta! as AdaptiveDelta,!liveMode || !playing && !first);else if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
-  if(first){ready=true;selected=traffic instanceof ExpeditionFleetViewStore?traffic.definition.actors[0].id:traffic instanceof ExpeditionViewStore?traffic.definition.source.scenario.ship.id:traffic instanceof LunarViewStore?'Tern':traffic instanceof NetworkViewStore?traffic.definition.lanes[0].vessels[0].id:traffic!.definition.vessels[0].id;frame=traffic instanceof LunarViewStore?'moon':'inertial';t=0;playing=true;}
+  const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof LibrationViewStore)traffic.ingest(e.data.delta! as LibrationDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionFleetViewStore)traffic.ingest(e.data.delta! as ExpeditionFleetDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionViewStore)traffic.ingest(e.data.delta! as ExpeditionDelta,!liveMode || !playing && !first);else if(traffic instanceof LunarViewStore)traffic.ingest(e.data.delta! as LunarDelta,!liveMode || !playing && !first);else if(traffic instanceof NetworkViewStore)traffic.ingest(e.data.delta! as NetworkDelta,!liveMode || !playing && !first);else if(traffic instanceof AdaptiveViewStore)traffic.ingest(e.data.delta! as AdaptiveDelta,!liveMode || !playing && !first);else if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
+  if(first){ready=true;selected=traffic instanceof LibrationViewStore?traffic.definition.courier.id:traffic instanceof ExpeditionFleetViewStore?traffic.definition.actors[0].id:traffic instanceof ExpeditionViewStore?traffic.definition.source.scenario.ship.id:traffic instanceof LunarViewStore?'Tern':traffic instanceof NetworkViewStore?traffic.definition.lanes[0].vessels[0].id:traffic!.definition.vessels[0].id;frame=traffic instanceof LunarViewStore?'moon':'inertial';t=0;playing=true;}
   else if(liveMode && playing && !playbackLead())t=traffic!.frontier;
   // Solver yields often acknowledge an unchanged head. Batch drawing-history
   // assembly with the panel cadence instead of rebuilding it for every reply.

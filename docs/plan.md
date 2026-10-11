@@ -482,3 +482,7 @@ After the finite user visual gate, implemented a separate authored recurrence wr
 ### Overlapping Aster–Selene activity
 
 The user accepted continuous expedition playback through16×. The next authored exhibit adds a second half-period expedition from an antipodal ground site, plus one full-field passive orbital craft. One mission compilation serves both ships; worker-prepared drawing strips keep recurrence construction off the UI thread. Libration-region visits remain the next proposed integration gate after visual acceptance. See docs/design/overlapping-expeditions/README.md and docs/evidence/crossings.md.
+
+### Beacon relay
+
+The user accepted the overlapping expedition set and authorized the libration-region station, permitting analytical/precomputed motion. The separate Beacon relay exhibit adds an actual-field ideal outer equilibrium and a paid lunar surface courier to Crossings. Shared publication, funded refills, consumed parcels, cached finite thrust and rolling playback are retained. Astra reviewed the provider, resources, storage and terminal-calendar seam. A drifting periodic reference or separate staged expedition can follow the visual gate. See docs/design/libration-service/README.md and docs/evidence/libration.md.
