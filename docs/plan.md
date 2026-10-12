@@ -546,3 +546,11 @@ Two production finite/continuous16×/4K tests pass, includingheld/reverse/Live/s
 switching. Both Astra P2 findings fixed and verified in follow-up. Human perception of
 “local enough” remains the next gate; no optimality/necessity claim.
 [Evidence](evidence/compact-refinement.md).
+
+## Compact cycler pass-through gate — 2026-10-12
+
+Owner rejected the refined Beacon turnaround and shallow taxi approach. Bounded
+research found a zero-thrust both-body recurring candidate with native three-period
+safety/independent agreement; live sets are unchanged. Next: finite carrier-only
+viewing, then one taxi parking/descent slice, then a separately proved continuous
+resource/numerical boundary. [Research and review](design/compact-cycler/pass-through/README.md).

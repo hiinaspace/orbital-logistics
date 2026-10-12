@@ -1,0 +1,96 @@
+{
+  "candidate": {
+    "initial": [
+      5.4,
+      0,
+      0,
+      -0.42847216402520905
+    ],
+    "period": 120.50467632722804,
+    "closure": 6.849691991120148e-12,
+    "asterMin": 1.8526662863143768,
+    "asterMax": 5.708525585300869,
+    "seleneMin": 0.39999999999922586,
+    "seleneEpoch": 120.50467632722804
+  },
+  "native": [
+    {
+      "step": 0.001953125,
+      "nodes": 185100,
+      "checks": 185100,
+      "minAster": 1.852666286310702,
+      "minSelene": 0.39999999951652826,
+      "oraclePosition": 1.2101669466578764e-9,
+      "oracleVelocity": 4.251473868424228e-10,
+      "ends": [
+        {
+          "cycle": 1,
+          "positionError": 1.0780906645104179e-11,
+          "velocityError": 4.96425237832751e-12
+        },
+        {
+          "cycle": 2,
+          "positionError": 9.515080819797873e-11,
+          "velocityError": 4.090125082931414e-11
+        },
+        {
+          "cycle": 3,
+          "positionError": 1.6189079717094579e-9,
+          "velocityError": 7.048190936871108e-10
+        }
+      ]
+    },
+    {
+      "step": 0.0009765625,
+      "nodes": 370200,
+      "checks": 370200,
+      "minAster": 1.8526662863139445,
+      "minSelene": 0.39999999997298075,
+      "oraclePosition": 6.653461535060592e-10,
+      "oracleVelocity": 2.364170658061733e-10,
+      "ends": [
+        {
+          "cycle": 1,
+          "positionError": 4.369473976208866e-12,
+          "velocityError": 2.176194889781882e-12
+        },
+        {
+          "cycle": 2,
+          "positionError": 2.3119487392490263e-12,
+          "velocityError": 1.437610392924941e-12
+        },
+        {
+          "cycle": 3,
+          "positionError": 9.827059315898715e-11,
+          "velocityError": 4.3279443025612937e-11
+        }
+      ]
+    },
+    {
+      "step": 0.00048828125,
+      "nodes": 740388,
+      "checks": 740388,
+      "minAster": 1.8526662863138106,
+      "minSelene": 0.39999999992660923,
+      "oraclePosition": 4.733405975053316e-10,
+      "oracleVelocity": 1.6937245369602262e-10,
+      "ends": [
+        {
+          "cycle": 1,
+          "positionError": 4.399440155087305e-12,
+          "velocityError": 2.140178572849609e-12
+        },
+        {
+          "cycle": 2,
+          "positionError": 9.454120066927858e-12,
+          "velocityError": 3.82509102864681e-12
+        },
+        {
+          "cycle": 3,
+          "positionError": 2.5253427063885253e-10,
+          "velocityError": 1.1030735306095623e-10
+        }
+      ]
+    }
+  ]
+}

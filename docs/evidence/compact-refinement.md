@@ -3,8 +3,9 @@
 The user rejected the v1 viewing gate: its taxis used continuous powered curves and
 Wayfarer's eight-unit Beacon burns felt substantial. The field's masses, radii and
 separation were actually identical to the expedition set. This refinement changes
-orbit/timing/control morphology, without needing a field change. Human acceptance of
-the revised aesthetics remains open.
+orbit/timing/control morphology, without needing a field change. The owner subsequently rejected
+the Beacon turnaround and shallow landing; see the
+[pass-through investigation](../design/compact-cycler/pass-through/README.md).
 
 Wayfarer now passes within2.171 Aster radii and coasts64 of74 units (86.5%). Departure
 and Beacon arrival each take4 units. Every Pipit leg has literal unpowered coasting,
