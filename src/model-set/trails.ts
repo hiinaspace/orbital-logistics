@@ -6,5 +6,5 @@ export function trailOpacity(epoch:number,cursor:number,oldest:number,selected:b
  if(age===0)return base;
  if(span===0)return 0;
  const edge=Math.max(0,Math.min(1,(span-age)/(span*.2)));
- return base*Math.exp(-age/Math.min(4,span/3))*edge*edge*(3-2*edge);
+ return base*Math.exp(-age/Math.max(1e-9,span/3))*edge*edge*(3-2*edge);
 }

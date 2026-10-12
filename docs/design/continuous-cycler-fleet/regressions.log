@@ -1,0 +1,260 @@
+TAP version 13
+# Subtest: orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility
+ok 1 - orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility
+  ---
+  duration_ms: 3.823594
+  type: 'test'
+  ...
+# Subtest: pan follows screen axes and cursor zoom anchors the same plane point in tilted views
+ok 2 - pan follows screen axes and cursor zoom anchors the same plane point in tilted views
+  ---
+  duration_ms: 1.980917
+  type: 'test'
+  ...
+# Subtest: sphere occlusion distinguishes front/back, limb, silhouette crossings and multiple bodies
+ok 3 - sphere occlusion distinguishes front/back, limb, silhouette crossings and multiple bodies
+  ---
+  duration_ms: 5.431839
+  type: 'test'
+  ...
+# Subtest: chase rigs and selected pivots remain orthonormal and deterministic at degenerate states
+ok 4 - chase rigs and selected pivots remain orthonormal and deterministic at degenerate states
+  ---
+  duration_ms: 23.988962
+  type: 'test'
+  ...
+# Subtest: one-draw projection snapshots camera axes and matches point queries
+ok 5 - one-draw projection snapshots camera axes and matches point queries
+  ---
+  duration_ms: 11.004884
+  type: 'test'
+  ...
+# compact convergence {"worst":7.722045225477814e-12,"work":{"nodes":44052,"checks":44072,"bytes":799206,"oraclePosition":5.119272579949609e-12,"oracleVelocity":5.614908680151549e-9},"fuelPerCycle":[3.2132207113261613,4.612377291253112]}
+# compact late absolute epoch residual 2.462359205424036e-10
+# compact rollout max packet bytes 2220675
+# compact directional geometry {"asterRelease":2.9974421967098066,"asterBoard":3.1984323151988034,"moonBoard":1.1215275966853346,"moonRelease":2.2453868155056185}
+# Subtest: native full coupled cycle agrees with independent DOP853, converges and closes with paid resources
+ok 6 - native full coupled cycle agrees with independent DOP853, converges and closes with paid resources
+  ---
+  duration_ms: 2766.322571
+  type: 'test'
+  ...
+# Subtest: rotated controls propagate at a late absolute epoch without phase accumulation
+ok 7 - rotated controls propagate at a late absolute epoch without phase accumulation
+  ---
+  duration_ms: 396.148305
+  type: 'test'
+  ...
+# Subtest: bounded continuous publication, resource counts, held scrubbing and faults
+ok 8 - bounded continuous publication, resource counts, held scrubbing and faults
+  ---
+  duration_ms: 9815.122786
+  type: 'test'
+  ...
+# Subtest: known bad controls, funding and model identities cannot enter the cache
+ok 9 - known bad controls, funding and model identities cannot enter the cache
+  ---
+  duration_ms: 680.66441
+  type: 'test'
+  ...
+# Subtest: a held reply crossing a cycle boundary retains the future row needed by Live
+ok 10 - a held reply crossing a cycle boundary retains the future row needed by Live
+  ---
+  duration_ms: 1658.53468
+  type: 'test'
+  ...
+# Subtest: fractional worker replies retain event resource anchors rather than every reply clock
+ok 11 - fractional worker replies retain event resource anchors rather than every reply clock
+  ---
+  duration_ms: 2149.404991
+  type: 'test'
+  ...
+# Subtest: local connections retain literal zero-thrust coasts and most travel time aboard the carrier
+ok 12 - local connections retain literal zero-thrust coasts and most travel time aboard the carrier
+  ---
+  duration_ms: 500.631455
+  type: 'test'
+  ...
+# Subtest: legacy v1 retains the exact singleton, control and zero-phase protocol
+ok 13 - legacy v1 retains the exact singleton, control and zero-phase protocol
+  ---
+  duration_ms: 963.635178
+  type: 'test'
+  ...
+# Subtest: directional handoffs remain inside the declared Aster and Selene encounter regions
+ok 14 - directional handoffs remain inside the declared Aster and Selene encounter regions
+  ---
+  duration_ms: 1.338578
+  type: 'test'
+  ...
+# Subtest: closed maintained macrocycle preserves rider resources while carrier maintenance is permanently paid
+ok 15 - closed maintained macrocycle preserves rider resources while carrier maintenance is permanently paid
+  ---
+  duration_ms: 28649.634437
+  type: 'test'
+  ...
+# Subtest: late absolute-epoch physical replay stays within the admitted numerical corridor
+ok 16 - late absolute-epoch physical replay stays within the admitted numerical corridor
+  ---
+  duration_ms: 9578.48886
+  type: 'test'
+  ...
+# Subtest: long rolling service bounds storage and keeps exact funded resource history and held-head scrubbing
+ok 17 - long rolling service bounds storage and keeps exact funded resource history and held-head scrubbing
+  ---
+  duration_ms: 12488.35357
+  type: 'test'
+  ...
+# Subtest: failed supplies, maintenance and packet admission stop at event-left without partial publication
+ok 18 - failed supplies, maintenance and packet admission stop at event-left without partial publication
+  ---
+  duration_ms: 14354.136114
+  type: 'test'
+  ...
+# Subtest: constructed late calendar boundaries retain exact event sides and resource counts
+ok 19 - constructed late calendar boundaries retain exact event sides and resource counts
+  ---
+  duration_ms: 1.741636
+  type: 'test'
+  ...
+# Subtest: frontend rejects corrupt or replacement chunks before advancing its resource clock
+ok 20 - frontend rejects corrupt or replacement chunks before advancing its resource clock
+  ---
+  duration_ms: 3681.785236
+  type: 'test'
+  ...
+# Subtest: two time-phased unpowered carriers and independent riders converge over the complete finite horizon
+ok 21 - two time-phased unpowered carriers and independent riders converge over the complete finite horizon
+  ---
+  duration_ms: 27121.393036
+  type: 'test'
+  ...
+# Subtest: extended lunar dwell and parking reduce the complete lunar departure cost
+ok 22 - extended lunar dwell and parking reduce the complete lunar departure cost
+  ---
+  duration_ms: 0.705006
+  type: 'test'
+  ...
+# Subtest: parent identity owns exact boarding/release mass, independent fuel, visibility and history
+ok 23 - parent identity owns exact boarding/release mass, independent fuel, visibility and history
+  ---
+  duration_ms: 2.438528
+  type: 'test'
+  ...
+# Subtest: disposable drawing stays close to independent orbital and powered witnesses
+ok 24 - disposable drawing stays close to independent orbital and powered witnesses
+  ---
+  duration_ms: 234.456165
+  type: 'test'
+  ...
+# Subtest: wrong-parent, stale version, carrier thrust, unbounded field and unfunded reload reject atomically
+ok 25 - wrong-parent, stale version, carrier thrust, unbounded field and unfunded reload reject atomically
+  ---
+  duration_ms: 9612.061642
+  type: 'test'
+  ...
+# Subtest: two uninterrupted native circuits and round trips agree with independent full-field oracles
+ok 26 - two uninterrupted native circuits and round trips agree with independent full-field oracles
+  ---
+  duration_ms: 18329.595117
+  type: 'test'
+  ...
+# Subtest: early launch includes four real parking laps and small paid orbital connections
+ok 27 - early launch includes four real parking laps and small paid orbital connections
+  ---
+  duration_ms: 2.115841
+  type: 'test'
+  ...
+# Subtest: board/release preserve separate tanks and add actual attached mass at event sides
+ok 28 - board/release preserve separate tanks and add actual attached mass at event sides
+  ---
+  duration_ms: 2.186233
+  type: 'test'
+  ...
+# Subtest: four funded deliveries and replay queries conserve finite inventories without wrapping
+ok 29 - four funded deliveries and replay queries conserve finite inventories without wrapping
+  ---
+  duration_ms: 7.3933
+  type: 'test'
+  ...
+# Subtest: known-bad controls, fields, carrier thrust, funding and missing reload reject
+ok 30 - known-bad controls, fields, carrier thrust, funding and missing reload reject
+  ---
+  duration_ms: 11393.999588
+  type: 'test'
+  ...
+# Subtest: reserved node and enclosure allowances stop integration before overspending
+ok 31 - reserved node and enclosure allowances stop integration before overspending
+  ---
+  duration_ms: 1.070464
+  type: 'test'
+  ...
+# Subtest: schematic attitude turns during the coast and reaches physical thrust continuously at ignition
+ok 32 - schematic attitude turns during the coast and reaches physical thrust continuously at ignition
+  ---
+  duration_ms: 8.436793
+  type: 'test'
+  ...
+# Subtest: attitude remains physical during thrust and respects explicit axes, surface support, and short coasts
+ok 33 - attitude remains physical during thrust and respects explicit axes, surface support, and short coasts
+  ---
+  duration_ms: 1.36622
+  type: 'test'
+  ...
+# Subtest: compiler origin accelerations agree with the independent spatial provider
+ok 34 - compiler origin accelerations agree with the independent spatial provider
+  ---
+  duration_ms: 3.388115
+  type: 'test'
+  ...
+# Subtest: nested solar ephemerides have consistent position, velocity and acceleration
+ok 35 - nested solar ephemerides have consistent position, velocity and acceleration
+  ---
+  duration_ms: 1.436563
+  type: 'test'
+  ...
+# Subtest: finite three-cycle exhibit preserves fuel, cargo and nested-frame epochs
+ok 36 - finite three-cycle exhibit preserves fuel, cargo and nested-frame epochs
+  ---
+  duration_ms: 369.402717
+  type: 'test'
+  ...
+# Subtest: version, row order, exhausted tank and oversized controls reject before display
+ok 37 - version, row order, exhausted tank and oversized controls reject before display
+  ---
+  duration_ms: 1026.219071
+  type: 'test'
+  ...
+# Subtest: capture preserves approach left limit and records the paid atomic debit
+ok 38 - capture preserves approach left limit and records the paid atomic debit
+  ---
+  duration_ms: 441.241581
+  type: 'test'
+  ...
+# Subtest: far-field heliocentric acceleration includes all indirect sources and supports 3D
+ok 39 - far-field heliocentric acceleration includes all indirect sources and supports 3D
+  ---
+  duration_ms: 0.810335
+  type: 'test'
+  ...
+# Subtest: short retained trails fade before eviction and remain invariant under time scaling
+ok 40 - short retained trails fade before eviction and remain invariant under time scaling
+  ---
+  duration_ms: 3.365101
+  type: 'test'
+  ...
+# Subtest: long orbital trails decay with the chosen timescale
+ok 41 - long orbital trails decay with the chosen timescale
+  ---
+  duration_ms: 0.341863
+  type: 'test'
+  ...
+1..41
+# tests 41
+# suites 0
+# pass 41
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 73855.426458

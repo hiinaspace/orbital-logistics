@@ -1,0 +1,35 @@
+{
+  "frontier": 4821.187053089122,
+  "stats": {
+    "physicalNodes": 346911,
+    "physicsChecks": 346919,
+    "cacheCompilations": 1,
+    "templateBytes": 1933589,
+    "retainedChunks": 65,
+    "retainedDrawingBytes": 10585069,
+    "retainedDrawingSamples": 22144,
+    "planningPending": 0,
+    "deliveries": 80,
+    "parcelsDelivered": 12,
+    "fuelImported": 198.33772872607528,
+    "fuelSpent": 198.33772976193166,
+    "carrierFuel": 11.99999896414363,
+    "maintenanceClosures": 40,
+    "packetBytes": 4363,
+    "retention": 514.0187053089121
+  },
+  "peakBytes": 11473311,
+  "peakSamples": 23411,
+  "peakPacket": 500793,
+  "work": {
+    "nodes": 346911,
+    "checks": 346919,
+    "oraclePosition": 1.1748502696862908e-9,
+    "oracleVelocity": 1.4115258516253593e-9,
+    "bytes": 1933589
+  },
+  "carrierDeltaV": [
+    1.0189443962049276e-8,
+    1.0527683956865572e-8
+  ]
+}

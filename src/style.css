@@ -166,3 +166,9 @@ details p { line-height: 1.7; }
   .view-tools { top: 86px; }
   #timelines { bottom: 79px; }
 }
+
+.trail-control { display: block; width: 100%; }
+.trail-control output { margin-left: auto; font-variant-numeric: tabular-nums; }
+.trail-control input { display: block; width: 100%; margin: 8px 0 0; }
+
+#timelines { resize: vertical; min-height: 26px; }

@@ -18,12 +18,12 @@ export interface PassThroughProfile {
 }
 export interface FinitePhase extends Phase {label:string;carrier?:number}
 export interface PassThroughTemplate {
-  fleet?:boolean;duration:number;period:number;rate:number;exhaustVelocity:number;padPhases:Record<string,number>;
+  recurrence?:{carrierDeltaV:number[]};fleet?:boolean;duration:number;period:number;rate:number;exhaustVelocity:number;padPhases:Record<string,number>;
   hardware:Hardware[];phases:FinitePhase[][];flows:Flow[];cost:number[];
-  events:{t:number;actor:number;kind:'dock'|'undock'|'land'|'launch'|'transfer'|'thrust-start'|'thrust-end'|'milestone';id:string;label:string;port?:string;deltaV:number;fuelUsed:number;beforeFuel:number;afterFuel:number;positionError?:number;velocityError?:number;cargoBefore?:number;cargoAfter?:number}[];
+  events:{t:number;actor:number;kind:'maintenance'|'dock'|'undock'|'land'|'launch'|'transfer'|'thrust-start'|'thrust-end'|'milestone';id:string;label:string;port?:string;deltaV:number;fuelUsed:number;beforeFuel:number;afterFuel:number;positionError?:number;velocityError?:number;cargoBefore?:number;cargoAfter?:number}[];
   work:{nodes:number;checks:number;oraclePosition:number;oracleVelocity:number;bytes:number};
 }
-export interface PassThroughPlayback {template:PassThroughTemplate;actor:number}
+export interface PassThroughPlayback {template:PassThroughTemplate;actor:number;continuous?:boolean;oldest?:number;end?:number}
 export interface PassThroughRun {template:PassThroughTemplate;carrierFinal:State}
 export const isPassThrough=(v:unknown):v is PassThroughDefinition=>(v as PassThroughDefinition)?.modelVersion==='pass-through-set-v1'||(v as PassThroughDefinition)?.modelVersion==='cycler-fleet-set-v1';
 
@@ -34,3 +34,5 @@ export interface FleetProfile {
   riders:{hardware:Hardware;mission:Mission;outbound:string;inbound:string}[];
   proof:unknown;
 }
+
+export type RecurringFleetProfile=Omit<FleetProfile,'modelVersion'>&{modelVersion:'recurring-cycler-profile-v1'};

@@ -1,0 +1,55 @@
+{
+  "summary": {
+    "draw": {
+      "n": 2568,
+      "p95": 9.5,
+      "max": 18.5
+    },
+    "frameGap": {
+      "n": 2567,
+      "p95": 33.400000000001455,
+      "max": 50.10000000000582
+    },
+    "panels": {
+      "n": 481,
+      "p95": 0.8999999761581421,
+      "max": 2
+    },
+    "refresh": {
+      "n": 483,
+      "p95": 9,
+      "max": 13
+    },
+    "workerTurnaround": {
+      "n": 2563,
+      "p95": 26.200000047683716,
+      "max": 34.700000047683716
+    },
+    "ingestion": {
+      "n": 2563,
+      "p95": 0.20000004768371582,
+      "max": 10.5
+    }
+  },
+  "errors": [],
+  "stats": {
+    "physicalNodes": 346911,
+    "physicsChecks": 346919,
+    "cacheCompilations": 1,
+    "templateBytes": 1933601,
+    "retainedChunks": 65,
+    "retainedDrawingBytes": 10724440,
+    "retainedDrawingSamples": 22394,
+    "planningPending": 0,
+    "deliveries": 16,
+    "parcelsDelivered": 2.4,
+    "fuelImported": 39.66754574538111,
+    "fuelSpent": 39.667545900739945,
+    "carrierFuel": 11.999999844641168,
+    "maintenanceClosures": 6,
+    "packetBytes": 4415,
+    "retention": 514.0187053089121
+  },
+  "head": 949.6126000000078,
+  "time": 917.6126000000078
+}

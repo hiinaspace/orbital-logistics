@@ -524,3 +524,7 @@ correction and resource recurrence remain a later gate.
 [validation](evidence/pass-through.md).
 
 The finite **Aster–Selene · Cycler fleet** adds two independently propagated, time-phased unpowered carriers and two riders. Riders dwell on Selene and use lunar parking before boarding the later carrier; Cairn has two schematic berths, Haven one. Explicit parent identities preserve paid captures, separate tanks and actual carried mass. See [design](design/cycler-fleet/README.md) and [evidence](evidence/cycler-fleet.md).
+
+## Continuous stabilized cycler fleet — 2026-10-12
+
+**Aster–Selene · Continuous cycler fleet** extends the accepted later-carrier visits using a separately admitted numerical stabilization contract. Two carriers/two riders repeat their funded missions, while carrier maintenance fuel remains permanently debited. Immutable clipped drawing chunks support four-loop rolling history, held/reverse/Live and bounded resource publication. Cyclers recommend two-loop trails with a remembered Layers slider; the timeline can resize vertically and scroll. See [design/reviews](design/continuous-cycler-fleet/README.md) and [evidence](evidence/continuous-cycler-fleet.md). Extra ships are a later content gate.

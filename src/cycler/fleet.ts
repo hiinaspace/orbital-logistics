@@ -3,23 +3,27 @@ import {validateControl} from '../compact/prepare';
 import {cubicBound} from '../sim/cubic';
 import type {State} from '../sim/schema';
 import type {Segment} from '../compact/types';
-import type {FleetProfile,PassThroughTemplate} from './types';
+import type {FleetProfile,RecurringFleetProfile,PassThroughTemplate} from './types';
+import {rotateState} from '../compact/query';
 import {surfaceState} from './query';
 
 const assert=(v:unknown,message:string)=>{if(!v)throw Error('Pass-through: '+message);};
 const keys=['schemaVersion','modelVersion','period','duration','rate','step','height','exhaustVelocity','padPhases','carriers','riders','proof'];
-export function prepareFleet(value:FleetProfile,step=STEP):PassThroughTemplate {
+export function prepareFleet(value:FleetProfile,step=STEP){return prepareProfile(value,step,false);}
+export function prepareRecurringFleet(value:RecurringFleetProfile,step=STEP){return prepareProfile(value,step,true);}
+function prepareProfile(value:FleetProfile|RecurringFleetProfile,step:number,recurring:boolean):PassThroughTemplate {
   assert(new TextEncoder().encode(JSON.stringify(value)).byteLength<=2_500_000,'source bytes');
   const v=structuredClone(value);
   assert(Object.keys(v).every(k=>keys.includes(k))&&keys.every(k=>Object.hasOwn(v,k)),'profile fields');
-  assert(v.schemaVersion===1&&v.modelVersion==='cycler-fleet-profile-v1'&&v.period===120.50467632722804&&v.duration>v.period&&v.duration<2*v.period&&v.step===STEP&&Math.abs(v.rate-RATE)<1e-14&&v.height===1e-5&&v.exhaustVelocity===4,'fixed field/model contract');
+  assert(v.schemaVersion===1&&v.modelVersion===(recurring?'recurring-cycler-profile-v1':'cycler-fleet-profile-v1')&&v.period===120.50467632722804&&(recurring?v.duration===2*v.period:v.duration>v.period&&v.duration<2*v.period)&&v.step===STEP&&Math.abs(v.rate-RATE)<1e-14&&v.height===1e-5&&v.exhaustVelocity===4,'fixed field/model contract');
   assert([STEP,STEP/2,STEP/4].includes(step),'canonical resolution');
   assert(Object.keys(v.padPhases).length===2&&['Cairn','Haven'].every(id=>Number.isFinite(v.padPhases[id])&&Math.abs(v.padPhases[id])<=Math.PI),'surface phases');
   assert(v.carriers.length===2&&v.riders.length===2,'finite fleet counts');
   const hardware=[...v.carriers.map(c=>c.hardware),...v.riders.map(r=>r.hardware)];
   assert(new Set(hardware.map(h=>h.id)).size===4,'unique actors');
-  assert(hardware.every((h,i)=>h.name===h.id&&/^[A-Za-z]{1,20}$/.test(h.id)&&/^#[0-9a-f]{6}$/i.test(h.color)&&h.dryMass===(i<2?4:1)&&h.fuel===(i<2?6:3)&&h.cargo===(i<2?0:.15)&&h.maxAcceleration===(i<2?0:4)&&h.maxForce===(i<2?0:16.6)),'hardware');
+  assert(hardware.every((h,i)=>h.name===h.id&&/^[A-Za-z]{1,20}$/.test(h.id)&&/^#[0-9a-f]{6}$/i.test(h.color)&&h.dryMass===(i<2?4:1)&&h.fuel===(i<2?6:3)&&h.cargo===(i<2?0:.15)&&h.maxAcceleration===(i<2?(recurring?1e-5:0):4)&&h.maxForce===(i<2?(recurring?1e-4:0):16.6)),'hardware');
   const p:PassThroughTemplate={fleet:true,duration:v.duration,period:v.period,rate:v.rate,exhaustVelocity:v.exhaustVelocity,padPhases:v.padPhases,hardware,phases:hardware.map(()=>[]),flows:[],events:[],cost:hardware.map(()=>0),work:{nodes:0,checks:0,oraclePosition:0,oracleVelocity:0,bytes:0}};
+  if(recurring)p.recurrence={carrierDeltaV:[0,0]};
   let actor=0,fuel=6,used=0,cargo=0;
   const physical=(segment:Segment,initial:State)=>{
     const h=p.hardware[actor],q=segment;
@@ -74,8 +78,18 @@ export function prepareFleet(value:FleetProfile,step=STEP):PassThroughTemplate {
     assert(segments.length>=4&&segments.length<=20&&segments[0].start===0&&segments.at(-1)!.end===p.duration,'carrier coverage');
     actual=[...segments[0].initial] as State;
     for(let i=0;i<segments.length;i++){
-      const seg=segments[i];assert(!seg.control&&(i===0||seg.start===segments[i-1].end),'uninterrupted ballistic carrier');
+      const seg=segments[i];assert((!seg.control||recurring&&seg.start>=p.duration-4)&&(i===0||seg.start===segments[i-1].end),'uninterrupted ballistic carrier');
       const trace=physical(seg,actual);traces.push(trace);actual=publishFlight(seg,trace);
+    }
+    if(recurring){
+      const target=rotateState(segments[0].initial,p.rate*p.duration),position=Math.hypot(...actual.slice(0,3).map((x,i)=>x-target[i])),speed=Math.hypot(...actual.slice(3).map((x,i)=>x-target[i+3]));
+      assert(position+MARGIN<1e-7&&speed+MARGIN<1e-7,'maintenance projection corridor');
+      const commanded=p.events.filter(e=>e.actor===actor&&e.kind==='thrust-end').reduce((n,e)=>n+e.deltaV,0),paid=speed+MARGIN,total=commanded+paid;
+      assert(total<=1e-5,'total maintenance ceiling');
+      const old=fuel;fuel=(4+fuel)*Math.exp(-paid/p.exhaustVelocity)-4;used+=old-fuel;
+      event(p.duration,'maintenance','phase-maintenance','Phase maintenance',undefined,{deltaV:paid,fuelUsed:old-fuel,beforeFuel:old,afterFuel:fuel,positionError:position,velocityError:speed});
+      p.recurrence!.carrierDeltaV[actor]=total;p.cost[actor]=used;
+      assert(10*Math.exp(-(Math.ceil(1_000_000/p.duration)+1)*total/p.exhaustVelocity)-4>=.6,'calendar maintenance reserve');
     }
     carrierTraces.push(traces);
   }
@@ -129,7 +143,7 @@ export function prepareFleet(value:FleetProfile,step=STEP):PassThroughTemplate {
   const boundaries=[...new Set(p.phases.flat().flatMap(q=>[q.start,q.end]))].sort((a,b)=>a-b);
   for(const t of boundaries.slice(0,-1)){
     const occupants=p.phases.slice(2).map(phases=>phases.find(q=>q.start<=t&&q.end>t)!);
-    for(const parent of [0,1])assert(occupants.filter(q=>q.kind==='ride'&&q.carrier===parent).length<=1,'carrier berth conflict');
+    for(const parent of [0,1]){assert(occupants.filter(q=>q.kind==='ride'&&q.carrier===parent).length<=1,'carrier berth conflict');if(recurring&&p.phases[parent].some(q=>q.control&&q.start<=t&&q.end>t))assert(!occupants.some(q=>q.kind==='ride'&&q.carrier===parent),'loaded maintenance');}
     for(const port of ['Cairn','Haven'])assert(occupants.filter(q=>q.kind==='support'&&q.port===port).length<=(port==='Cairn'?2:1),'terminal berth conflict');
   }
   for(const phases of p.phases){assert(phases[0].start===0&&phases.at(-1)!.end===p.duration,'absolute horizon coverage');for(let i=1;i<phases.length;i++)assert(phases[i].start===phases[i-1].end,'phase coverage');}

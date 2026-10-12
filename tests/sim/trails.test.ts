@@ -13,3 +13,8 @@ test('short retained trails fade before eviction and remain invariant under time
  }
  for(const u of [0,.1,.5,.85,1])assert.ok(Math.abs(trailOpacity(2-u,2,1,true)-trailOpacity((2-u)*.65,2*.65,.65,true))<1e-12);
 });
+
+test("long orbital trails decay with the chosen timescale",()=>{
+ assert.ok(trailOpacity(120,240,0,true,240)>.1);
+ assert.ok(Math.abs(trailOpacity(120,240,0,true,240)-trailOpacity(6,12,0,true,12))<1e-12);
+});

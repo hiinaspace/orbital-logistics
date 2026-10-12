@@ -1,3 +1,7 @@
+import {FleetViewStore} from './cycler/service-store';
+import {isFleetService,type FleetServiceDefinition} from './cycler/service-view';
+import type {FleetDelta} from './cycler/service-engine';
+import fleetServiceDefinition from '../fixtures/model-sets/aster-selene-cycler-fleet-service.json';
 import {passThroughResources} from './cycler/view';
 import fleetDefinition from '../fixtures/model-sets/aster-selene-cycler-fleet.json';
 import passThroughDefinition from '../fixtures/model-sets/aster-selene-pass-through.json';
@@ -99,7 +103,8 @@ const solarSet={...solarDefinition,artifactUrl:new URL('../fixtures/model-sets/s
 const passThroughSet={...passThroughDefinition,artifactUrl:new URL('../fixtures/model-sets/pass-through-profile.json',import.meta.url).href} as PassThroughDefinition;
 const fleetSet={...fleetDefinition,artifactUrl:new URL('../fixtures/model-sets/cycler-fleet-profile.json',import.meta.url).href} as PassThroughDefinition;
 const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo,stagedApollo,solarSet,passThroughSet,fleetSet] as (PassThroughDefinition|CompactDefinition|SolarDefinition|StagedApolloMission|ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
-const trafficSets=[asterSystem,stagedService,beacon,crossings,expeditionService,trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (CompactDefinition|TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition)[];
+const fleetService={...fleetServiceDefinition,artifactUrl:new URL('../fixtures/model-sets/recurring-cycler-profile.json',import.meta.url).href} as FleetServiceDefinition;
+const trafficSets=[fleetService,asterSystem,stagedService,beacon,crossings,expeditionService,trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (FleetServiceDefinition|CompactDefinition|TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
@@ -108,7 +113,7 @@ document.body.innerHTML = `
   <header><h1>Orbital Logistics</h1><select id="set" aria-label="Model set">${[...sets,...trafficSets].map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><span id="load-status" role="status">Preparing scene…</span></header>
   <div class="workspace">
     <section class="scene" aria-label="Orbital viewer">
-      <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><label>View <select id="camera-view" aria-label="Camera view"><option value="top">Top</option><option value="oblique">3D</option><option value="front">Front</option><option value="side">Side</option><option value="custom" hidden>Custom</option></select></label><label>Track <select id="tracking" aria-label="Camera tracking"><option value="off">Off</option><option value="follow">Follow</option><option value="chase">Chase</option></select></label><button id="drag-mode" title="Drag to orbit · Shift-drag to pan" aria-pressed="false">Orbit</button><button id="fit" title="Fit the scene (F)">Fit</button><button id="launch-view" hidden>Surface view</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<label class="entry-layer" hidden><input type="checkbox" id="layer-atmosphere" checked>Atmosphere</label><label class="entry-layer" hidden><input type="checkbox" id="layer-aero">Aerodynamic forces <span style="color:#80c6ed">D</span> / <span style="color:#bb9fee">L</span></label><label class="entry-layer" hidden><input type="checkbox" id="layer-glow" checked>Entry glow</label><label><input type="checkbox" id="see-through">See-through bodies</label><button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
+      <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><label>View <select id="camera-view" aria-label="Camera view"><option value="top">Top</option><option value="oblique">3D</option><option value="front">Front</option><option value="side">Side</option><option value="custom" hidden>Custom</option></select></label><label>Track <select id="tracking" aria-label="Camera tracking"><option value="off">Off</option><option value="follow">Follow</option><option value="chase">Chase</option></select></label><button id="drag-mode" title="Drag to orbit · Shift-drag to pan" aria-pressed="false">Orbit</button><button id="fit" title="Fit the scene (F)">Fit</button><button id="launch-view" hidden>Surface view</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<label class="entry-layer" hidden><input type="checkbox" id="layer-atmosphere" checked>Atmosphere</label><label class="entry-layer" hidden><input type="checkbox" id="layer-aero">Aerodynamic forces <span style="color:#80c6ed">D</span> / <span style="color:#bb9fee">L</span></label><label class="entry-layer" hidden><input type="checkbox" id="layer-glow" checked>Entry glow</label><label><input type="checkbox" id="see-through">See-through bodies</label><label class="trail-control">Trail length <output id="trail-value">1×</output><input id="trail-length" type="range" min="0.25" max="2" step="0.05" value="1" aria-label="Trail length"></label><button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
       <div class="viewport"><canvas id="space" tabindex="0" aria-label="Orbital traffic. Drag to pan, scroll to zoom, click a ship or station to inspect."></canvas></div>
       <div id="timelines" aria-label="Ship activity timelines"></div>
       <div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><label class="speed-control"><span class="speed-track"><input id="speed" type="range" min="-1" max="1" step="0.0001" value="0" title="Reverse ← · 0× pause · → Forward" aria-label="Playback speed" aria-valuetext="1×"></span><output id="speed-value">1×</output></label><input id="time" type="range" min="0" max="64" value="0" step="0.001" aria-label="Simulation time"><output id="clock">0.00</output><button id="live" hidden>Live</button><label class="replay"><input type="checkbox" id="replay" title="Rewind the prepared scene at the end">Replay</label></div>
@@ -121,14 +126,19 @@ const canvas = $<HTMLCanvasElement>('space'), ctx = canvas.getContext('2d')!;
 function bodyState(body:import('./sim/schema').Body,epoch:number):State{return run?.solar&&run.world.bodies.some(b=>b.id===body.id)?solarBodyState(run.solar,body.id,epoch):baseBodyState(body,epoch);}
 function displayPortState(port:import('./sim/schema').Port,samples:import('./model-set/model').PortSamples,epoch:number):State{return run?.solar?solarPortState(run.solar,port.id,epoch):basePortState(port,samples,epoch);}
 let run: SceneView | undefined, worker: Worker | undefined, revision = 0;
-let traffic:CompactViewStore|TrafficViewStore|MaintainedViewStore|AdaptiveViewStore|NetworkViewStore|LunarViewStore|ExpeditionViewStore|ExpeditionFleetViewStore|LibrationViewStore|StagedServiceViewStore|AsterSystemViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='',trafficDirty=false;
-let trafficRequestStart=0;
+let traffic:FleetViewStore|CompactViewStore|TrafficViewStore|MaintainedViewStore|AdaptiveViewStore|NetworkViewStore|LunarViewStore|ExpeditionViewStore|ExpeditionFleetViewStore|LibrationViewStore|StagedServiceViewStore|AsterSystemViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='',trafficDirty=false;
+let trafficRequestStart=0,lastTrafficRefresh=0;
+const trafficRefreshDue=()=>performance.now()-lastTrafficRefresh>100;
 let events: SetEvent[] = [], selected = '', frame = 'inertial', t = 0, playing = false;
 let ready = false, width = 900, height = 600;
 const camera:Camera={yaw:0,pitch:Math.PI/2,center:[0,0,0],scale:100};
 let cameraPreset:CameraPreset|'custom'='top',panMode=false,spheres:Sphere[]=[],seeThroughBodies=false;
 let tracking:'off'|'follow'|'chase'='off',trackingOffset:Vec3=[0,0,0];
 const setSpeeds=new Map<string,number>(),setResumeSpeeds=new Map<string,number>();let currentSet='';
+const trailScales=new Map<string,number>();let trailScale=1;
+const recommendedTrail=()=>run?.playback?.trailSpan??(run?.id==='lunar-loop'?9:12);
+const trailSpan=()=>recommendedTrail()*trailScale;
+function syncTrail(){ $<HTMLInputElement>('trail-length').value=String(trailScale);$('trail-value').textContent=trailScale.toFixed(2).replace(/0+$/,'').replace(/\.$/,'')+'×';}
 let lastFrame = performance.now(), lastPanel = 0, playbackRate = 1, resumeRate=1;
 let layers = {orbits: true, trails: true, plan: true, labels: true,atmosphere:true,aero:false,glow:true};
 let savedLayers = {...layers}, cleared = false;
@@ -149,13 +159,13 @@ function html(id: string, value: string) { if ($(id).innerHTML !== value) $(id).
 const end = () => run!.window.end;
 const start = () => run!.window.start;
 const cursorEnd=()=>traffic?.frontier??end();
-function refreshTraffic(){if(!traffic)return;const began=performance.now();trafficDirty=false;run=traffic.view(t);events=setEvents(run);const v=vessel(),chart=document.querySelector('.budget-chart');if(v && chart)chart.outerHTML=fuelGraph(v);buildTimeline();viewerProfile.record('refresh',performance.now()-began);}
+function refreshTraffic(){if(!traffic)return;const began=performance.now();trafficDirty=false;run=traffic.view(t);events=setEvents(run);const v=vessel(),chart=document.querySelector('.budget-chart');if(v && chart)chart.outerHTML=fuelGraph(v);buildTimeline();viewerProfile.record('refresh',performance.now()-began);lastTrafficRefresh=performance.now();}
 function requestTraffic(target:number){
  if(!traffic || !worker || pending || liveError || traffic.halt || !playing || playbackRate<=0 || !liveMode || document.hidden || target<=traffic.frontier)return;
  trafficRequestStart=performance.now();pending=true;requestedTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,target));
  worker.postMessage({generation:revision,sequence:++sequence,target:requestedTarget,after:traffic.frontier});
 }
-const playbackLead=()=>traffic instanceof CompactViewStore||traffic instanceof AsterSystemViewStore||traffic instanceof StagedServiceViewStore||traffic instanceof LibrationViewStore||traffic instanceof ExpeditionViewStore||traffic instanceof ExpeditionFleetViewStore?EXPEDITION_LEAD:traffic instanceof LunarViewStore?LUNAR_LEAD:(traffic instanceof AdaptiveViewStore||traffic instanceof NetworkViewStore)?adaptivePlaybackLead:0;
+const playbackLead=()=>traffic instanceof FleetViewStore||traffic instanceof CompactViewStore||traffic instanceof AsterSystemViewStore||traffic instanceof StagedServiceViewStore||traffic instanceof LibrationViewStore||traffic instanceof ExpeditionViewStore||traffic instanceof ExpeditionFleetViewStore?EXPEDITION_LEAD:traffic instanceof LunarViewStore?LUNAR_LEAD:(traffic instanceof AdaptiveViewStore||traffic instanceof NetworkViewStore)?adaptivePlaybackLead:0;
 const liveEdge=()=>traffic?bufferedEdge(traffic.frontier,traffic.oldest,playbackLead()):0;
 function goLive(){if(!traffic)return;if(playbackRate<=0){playbackRate=Math.abs(resumeRate)||1;resumeRate=playbackRate;syncSpeed();}traffic.release();if(!liveMode)t=Math.max(t,liveEdge());desiredTarget=t+playbackLead();liveMode=!!playbackLead()||!liveError&&!traffic.halt;playing=(!liveError&&!traffic.halt)||t<traffic.frontier;lastFrame=performance.now();refreshTraffic();updatePanels();}
 const vessel = () => run?.vessels.find(v => v.id === selected)??run?.maintained?.[selected];
@@ -217,7 +227,7 @@ function fit() {
 }
 function seek(time: number, pause = true) {
   if (!ready) return;
-  t = Math.max(start(), Math.min(cursorEnd(), time));
+  t = Math.max(traffic?.oldest??start(), Math.min(cursorEnd(), time));
   if (pause) {playing=false;if(traffic)liveMode=false;}
   refreshTraffic();
   draw();
@@ -409,7 +419,7 @@ function updatePanels() {
   publishState();
 }
 function publishState() {
-  $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, frame, selected, layers, traffic:traffic?{frontier:traffic.frontier,oldest:traffic.oldest,pending,sequence,live:liveMode,stats:run?.traffic?.stats,halt:traffic.halt,error:liveError}:undefined,
+  $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, trailScale,trailSpan:trailSpan(), frame, selected, layers, traffic:traffic?{frontier:traffic.frontier,oldest:traffic.oldest,pending,sequence,live:liveMode,stats:run?.traffic?.stats,halt:traffic.halt,error:liveError}:undefined,
     passThrough:run?.passThrough?{period:run.passThrough.period,duration:run.passThrough.duration,work:run.passThrough.work,resources:passThroughResources(run.passThrough,t)}:undefined,
     staging:run?.staging,assemblies:run?.assemblies,entry:run?.entry,recoveries:run?.recoveries,aeroVectors,
     ships: run?.vessels.map(v => !isPresent(v,t)?({id:v.id,present:false,lifetime:v.lifetime}):({id: v.id,present:true, ...sampleVessel(v, t), ...(v.glyph?{glyph:v.glyph,axis:rocketAxis(v,sampleVessel(v,t),t)}:{}), screen: project(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),occludedBy:occluder(project3(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),spheres)?.id})),
@@ -418,7 +428,7 @@ function publishState() {
     stocks: run ? stockAt(run, t) : [], events, thrustWhiskers, camera: {...camera,preset:cameraPreset,panMode,tracking,trackingOffset}, seeThroughBodies, hits});
 }
 function loadSet(id: string) {
-  if(currentSet){setSpeeds.set(currentSet,playbackRate);setResumeSpeeds.set(currentSet,resumeRate);}currentSet=id;
+  if(currentSet){setSpeeds.set(currentSet,playbackRate);setResumeSpeeds.set(currentSet,resumeRate);}currentSet=id;trailScale=trailScales.get(id)??1;syncTrail();
   playbackRate=setSpeeds.get(id)??(id.startsWith('aster-selene-cycler')?.5:id==='solar-cycler'?4:['selene-ground','selene-ground-service'].includes(id)?.01:['aster-selene-staged-expedition','aster-selene-staged-service','aster-selene-beacon','aster-selene-crossings','aster-selene-service','aster-selene-expedition','selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
   resumeRate=setResumeSpeeds.get(id)??(playbackRate||1);playbackRate=Math.sign(playbackRate)*Math.min(Math.abs(playbackRate),maximumPlaybackRate(id));resumeRate=Math.sign(resumeRate)*Math.min(Math.abs(resumeRate),maximumPlaybackRate(id));if(playbackRate!==0)resumeRate=playbackRate;syncSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
@@ -453,23 +463,23 @@ function loadSet(id: string) {
   worker.postMessage({revision, set});
 }
 
-function loadTraffic(definition:CompactDefinition|TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition){
- traffic=isCompact(definition)?new CompactViewStore(definition):isAsterSystem(definition)?new AsterSystemViewStore(definition):isStagedService(definition)?new StagedServiceViewStore(definition,true):isLibration(definition)?new LibrationViewStore(definition):isExpeditionFleet(definition)?new ExpeditionFleetViewStore(definition):isExpedition(definition)?new ExpeditionViewStore(definition):isLunar(definition)?new LunarViewStore(definition):isNetwork(definition)?new NetworkViewStore(definition):isAdaptive(definition)?new AdaptiveViewStore(definition):isMaintained(definition)?new MaintainedViewStore(definition):new TrafficViewStore(definition);
+function loadTraffic(definition:FleetServiceDefinition|CompactDefinition|TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition){
+ traffic=isFleetService(definition)?new FleetViewStore(definition):isCompact(definition)?new CompactViewStore(definition):isAsterSystem(definition)?new AsterSystemViewStore(definition):isStagedService(definition)?new StagedServiceViewStore(definition,true):isLibration(definition)?new LibrationViewStore(definition):isExpeditionFleet(definition)?new ExpeditionFleetViewStore(definition):isExpedition(definition)?new ExpeditionViewStore(definition):isLunar(definition)?new LunarViewStore(definition):isNetwork(definition)?new NetworkViewStore(definition):isAdaptive(definition)?new AdaptiveViewStore(definition):isMaintained(definition)?new MaintainedViewStore(definition):new TrafficViewStore(definition);
  worker=new TrafficWorker({name:'continuous-traffic'});
  const generation=revision;pending=true;trafficRequestStart=performance.now();
- worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:CompactDelta|TrafficDelta|MaintainedDelta|AdaptiveDelta|NetworkDelta|LunarDelta|ExpeditionDelta|ExpeditionFleetDelta|LibrationDelta|StagedServiceDelta|AsterSystemDelta;error?:string}>)=>{
+ worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:FleetDelta|CompactDelta|TrafficDelta|MaintainedDelta|AdaptiveDelta|NetworkDelta|LunarDelta|ExpeditionDelta|ExpeditionFleetDelta|LibrationDelta|StagedServiceDelta|AsterSystemDelta;error?:string}>)=>{
   if(generation!==revision || e.data.generation!==revision || e.data.sequence!==sequence)return;
   viewerProfile.record('workerTurnaround',performance.now()-trafficRequestStart);const ingestionStart=performance.now();
   pending=false;
   if(e.data.error){liveError=`Simulation stopped: ${e.data.error}`;playing=playing&&ready&&!!playbackLead()&&t<traffic!.frontier;if(!playbackLead())liveMode=false;$('load-status').textContent=liveError;updatePanels();return;}
-  const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof CompactViewStore||traffic instanceof AsterSystemViewStore){try{if(traffic instanceof CompactViewStore)traffic.ingest(e.data.delta! as CompactDelta,!liveMode||!playing&&!first);else traffic.ingest(e.data.delta! as AsterSystemDelta,!liveMode||!playing&&!first);}catch(error){liveError='Simulation stopped: '+(error as Error).message;worker?.terminate();playing=playing&&ready&&t<traffic.frontier;$('load-status').textContent=liveError;updatePanels();return;}}else if(traffic instanceof StagedServiceViewStore)traffic.ingest(e.data.delta! as StagedServiceDelta,!liveMode || !playing && !first);else if(traffic instanceof LibrationViewStore)traffic.ingest(e.data.delta! as LibrationDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionFleetViewStore)traffic.ingest(e.data.delta! as ExpeditionFleetDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionViewStore)traffic.ingest(e.data.delta! as ExpeditionDelta,!liveMode || !playing && !first);else if(traffic instanceof LunarViewStore)traffic.ingest(e.data.delta! as LunarDelta,!liveMode || !playing && !first);else if(traffic instanceof NetworkViewStore)traffic.ingest(e.data.delta! as NetworkDelta,!liveMode || !playing && !first);else if(traffic instanceof AdaptiveViewStore)traffic.ingest(e.data.delta! as AdaptiveDelta,!liveMode || !playing && !first);else if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
+  const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof FleetViewStore||traffic instanceof CompactViewStore||traffic instanceof AsterSystemViewStore){try{if(traffic instanceof FleetViewStore)traffic.ingest(e.data.delta! as FleetDelta,!liveMode||!playing&&!first);else if(traffic instanceof CompactViewStore)traffic.ingest(e.data.delta! as CompactDelta,!liveMode||!playing&&!first);else traffic.ingest(e.data.delta! as AsterSystemDelta,!liveMode||!playing&&!first);}catch(error){liveError='Simulation stopped: '+(error as Error).message;worker?.terminate();playing=playing&&ready&&t<traffic.frontier;$('load-status').textContent=liveError;updatePanels();return;}}else if(traffic instanceof StagedServiceViewStore)traffic.ingest(e.data.delta! as StagedServiceDelta,!liveMode || !playing && !first);else if(traffic instanceof LibrationViewStore)traffic.ingest(e.data.delta! as LibrationDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionFleetViewStore)traffic.ingest(e.data.delta! as ExpeditionFleetDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionViewStore)traffic.ingest(e.data.delta! as ExpeditionDelta,!liveMode || !playing && !first);else if(traffic instanceof LunarViewStore)traffic.ingest(e.data.delta! as LunarDelta,!liveMode || !playing && !first);else if(traffic instanceof NetworkViewStore)traffic.ingest(e.data.delta! as NetworkDelta,!liveMode || !playing && !first);else if(traffic instanceof AdaptiveViewStore)traffic.ingest(e.data.delta! as AdaptiveDelta,!liveMode || !playing && !first);else if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
   viewerProfile.record('ingestion',performance.now()-ingestionStart);
-  if(first){ready=true;selected=traffic instanceof CompactViewStore?'Wayfarer':traffic instanceof AsterSystemViewStore?traffic.definition.source.source.stack.id:traffic instanceof StagedServiceViewStore?traffic.definition.source.stack.id:traffic instanceof LibrationViewStore?traffic.definition.courier.id:traffic instanceof ExpeditionFleetViewStore?traffic.definition.actors[0].id:traffic instanceof ExpeditionViewStore?traffic.definition.source.scenario.ship.id:traffic instanceof LunarViewStore?'Tern':traffic instanceof NetworkViewStore?traffic.definition.lanes[0].vessels[0].id:traffic!.definition.vessels[0].id;frame=traffic instanceof LunarViewStore?'moon':'inertial';t=0;playing=playbackRate!==0;}
+  if(first){ready=true;selected=traffic instanceof FleetViewStore?'Wayfarer':traffic instanceof CompactViewStore?'Wayfarer':traffic instanceof AsterSystemViewStore?traffic.definition.source.source.stack.id:traffic instanceof StagedServiceViewStore?traffic.definition.source.stack.id:traffic instanceof LibrationViewStore?traffic.definition.courier.id:traffic instanceof ExpeditionFleetViewStore?traffic.definition.actors[0].id:traffic instanceof ExpeditionViewStore?traffic.definition.source.scenario.ship.id:traffic instanceof LunarViewStore?'Tern':traffic instanceof NetworkViewStore?traffic.definition.lanes[0].vessels[0].id:traffic!.definition.vessels[0].id;frame=traffic instanceof LunarViewStore?'moon':'inertial';t=0;playing=playbackRate!==0;}
   else if(liveMode && playing && !playbackLead())t=traffic!.frontier;
   // Solver yields often acknowledge an unchanged head. Batch drawing-history
   // assembly with the panel cadence instead of rebuilding it for every reply.
   if(first || previousFrontier!==traffic!.frontier || traffic instanceof LunarViewStore&&(e.data.delta as LunarDelta).missions.length){
-   if(first || !playing || t>run!.window.end || performance.now()-lastPanel>100)refreshTraffic();else trafficDirty=true;
+   if(first || !playing || t>run!.window.end || trafficRefreshDue())refreshTraffic();else trafficDirty=true;
   }
   if(first){document.querySelectorAll<HTMLElement>('.entry-layer').forEach(e=>e.hidden=!run!.atmosphere);$('launch-view').textContent='Surface view';$('launch-view').hidden=!run!.world.ports.some(p=>p.rail.kind==='surface');$('frame').innerHTML=`<option value="inertial">Inertial</option><option value="rotating">${esc(run!.rotating.name)}</option>`+[...run!.world.bodies.map(b=>[b.id,b.id]),...run!.stations.map(s=>[s.id,s.id]),...run!.vessels.map(v=>[v.id,v.name])].map(([id,name])=>`<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
    $<HTMLSelectElement>('frame').value=frame;
@@ -575,12 +585,12 @@ function draw() {
   for (const v of [...run.vessels,...Object.values(run.maintained??{})]) {
     const id = v.id, isSelected = id === selected;
     if (layers.trails) {
-      const trailStart = Math.max(start(), t - (run.playback?.trailSpan??(run.id === 'lunar-loop' ? 9 : 12)));
+      const trailStart = Math.max(start(), t - trailSpan());
       let prev: ScreenPoint | undefined,chunk:ScreenPoint[]=[],shade=-1;
       for (const sample of v.samples) {
         if (sample.t < trailStart || sample.t > t || sample.activity?.kind==='fault') continue;
         const p:ScreenPoint = sample.opacity===0?[NaN,NaN,NaN]:project3(sample.y, sample.t);
-        const alpha=Math.round(32*trailOpacity(sample.t,t,start(),isSelected,run.playback?.trailSpan??(run.id==='lunar-loop'?9:12)));
+        const alpha=Math.round(32*trailOpacity(sample.t,t,start(),isSelected,trailSpan()));
         if(alpha!==shade && chunk.length){worldPath(chunk,v.color,isSelected?1.7:1.1,shade/32);chunk=prev?[prev]:[];}
         chunk.push(p);shade=alpha;
         prev = p;
@@ -747,6 +757,7 @@ $<HTMLInputElement>('time').oninput = e => seek(Number((e.target as HTMLInputEle
 for (const key of Object.keys(layers) as (keyof typeof layers)[]) {
   $<HTMLInputElement>(`layer-${key}`).onchange = e => { layers[key] = (e.target as HTMLInputElement).checked; cleared = false; $('clear-view').setAttribute('aria-pressed', 'false'); draw();updatePanels(); };
 }
+$<HTMLInputElement>('trail-length').oninput=e=>{trailScale=Number((e.target as HTMLInputElement).value);trailScales.set(currentSet,trailScale);syncTrail();draw();if(ready)updatePanels();};
 $<HTMLInputElement>('see-through').onchange=e=>{seeThroughBodies=(e.target as HTMLInputElement).checked;draw();updatePanels();};
 $('clear-view').onclick = () => {
   if (!cleared) {savedLayers = {...layers}; layers = {orbits: false, trails: false, plan: false, labels: false,atmosphere:false,aero:false,glow:false};}
@@ -830,17 +841,17 @@ function animate(now: number) {
   const dt = Math.max(0, Math.min(0.1, (now - lastFrame) / 1000)); lastFrame = now;
   if(ready && playing && traffic && !document.hidden){
    if(liveMode){
-    if(playbackLead()){t=Math.min(traffic.frontier,t+dt*playbackRate);desiredTarget=t+playbackLead();if((traffic.halt||liveError)&&t>=traffic.frontier)playing=false;if(now-lastPanel>100||t>run!.window.end||t>run!.traffic!.frontier)refreshTraffic();}
+    if(playbackLead()){t=Math.min(traffic.frontier,t+dt*playbackRate);desiredTarget=t+playbackLead();if((traffic.halt||liveError)&&t>=traffic.frontier)playing=false;if(trafficRefreshDue()||t>run!.window.end||t>run!.traffic!.frontier)refreshTraffic();}
     else desiredTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,desiredTarget)+dt*playbackRate);
     requestTraffic(desiredTarget);
    }
-   else {t=Math.max(traffic.oldest,Math.min(traffic.frontier,t+dt*playbackRate));if(playbackRate<0&&t<=traffic.oldest||(traffic.halt||liveError)&&t>=traffic.frontier)playing=false;else if(playbackRate>0&&t>=liveEdge()){traffic.release();desiredTarget=t+playbackLead();liveMode=true;}if(now-lastPanel>100||playbackLead()&&(t>run!.window.end||t>run!.traffic!.frontier))refreshTraffic();}
+   else {t=Math.max(traffic.oldest,Math.min(traffic.frontier,t+dt*playbackRate));if(playbackRate<0&&t<=traffic.oldest||(traffic.halt||liveError)&&t>=traffic.frontier)playing=false;else if(playbackRate>0&&t>=liveEdge()){traffic.release();desiredTarget=t+playbackLead();liveMode=true;}if(trafficRefreshDue()||playbackLead()&&(t>run!.window.end||t>run!.traffic!.frontier))refreshTraffic();}
   }
   if (ready && playing && !traffic) {
     t = Math.max(start(),Math.min(end(), t + dt * playbackRate * (run?.playback?.rateScale??1)));
     if (playbackRate>0&&t>=end()||playbackRate<0&&t<=start()) { if ($<HTMLInputElement>('replay').checked) t = playbackRate>0?start():end(); else playing = false; }
   }
-  if(ready && trafficDirty && now-lastPanel>100)refreshTraffic();
+  if(ready && trafficDirty && trafficRefreshDue())refreshTraffic();
   const drawStart=performance.now();draw();viewerProfile.record('draw',performance.now()-drawStart);
   if (ready && now - lastPanel > 100) { const panelStart=performance.now();updatePanels();viewerProfile.record('panels',performance.now()-panelStart);lastPanel = now; }
   requestAnimationFrame(animate);
