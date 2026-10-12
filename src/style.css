@@ -171,4 +171,14 @@ details p { line-height: 1.7; }
 .trail-control output { margin-left: auto; font-variant-numeric: tabular-nums; }
 .trail-control input { display: block; width: 100%; margin: 8px 0 0; }
 
-#timelines { resize: vertical; min-height: 26px; }
+#timelines { resize: none; min-height: 26px; }
+
+.timeline-grip { position: sticky; top: -10px; height: 10px; margin: -10px -8px 5px 0; z-index: 3; cursor: ns-resize; touch-action: none; background: #0e1923; }
+.timeline-grip::after { content: ''; display: block; width: 42px; height: 3px; border-radius: 2px; background: #526775; margin: 0 auto; position: relative; top: 3px; }
+.timeline-grip:hover::after, .timeline-grip:focus-visible::after { background: #abc1cc; }
+#field-key { position: absolute; z-index: 1; left: 18px; top: 154px; color: #9db2a7; font: 10px ui-monospace, monospace; pointer-events: none; }
+#field-key span { display: inline-block; width: 65px; height: 6px; background: linear-gradient(90deg,#978561,#2c4d49,#14232c); margin: 0 6px; }
+
+#field-space { position: absolute; inset: 0; pointer-events: none; }
+#space { position: relative; }
+.viewport { background: #0c141d; }

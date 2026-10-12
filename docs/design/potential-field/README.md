@@ -1,12 +1,12 @@
-# Potential-field visualization: proposed first slice
+# Potential-field visualization: first slice
 
-2026-10-12 research and Astra-reviewed feasibility plan. Implementation has not started.
+2026-10-12 research and Astra-reviewed feasibility plan, authorized and implemented. See [evidence](../../evidence/potential-field.md), including the open 4K compositor envelope.
 
 See the [research report](../../../reports/Orbital%20field%20visualization.md), [review disposition](disposition.md), [review](astra-review.md), and [representation comparison](compact-field-representations.png).
 
 ## Scope
 
-Add an optional, default-off ordinary gravitational-potential layer to the compact Aster–Selene cycler exhibit. Begin with quiet tint and roughly 8–12 fixed-value contours, a small numeric legend and fixed per-set compression. Top view first; allow the same physical XY slice in oblique 3D only with an edge-on suppression guard. Ships remain in physical space. Sheet relief is a later analytical representation, not terrain for ships to ride.
+Add an optional, default-off ordinary gravitational-potential layer to the compact Aster–Selene cycler exhibit. Begin with quiet tint and roughly 8–12 fixed-value contours, a small numeric legend and fixed per-set compression. Top view first; allow the same physical XY slice in oblique 3D only with an edge-on suppression guard. Ships remain in physical space. The owner subsequently accepted a later schematic relief mode with bodies and ships mapped onto the sheet height; it will remain a presentation option rather than physical altitude.
 
 Use the actual prescribed-source potential `Φ = -Σ μ/|r-b|`, excluding source interiors. Do not change forces, soften gravity, integrate particles or advance the service frontier. Viewing-frame transforms change presentation, not potential values. This first layer does not claim to show full apparent acceleration in rotating or accelerating frames.
 
@@ -31,4 +31,4 @@ Replace native timeline corner resizing with a top-edge separator. With the bott
 
 ## Later options
 
-If the scalar gate succeeds, add sparse acceleration arrows with stable sampling and explicit magnitude compression. Effective potential then gets its own compact rotating-mode validation, including Coriolis explanation and source-model conventions. A separate relief view can visualize energy height without moving ships. Static LIC, animated field flow/test particles and noncoplanar Solar fields remain separate experiments; none is required for this prototype.
+If the scalar gate succeeds, add sparse acceleration arrows with stable sampling and explicit magnitude compression. Effective potential then gets its own compact rotating-mode validation, including Coriolis explanation and source-model conventions. A separate relief view can visualize energy height without moving ships. The owner deprioritized vector grids and LIC because the scalar map should already convey slopes. Noncoplanar Solar fields remain separate work. Lagrange-like crosses belong to a separately derived rotating effective-field diagnostic, not extrema of this ordinary potential.
