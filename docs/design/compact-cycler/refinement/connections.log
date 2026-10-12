@@ -1,0 +1,29 @@
+Haven launch departure calls 27 residual 8.615330671091215e-14 cap 1.6160404765292684 dv 1.5293314742918624
+Haven launch arrival calls 18 residual 9.769962616701378e-15 cap 1.5912505630886853 dv 0.8173620811710249
+REJECT Haven launch 0 physical collision
+Haven launch departure calls 31 residual 9.636735853746359e-14 cap 1.6160404765292713 dv 1.5293314742918593
+Haven launch arrival calls 22 residual 1.3322676295501878e-14 cap 1.5912505630886464 dv 0.8173620811710044
+REJECT Haven launch 1 physical collision
+Haven launch departure calls 30 residual 8.720801858430605e-14 cap 1.6160404765292748 dv 1.5293314742918618
+Haven launch arrival calls 20 residual 8.881784197001252e-15 cap 1.5912505630886968 dv 0.8173620811710316
+REJECT Haven launch 2 physical collision
+UNAVAILABLE Haven launch
+Cairn landing departure calls 26 residual 3.885780586188048e-15 cap 1.7189189390055188 dv 0.8821387285058747
+Cairn landing arrival calls 23 residual 3.649858193455202e-15 cap 2.1688577274439775 dv 2.957443334474563
+ADMITTED Cairn landing dv 3.839582062980438 coast 2.0
+Cairn launch departure calls 23 residual 1.4210854715202004e-14 cap 3.6477203186871527 dv 4.5171994800451065
+REJECT Cairn launch 0 Burn admission Cairn launch departure
+REJECT Cairn launch 1 ballistic branch
+Cairn launch departure calls 27 residual 1.7985612998927536e-14 cap 3.6477203186872713 dv 4.517199480045229
+REJECT Cairn launch 2 Burn admission Cairn launch departure
+UNAVAILABLE Cairn launch
+Haven landing departure calls 21 residual 9.892087149410145e-14 cap 2.971269499680314 dv 1.5260370447051532
+Haven landing arrival calls 29 residual 3.248235014297052e-13 cap 2.7573297213730483 dv 2.3636725161418726
+REJECT Haven landing 0 physical collision
+Haven landing departure calls 23 residual 1.1235457009206584e-13 cap 2.971269499680375 dv 1.5260370447051685
+Haven landing arrival calls 29 residual 3.394801800782332e-13 cap 2.7573297213722054 dv 2.363672516141223
+REJECT Haven landing 1 physical collision
+Haven landing departure calls 39 residual 1.1179945857975326e-13 cap 2.9712694996803712 dv 1.5260370447051683
+Haven landing arrival calls 29 residual 3.0068829370843986e-13 cap 2.7573297213722205 dv 2.3636725161412198
+REJECT Haven landing 2 physical collision
+UNAVAILABLE Haven landing

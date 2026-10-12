@@ -496,3 +496,15 @@ DOP853; fixed-field reuse never propagates a drawing sample.128-unit rolling his
 includes32-unit lead, bounded worker transactions and held/rewind/Live semantics.
 [Contract/reviews](design/compact-cycler/README.md) and
 [evidence](evidence/compact-cycler.md). Sun/Mars/Jupiter analog remains separate work.
+
+## Compact cycler refinement — 2026-10-12
+
+The owner rejected v1's fully powered taxis/long Beacon burns. Current profile-v2
+keeps the field but uses a closer2.171-radius carrier pass,86.5% coast, four-unit
+carrier burns and explicit coast intervals on every taxi leg. Earlier handoffs and
+Cairn longitude1.2 give Aster boarding radius3.198. Independent/aboard time is6.5/7
+inbound and7.5/40 outbound. Exhaust4 is restored with reserve; stronger short-burn
+engines are explicit. This improves morphology, not a demonstrated optimal natural
+cycler. Both runtime modes use the admitted source; Wayfarer's label is shortened.
+[Current evidence](evidence/compact-refinement.md) and
+[review dispositions](design/compact-cycler/refinement/disposition.md).

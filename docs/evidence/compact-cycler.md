@@ -1,8 +1,9 @@
-# Compact cycler evidence — 2026-10-11
+# Historical compact cycler v1 evidence — 2026-10-11
 
 Implemented finite **Aster–Selene · Cycler** and continuous **Aster–Selene · Cycler
 service**, alongside the unchanged Solar-scale witness. Own finite viewing/numerical
-gate passed before continuous acceptance. The owner has not yet viewed these new sets.
+gate passed before continuous acceptance. The owner subsequently rejected this morphology;
+[current refinement evidence](compact-refinement.md) supersedes this viewing gate.
 
 The display shares one overview for the carrier's wide free flight and the parcel
 shuttle's four local powered legs. Default.5×; a72-unit cycle takes144 wall seconds.

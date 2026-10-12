@@ -7,7 +7,7 @@ const assert=(v:unknown,message:string)=>{if(!v)throw Error('Compact: '+message)
 export function world(p:CompactTemplate){
  const bodies:Body[]=[{id:'Aster',mu:1,radius:1,rail:{kind:'fixed',position:[0,0,0]}},{id:'Selene',mu:.03,radius:.2,rail:{kind:'circular',center:[0,0,0],u:[1,0,0],v:[0,1,0],radius:5,rate:p.rate,phase:0}}];
  const common={cargo:0,cargoCapacity:1,propellant:0,tankCapacity:10,serviceDuration:0};
- const ports:Port[]=[{...common,id:'Beacon',rail:{kind:'circular',center:[0,0,0],u:[1,0,0],v:[0,1,0],radius:p.beaconRadius,rate:p.rate,phase:0}},...(['Cairn','Haven']as const).map((id,i)=>({...common,id,rail:{kind:'surface' as const,bodyId:bodies[i].id,bodyRail:bodies[i].rail,center:[0,0,0]as [number,number,number],u:[1,0,0]as [number,number,number],v:[0,1,0]as [number,number,number],radius:[1,.2][i]+1e-5,rate:p.rate,phase:0,latitude:0,centerHeight:1e-5}}))];
+ const ports:Port[]=[{...common,id:'Beacon',rail:{kind:'circular',center:[0,0,0],u:[1,0,0],v:[0,1,0],radius:p.beaconRadius,rate:p.rate,phase:0}},...(['Cairn','Haven']as const).map((id,i)=>({...common,id,rail:{kind:'surface' as const,bodyId:bodies[i].id,bodyRail:bodies[i].rail,center:[0,0,0]as [number,number,number],u:[1,0,0]as [number,number,number],v:[0,1,0]as [number,number,number],radius:[1,.2][i]+1e-5,rate:p.rate,phase:p.padPhases[id],latitude:0,centerHeight:1e-5}}))];
  return {bodies,ports,units:{length:'Aster radius',time:'√(R³/μ)',mass:'mass unit'}};
 }
 function validateControl(c:CubicControl,start:number,end:number,cap:number){
@@ -26,17 +26,22 @@ function validateControl(c:CubicControl,start:number,end:number,cap:number){
 }
 export function prepareCompact(value:CompactProfile,step=STEP){
  const v=structuredClone(value),T=v.times;
- assert(v.modelVersion==='compact-cycler-profile-v1'&&v.schemaVersion===1&&v.period===72&&v.step===STEP&&Math.abs(v.rate-RATE)<1e-14&&v.height===1e-5&&v.exhaustVelocity===8&&v.segments.length===7,'model contract');
+ const refined=v.modelVersion==='compact-cycler-profile-v2';
+ const singles=Array.from({length:7},(_,i)=>[i]);
+ if(!refined)assert(v.segments.length===7&&(!v.routes||JSON.stringify(v.routes)===JSON.stringify(singles))&&(!v.padPhases||v.padPhases.Cairn===0&&v.padPhases.Haven===0)&&v.segments.every((s,i)=>Boolean(s.control)===(i!==1)),'legacy profile extensions require v2');
+ const groups=v.routes??Array.from({length:7},(_,i)=>[i]);
+ assert(groups.length===7&&groups.every(g=>g.length>0&&g.length<=3)&&JSON.stringify(groups.flat())===JSON.stringify(v.segments.map((_,i)=>i)),'route groups');
+ assert((refined||v.modelVersion==='compact-cycler-profile-v1')&&v.schemaVersion===1&&v.period===(refined?74:72)&&v.step===STEP&&Math.abs(v.rate-RATE)<1e-14&&v.height===1e-5&&(refined?[4,8].includes(v.exhaustVelocity):v.exhaustVelocity===8)&&v.segments.length<=15,'model contract');
  assert([v.beaconRadius,...Object.values(T)].every(Number.isFinite)&&v.beaconRadius>5.3&&v.beaconRadius<7&&Math.abs(v.rate*v.rate*v.beaconRadius-1/v.beaconRadius**2-.03/(v.beaconRadius-5)**2)<1e-12,'equilibrium');
- assert(v.carrier.id==='Wayfarer'&&v.shuttle.id==='Pipit'&&v.carrier.dryMass===4&&v.carrier.fuel===6&&v.carrier.cargo===0&&v.carrier.maxAcceleration===.15&&v.carrier.maxForce===1.5&&v.shuttle.dryMass===1&&v.shuttle.fuel===3&&v.shuttle.cargo===.15&&v.shuttle.maxAcceleration===3&&v.shuttle.maxForce===12.45,'hardware');
- const p:CompactTemplate={period:v.period,rate:v.rate,beaconRadius:v.beaconRadius,exhaustVelocity:v.exhaustVelocity,hardware:[v.carrier,v.shuttle],phases:[[],[]],cost:[0,0],flows:[],events:[],work:{nodes:0,checks:0,bytes:0,oraclePosition:0,oracleVelocity:0}};
+ assert(v.carrier.id==='Wayfarer'&&v.shuttle.id==='Pipit'&&v.carrier.dryMass===4&&v.carrier.fuel===6&&v.carrier.cargo===0&&v.carrier.maxAcceleration===(refined?.6:.15)&&v.carrier.maxForce===(refined?6:1.5)&&v.shuttle.dryMass===1&&v.shuttle.fuel===3&&v.shuttle.cargo===.15&&v.shuttle.maxAcceleration===(refined?4:3)&&v.shuttle.maxForce===(refined?16.6:12.45),'hardware');
+ const padPhases=v.padPhases??{Cairn:0,Haven:0};assert(['Cairn','Haven'].every(id=>Number.isFinite(padPhases[id])&&Math.abs(padPhases[id])<=Math.PI),'pad phases');
+ const p:CompactTemplate={padPhases,period:v.period,rate:v.rate,beaconRadius:v.beaconRadius,exhaustVelocity:v.exhaustVelocity,hardware:[v.carrier,v.shuttle],phases:[[],[]],cost:[0,0],flows:[],events:[],work:{nodes:0,checks:0,bytes:0,oraclePosition:0,oracleVelocity:0}};
  const traces:Trace[]=[];let actor=0,fuel=6,used=0,cargo=0;
  const support=(start:number,end:number,port:string)=>{assert(end>start,'support duration');p.phases[actor].push({start,end,kind:'support',port,fuel,fuelEnd:fuel,used,cargo});};
  const event=(t:number,kind:CompactTemplate['events'][0]['kind'],id:string,label:string,port?:string,extra:Partial<CompactTemplate['events'][0]>={})=>p.events.push({t,actor,kind,id,label,port,deltaV:0,fuelUsed:0,beforeFuel:fuel,afterFuel:fuel,...extra});
- const fly=(index:number,initial:State)=>{
+ const flySegment=(index:number,initial:State)=>{
   const s=v.segments[index],h=p.hardware[actor];
-  const intervals=[[T.carrierLaunch,T.coastStart],[T.coastStart,T.coastEnd],[T.coastEnd,T.carrierDock],[T.moonLaunch,T.boardIn],[T.releaseIn,T.asterLand],[T.asterLaunch,T.boardOut],[T.releaseOut,T.moonLand]];
-  assert(s.start===intervals[index][0]&&s.end===intervals[index][1]&&s.start>=0&&s.end<=p.period&&s.initial.length===6&&s.endpoint.length===6&&[...s.initial,...s.endpoint].every(Number.isFinite)&&Boolean(s.control)===(index!==1),'segment contract');
+  assert(s.start>=0&&s.end<=p.period&&s.initial.length===6&&s.endpoint.length===6&&[...s.initial,...s.endpoint].every(Number.isFinite),'segment contract');
   assert(s.oracle.length>=65&&s.oracle.length<=2048&&s.oracle.every((r,i)=>r.length===8&&r.every(Number.isFinite)&&r[0]>=s.start&&r[0]<=s.end&&(i===0||r[0]>s.oracle[i-1][0]))&&s.oracle[0][0]===s.start&&s.oracle.at(-1)![0]===s.end,'oracle contract');
   if(s.control)validateControl(s.control,s.start,s.end,h.maxAcceleration);
   const trace=integrate(s.start,s.end,initial,s.control,step,s.control?h.maxAcceleration:0);traces.push(trace);p.work.nodes+=trace.nodes;p.work.checks+=trace.work;
@@ -50,6 +55,13 @@ export function prepareCompact(value:CompactProfile,step=STEP){
   p.phases[actor].push({start:s.start,end:s.end,kind:'flight',rows,control:s.control,fuel:initialFuel,fuelEnd:fuel,used,cargo});used+=initialFuel-fuel;
   if(s.control){event(s.start,'thrust-start',s.id+':start',s.id,undefined,{beforeFuel:initialFuel,afterFuel:initialFuel});event(s.end,'thrust-end',s.id+':end',s.id,undefined,{beforeFuel:fuel,afterFuel:fuel});}
   return final.slice(0,6) as State;
+ };
+ const fly=(route:number,initial:State)=>{
+  const ids=groups[route],intervals=[[T.carrierLaunch,T.coastStart],[T.coastStart,T.coastEnd],[T.coastEnd,T.carrierDock],[T.moonLaunch,T.boardIn],[T.releaseIn,T.asterLand],[T.asterLaunch,T.boardOut],[T.releaseOut,T.moonLand]];
+  if(refined&&route>=3)assert(ids.length===3&&v.segments[ids[0]].control&&!v.segments[ids[1]].control&&v.segments[ids[2]].control&&v.segments[ids[1]].end-v.segments[ids[1]].start>=1,'local connection coast');
+  if(route===1)assert(ids.every(i=>!v.segments[i].control),'carrier coast');
+  assert(v.segments[ids[0]].start===intervals[route][0]&&v.segments[ids.at(-1)!].end===intervals[route][1],'route interval');
+  let actual=initial;for(let j=0;j<ids.length;j++){if(j)assert(v.segments[ids[j]].start===v.segments[ids[j-1]].end,'route continuity');actual=flySegment(ids[j],actual);}return actual;
  };
  const capture=(t:number,before:State,target:State,id:string,port:string,kind:'dock'|'land')=>{
   const position=Math.hypot(...before.slice(0,3).map((x,i)=>x-target[i])),speed=Math.hypot(...before.slice(3).map((x,i)=>x-target[i+3]));assert(position+MARGIN<1e-7&&speed+MARGIN<1e-7,'capture margin '+id);

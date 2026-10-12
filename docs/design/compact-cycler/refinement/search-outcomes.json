@@ -1,0 +1,10 @@
+{
+  "field": {"asterMu": 1, "moonMu": 0.03, "separation": 5},
+  "rejected": [
+    {"method": "unrestricted endpoint pulses", "period": 72, "sampledAsterRadius": 0.5220141266, "reason": "planet intersection", "published": false},
+    {"method": "pulse continuation", "period": 76, "reason": "endpoint convergence failure", "published": false},
+    {"method": "prescribed coast endpoints", "reason": "collisions or cap refusals on local connections", "published": false}
+  ],
+  "selected": {"method": "closer coast branch plus endpoint-control homotopy", "period": 74, "asterPadLongitude": 1.2, "nativeSafetyCertified": true},
+  "note": "Authoring sampled screening is not the canonical safety certificate. Rejected intermediate artifacts were removed; retained logs describe outcomes."
+}

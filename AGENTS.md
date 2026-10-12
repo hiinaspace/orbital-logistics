@@ -152,6 +152,17 @@ incoming future drawing rows across paused replies until Live; retain resource
 anchors at actual events/window cuts instead of every reply clock. Calendar1e6.
 Sun/Mars/Jupiter analog requires a fresh recurrence/physical admission gate.
 
+The owner rejected compact v1 morphology; active source is now profile-v2. Read
+docs/evidence/compact-refinement.md and docs/design/compact-cycler/refinement/.
+Preserve legacy v1's seven singleton/control/zero-phase protocol; expanded groups
+require v2. Current period74, carrier64 coast/two4-unit burns; every taxi has literal
+coast. Earlier handoffs/Cairn longitude1.2 give Aster boarding radius3.198. Exhaust4
+restored; carrier caps.6/6 and shuttle4/16.6 explicitly revise hardware for shorter
+burns, keeping tanks/dry/cargo/reserves. Carrier delta-v is higher: do not claim
+cheaper maintenance or necessary/optimal natural cycling. Keep directional geometry
+and independent-vs-aboard gates, not just aggregate aboard time. Frozen controls are
+freshly replayed by compact_cycler_refined.py; native canonical physics remains authority.
+
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.
 - Canonical physics steps and event boundaries must not depend on display queries, warp, or scrub frequency.

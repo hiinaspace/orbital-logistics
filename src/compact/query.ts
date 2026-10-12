@@ -6,8 +6,10 @@ import type {CompactTemplate,CompactPlayback,Phase} from './types';
 export const rotate=(v:readonly number[],a:number):Vec3=>{const c=Math.cos(a),s=Math.sin(a);return [c*v[0]-s*v[1],s*v[0]+c*v[1],v[2]];};
 export const rotateState=(y:readonly number[],a:number):State=>[...rotate(y.slice(0,3),a),...rotate(y.slice(3,6),a)];
 export function localPort(p:CompactTemplate,id:string,t:number):State {
- const r=id==='Beacon'?p.beaconRadius:id==='Cairn'?1.00001:id==='Haven'?5.20001:NaN;if(!Number.isFinite(r))throw Error('Unknown compact port');
- const a=p.rate*t,c=Math.cos(a),s=Math.sin(a);return [r*c,r*s,0,-r*p.rate*s,r*p.rate*c,0];
+ if(id==='Beacon'){const a=p.rate*t,r=p.beaconRadius;return [r*Math.cos(a),r*Math.sin(a),0,-r*p.rate*Math.sin(a),r*p.rate*Math.cos(a),0];}
+ if(id!=='Cairn'&&id!=='Haven')throw Error('Unknown compact port');
+ const local=rotate([id==='Cairn'?1.00001:.20001,0,0],p.rate*t+p.padPhases[id]),body=id==='Haven'?rotate([5,0,0],p.rate*t):[0,0,0];
+ const x=local[0]+body[0],y=local[1]+body[1];return [x,y,0,-p.rate*y,p.rate*x,0];
 }
 export function phaseAt(phases:Phase[],t:number,left=false):Phase {
  const p=[...phases].reverse().find(p=>left&&t>0?t>p.start&&t<=p.end:t>=p.start&&t<p.end)??(t===phases.at(-1)!.end?phases.at(-1):undefined);
@@ -20,7 +22,7 @@ export function ownSample(p:CompactTemplate,actor:number,t:number,left=false):Vi
  const fuelUsed=phase.used+phase.fuel-propellant,mass=hardware.dryMass+phase.cargo+propellant;
  const q:ViewSample={t,y,propellant,fuelUsed,mass,burnCursor:0,status:'running',detail:'',logistics:{operationCursor:0,cargoMass:phase.cargo,fuelUsed,ports:[],...(phase.kind==='support'?{dockedPortId:phase.port}:phase.kind==='ride'?{dockedPortId:p.hardware[0].id}:{})},activity:{kind:phase.kind==='support'?'waiting':phase.kind==='ride'?'service':'flying',reason:phase.kind==='ride'?'Aboard '+p.hardware[0].id:phase.kind==='support'?'Turnaround':phase.control?.id??'Ballistic coast'}};
  if(phase.kind==='ride')q.opacity=0;
- if(phase.kind==='support'&&phase.port!=='Beacon')q.axis=rotate([1,0,0],p.rate*t);
+ if(phase.kind==='support'&&phase.port!=='Beacon')q.axis=rotate([1,0,0],p.rate*t+p.padPhases[phase.port!]);
  if(phase.control){const a=evaluateCubic(phase.control,Math.min(t,phase.end-Number.EPSILON*Math.max(1,t))),n=Math.hypot(...a);if(n>1e-9){q.thrust={id:phase.control.id,direction:a.map(x=>x/n) as Vec3,force:n*mass,acceleration:n};q.axis=q.thrust.direction;}}
  return q;
 }

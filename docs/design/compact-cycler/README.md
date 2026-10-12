@@ -7,30 +7,40 @@ The scale keeps both surface journeys visible in the same overview as the carrie
 
 ## Choreography and field
 
-The 72-unit cycle has 54 carrier coast units, two eight-unit powered arcs and two
-supported units. Wayfarer departs Beacon at1, coasts from9 to63, joins Beacon at71,
-and imports replacement propellant at71.5. Pipit launches from Haven at8, boards at13,
-rides to26, lands at Cairn at32, unloads/refills, launches at38, boards at44,
-leaves at54 and lands at Haven at59. Each half-trip delivers one .15 parcel;
-deliveries are consumed and subsequent parcels/fuel are explicit capped imports.
-Separate tanks remain visible. While Pipit rides, its full mass is carried by
-Wayfarer; carrier burns never overlap attachment. Its hidden glyph avoids drawing
-two ships on top of each other; its timeline and inspection remain available.
+The 74-unit cycle has64 carrier coast units, two four-unit powered arcs and two
+supported units. Wayfarer departs Beacon at1, coasts5→69, joins Beacon at73,
+and resupplies at73.5. Pipit launches Haven6→9, rides9→16, lands Cairn16→19.5,
+unloads/refills19.75/20, launches21.5→25, rides25→65, lands Haven65→69,
+and unloads/refills69.25/69.5. Each half-trip delivers one .15 parcel; deliveries
+are consumed and subsequent parcels/fuel are explicit capped imports. Separate tanks
+remain visible. While Pipit rides, its full mass loads Wayfarer; carrier burns never
+overlap attachment. Its hidden glyph avoids drawing overlapping ships, while the
+individual timeline/inspection remains available.
+
+Every taxi leg includes a literal coast between finite steering bursts. Per-direction
+independent/aboard time is6.5/7 inbound and7.5/40 outbound. Aster release/boarding
+radii2.997/3.198, Selene-relative boarding/release distances1.122/2.245; these are
+measured encounter geometry, not a direct-route optimality or necessity proof.
 
 Aster has GM1/radius1; Selene GM.03/radius.2 on a radius5 prescribed circle at
 sqrt(1.03/125). There is no indirect acceleration on this fixed-primary field.
 Beacon is the actual-field outer rotating equilibrium, checked algebraically.
-Both airless pads spin at the moon's orbital rate, with COM support height1e-5.
+Both airless pads spin at the moon's orbital rate, with COM support height1e-5;
+Cairn's fixed longitude is1.2 radians, Haven's0.
 These are explicit per-set fictional synchronous spins, leaving other sets untouched.
 No atmosphere, mutual ship gravity, general targeting or real Aldrin trajectory is claimed.
 
-The lower-exhaust-velocity trial failed the shuttle reserve; see
-[hardware revision](hardware-revision.md). Final exhaust velocity8, unchanged wet/dry
-masses, tanks and caps, and 10% post-half-trip reserves are part of this witness.
+V1's fully powered taxis failed at exhaust4 and temporarily used8. The refined
+coast-based witness restores4 with the same tanks/dry/cargo/reserves. Shorter burns
+use stronger engines: carrier acceleration/force.6/6 and shuttle4/16.6. Shuttle
+half costs3.1266/3.3672 and fuels.749/.638 exceed.3 reserve; carrier fuel2.787
+exceeds.6. Carrier delta-v1.5504 is higher than v1's1.0718: the Beacon burns are
+shorter, not proven cheaper. [Refinement evidence](../../evidence/compact-refinement.md).
 
 ## Numerical authority
 
-`compact-cycler-profile-v1` freezes 129 acceleration keys and128 inertial cubic pieces
+`compact-cycler-profile-v2` groups fifteen contiguous native segments into seven
+ownership stages, including explicit unpowered taxi middles. Each powered segment freezes 129 acceleration keys and128 inertial cubic pieces
 per powered segment. An inverse quintic is only the designer's starting guess;
 shooting corrects a forward solution. Production TypeScript canonical RK4 at1/512
 executes the exact frozen controls in six-state dynamics. Every knot is a step boundary.
@@ -50,7 +60,9 @@ control cap and linear-relative closest approach. Refusal bisects the canonical 
 with depth/work/node limits; inside-body derivatives reject. A geometric snap cannot
 cross a body surface. Private native traces are admitted once and retained boundedly.
 
-The separately versioned acceleration-commanded contract does not change Runner's
+Legacy profile-v1 retains exactly seven singleton routes, original control presence
+and zero pad phases; the actual original fixture is regression-tested. Old readers
+reject v2 before propagation. The separately versioned acceleration-commanded contract does not change Runner's
 fixed-thrust law, Solar's field or old fixtures. JSON authoring remains inspectable:
 `uv run --project spikes/numerics python spikes/numerics/compact_cycler.py` regenerates
 the frozen controls and oracle. Retained bounded coast studies are seed provenance,
@@ -89,4 +101,7 @@ frontier intact. Import/capture failure halts this dependent pair before the eve
 future cached support/success samples are excluded. No rescue or online replanning.
 Fault injection is an internal test seam, not a user configuration feature.
 
-[Astra disposition](disposition.md) and [evidence](../../evidence/compact-cycler.md).
+[Refinement Astra disposition](refinement/disposition.md) and
+[current evidence](../../evidence/compact-refinement.md). Original
+[architecture disposition](disposition.md) and [v1 evidence](../../evidence/compact-cycler.md)
+remain historical; the owner rejected that first morphology.

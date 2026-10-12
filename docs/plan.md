@@ -535,3 +535,14 @@ Production4K Chrome through three completed carrier circuits/eight deliveries at
 switching pass. [Evidence](evidence/compact-cycler.md). Await owner choreography taste;
 next content experiment is a fictional Sun/Mars cycler with optional Jupiter influence,
 whose independent body phases require a fresh recurrence/admission design.
+
+## Compact morphology refinement completed — 2026-10-12
+
+Owner feedback superseded the first own-view gate. The revised source uses closer
+encounters, earlier boarding, literal taxi coasts, stronger short-burn engines and
+restored exhaust4; fields unchanged. Nine compact tests, legacy compatibility and
+directional geometry plus independent/resolution/late-epoch/resource/fault gates pass.
+Two production finite/continuous16×/4K tests pass, includingheld/reverse/Live/set
+switching. Both Astra P2 findings fixed and verified in follow-up. Human perception of
+“local enough” remains the next gate; no optimality/necessity claim.
+[Evidence](evidence/compact-refinement.md).

@@ -11,3 +11,6 @@ not an optimization result. The available half-trip Δv budget becomes8.412 inst
 4.206; the wider coast geometry and8-unit carrier burns retain the original.15 cap.
 The complete cycle includes54 coast units,16 carrier burn units and2 supported units:
 75%coast. The early54/64 figure described the coast search, not the admitted cycle.
+
+This records the rejected/superseded v1 design. The [current refinement](refinement/README.md)
+restores exhaust4 after changing the geometry and admitting literal taxi coasts.

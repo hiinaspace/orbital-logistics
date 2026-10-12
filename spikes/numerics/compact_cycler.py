@@ -341,7 +341,7 @@ def compile_profile():
         times=TIMES,
         carrier=dict(
             id="Wayfarer",
-            name="Wayfarer · cycler",
+            name="Wayfarer",
             dryMass=4.0,
             fuel=6.0,
             cargo=0.0,
@@ -372,4 +372,6 @@ def compile_profile():
 
 
 if __name__ == "__main__":
-    compile_profile()
+    from compact_cycler_refined import compile_profile as refined
+
+    refined()
