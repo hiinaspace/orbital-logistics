@@ -1,5 +1,6 @@
+import {ReliefRenderer} from './relief';
 import {viewerProfile} from './profile';
-import {basisPoint,FIELD_LIMIT,SOURCES,type Bounds,type FieldGrid,type FieldRequest} from './potential-field';
+import {basisPoint,FIELD_LIMIT,SOURCES,reliefFootprint,type Bounds,type FieldGrid,type FieldRequest} from './potential-field';
 type Project=(point:ReturnType<typeof basisPoint>)=>readonly number[];
 interface Patch {grid:FieldGrid;image:HTMLCanvasElement;path:Path2D;bytes:number}
 const OVERVIEW:Bounds={x:-12,y:-12,span:24};
@@ -8,16 +9,17 @@ const same=(a:Bounds,b:Bounds)=>a.x===b.x&&a.y===b.y&&a.span===b.span;
 export class PotentialLayer {
  private worker?:Worker;private overview?:Patch;private detail?:Patch;
  private plateKey='';private plateHits=0;
- constructor(private plate:HTMLCanvasElement){}
+ private relief?:ReliefRenderer;
+ constructor(private plate:HTMLCanvasElement,private reliefCanvas:HTMLCanvasElement){}
  private desired?:Bounds;private pending?:FieldRequest;private serial=0;
- error='';visible=false;requests=0;
- get stats(){return {visible:this.visible,ready:!!this.overview,pending:!!this.pending,requests:this.requests,plateHits:this.plateHits,bytes:this.plate.width*this.plate.height*4+(this.overview?.bytes??0)+(this.detail?.bytes??0)+(this.pending?this.pending.size**2*16+20000*80:0),segments:(this.overview?.grid.segments.length??0)/4+(this.detail?.grid.segments.length??0)/4,error:this.error};}
+ error='';visible=false;requests=0;private reliefBounds?:Bounds;
+ get stats(){return {visible:this.visible,ready:!!this.overview||!this.reliefCanvas.hidden&&!this.relief?.error,pending:!!this.pending,requests:this.requests,plateHits:this.plateHits,reliefError:this.relief?.error??'',mode:this.reliefCanvas.hidden?'flat':'relief',bounds:this.reliefBounds,bytes:(this.relief?.bytes??0)+this.plate.width*this.plate.height*4+(this.overview?.bytes??0)+(this.detail?.bytes??0)+(this.pending?this.pending.size**2*16+20000*80:0),segments:(this.overview?.grid.segments.length??0)/4+(this.detail?.grid.segments.length??0)/4,error:this.error};}
  private request(bounds:Bounds,size:number){
-  if(this.pending||this.error)return;
-  if(!this.worker){this.worker=new Worker(new URL('./potential-worker.ts',import.meta.url),{type:'module'});
-   this.worker.onerror=()=>{this.error='Field unavailable';this.pending=undefined;this.worker?.terminate();};
+  if(this.pending||this.error)return;const reserve=size**2*16+20000*80;if(this.stats.bytes+reserve>FIELD_LIMIT){if(this.detail){this.detail.image.width=this.detail.image.height=1;this.detail=undefined;}if(this.stats.bytes+reserve>FIELD_LIMIT)return;}
+  if(!this.worker){this.worker=new Worker(new URL('./potential-worker.ts',import.meta.url),{type:'module'});const owner=this.worker;
+   this.worker.onerror=()=>{if(owner!==this.worker)return;this.error='Field unavailable';this.pending=undefined;this.worker?.terminate();};
    this.worker.onmessage=(e:MessageEvent<{grid?:FieldGrid;error?:string;id?:number}>)=>{
-    if(!this.pending)return;const expected=this.pending;this.pending=undefined;
+    if(owner!==this.worker||!this.pending)return;const expected=this.pending;this.pending=undefined;
     if(e.data.error){this.error=e.data.error;return;}const g=e.data.grid!;if(g.id!==expected.id){this.error='Field reply mismatch';return;}
     const uploadStart=performance.now();const image=document.createElement('canvas');image.width=image.height=g.size;
     image.getContext('2d')!.putImageData(new ImageData(new Uint8ClampedArray(g.pixels),g.size,g.size),0,0);
@@ -30,19 +32,21 @@ export class PotentialLayer {
   }
   this.pending={id:++this.serial,bounds,size};this.requests++;this.worker.postMessage(this.pending);
  }
- draw(width:number,height:number,epoch:number,project:Project,enabled:boolean){
-  this.visible=false;this.plate.hidden=!enabled;if(!enabled)return;
+ draw(width:number,height:number,epoch:number,project:Project,enabled:boolean,relief=false,gain=1,originHeight=0){
+  this.visible=false;if(relief&&enabled){if(this.pending){this.worker?.terminate();this.worker=undefined;this.pending=undefined;}if(this.detail){this.detail.image.width=this.detail.image.height=1;this.detail=undefined;}}if(!enabled||!relief)this.relief?.hide();this.plate.hidden=!enabled;this.reliefCanvas.hidden=true;if(!enabled)return;
   const o=project(basisPoint(0,0,epoch)),x=project(basisPoint(1,0,epoch)),y=project(basisPoint(0,1,epoch));
   const a=x[0]-o[0],b=x[1]-o[1],c=y[0]-o[0],d=y[1]-o[1],det=a*d-b*c,scale=Math.max(Math.hypot(a,b),Math.hypot(c,d));
-  if(Math.abs(det)<.12*scale**2){this.plate.hidden=true;return;}this.visible=true;
+  if(Math.abs(det)<.12*scale**2){this.plate.hidden=true;if(relief){this.plate.width=this.plate.height=1;this.plateKey='';}if(relief){this.relief??=new ReliefRenderer(this.reliefCanvas);this.reliefBounds=OVERVIEW;this.visible=this.relief.draw(width,height,epoch,project,OVERVIEW,gain,originHeight);}return;}this.visible=true;
   // Invert only a well-conditioned physical plane. No source/cursor sampling.
-  const corners=[[0,0],[width,0],[width,height],[0,height]].map(([u,v])=>[(d*(u-o[0])-c*(v-o[1]))/det,(-b*(u-o[0])+a*(v-o[1]))/det]);
+  const z=project([0,0,1,0,0,0]).map((v,i)=>v-o[i]);
+  const corners=relief?reliefFootprint(width,height,o,a,b,c,d,z,gain,originHeight):[[0,0],[width,0],[width,height],[0,height]].map(([u,v])=>[(d*(u-o[0])-c*(v-o[1]))/det,(-b*(u-o[0])+a*(v-o[1]))/det]);
   const xs=corners.map(p=>p[0]),ys=corners.map(p=>p[1]),left=Math.min(...xs),right=Math.max(...xs),bottom=Math.min(...ys),top=Math.max(...ys);
   const span=2**Math.ceil(Math.log2(Math.max(right-left,top-bottom)*1.6));
   this.desired=span<16?{x:Math.round((left+right)/2/(span/8))*span/8-span/2,y:Math.round((bottom+top)/2/(span/8))*span/8-span/2,span}:undefined;
-  if(!this.overview)this.request(OVERVIEW,256);
-  else if(this.desired){const q=this.detail?.grid.bounds;const covered=q&&q.span<=span*2&&q.span>=span/2&&left>=q.x&&right<=q.x+q.span&&bottom>=q.y&&top<=q.y+q.span;if(!covered&&(!q||!same(q,this.desired)))this.request(this.desired,512);}
+  if(!this.overview&&!relief)this.request(OVERVIEW,256);
+  else if(this.desired&&!relief){const q=this.detail?.grid.bounds;const covered=q&&q.span<=span*2&&q.span>=span/2&&left>=q.x&&right<=q.x+q.span&&bottom>=q.y&&top<=q.y+q.span;if(!covered&&(!q||!same(q,this.desired)))this.request(this.desired,512);}
   const detail=this.desired?this.detail:undefined;
+  if(relief){this.plate.hidden=true;this.plate.width=this.plate.height=1;this.plateKey='';this.relief??=new ReliefRenderer(this.reliefCanvas);const bounds=this.desired??OVERVIEW;this.reliefBounds=bounds;this.visible=this.relief.draw(width,height,epoch,project,bounds,gain,originHeight);return;}
   const paint=(ctx:CanvasRenderingContext2D,patch:Patch,exclude?:Bounds)=>{
    const q=patch.grid.bounds;ctx.save();ctx.transform(a,b,c,d,o[0],o[1]);
    ctx.beginPath();ctx.rect(q.x,q.y,q.span,q.span);for(const s of SOURCES){ctx.moveTo(s.x+s.radius,s.y);ctx.arc(s.x,s.y,s.radius,0,2*Math.PI);}ctx.clip('evenodd');

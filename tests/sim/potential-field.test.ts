@@ -22,3 +22,27 @@ test('sampling is bounded, deterministic and contours stay outside source interi
  for(let i=0;i<a.segments.length;i+=2){const x=a.segments[i],y=a.segments[i+1];assert.ok(Math.hypot(x,y)>1);assert.ok(Math.hypot(x-5,y)>.2);}
  assert.throws(()=>sampleField({...request,size:513}));assert.throws(()=>sampleField({...request,bounds:{x:NaN,y:0,span:1}}));
 });
+
+test('field edges reach the background naturally and relief is bounded and continuous',async()=>{
+ const {FADE,fieldTone,reliefHeight}=await import('../../src/view/potential-field');
+ for(let u=-12;u<=12;u+=.2)for(const [x,y] of [[u,-12],[u,12],[-12,u],[12,u]]){assert.equal(fieldTone(potential(x,y)),0);assert.ok(-potential(x,y)<FADE);}
+ assert.equal(fieldTone(-FADE),0);assert.equal(fieldTone(-1.4),1);
+ for(const [x,y] of [[0,0],[5,0],[2,2],[-12,0]]){const h=reliefHeight(x,y);assert.ok(Number.isFinite(h)&&h>=-2.4&&h<=0);}
+ const grid=sampleField({id:2,bounds:{x:-12,y:-12,span:24},size:256});
+ for(let i=0;i<256;i++){assert.deepEqual(Array.from(grid.pixels.slice(i*4,i*4+3)),[12,20,29]);}
+});
+test('equilibrium crosses cancel the actual rotating acceleration, not the gravity alone',async()=>{
+ const {EQUILIBRIA,equilibriumForce}=await import('../../src/view/potential-field');const {RATE}=await import('../../src/compact/physics');
+ assert.equal(EQUILIBRIA.length,3);
+ for(const p of EQUILIBRIA){assert.ok(Math.hypot(...equilibriumForce(p.x,p.y))<1e-13);for(const t of [0,12,80]){const y=basisPoint(p.x,p.y,t),g=gravity(t,y);assert.ok(Math.hypot(g[0]+RATE**2*y[0],g[1]+RATE**2*y[1])<1e-12);}}
+});
+
+test('relief refinement covers a close followed glyph across the permitted height slab',async()=>{
+ const {reliefHeight,reliefFootprint}=await import('../../src/view/potential-field');const {cameraProjection}=await import('../../src/model-set/camera');
+ for(const originHeight of [0,reliefHeight(5,0)])for(const [x,y] of [[2,0],[5.5,.1],[-3,1]]){
+  const z=3*(reliefHeight(x,y)-originHeight),project=cameraProjection({yaw:-.65,pitch:.6,center:[x,y,z],scale:2000},1280,1280);
+  const o=project([0,0,0]),xx=project([1,0,0]),yy=project([0,1,0]),zz=project([0,0,1]).map((v,i)=>v-o[i]);
+  const corners=reliefFootprint(1280,1280,o,xx[0]-o[0],xx[1]-o[1],yy[0]-o[0],yy[1]-o[1],zz,3,originHeight);
+  const xs=corners.map(q=>q[0]),ys=corners.map(q=>q[1]);assert.ok(x>=Math.min(...xs)&&x<=Math.max(...xs));assert.ok(y>=Math.min(...ys)&&y<=Math.max(...ys));
+ }
+});

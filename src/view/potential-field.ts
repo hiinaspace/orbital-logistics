@@ -20,7 +20,7 @@ export function sampleField(request:FieldRequest):FieldGrid {
  if(!Number.isInteger(n)||n<16||n>512||![b.x,b.y,b.span].every(Number.isFinite)||b.span<=0||b.span>64)throw Error('Field sampling bounds');
  const step=b.span/n,values=new Float64Array((n+1)**2),pixels=new Uint8ClampedArray(n*n*4),segments:number[]=[];
  for(let j=0;j<=n;j++)for(let i=0;i<=n;i++)values[j*(n+1)+i]=SOURCES.some(s=>Math.hypot(b.x+i*step-s.x,b.y+j*step-s.y)<=s.radius)?NaN:potential(b.x+i*step,b.y+j*step);
- const stops=[[20,35,44],[27,53,61],[44,77,73],[99,102,71],[151,133,97]];
+ const stops=[BACKGROUND,[17,29,36],[24,43,42],[54,63,45],[104,90,62]];
  for(let j=0;j<n;j++)for(let i=0;i<n;i++){
   const x=b.x+i*step,y=b.y+j*step,masked=intersectsBody(x,y,step,step);
   const v=[values[j*(n+1)+i],values[j*(n+1)+i+1],values[(j+1)*(n+1)+i+1],values[(j+1)*(n+1)+i]];
@@ -29,7 +29,7 @@ export function sampleField(request:FieldRequest):FieldGrid {
   // Boundary-cell tint is extended from exterior values, then exactly clipped
   // by the renderer. Interior scalar samples never become field values.
   const colorValue=SOURCES.some(s=>Math.hypot(cx-s.x,cy-s.y)<=s.radius)?exterior.reduce((a,b)=>a+b,0)/exterior.length:potential(cx,cy);
-  const tone=Math.max(0,Math.min(1,Math.log(-colorValue/.075)/Math.log(1.4/.075)))*4;
+  const tone=fieldTone(colorValue)*4;
   const k=Math.min(3,Math.floor(tone)),u=tone-k,offset=4*(j*n+i);
   for(let c=0;c<3;c++)pixels[offset+c]=Math.round(stops[k][c]*(1-u)+stops[k+1][c]*u);pixels[offset+3]=185;
   if(masked)continue;
@@ -46,4 +46,31 @@ export function sampleField(request:FieldRequest):FieldGrid {
   }
  }
  return {...request,pixels,segments:new Float32Array(segments)};
+}
+
+// Fixed display transfer: reach the background before the overview boundary.
+export const BACKGROUND=[12,20,29],FADE=.095,CEILING=1.4;
+export function fieldTone(phi:number):number {return Math.max(0,Math.min(1,Math.log(Math.max(FADE,-phi)/FADE)/Math.log(CEILING/FADE)));}
+export function reliefHeight(x:number,y:number):number {
+ // Interior clamping is only for schematic body centers; the mesh masks them.
+ const phi=-SOURCES.reduce((sum,s)=>sum+s.mu/Math.max(s.radius,Math.hypot(x-s.x,y-s.y)),0);
+ return -2.4*fieldTone(phi);
+}
+export function equilibriumForce(x:number,y:number):[number,number] {
+ const r=Math.hypot(x,y),m=Math.hypot(x-5,y);
+ return [-x/r**3-.03*(x-5)/m**3+RATE**2*x,-y/r**3-.03*y/m**3+RATE**2*y];
+}
+export const EQUILIBRIA=[[-8,-1.001],[1.001,4.799],[5.201,9]].map(([left,right],i)=>{
+ let a=left,b=right;for(let j=0;j<80;j++){const mid=(a+b)/2;if(equilibriumForce(a,0)[0]*equilibriumForce(mid,0)[0]<=0)b=mid;else a=mid;}
+ return {id:['L3','L1','L2'][i],x:(a+b)/2,y:0};
+});
+
+// Conservative inverse-projection footprint of the entire allowed height slab.
+export function reliefFootprint(width:number,height:number,o:readonly number[],a:number,b:number,c:number,d:number,z:readonly number[],gain:number,originHeight:number):number[][] {
+ const det=a*d-b*c,out:number[][]=[];
+ for(const [sx,sy] of [[0,0],[width,0],[width,height],[0,height]])for(const h of [-2.4,0]){
+  const dx=sx-o[0]-z[0]*gain*(h-originHeight),dy=sy-o[1]-z[1]*gain*(h-originHeight);
+  out.push([(d*dx-c*dy)/det,(-b*dx+a*dy)/det]);
+ }
+ return out;
 }

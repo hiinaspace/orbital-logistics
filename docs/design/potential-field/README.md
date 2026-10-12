@@ -2,6 +2,8 @@
 
 2026-10-12 research and Astra-reviewed feasibility plan, authorized and implemented. See [evidence](../../evidence/potential-field.md), including the open 4K compositor envelope.
 
+The owner subsequently accepted the scalar layer and authorized the darker fade, schematic relief and equilibrium markers. These are now implemented; see [current evidence](../../evidence/relief.md) and [review disposition](relief/disposition.md). The first-slice plan below is preserved as the sequencing rationale.
+
 See the [research report](../../../reports/Orbital%20field%20visualization.md), [review disposition](disposition.md), [review](astra-review.md), and [representation comparison](compact-field-representations.png).
 
 ## Scope

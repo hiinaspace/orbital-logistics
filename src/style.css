@@ -96,7 +96,7 @@ details p { line-height: 1.7; }
 #space { cursor:grab; }
 #space:active { cursor:grabbing; }
 
-/* Wide displays share one canvas; panels are disposable presentation overlays. */
+/* Wide displays share one viewport; panels are disposable presentation overlays. */
 @media (min-width: 1000px) {
   body { overflow: hidden; }
   main { padding: 0; --panel-gap: 16px; --inspector-width: 280px; --scene-right: calc(var(--inspector-width) + 2 * var(--panel-gap)); }
@@ -177,8 +177,11 @@ details p { line-height: 1.7; }
 .timeline-grip::after { content: ''; display: block; width: 42px; height: 3px; border-radius: 2px; background: #526775; margin: 0 auto; position: relative; top: 3px; }
 .timeline-grip:hover::after, .timeline-grip:focus-visible::after { background: #abc1cc; }
 #field-key { position: absolute; z-index: 1; left: 18px; top: 154px; color: #9db2a7; font: 10px ui-monospace, monospace; pointer-events: none; }
-#field-key span { display: inline-block; width: 65px; height: 6px; background: linear-gradient(90deg,#978561,#2c4d49,#14232c); margin: 0 6px; }
+#field-key span { display: inline-block; width: 65px; height: 6px; background: linear-gradient(90deg,#685a3e,#182b2a,#0c141d); margin: 0 6px; }
 
 #field-space { position: absolute; inset: 0; pointer-events: none; }
 #space { position: relative; }
 .viewport { background: #0c141d; }
+
+#relief-space { position: absolute; inset: 0; pointer-events: none; }
+.layer-options { max-height: calc(100dvh - 160px); overflow-y: auto; }
