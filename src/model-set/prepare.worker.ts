@@ -1,4 +1,5 @@
-import {isPassThrough,type PassThroughDefinition,type PassThroughProfile} from '../cycler/types';
+import {isPassThrough,type PassThroughDefinition,type PassThroughProfile,type FleetProfile} from '../cycler/types';
+import {prepareFleet} from '../cycler/fleet';
 import {preparePassThrough} from '../cycler/prepare';
 import {createPassThroughView} from '../cycler/view';
 import {isCompact,type CompactDefinition,type CompactProfile} from '../compact/types';
@@ -14,7 +15,7 @@ import {isEntry,prepareEntry,type EntryFlight} from './entry';
 import {isStaged,prepareStaged,type StagedFlight} from './staging';
 import { prepareSet, type ModelSet } from './model';
 self.onmessage = async (event: MessageEvent<{revision: number; set: PassThroughDefinition|CompactDefinition|SolarDefinition|StagedApolloMission|ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle}>) => {
-  try { if(isPassThrough(event.data.set)){const response=await fetch(event.data.set.artifactUrl!);if(!response.ok)throw Error('Pass-through profile unavailable');const data=await response.text();if(data.length>2_000_000)throw Error('Pass-through profile bytes');const p=preparePassThrough(JSON.parse(data) as PassThroughProfile).template;self.postMessage({revision:event.data.revision,run:createPassThroughView(p,event.data.set)});return;}if(isCompact(event.data.set)){const response=await fetch(event.data.set.artifactUrl!);if(!response.ok)throw Error('Compact profile unavailable');const data=await response.text();if(data.length>1_000_000)throw Error('Compact profile bytes');const p=prepareCompact(JSON.parse(data) as CompactProfile).template;self.postMessage({revision:event.data.revision,run:createView(p,event.data.set,0,p.period,[cycleRow(p,0)])});return;}if(isSolar(event.data.set)){
+  try { if(isPassThrough(event.data.set)){const response=await fetch(event.data.set.artifactUrl!);if(!response.ok)throw Error('Pass-through profile unavailable');const data=await response.text();if(data.length>2_500_000)throw Error('Pass-through profile bytes');const value=JSON.parse(data);const p=event.data.set.modelVersion==='cycler-fleet-set-v1'?prepareFleet(value as FleetProfile):preparePassThrough(value as PassThroughProfile).template;self.postMessage({revision:event.data.revision,run:createPassThroughView(p,event.data.set)});return;}if(isCompact(event.data.set)){const response=await fetch(event.data.set.artifactUrl!);if(!response.ok)throw Error('Compact profile unavailable');const data=await response.text();if(data.length>1_000_000)throw Error('Compact profile bytes');const p=prepareCompact(JSON.parse(data) as CompactProfile).template;self.postMessage({revision:event.data.revision,run:createView(p,event.data.set,0,p.period,[cycleRow(p,0)])});return;}if(isSolar(event.data.set)){
    const response=await fetch(event.data.set.artifactUrl!);if(!response.ok)throw Error('Solar artifact unavailable');
    const data=await response.text();if(data.length>16*1024*1024)throw Error('Solar artifact byte budget');
    self.postMessage({revision:event.data.revision,run:prepareSolar(JSON.parse(data) as SolarArtifact)});return;

@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: two time-phased unpowered carriers and independent riders converge over the complete finite horizon
+ok 1 - two time-phased unpowered carriers and independent riders converge over the complete finite horizon
+  ---
+  duration_ms: 15113.562866
+  type: 'test'
+  ...
+# Subtest: extended lunar dwell and parking reduce the complete lunar departure cost
+ok 2 - extended lunar dwell and parking reduce the complete lunar departure cost
+  ---
+  duration_ms: 0.638752
+  type: 'test'
+  ...
+# Subtest: parent identity owns exact boarding/release mass, independent fuel, visibility and history
+ok 3 - parent identity owns exact boarding/release mass, independent fuel, visibility and history
+  ---
+  duration_ms: 1.684719
+  type: 'test'
+  ...
+# Subtest: disposable drawing stays close to independent orbital and powered witnesses
+ok 4 - disposable drawing stays close to independent orbital and powered witnesses
+  ---
+  duration_ms: 204.772069
+  type: 'test'
+  ...
+# Subtest: wrong-parent, stale version, carrier thrust, unbounded field and unfunded reload reject atomically
+ok 5 - wrong-parent, stale version, carrier thrust, unbounded field and unfunded reload reject atomically
+  ---
+  duration_ms: 7974.983483
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 27666.286737

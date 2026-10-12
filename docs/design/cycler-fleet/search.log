@@ -1,0 +1,66 @@
+Haven ascent calls 35 residual 4.1300296516055823e-14 cap 1.1778681241362516 dv 0.8426839449757275
+SEGMENT Haven ascent 64.0 65.25 dv 0.8426839449757275 clear [np.float64(3.810082035186805), np.float64(1.0000000000287557e-05)]
+SEGMENT Selene departure parking 65.25 72.0 dv 0.0 clear [np.float64(3.6787788236228947), np.float64(0.1199992393924737)]
+REFUSED 64.0 72.0 76.0 Sampled collision Later carrier connection departure
+Haven ascent calls 35 residual 4.1300296516055823e-14 cap 1.1778681241362516 dv 0.8426839449757275
+SEGMENT Haven ascent 64.0 65.25 dv 0.8426839449757275 clear [np.float64(3.810082035186805), np.float64(1.0000000000287557e-05)]
+SEGMENT Selene departure parking 65.25 73.0 dv 0.0 clear [np.float64(3.6784797029601135), np.float64(0.11931673283642047)]
+REFUSED 64.0 73.0 78.0 Sampled collision Later carrier connection departure
+Haven ascent calls 38 residual 9.867107131356079e-15 cap 1.177868124136202 dv 0.8426839449756931
+SEGMENT Haven ascent 66.0 67.25 dv 0.8426839449756931 clear [np.float64(3.810082035186813), np.float64(9.999999999871223e-06)]
+SEGMENT Selene departure parking 67.25 72.0 dv 0.0 clear [np.float64(3.678778823623003), np.float64(0.11999923823249842)]
+SEGMENT Later carrier connection departure 72.0 72.5 dv 0.26541249050140253 clear [np.float64(4.10449402940432), np.float64(0.12608981873402614)]
+SEGMENT Later carrier connection coast 72.5 75.5 dv 0.0 clear [np.float64(3.239190547816534), np.float64(0.19655365418351367)]
+SEGMENT Later carrier connection arrival 75.5 76.0 dv 0.07422155510080371 clear [np.float64(3.0815512314356397), np.float64(0.9852082209703057)]
+CANDIDATE 66.0 72.0 76.0 1.1823179905778993
+Haven ascent calls 38 residual 9.867107131356079e-15 cap 1.177868124136202 dv 0.8426839449756931
+SEGMENT Haven ascent 66.0 67.25 dv 0.8426839449756931 clear [np.float64(3.810082035186813), np.float64(9.999999999871223e-06)]
+SEGMENT Selene departure parking 67.25 73.0 dv 0.0 clear [np.float64(3.6787790498168453), np.float64(0.11999923956187408)]
+REFUSED 66.0 73.0 78.0 Pulse solve budget
+Haven ascent calls 17 residual 5.6066262743570405e-14 cap 1.1778681241362476 dv 0.8426839449757327
+SEGMENT Haven ascent 68.0 69.25 dv 0.8426839449757327 clear [np.float64(3.8100820351868014), np.float64(1.0000000000010001e-05)]
+SEGMENT Selene departure parking 69.25 72.0 dv 0.0 clear [np.float64(3.678778964700534), np.float64(0.11999923842835308)]
+SEGMENT Later carrier connection departure 72.0 72.5 dv 0.3599819841041971 clear [np.float64(4.118900442425562), np.float64(0.046191158960333545)]
+SEGMENT Later carrier connection coast 72.5 75.5 dv 0.0 clear [np.float64(3.258109529750903), np.float64(0.005983543792128954)]
+SEGMENT Later carrier connection arrival 75.5 76.0 dv 0.19768925718066307 clear [np.float64(3.081551231435684), np.float64(0.953392058858124)]
+CANDIDATE 68.0 72.0 76.0 1.400355186260593
+Haven ascent calls 17 residual 5.6066262743570405e-14 cap 1.1778681241362476 dv 0.8426839449757327
+SEGMENT Haven ascent 68.0 69.25 dv 0.8426839449757327 clear [np.float64(3.8100820351868014), np.float64(1.0000000000010001e-05)]
+SEGMENT Selene departure parking 69.25 73.0 dv 0.0 clear [np.float64(3.678779331961959), np.float64(0.11999923818904451)]
+SEGMENT Later carrier connection departure 73.0 73.5 dv 0.2423239629057303 clear [np.float64(4.265825296099608), np.float64(0.10077841326162956)]
+SEGMENT Later carrier connection coast 73.5 77.5 dv 0.0 clear [np.float64(2.643246338583782), np.float64(0.10058587179230055)]
+SEGMENT Later carrier connection arrival 77.5 78.0 dv 0.16229259911730123 clear [np.float64(2.451676588073042), np.float64(1.3121931566384948)]
+CANDIDATE 68.0 73.0 78.0 1.2473005069987644
+Haven ascent calls 29 residual 1.3322676295501878e-15 cap 1.1778681241362683 dv 0.8426839449757294
+SEGMENT Haven ascent 62.0 63.25 dv 0.8426839449757294 clear [np.float64(3.8100820351868094), np.float64(1.0000000000176534e-05)]
+SEGMENT Selene departure parking 63.25 72.0 dv 0.0 clear [np.float64(3.678480012125939), np.float64(0.1175758509077714)]
+SEGMENT Later carrier connection departure 72.0 72.5 dv 0.37046178069072977 clear [np.float64(4.083055938261806), np.float64(0.03397908206158565)]
+REFUSED 62.0 72.0 76.0 Sampled collision Later carrier connection coast
+Haven ascent calls 29 residual 1.3322676295501878e-15 cap 1.1778681241362683 dv 0.8426839449757294
+SEGMENT Haven ascent 62.0 63.25 dv 0.8426839449757294 clear [np.float64(3.8100820351868094), np.float64(1.0000000000176534e-05)]
+SEGMENT Selene departure parking 63.25 73.0 dv 0.0 clear [np.float64(3.678483242737453), np.float64(0.11668235942753957)]
+SEGMENT Later carrier connection departure 73.0 73.5 dv 0.25455077996622955 clear [np.float64(4.266348936666703), np.float64(0.09403238568323863)]
+SEGMENT Later carrier connection coast 73.5 77.5 dv 0.0 clear [np.float64(2.6434710933463785), np.float64(0.09333076258002815)]
+SEGMENT Later carrier connection arrival 77.5 78.0 dv 0.16439012465927313 clear [np.float64(2.451676588073096), np.float64(1.311704607000805)]
+CANDIDATE 62.0 73.0 78.0 1.2616248496012321
+Haven ascent calls 20 residual 2.0067281170099704e-14 cap 1.1778681241362536 dv 0.8426839449757261
+SEGMENT Haven ascent 60.0 61.25 dv 0.8426839449757261 clear [np.float64(3.810082035186803), np.float64(1.0000000000010001e-05)]
+SEGMENT Selene departure parking 61.25 72.0 dv 0.0 clear [np.float64(3.6784795812883706), np.float64(0.11668235060618498)]
+SEGMENT Later carrier connection departure 72.0 72.5 dv 0.24247298539869225 clear [np.float64(4.125518038974138), np.float64(0.12956866829843566)]
+SEGMENT Later carrier connection coast 72.5 75.5 dv 0.0 clear [np.float64(3.24096113113408), np.float64(0.19704378051573995)]
+SEGMENT Later carrier connection arrival 75.5 76.0 dv 0.07644992013505425 clear [np.float64(3.0815512314355447), np.float64(0.9841483740494354)]
+CANDIDATE 60.0 72.0 76.0 1.1616068505094725
+Haven ascent calls 20 residual 2.0067281170099704e-14 cap 1.1778681241362536 dv 0.8426839449757261
+SEGMENT Haven ascent 60.0 61.25 dv 0.8426839449757261 clear [np.float64(3.810082035186803), np.float64(1.0000000000010001e-05)]
+SEGMENT Selene departure parking 61.25 73.0 dv 0.0 clear [np.float64(3.6784793479148874), np.float64(0.11668235185263282)]
+REFUSED 60.0 73.0 78.0 Pulse solve budget
+Haven ascent calls 36 residual 1.3877787807814457e-14 cap 1.177868124136212 dv 0.8426839449756998
+SEGMENT Haven ascent 70.0 71.25 dv 0.8426839449756998 clear [np.float64(3.810082035186811), np.float64(9.999999999982245e-06)]
+SEGMENT Selene departure parking 71.25 72.0 dv 0.0 clear [np.float64(3.6817599193902915), np.float64(0.11999923818901709)]
+REFUSED 70.0 72.0 76.0 Sampled collision Later carrier connection departure
+Haven ascent calls 36 residual 1.3877787807814457e-14 cap 1.177868124136212 dv 0.8426839449756998
+SEGMENT Haven ascent 70.0 71.25 dv 0.8426839449756998 clear [np.float64(3.810082035186811), np.float64(9.999999999982245e-06)]
+SEGMENT Selene departure parking 71.25 73.0 dv 0.0 clear [np.float64(3.678778823623073), np.float64(0.11999923827360781)]
+SEGMENT Later carrier connection departure 73.0 73.5 dv 0.4603818452536952 clear [np.float64(3.806698975003468), np.float64(0.009652854184705184)]
+REFUSED 70.0 73.0 78.0 Sampled collision Later carrier connection coast
+BEST (1.1616068505094725, 60.0, 72.0, 76.0)

@@ -16,11 +16,11 @@ function own(p:PassThroughTemplate,actor:number,t:number,left=false):ViewSample 
   const h=p.hardware[actor],phase=phaseAt(p.phases[actor],t,left) as FinitePhase;
   const raw=phase.kind==='flight'?at(phase.rows!,t,phase.control):undefined;
   const propellant=raw?(h.dryMass+phase.cargo+phase.fuel)*Math.exp(-raw[6]/p.exhaustVelocity)-h.dryMass-phase.cargo:phase.fuel;
-  const y=raw?raw.slice(0,6) as State:phase.kind==='support'?surfaceState(p,phase.port!,t):own(p,0,t,left).y;
+  const y=raw?raw.slice(0,6) as State:phase.kind==='support'?surfaceState(p,phase.port!,t):own(p,phase.carrier??0,t,left).y;
   const fuelUsed=phase.used+phase.fuel-propellant,mass=h.dryMass+phase.cargo+propellant;
   const q:ViewSample={t,y,propellant,fuelUsed,mass,burnCursor:0,status:'running',detail:'',
-    logistics:{operationCursor:0,cargoMass:phase.cargo,fuelUsed,ports:[],...(phase.kind==='support'?{dockedPortId:phase.port}:phase.kind==='ride'?{dockedPortId:p.hardware[0].id}:{})},
-    activity:{kind:phase.kind==='support'?'waiting':phase.kind==='ride'?'service':'flying',reason:phase.kind==='ride'?'Aboard Wayfarer':phase.kind==='support'?'Turnaround':phase.label}};
+    logistics:{operationCursor:0,cargoMass:phase.cargo,fuelUsed,ports:[],...(phase.kind==='support'?{dockedPortId:phase.port}:phase.kind==='ride'?{dockedPortId:p.hardware[phase.carrier??0].id}:{})},
+    activity:{kind:phase.kind==='support'?'waiting':phase.kind==='ride'?'service':'flying',reason:phase.kind==='ride'?phase.label:phase.kind==='support'?'Turnaround':phase.label}};
   if(phase.kind==='ride')q.opacity=0;
   if(phase.kind==='support')q.axis=rotate([1,0,0],p.rate*t+p.padPhases[phase.port!]);
   if(phase.control){
@@ -34,6 +34,6 @@ export function samplePassThrough(v:PassThroughPlayback,t:number,left=false):Vie
   const p=v.template;
   if(!Number.isFinite(t)||t<0||t>p.duration)throw Error('Pass-through query outside admitted history');
   const q=own(p,v.actor,t,left);
-  if(v.actor===0&&phaseAt(p.phases[1],t,left).kind==='ride')q.mass!+=own(p,1,t,left).mass!;
+  for(let actor=0;actor<p.hardware.length;actor++){const phase=phaseAt(p.phases[actor],t,left) as FinitePhase;if(phase.kind==='ride'&&(phase.carrier??0)===v.actor)q.mass!+=own(p,actor,t,left).mass!;}
   return q;
 }

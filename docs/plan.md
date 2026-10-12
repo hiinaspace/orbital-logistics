@@ -565,3 +565,5 @@ production4K16×/3D/set-switching passes. Astra findings are fixed/dispositioned
 The existing finite Cycler selector loads it; the rejected Beacon-stop continuous
 entry is retired. Next is the owner's service choreography viewing, then an explicit
 continuous free-carrier correction/resource protocol. See [evidence](evidence/pass-through.md).
+
+- 2026-10-12: later-pass cycler fleet finite gate implemented with Astra review. Two carriers/two riders, long lunar dwell/parking and different-carrier return; complete lunar departure Δv reduced about 32%. Preserved original set; native/independent/calibration, bounded drawings/transport and 4K/16× playback gates pass. Indefinite carrier stability/continuous scheduling remain separate. See docs/evidence/cycler-fleet.md.

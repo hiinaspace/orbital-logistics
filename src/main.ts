@@ -1,4 +1,5 @@
 import {passThroughResources} from './cycler/view';
+import fleetDefinition from '../fixtures/model-sets/aster-selene-cycler-fleet.json';
 import passThroughDefinition from '../fixtures/model-sets/aster-selene-pass-through.json';
 import type {PassThroughDefinition} from './cycler/types';
 import {isCompact,type CompactDefinition} from './compact/types';
@@ -96,7 +97,8 @@ import {transform,transformDirection} from './model-set/frames';
 
 const solarSet={...solarDefinition,artifactUrl:new URL('../fixtures/model-sets/solar-cycler.json',import.meta.url).href} as SolarDefinition;
 const passThroughSet={...passThroughDefinition,artifactUrl:new URL('../fixtures/model-sets/pass-through-profile.json',import.meta.url).href} as PassThroughDefinition;
-const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo,stagedApollo,solarSet,passThroughSet] as (PassThroughDefinition|CompactDefinition|SolarDefinition|StagedApolloMission|ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
+const fleetSet={...fleetDefinition,artifactUrl:new URL('../fixtures/model-sets/cycler-fleet-profile.json',import.meta.url).href} as PassThroughDefinition;
+const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo,stagedApollo,solarSet,passThroughSet,fleetSet] as (PassThroughDefinition|CompactDefinition|SolarDefinition|StagedApolloMission|ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
 const trafficSets=[asterSystem,stagedService,beacon,crossings,expeditionService,trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (CompactDefinition|TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));

@@ -522,3 +522,5 @@ The old supported-cycle service is retired from the chooser; continuous free-car
 correction and resource recurrence remain a later gate.
 [Contract/reviews](design/compact-cycler/redesign/README.md) and
 [validation](evidence/pass-through.md).
+
+The finite **Aster–Selene · Cycler fleet** adds two independently propagated, time-phased unpowered carriers and two riders. Riders dwell on Selene and use lunar parking before boarding the later carrier; Cairn has two schematic berths, Haven one. Explicit parent identities preserve paid captures, separate tanks and actual carried mass. See [design](design/cycler-fleet/README.md) and [evidence](evidence/cycler-fleet.md).

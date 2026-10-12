@@ -1,0 +1,75 @@
+{
+  "duration": 224.01402744277175,
+  "work": {
+    "nodes": 329508,
+    "checks": 329516,
+    "oraclePosition": 1.1748502696862908e-9,
+    "oracleVelocity": 1.4115258516253593e-9,
+    "bytes": 1687080
+  },
+  "cost": [
+    0,
+    0,
+    4.9584432176140325,
+    4.958443218689731
+  ],
+  "convergence": [
+    {
+      "step": 0.0009765625,
+      "work": {
+        "nodes": 658996,
+        "checks": 658996,
+        "oraclePosition": 1.0725075338454702e-9,
+        "oracleVelocity": 1.2886706311485413e-9,
+        "bytes": 1687404
+      },
+      "cost": [
+        0,
+        0,
+        4.958443217744806,
+        4.958443220093263
+      ]
+    },
+    {
+      "step": 0.00048828125,
+      "work": {
+        "nodes": 1317989,
+        "checks": 1317989,
+        "oraclePosition": 7.186530429838343e-10,
+        "oracleVelocity": 1.2799892024043746e-9,
+        "bytes": 1687272
+      },
+      "cost": [
+        0,
+        0,
+        4.958443217872249,
+        4.958443219560893
+      ]
+    }
+  ],
+  "resources": {
+    "t": 224.01402744277175,
+    "fuelImported": 9.916886436303765,
+    "cargoImported": 0.6,
+    "cargoExported": 0.6
+  },
+  "replyBytes": 12644763,
+  "samples": [
+    {
+      "id": "Wayfarer",
+      "count": 1795
+    },
+    {
+      "id": "Nomad",
+      "count": 1796
+    },
+    {
+      "id": "Pipit",
+      "count": 2803
+    },
+    {
+      "id": "Wren",
+      "count": 2803
+    }
+  ]
+}
