@@ -136,6 +136,22 @@ finite provider validity, 10% fuel reserves and existing day-based presentation.
 The browser never targets a flight from its Hermite drawing interpolation. Continuous
 resupply, true assist optimization and solar local ground service remain future slices.
 
+The user accepted Solar-scale viewing but requested compact fictional cycler scale.
+Aster–Selene · Cycler and Cycler service use separate compact-cycler-v1/profile-v1
+contracts; read docs/design/compact-cycler/README.md, disposition.md and
+docs/evidence/compact-cycler.md. Native canonical RK4 owns admitted execution,
+independent DOP853 and three resolutions calibrate it; drawing interpolation never
+targets/resumes flight. Exact rotation reuse applies only to this fixed-primary/
+circular-moon field with synchronous pads and checked Beacon equilibrium. Paid
+captures/support/funded resupply establish recurrence, not free-flight resets.
+Preserve separate tanks/carried mass, no carrier thrust while attached, cubic
+acceleration-commanded force/mass law, caps/reserves and numerical margins.
+Continuous pair halts before failed imports/captures, with128 total history including
+32 lead, atomic packet publication and bounded pending/held row retention. Retain
+incoming future drawing rows across paused replies until Live; retain resource
+anchors at actual events/window cuts instead of every reply clock. Calendar1e6.
+Sun/Mars/Jupiter analog requires a fresh recurrence/physical admission gate.
+
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.
 - Canonical physics steps and event boundaries must not depend on display queries, warp, or scrub frequency.

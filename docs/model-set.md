@@ -5,6 +5,9 @@ require the user to solve puzzles, author policies, or design individual maneuve
 The CoaDE editor is retired from the prototype's main UI. Historical functionality
 and acceptance evidence remain in Git and the earlier milestone documents.
 
+The current framing is an **orrery with spaceships** or an operating model train set:
+selective compression of distance, time and operations preserves visible journeys.
+
 ## What matters
 
 The scene centers on schematic ships and stations, their transfers and loadouts, and
@@ -479,3 +482,17 @@ Preparation is off the playback path. This is a fictional powered cycler, with i
 fuel/capture/resource gates, rather than a real Starship or ballistic Aldrin trajectory.
 [Contract/review](design/solar-cycler/README.md) and [evidence](evidence/solar-cycler.md)
 cover the finite resource calendar, numerical comparisons and production performance.
+
+## Compact powered cycler — 2026-10-11
+
+**Aster–Selene · Cycler** and **Aster–Selene · Cycler service** retain the carrier/taxi
+aesthetic at the accepted fictional planet/moon scale. One reusable shuttle makes two
+parcel deliveries per72-unit cycle; the carrier coasts54 units, with smooth powered
+departure/insertion and a short Beacon resupply. Synchronous pads and the actual-field
+Beacon anchor permit exact admitted-cycle rotation without online re-solving. Tanks,
+carried mass, paid captures and cumulative imports/deliveries remain physical.
+Native canonical RK4 admits the full coupled forward execution against independent
+DOP853; fixed-field reuse never propagates a drawing sample.128-unit rolling history
+includes32-unit lead, bounded worker transactions and held/rewind/Live semantics.
+[Contract/reviews](design/compact-cycler/README.md) and
+[evidence](evidence/compact-cycler.md). Sun/Mars/Jupiter analog remains separate work.

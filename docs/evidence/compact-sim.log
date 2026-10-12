@@ -1,0 +1,196 @@
+TAP version 13
+# Subtest: orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility
+ok 1 - orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility
+  ---
+  duration_ms: 2.966202
+  type: 'test'
+  ...
+# Subtest: pan follows screen axes and cursor zoom anchors the same plane point in tilted views
+ok 2 - pan follows screen axes and cursor zoom anchors the same plane point in tilted views
+  ---
+  duration_ms: 1.310346
+  type: 'test'
+  ...
+# Subtest: sphere occlusion distinguishes front/back, limb, silhouette crossings and multiple bodies
+ok 3 - sphere occlusion distinguishes front/back, limb, silhouette crossings and multiple bodies
+  ---
+  duration_ms: 3.498103
+  type: 'test'
+  ...
+# Subtest: chase rigs and selected pivots remain orthonormal and deterministic at degenerate states
+ok 4 - chase rigs and selected pivots remain orthonormal and deterministic at degenerate states
+  ---
+  duration_ms: 10.203722
+  type: 'test'
+  ...
+# Subtest: one-draw projection snapshots camera axes and matches point queries
+ok 5 - one-draw projection snapshots camera axes and matches point queries
+  ---
+  duration_ms: 3.355865
+  type: 'test'
+  ...
+# compact convergence {"worst":1.4214851518090654e-11,"work":{"nodes":47121,"checks":47138,"bytes":903890,"oraclePosition":1.7994069802706274e-11,"oracleVelocity":4.767357288286406e-12},"fuelPerCycle":[1.2538957300756035,4.081984609262357]}
+# compact late absolute epoch residual 1.4808382298170386e-10
+# compact rollout max packet bytes 3716148
+# Subtest: native full coupled cycle agrees with independent DOP853, converges and closes with paid resources
+ok 6 - native full coupled cycle agrees with independent DOP853, converges and closes with paid resources
+  ---
+  duration_ms: 2348.126152
+  type: 'test'
+  ...
+# Subtest: rotated controls propagate at a late absolute epoch without phase accumulation
+ok 7 - rotated controls propagate at a late absolute epoch without phase accumulation
+  ---
+  duration_ms: 327.864534
+  type: 'test'
+  ...
+# Subtest: bounded continuous publication, resource counts, held scrubbing and faults
+ok 8 - bounded continuous publication, resource counts, held scrubbing and faults
+  ---
+  duration_ms: 7402.471353
+  type: 'test'
+  ...
+# Subtest: known bad controls, funding and model identities cannot enter the cache
+ok 9 - known bad controls, funding and model identities cannot enter the cache
+  ---
+  duration_ms: 312.747576
+  type: 'test'
+  ...
+# Subtest: a held reply crossing a cycle boundary retains the future row needed by Live
+ok 10 - a held reply crossing a cycle boundary retains the future row needed by Live
+  ---
+  duration_ms: 813.525742
+  type: 'test'
+  ...
+# Subtest: fractional worker replies retain event resource anchors rather than every reply clock
+ok 11 - fractional worker replies retain event resource anchors rather than every reply clock
+  ---
+  duration_ms: 1213.945531
+  type: 'test'
+  ...
+# Subtest: prepared freight conserves shared cargo and accounts for every unit of propellant
+ok 12 - prepared freight conserves shared cargo and accounts for every unit of propellant
+  ---
+  duration_ms: 28.665984
+  type: 'test'
+  ...
+# Subtest: admission rejects incompatible worlds, aggregate overdrafts and berth contention
+ok 13 - admission rejects incompatible worlds, aggregate overdrafts and berth contention
+  ---
+  duration_ms: 1030.60404
+  type: 'test'
+  ...
+# Subtest: display interpolation does not anticipate cargo operations or impulses and remains disposable
+ok 14 - display interpolation does not anticipate cargo operations or impulses and remains disposable
+  ---
+  duration_ms: 104.739231
+  type: 'test'
+  ...
+# Subtest: rotating frame includes omega cross r and transforms every epoch independently
+ok 15 - rotating frame includes omega cross r and transforms every epoch independently
+  ---
+  duration_ms: 1.00402
+  type: 'test'
+  ...
+# Subtest: lunar rotating-frame loop closes in the current runner; view changes cannot mutate its program
+ok 16 - lunar rotating-frame loop closes in the current runner; view changes cannot mutate its program
+  ---
+  duration_ms: 132.369667
+  type: 'test'
+  ...
+# Subtest: compiler origin accelerations agree with the independent spatial provider
+ok 17 - compiler origin accelerations agree with the independent spatial provider
+  ---
+  duration_ms: 2.055558
+  type: 'test'
+  ...
+# Subtest: nested solar ephemerides have consistent position, velocity and acceleration
+ok 18 - nested solar ephemerides have consistent position, velocity and acceleration
+  ---
+  duration_ms: 0.71785
+  type: 'test'
+  ...
+# Subtest: finite three-cycle exhibit preserves fuel, cargo and nested-frame epochs
+ok 19 - finite three-cycle exhibit preserves fuel, cargo and nested-frame epochs
+  ---
+  duration_ms: 256.636186
+  type: 'test'
+  ...
+# Subtest: version, row order, exhausted tank and oversized controls reject before display
+ok 20 - version, row order, exhausted tank and oversized controls reject before display
+  ---
+  duration_ms: 906.016027
+  type: 'test'
+  ...
+# Subtest: capture preserves approach left limit and records the paid atomic debit
+ok 21 - capture preserves approach left limit and records the paid atomic debit
+  ---
+  duration_ms: 332.593634
+  type: 'test'
+  ...
+# Subtest: far-field heliocentric acceleration includes all indirect sources and supports 3D
+ok 22 - far-field heliocentric acceleration includes all indirect sources and supports 3D
+  ---
+  duration_ms: 0.63231
+  type: 'test'
+  ...
+1..22
+# tests 22
+# suites 0
+# pass 22
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13401.424883
+
+Final compact-only regression after admission/retention guards:
+TAP version 13
+# compact convergence {"worst":1.4214851518090654e-11,"work":{"nodes":47121,"checks":47138,"bytes":903890,"oraclePosition":1.7994069802706274e-11,"oracleVelocity":4.767357288286406e-12},"fuelPerCycle":[1.2538957300756035,4.081984609262357]}
+# compact late absolute epoch residual 1.4808382298170386e-10
+# compact rollout max packet bytes 3716148
+# Subtest: native full coupled cycle agrees with independent DOP853, converges and closes with paid resources
+ok 1 - native full coupled cycle agrees with independent DOP853, converges and closes with paid resources
+  ---
+  duration_ms: 2726.733948
+  type: 'test'
+  ...
+# Subtest: rotated controls propagate at a late absolute epoch without phase accumulation
+ok 2 - rotated controls propagate at a late absolute epoch without phase accumulation
+  ---
+  duration_ms: 326.404572
+  type: 'test'
+  ...
+# Subtest: bounded continuous publication, resource counts, held scrubbing and faults
+ok 3 - bounded continuous publication, resource counts, held scrubbing and faults
+  ---
+  duration_ms: 6997.276526
+  type: 'test'
+  ...
+# Subtest: known bad controls, funding and model identities cannot enter the cache
+ok 4 - known bad controls, funding and model identities cannot enter the cache
+  ---
+  duration_ms: 322.951523
+  type: 'test'
+  ...
+# Subtest: a held reply crossing a cycle boundary retains the future row needed by Live
+ok 5 - a held reply crossing a cycle boundary retains the future row needed by Live
+  ---
+  duration_ms: 837.385025
+  type: 'test'
+  ...
+# Subtest: fractional worker replies retain event resource anchors rather than every reply clock
+ok 6 - fractional worker replies retain event resource anchors rather than every reply clock
+  ---
+  duration_ms: 1149.430044
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13788.345265

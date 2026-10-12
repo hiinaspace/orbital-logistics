@@ -1,3 +1,6 @@
+import {sampleCompact} from '../compact/query';
+import {resourcesAt as compactResourcesAt} from '../compact/view';
+import type {CompactPlayback,CompactTemplate} from '../compact/types';
 import {sampleSolar,solarStateAt,type SolarPlayback} from '../solar/query';
 import {solarStockAt,type SolarScene} from '../solar/view';
 import {sampleStagedService,stagedStateAt,stagedServicePresent,stagedServicePresenceLabel,type StagedPlayback,type StagedVessel} from '../staged-service/query';
@@ -25,6 +28,7 @@ export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
 export interface ViewSample extends Sample {frameOrigin?:State;opacity?:number;activity?:Activity;mass?:number;aero?:AeroTelemetry;axis?:Vector3;entryPhase?:'coast'|'entry'|'braking'|'recovered'}
 export interface VesselView {
+ compact?:CompactPlayback;
  solar?:SolarPlayback;
  stagedService?:StagedPlayback;
  attachment?:{before?:string;after?:string};
@@ -47,6 +51,7 @@ export interface VesselView {
 export interface VesselRun extends Vessel,VesselView {}
 export interface MaintainedView extends VesselView {baseline:{t:number;y:State}[]}
 export interface SceneView {
+ compact?:CompactTemplate;
  solar?:SolarScene;
  playback?:{rateScale:number;trailSpan:number;forecastSpan:number;maxZoom:number};
  assemblies?:{separations:{t:number;parentId:string;children:string[];state:State;beforeMass:number;afterMass:number;momentumBefore:number[];momentumAfter:number[]}[];dock:{t:number;carrierId:string;partId:string;positionError:number;deltaV:number;fuelUsed:number}};
@@ -110,6 +115,7 @@ function eventOrder(e: ViewerEvent): number {
 }
 export function stockAt(run: SceneView, t: number): Stock[] {
   if(run.solar)return solarStockAt(run.solar,t);
+  if(run.compact&&!run.traffic)return compactResourcesAt(run.compact,t).stocks.map(p=>({...p,occupied:run.vessels.filter(v=>sampleVessel(v,t).logistics?.dockedPortId===p.id).length}));
   const ports=portsOf(run);
   if(run.traffic) {
     const anchor=[...run.traffic.resources].reverse().find(a=>a.t<=t);
@@ -208,6 +214,7 @@ export function presenceLabel(v:VesselView,t:number):string {
  return t<(v.lifetime?.start??-Infinity)?'Carried by '+(v.attachment?.before??'launch stack'):v.attachment?.after?'Aboard '+v.attachment.after:'Separated';
 }
 export function sampleVessel(v: VesselView, t: number): ViewSample {
+ if(v.compact)return sampleCompact(v.compact,t);
  if(v.solar)return sampleSolar(v.solar,Math.max(v.solar.start,Math.min(v.solar.end,t)));
  if(v.stagedService)return sampleStagedService(v as StagedVessel,t);
  if(v.libration)return sampleLibration(v,t);
@@ -265,6 +272,7 @@ function bracket(v: VesselView, t: number): [ViewSample, ViewSample] {
   return [a, b];
 }
 export function stateAt(v: VesselView, t: number): State {
+ if(v.compact)return sampleCompact(v.compact,t).y;
  if(v.solar)return solarStateAt(v.solar.rows,t,v.solar.captures);
  if(v.stagedService)return stagedStateAt(v as StagedVessel,t);
  if(v.libration)return sampleLibration(v,t).y;

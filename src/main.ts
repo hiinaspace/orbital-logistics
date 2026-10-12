@@ -1,3 +1,8 @@
+import compactFinite from '../fixtures/model-sets/aster-selene-cycler.json';
+import compactService from '../fixtures/model-sets/aster-selene-cycler-service.json';
+import {isCompact,type CompactDefinition} from './compact/types';
+import {CompactViewStore} from './compact/store';
+import type {CompactDelta} from './compact/engine';
 import solarDefinition from '../fixtures/model-sets/solar-cycler-set.json';
 import {AU_KM,YEAR_SECONDS,solarBodyState} from './solar/ephemeris';
 import {solarPortState,type SolarDefinition} from './solar/view';
@@ -88,9 +93,12 @@ import type {State,Vec3} from './sim/schema';
 import {orbitError,displayPortState as basePortState,portsOf, sampleVessel as uncachedSampleVessel, setEvents, stockAt, isPresent,presenceLabel,type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
+const compactUrl=new URL('../fixtures/model-sets/compact-cycler-profile.json',import.meta.url).href;
+const compactSet={...compactFinite,artifactUrl:compactUrl} as CompactDefinition;
+const compactTraffic={...compactService,artifactUrl:compactUrl} as CompactDefinition;
 const solarSet={...solarDefinition,artifactUrl:new URL('../fixtures/model-sets/solar-cycler.json',import.meta.url).href} as SolarDefinition;
-const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo,stagedApollo,solarSet] as (SolarDefinition|StagedApolloMission|ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
-const trafficSets=[asterSystem,stagedService,beacon,crossings,expeditionService,trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition)[];
+const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo,stagedApollo,solarSet,compactSet] as (CompactDefinition|SolarDefinition|StagedApolloMission|ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
+const trafficSets=[compactTraffic,asterSystem,stagedService,beacon,crossings,expeditionService,trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (CompactDefinition|TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
@@ -112,7 +120,7 @@ const canvas = $<HTMLCanvasElement>('space'), ctx = canvas.getContext('2d')!;
 function bodyState(body:import('./sim/schema').Body,epoch:number):State{return run?.solar&&run.world.bodies.some(b=>b.id===body.id)?solarBodyState(run.solar,body.id,epoch):baseBodyState(body,epoch);}
 function displayPortState(port:import('./sim/schema').Port,samples:import('./model-set/model').PortSamples,epoch:number):State{return run?.solar?solarPortState(run.solar,port.id,epoch):basePortState(port,samples,epoch);}
 let run: SceneView | undefined, worker: Worker | undefined, revision = 0;
-let traffic:TrafficViewStore|MaintainedViewStore|AdaptiveViewStore|NetworkViewStore|LunarViewStore|ExpeditionViewStore|ExpeditionFleetViewStore|LibrationViewStore|StagedServiceViewStore|AsterSystemViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='',trafficDirty=false;
+let traffic:CompactViewStore|TrafficViewStore|MaintainedViewStore|AdaptiveViewStore|NetworkViewStore|LunarViewStore|ExpeditionViewStore|ExpeditionFleetViewStore|LibrationViewStore|StagedServiceViewStore|AsterSystemViewStore|undefined,pending=false,sequence=0,requestedTarget=0,desiredTarget=0,liveMode=true,liveError='',trafficDirty=false;
 let trafficRequestStart=0;
 let events: SetEvent[] = [], selected = '', frame = 'inertial', t = 0, playing = false;
 let ready = false, width = 900, height = 600;
@@ -146,7 +154,7 @@ function requestTraffic(target:number){
  trafficRequestStart=performance.now();pending=true;requestedTarget=Math.min(traffic.frontier+1,Math.max(traffic.frontier,target));
  worker.postMessage({generation:revision,sequence:++sequence,target:requestedTarget,after:traffic.frontier});
 }
-const playbackLead=()=>traffic instanceof AsterSystemViewStore||traffic instanceof StagedServiceViewStore||traffic instanceof LibrationViewStore||traffic instanceof ExpeditionViewStore||traffic instanceof ExpeditionFleetViewStore?EXPEDITION_LEAD:traffic instanceof LunarViewStore?LUNAR_LEAD:(traffic instanceof AdaptiveViewStore||traffic instanceof NetworkViewStore)?adaptivePlaybackLead:0;
+const playbackLead=()=>traffic instanceof CompactViewStore||traffic instanceof AsterSystemViewStore||traffic instanceof StagedServiceViewStore||traffic instanceof LibrationViewStore||traffic instanceof ExpeditionViewStore||traffic instanceof ExpeditionFleetViewStore?EXPEDITION_LEAD:traffic instanceof LunarViewStore?LUNAR_LEAD:(traffic instanceof AdaptiveViewStore||traffic instanceof NetworkViewStore)?adaptivePlaybackLead:0;
 const liveEdge=()=>traffic?bufferedEdge(traffic.frontier,traffic.oldest,playbackLead()):0;
 function goLive(){if(!traffic)return;if(playbackRate<=0){playbackRate=Math.abs(resumeRate)||1;resumeRate=playbackRate;syncSpeed();}traffic.release();if(!liveMode)t=Math.max(t,liveEdge());desiredTarget=t+playbackLead();liveMode=!!playbackLead()||!liveError&&!traffic.halt;playing=(!liveError&&!traffic.halt)||t<traffic.frontier;lastFrame=performance.now();refreshTraffic();updatePanels();}
 const vessel = () => run?.vessels.find(v => v.id === selected)??run?.maintained?.[selected];
@@ -215,7 +223,7 @@ function seek(time: number, pause = true) {
   updatePanels();
 }
 function eventLabel(e: SetEvent): string {
-  if(run?.solar&&e.label)return e.label;
+  if((run?.solar||run?.compact)&&e.label)return e.label;
   const port = e.portId ?? '';
   if(e.kind==='burn' && e.id.includes('plane-change'))return 'Plane change';
   if(e.kind==='separation')return e.label??'Stage separation';
@@ -243,7 +251,7 @@ function nextArrival(v: VesselView) { return events.find(e => e.vessel === v.id 
 function status(v: VesselView): string {
   if(!isPresent(v,t))return presenceLabel(v,t);
   const s = sampleVessel(v, t), l = s.logistics;
-  if(v.solar)return s.activity?.reason??'Coasting';
+  if(v.solar||v.compact)return s.activity?.reason??'Coasting';
   if(s.activity?.reason==='Ground recovery transport'||s.activity?.reason==='Ocean recovery')return s.activity.reason;
   if(s.entryPhase)return ({coast:'Approaching atmosphere',entry:'Atmospheric braking',braking:'Terminal braking',recovered:'Recovered · Ocean'} as const)[s.entryPhase];
   if(s.activity?.kind==='fault')return `Fault · last seen ${number(s.activity.knownEpoch!)}`;
@@ -367,7 +375,7 @@ function updatePanels() {
       $('readouts').innerHTML+=`${aeroReadouts?'':`<div><dt>Altitude · R</dt><dd>${small((r-body.radius)/body.radius)}</dd></div>`}<div><dt>Radial speed</dt><dd>${small(radial)}</dd></div><div><dt>Tangential speed</dt><dd>${small(tangential)}</dd></div><div><dt>Thrust / weight</dt><dd>${number((s.thrust?.force??0)/mass/(body.mu/r**2))}</dd></div>`;
     }
     $<HTMLButtonElement>('object-frame').disabled=s.activity?.kind==='fault';
-    if(s.activity?.reason&&!v.solar)$('readouts').innerHTML+=`<div class="fault-reason">${esc(s.activity.reason)}</div>`;
+    if(s.activity?.reason&&!v.solar&&!v.compact)$('readouts').innerHTML+=`<div class="fault-reason">${esc(s.activity.reason)}</div>`;
     if(s.activity?.retryAt!==undefined)$('readouts').innerHTML+=`<div><dt>Retry</dt><dd>${number(s.activity.retryAt)}</dd></div>`;
     const local=s.activity?.kind==='fault'?[0,0,0,0,0,0]:transform(run,s.y,t,frame);
     if(Math.abs(local[2])+Math.abs(local[5])>1e-9)$('readouts').innerHTML+=`<div><dt>Z position</dt><dd>${number(local[2])}</dd></div><div><dt>Z velocity</dt><dd>${number(local[5])}</dd></div>`;
@@ -409,7 +417,7 @@ function publishState() {
 }
 function loadSet(id: string) {
   if(currentSet){setSpeeds.set(currentSet,playbackRate);setResumeSpeeds.set(currentSet,resumeRate);}currentSet=id;
-  playbackRate=setSpeeds.get(id)??(id==='solar-cycler'?4:['selene-ground','selene-ground-service'].includes(id)?.01:['aster-selene-staged-expedition','aster-selene-staged-service','aster-selene-beacon','aster-selene-crossings','aster-selene-service','aster-selene-expedition','selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
+  playbackRate=setSpeeds.get(id)??(id.startsWith('aster-selene-cycler')?.5:id==='solar-cycler'?4:['selene-ground','selene-ground-service'].includes(id)?.01:['aster-selene-staged-expedition','aster-selene-staged-service','aster-selene-beacon','aster-selene-crossings','aster-selene-service','aster-selene-expedition','selene-staging','aster-entry','aster-launch','aster-northern-launch','orison-direct-surface','orison-low-orbit-shuttle','orison-shuttle-service','orison-latitude-shuttle'].includes(id)?.1:1);
   resumeRate=setResumeSpeeds.get(id)??(playbackRate||1);playbackRate=Math.sign(playbackRate)*Math.min(Math.abs(playbackRate),maximumPlaybackRate(id));resumeRate=Math.sign(resumeRate)*Math.min(Math.abs(resumeRate),maximumPlaybackRate(id));if(playbackRate!==0)resumeRate=playbackRate;syncSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
@@ -443,18 +451,18 @@ function loadSet(id: string) {
   worker.postMessage({revision, set});
 }
 
-function loadTraffic(definition:TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition){
- traffic=isAsterSystem(definition)?new AsterSystemViewStore(definition):isStagedService(definition)?new StagedServiceViewStore(definition,true):isLibration(definition)?new LibrationViewStore(definition):isExpeditionFleet(definition)?new ExpeditionFleetViewStore(definition):isExpedition(definition)?new ExpeditionViewStore(definition):isLunar(definition)?new LunarViewStore(definition):isNetwork(definition)?new NetworkViewStore(definition):isAdaptive(definition)?new AdaptiveViewStore(definition):isMaintained(definition)?new MaintainedViewStore(definition):new TrafficViewStore(definition);
+function loadTraffic(definition:CompactDefinition|TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition){
+ traffic=isCompact(definition)?new CompactViewStore(definition):isAsterSystem(definition)?new AsterSystemViewStore(definition):isStagedService(definition)?new StagedServiceViewStore(definition,true):isLibration(definition)?new LibrationViewStore(definition):isExpeditionFleet(definition)?new ExpeditionFleetViewStore(definition):isExpedition(definition)?new ExpeditionViewStore(definition):isLunar(definition)?new LunarViewStore(definition):isNetwork(definition)?new NetworkViewStore(definition):isAdaptive(definition)?new AdaptiveViewStore(definition):isMaintained(definition)?new MaintainedViewStore(definition):new TrafficViewStore(definition);
  worker=new TrafficWorker({name:'continuous-traffic'});
  const generation=revision;pending=true;trafficRequestStart=performance.now();
- worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:TrafficDelta|MaintainedDelta|AdaptiveDelta|NetworkDelta|LunarDelta|ExpeditionDelta|ExpeditionFleetDelta|LibrationDelta|StagedServiceDelta|AsterSystemDelta;error?:string}>)=>{
+ worker.onmessage=(e:MessageEvent<{generation:number;sequence:number;delta?:CompactDelta|TrafficDelta|MaintainedDelta|AdaptiveDelta|NetworkDelta|LunarDelta|ExpeditionDelta|ExpeditionFleetDelta|LibrationDelta|StagedServiceDelta|AsterSystemDelta;error?:string}>)=>{
   if(generation!==revision || e.data.generation!==revision || e.data.sequence!==sequence)return;
   viewerProfile.record('workerTurnaround',performance.now()-trafficRequestStart);const ingestionStart=performance.now();
   pending=false;
   if(e.data.error){liveError=`Simulation stopped: ${e.data.error}`;playing=playing&&ready&&!!playbackLead()&&t<traffic!.frontier;if(!playbackLead())liveMode=false;$('load-status').textContent=liveError;updatePanels();return;}
-  const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof AsterSystemViewStore){try{traffic.ingest(e.data.delta! as AsterSystemDelta,!liveMode||!playing&&!first);}catch(error){liveError='Simulation stopped: '+(error as Error).message;worker?.terminate();playing=playing&&ready&&t<traffic.frontier;$('load-status').textContent=liveError;updatePanels();return;}}else if(traffic instanceof StagedServiceViewStore)traffic.ingest(e.data.delta! as StagedServiceDelta,!liveMode || !playing && !first);else if(traffic instanceof LibrationViewStore)traffic.ingest(e.data.delta! as LibrationDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionFleetViewStore)traffic.ingest(e.data.delta! as ExpeditionFleetDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionViewStore)traffic.ingest(e.data.delta! as ExpeditionDelta,!liveMode || !playing && !first);else if(traffic instanceof LunarViewStore)traffic.ingest(e.data.delta! as LunarDelta,!liveMode || !playing && !first);else if(traffic instanceof NetworkViewStore)traffic.ingest(e.data.delta! as NetworkDelta,!liveMode || !playing && !first);else if(traffic instanceof AdaptiveViewStore)traffic.ingest(e.data.delta! as AdaptiveDelta,!liveMode || !playing && !first);else if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
+  const first=!ready,previousFrontier=traffic!.frontier;if(traffic instanceof CompactViewStore||traffic instanceof AsterSystemViewStore){try{if(traffic instanceof CompactViewStore)traffic.ingest(e.data.delta! as CompactDelta,!liveMode||!playing&&!first);else traffic.ingest(e.data.delta! as AsterSystemDelta,!liveMode||!playing&&!first);}catch(error){liveError='Simulation stopped: '+(error as Error).message;worker?.terminate();playing=playing&&ready&&t<traffic.frontier;$('load-status').textContent=liveError;updatePanels();return;}}else if(traffic instanceof StagedServiceViewStore)traffic.ingest(e.data.delta! as StagedServiceDelta,!liveMode || !playing && !first);else if(traffic instanceof LibrationViewStore)traffic.ingest(e.data.delta! as LibrationDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionFleetViewStore)traffic.ingest(e.data.delta! as ExpeditionFleetDelta,!liveMode || !playing && !first);else if(traffic instanceof ExpeditionViewStore)traffic.ingest(e.data.delta! as ExpeditionDelta,!liveMode || !playing && !first);else if(traffic instanceof LunarViewStore)traffic.ingest(e.data.delta! as LunarDelta,!liveMode || !playing && !first);else if(traffic instanceof NetworkViewStore)traffic.ingest(e.data.delta! as NetworkDelta,!liveMode || !playing && !first);else if(traffic instanceof AdaptiveViewStore)traffic.ingest(e.data.delta! as AdaptiveDelta,!liveMode || !playing && !first);else if(traffic instanceof MaintainedViewStore)traffic.ingest(e.data.delta! as MaintainedDelta,!liveMode || !playing && !first);else traffic!.ingest(e.data.delta! as TrafficDelta,!liveMode || !playing && !first);
   viewerProfile.record('ingestion',performance.now()-ingestionStart);
-  if(first){ready=true;selected=traffic instanceof AsterSystemViewStore?traffic.definition.source.source.stack.id:traffic instanceof StagedServiceViewStore?traffic.definition.source.stack.id:traffic instanceof LibrationViewStore?traffic.definition.courier.id:traffic instanceof ExpeditionFleetViewStore?traffic.definition.actors[0].id:traffic instanceof ExpeditionViewStore?traffic.definition.source.scenario.ship.id:traffic instanceof LunarViewStore?'Tern':traffic instanceof NetworkViewStore?traffic.definition.lanes[0].vessels[0].id:traffic!.definition.vessels[0].id;frame=traffic instanceof LunarViewStore?'moon':'inertial';t=0;playing=playbackRate!==0;}
+  if(first){ready=true;selected=traffic instanceof CompactViewStore?'Wayfarer':traffic instanceof AsterSystemViewStore?traffic.definition.source.source.stack.id:traffic instanceof StagedServiceViewStore?traffic.definition.source.stack.id:traffic instanceof LibrationViewStore?traffic.definition.courier.id:traffic instanceof ExpeditionFleetViewStore?traffic.definition.actors[0].id:traffic instanceof ExpeditionViewStore?traffic.definition.source.scenario.ship.id:traffic instanceof LunarViewStore?'Tern':traffic instanceof NetworkViewStore?traffic.definition.lanes[0].vessels[0].id:traffic!.definition.vessels[0].id;frame=traffic instanceof LunarViewStore?'moon':'inertial';t=0;playing=playbackRate!==0;}
   else if(liveMode && playing && !playbackLead())t=traffic!.frontier;
   // Solver yields often acknowledge an unchanged head. Batch drawing-history
   // assembly with the panel cadence instead of rebuilding it for every reply.

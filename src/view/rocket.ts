@@ -1,3 +1,5 @@
+import {occurrence,rotate} from '../compact/query';
+import {evaluateCubic} from '../sim/cubic';
 import {solarControl} from '../solar/query';
 import {surfaceNormal} from '../sim/logistics';
 import {directionAt} from '../sim/steering';
@@ -20,6 +22,14 @@ function turn(from:Vec3,to:Vec3,fraction:number):Vec3 {
 // Queries depend only on mission time, so scrubbing never leaves a stale heading.
 export function rocketAxis(v:VesselView,sample:ViewSample,t:number):Vec3 {
  if(sample.axis)return [...sample.axis];
+ if(v.compact){
+  const p=v.compact.template,o=occurrence(p,t),controls=p.phases[v.compact.actor].flatMap(s=>s.control?[s.control]:[]);
+  const previous=[...controls].reverse().find(c=>c.end<=o.local),next=controls.find(c=>c.start>o.local);
+  const axis=(c:typeof controls[number],early:boolean)=>{const q=evaluateCubic(c,early?c.keys[1][0]:c.keys.at(-2)![0]),n=Math.hypot(...q);return q.map(x=>x/n) as Vec3;};
+  const held=previous?axis(previous,false):[1,0,0] as Vec3;
+  const duration=next?Math.min(.6,next.start-(previous?.end??0)):0;
+  return rotate(next&&duration>0&&o.local>next.start-duration?turn(held,axis(next,true),(o.local-next.start+duration)/duration):held,o.angle);
+ }
  if(v.solar){
   const previous=[...v.solar.arcs].reverse().find(a=>a.start<=t),next=v.solar.arcs.find(a=>a.start>t);
   const axis=(a:NonNullable<typeof previous>,early:boolean)=>{const q=solarControl(a,early?a.keys[1][0]:a.keys.at(-2)![0]),n=Math.hypot(...q);return n>1e-10?q.map(x=>x/n) as Vec3:[0,1,0] as Vec3;};

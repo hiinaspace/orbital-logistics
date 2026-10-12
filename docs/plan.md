@@ -522,3 +522,16 @@ and [evidence](evidence/solar-cycler.md) describe the finite 6.566-year history.
 Next gate is the owner's pacing/geometry viewing at solar scale. A continuous resource
 calendar and local Earth/Moon/ground activity may follow that acceptance. Exact template
 recurrence is not assumed in the five-body field; Jupiter and Moon retain their own phases.
+
+## Compact cycler gate completed — 2026-10-11
+
+The user accepted the Solar-scale witness but requested less dynamic range, selected
+fictional Aster/Selene scale first, and authorized continuous after a successful finite
+gate. [Compact finite/service sets](design/compact-cycler/README.md) now combine one
+mostly ballistic carrier with two parcel deliveries by a reusable surface shuttle.
+Astra architecture and implementation reviews are dispositioned; native/DOP853/
+convergence/late-epoch, resource/physical closure and failure/retention gates pass.
+Production4K Chrome through three completed carrier circuits/eight deliveries at16×, rewind/Live and set
+switching pass. [Evidence](evidence/compact-cycler.md). Await owner choreography taste;
+next content experiment is a fictional Sun/Mars cycler with optional Jupiter influence,
+whose independent body phases require a fresh recurrence/admission design.
