@@ -1,0 +1,170 @@
+TAP version 13
+# Subtest: orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility
+ok 1 - orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility
+  ---
+  duration_ms: 2.626601
+  type: 'test'
+  ...
+# Subtest: pan follows screen axes and cursor zoom anchors the same plane point in tilted views
+ok 2 - pan follows screen axes and cursor zoom anchors the same plane point in tilted views
+  ---
+  duration_ms: 1.19616
+  type: 'test'
+  ...
+# Subtest: sphere occlusion distinguishes front/back, limb, silhouette crossings and multiple bodies
+ok 3 - sphere occlusion distinguishes front/back, limb, silhouette crossings and multiple bodies
+  ---
+  duration_ms: 3.214778
+  type: 'test'
+  ...
+# Subtest: chase rigs and selected pivots remain orthonormal and deterministic at degenerate states
+ok 4 - chase rigs and selected pivots remain orthonormal and deterministic at degenerate states
+  ---
+  duration_ms: 7.79832
+  type: 'test'
+  ...
+# Subtest: one-draw projection snapshots camera axes and matches point queries
+ok 5 - one-draw projection snapshots camera axes and matches point queries
+  ---
+  duration_ms: 3.323181
+  type: 'test'
+  ...
+# compact convergence {"worst":7.722045225477814e-12,"work":{"nodes":44052,"checks":44072,"bytes":799206,"oraclePosition":5.119272579949609e-12,"oracleVelocity":5.614908680151549e-9},"fuelPerCycle":[3.2132207113261613,4.612377291253112]}
+# compact late absolute epoch residual 2.462359205424036e-10
+# compact rollout max packet bytes 2220675
+# compact directional geometry {"asterRelease":2.9974421967098066,"asterBoard":3.1984323151988034,"moonBoard":1.1215275966853346,"moonRelease":2.2453868155056185}
+# Subtest: native full coupled cycle agrees with independent DOP853, converges and closes with paid resources
+ok 6 - native full coupled cycle agrees with independent DOP853, converges and closes with paid resources
+  ---
+  duration_ms: 1848.892595
+  type: 'test'
+  ...
+# Subtest: rotated controls propagate at a late absolute epoch without phase accumulation
+ok 7 - rotated controls propagate at a late absolute epoch without phase accumulation
+  ---
+  duration_ms: 315.830942
+  type: 'test'
+  ...
+# Subtest: bounded continuous publication, resource counts, held scrubbing and faults
+ok 8 - bounded continuous publication, resource counts, held scrubbing and faults
+  ---
+  duration_ms: 5863.224247
+  type: 'test'
+  ...
+# Subtest: known bad controls, funding and model identities cannot enter the cache
+ok 9 - known bad controls, funding and model identities cannot enter the cache
+  ---
+  duration_ms: 407.423441
+  type: 'test'
+  ...
+# Subtest: a held reply crossing a cycle boundary retains the future row needed by Live
+ok 10 - a held reply crossing a cycle boundary retains the future row needed by Live
+  ---
+  duration_ms: 737.222413
+  type: 'test'
+  ...
+# Subtest: fractional worker replies retain event resource anchors rather than every reply clock
+ok 11 - fractional worker replies retain event resource anchors rather than every reply clock
+  ---
+  duration_ms: 1219.164569
+  type: 'test'
+  ...
+# Subtest: local connections retain literal zero-thrust coasts and most travel time aboard the carrier
+ok 12 - local connections retain literal zero-thrust coasts and most travel time aboard the carrier
+  ---
+  duration_ms: 354.896887
+  type: 'test'
+  ...
+# Subtest: legacy v1 retains the exact singleton, control and zero-phase protocol
+ok 13 - legacy v1 retains the exact singleton, control and zero-phase protocol
+  ---
+  duration_ms: 517.539989
+  type: 'test'
+  ...
+# Subtest: directional handoffs remain inside the declared Aster and Selene encounter regions
+ok 14 - directional handoffs remain inside the declared Aster and Selene encounter regions
+  ---
+  duration_ms: 0.982233
+  type: 'test'
+  ...
+# Subtest: two uninterrupted native circuits and round trips agree with independent full-field oracles
+ok 15 - two uninterrupted native circuits and round trips agree with independent full-field oracles
+  ---
+  duration_ms: 10251.081211
+  type: 'test'
+  ...
+# Subtest: early launch includes four real parking laps and small paid orbital connections
+ok 16 - early launch includes four real parking laps and small paid orbital connections
+  ---
+  duration_ms: 1.352329
+  type: 'test'
+  ...
+# Subtest: board/release preserve separate tanks and add actual attached mass at event sides
+ok 17 - board/release preserve separate tanks and add actual attached mass at event sides
+  ---
+  duration_ms: 1.181588
+  type: 'test'
+  ...
+# Subtest: four funded deliveries and replay queries conserve finite inventories without wrapping
+ok 18 - four funded deliveries and replay queries conserve finite inventories without wrapping
+  ---
+  duration_ms: 14.200778
+  type: 'test'
+  ...
+# Subtest: known-bad controls, fields, carrier thrust, funding and missing reload reject
+ok 19 - known-bad controls, fields, carrier thrust, funding and missing reload reject
+  ---
+  duration_ms: 7233.815377
+  type: 'test'
+  ...
+# Subtest: reserved node and enclosure allowances stop integration before overspending
+ok 20 - reserved node and enclosure allowances stop integration before overspending
+  ---
+  duration_ms: 0.76679
+  type: 'test'
+  ...
+# Subtest: compiler origin accelerations agree with the independent spatial provider
+ok 21 - compiler origin accelerations agree with the independent spatial provider
+  ---
+  duration_ms: 2.213855
+  type: 'test'
+  ...
+# Subtest: nested solar ephemerides have consistent position, velocity and acceleration
+ok 22 - nested solar ephemerides have consistent position, velocity and acceleration
+  ---
+  duration_ms: 0.561616
+  type: 'test'
+  ...
+# Subtest: finite three-cycle exhibit preserves fuel, cargo and nested-frame epochs
+ok 23 - finite three-cycle exhibit preserves fuel, cargo and nested-frame epochs
+  ---
+  duration_ms: 251.387036
+  type: 'test'
+  ...
+# Subtest: version, row order, exhausted tank and oversized controls reject before display
+ok 24 - version, row order, exhausted tank and oversized controls reject before display
+  ---
+  duration_ms: 703.140265
+  type: 'test'
+  ...
+# Subtest: capture preserves approach left limit and records the paid atomic debit
+ok 25 - capture preserves approach left limit and records the paid atomic debit
+  ---
+  duration_ms: 254.576098
+  type: 'test'
+  ...
+# Subtest: far-field heliocentric acceleration includes all indirect sources and supports 3D
+ok 26 - far-field heliocentric acceleration includes all indirect sources and supports 3D
+  ---
+  duration_ms: 0.557536
+  type: 'test'
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20162.243898

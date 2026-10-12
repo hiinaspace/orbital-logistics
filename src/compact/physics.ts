@@ -1,6 +1,7 @@
 import {evaluateCubic,type CubicControl} from '../sim/cubic';
 import type {State} from '../sim/schema';
 export const RATE=Math.sqrt(1.03/125),STEP=1/512,MARGIN=1e-8;
+export interface WorkBudget {nodes:number;checks:number}
 export interface Trace {rows:number[][];work:number;nodes:number;initial:State;start:number;end:number;control?:CubicControl}
 export function moon(t:number):State {const a=RATE*t,c=Math.cos(a),s=Math.sin(a);return [5*c,5*s,0,-5*RATE*s,5*RATE*c,0];}
 export function gravity(t:number,p:readonly number[]):number[]{
@@ -18,15 +19,17 @@ function enclosed(t:number,y:number[],h:number,cap:number):boolean {
   return linear-(acceleration+(i?5*RATE**2:0))*h*h/2>[1,.2][i]+MARGIN+clear[i]/2;
  });
 }
-export function integrate(start:number,end:number,initial:State,control?:CubicControl,step=STEP,cap=0):Trace {
+export function integrate(start:number,end:number,initial:State,control?:CubicControl,step=STEP,cap=0,budget:WorkBudget={nodes:180000,checks:240000}):Trace {
  if(initial.length!==6||!initial.every(Number.isFinite)||!Number.isFinite(cap)||cap<0||!Number.isFinite(start)||!Number.isFinite(end)||end<=start||end-start>80||![STEP,STEP/2,STEP/4].includes(step))throw Error('Compact integration interval/policy');
+ if(!Number.isInteger(budget.nodes)||budget.nodes<1||budget.nodes>180000||!Number.isInteger(budget.checks)||budget.checks<1||budget.checks>240000)throw Error('Compact integration work policy');
  let y=[...initial,0],nodes=0,work=0;const rows:number[][]=[[start,...y]];
  const rhs=(t:number,q:number[])=>{const a=control?evaluateCubic(control,Math.min(t,control.end-Number.EPSILON*Math.max(1,control.end))):[0,0,0],g=gravity(t,q);return [...q.slice(3,6),...g.map((x,i)=>x+a[i]),Math.hypot(...a)];};
  const advance=(left:number,right:number,depth=0)=>{
-  const h=right-left;if(++work>240000||depth>24)throw Error('Compact enclosure work budget');
+  const h=right-left;if(work>=budget.checks||depth>24)throw Error('Compact enclosure work budget');work++;
   if(!enclosed(left,y,h,cap)){const mid=(left+right)/2;advance(left,mid,depth+1);advance(mid,right,depth+1);return;}
+  if(nodes>=budget.nodes)throw Error('Compact physical node budget');
   const a=rhs(left,y),b=rhs(left+h/2,y.map((x,i)=>x+h*a[i]/2)),c=rhs(left+h/2,y.map((x,i)=>x+h*b[i]/2)),d=rhs(right,y.map((x,i)=>x+h*c[i]));
-  y=y.map((x,i)=>x+h*(a[i]+2*b[i]+2*c[i]+d[i])/6);if(y.some(x=>!Number.isFinite(x))||++nodes>180000)throw Error('Compact physical node budget');
+  y=y.map((x,i)=>x+h*(a[i]+2*b[i]+2*c[i]+d[i])/6);if(y.some(x=>!Number.isFinite(x)))throw Error('Compact physical node budget');nodes++;
   rows.push([right,...y]);
  };
  const cuts=[...new Set([start,end,...(control?.keys.map(k=>k[0])??[])])].sort((a,b)=>a-b);

@@ -554,3 +554,14 @@ research found a zero-thrust both-body recurring candidate with native three-per
 safety/independent agreement; live sets are unchanged. Next: finite carrier-only
 viewing, then one taxi parking/descent slice, then a separately proved continuous
 resource/numerical boundary. [Research and review](design/compact-cycler/pass-through/README.md).
+
+## Finite pass-through redesign implemented — 2026-10-12
+
+The accepted carrier geometry now has early Aster parking, paid finite orbital
+connections and separately phased surface descent, through two true circuits and
+two round trips/four deliveries. Native/DOP853/three-resolution, funding/reserve,
+event-side mass, nonwrapping/rewind and invalid-control/work-budget gates pass;
+production4K16×/3D/set-switching passes. Astra findings are fixed/dispositioned.
+The existing finite Cycler selector loads it; the rejected Beacon-stop continuous
+entry is retired. Next is the owner's service choreography viewing, then an explicit
+continuous free-carrier correction/resource protocol. See [evidence](evidence/pass-through.md).

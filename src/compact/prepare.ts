@@ -10,7 +10,7 @@ export function world(p:CompactTemplate){
  const ports:Port[]=[{...common,id:'Beacon',rail:{kind:'circular',center:[0,0,0],u:[1,0,0],v:[0,1,0],radius:p.beaconRadius,rate:p.rate,phase:0}},...(['Cairn','Haven']as const).map((id,i)=>({...common,id,rail:{kind:'surface' as const,bodyId:bodies[i].id,bodyRail:bodies[i].rail,center:[0,0,0]as [number,number,number],u:[1,0,0]as [number,number,number],v:[0,1,0]as [number,number,number],radius:[1,.2][i]+1e-5,rate:p.rate,phase:p.padPhases[id],latitude:0,centerHeight:1e-5}}))];
  return {bodies,ports,units:{length:'Aster radius',time:'√(R³/μ)',mass:'mass unit'}};
 }
-function validateControl(c:CubicControl,start:number,end:number,cap:number){
+export function validateControl(c:CubicControl,start:number,end:number,cap:number){
  assert(c.start===start&&c.end===end&&c.keys.length===129&&c.coefficients.length===128,'control interval');
  assert(c.keys.every((k,i)=>k.length===4&&k.every(Number.isFinite)&&(i===0||k[0]>c.keys[i-1][0]))&&c.keys[0][0]===start&&c.keys.at(-1)![0]===end,'control keys');
  assert(c.coefficients.every(q=>q.length===4&&q.every(v=>v.length===3&&v.every(Number.isFinite))),'control coefficients');

@@ -1,0 +1,204 @@
+{
+  "sha256": "17b9899ef817bbb9415ababa05c4d39eeb2985e7b7b20c1c0dab93a29bc4314e",
+  "period": 120.50467632722804,
+  "duration": 241.00935265445608,
+  "work": {
+    "nodes": 212249,
+    "checks": 212257,
+    "oraclePosition": 1.1825114987323223e-9,
+    "oracleVelocity": 2.9990372583500772e-9,
+    "bytes": 2530018
+  },
+  "carrierDeltaV": 0,
+  "fuelSpent": [
+    0,
+    10.3479120982197
+  ],
+  "connectionDeltaV": 0.35821345680571376,
+  "accelerationEnvelope": 2.3524421760384175,
+  "forceEnvelope": 7.9081301277902005,
+  "captures": [
+    {
+      "t": 56,
+      "actor": 1,
+      "kind": "dock",
+      "id": "dock:Wayfarer",
+      "label": "Join Wayfarer",
+      "port": "Wayfarer",
+      "deltaV": 1.0019785526498336e-8,
+      "fuelUsed": 6.043296529867348e-9,
+      "beforeFuel": 1.2625452156049666,
+      "afterFuel": 1.26254520956167,
+      "positionError": 6.099179576439127e-11,
+      "velocityError": 1.9785526498335835e-11
+    },
+    {
+      "t": 73.5,
+      "actor": 1,
+      "kind": "land",
+      "id": "land:Haven",
+      "label": "Land at Haven",
+      "port": "Haven",
+      "deltaV": 1.015767907548846e-8,
+      "fuelUsed": 4.167453937498067e-9,
+      "beforeFuel": 0.4911046946092915,
+      "afterFuel": 0.4911046904418376,
+      "positionError": 6.121805968463742e-11,
+      "velocityError": 1.5767907548846122e-10
+    },
+    {
+      "t": 79.5,
+      "actor": 1,
+      "kind": "dock",
+      "id": "dock:Wayfarer",
+      "label": "Join Wayfarer",
+      "port": "Wayfarer",
+      "deltaV": 1.0012748839705274e-8,
+      "fuelUsed": 6.785250139529353e-9,
+      "beforeFuel": 1.5606442535680265,
+      "afterFuel": 1.5606442467827764,
+      "positionError": 4.138143271728484e-11,
+      "velocityError": 1.2748839705273824e-11
+    },
+    {
+      "t": 102.75935111554372,
+      "actor": 1,
+      "kind": "land",
+      "id": "land:Cairn",
+      "label": "Land at Cairn",
+      "port": "Cairn",
+      "deltaV": 1.0086932775317031e-8,
+      "fuelUsed": 3.7446208356328725e-9,
+      "beforeFuel": 0.33493926467800794,
+      "afterFuel": 0.3349392609333871,
+      "positionError": 7.278780271646225e-11,
+      "velocityError": 8.693277531703118e-11
+    },
+    {
+      "t": 176.50467632722803,
+      "actor": 1,
+      "kind": "dock",
+      "id": "dock:Wayfarer",
+      "label": "Join Wayfarer",
+      "port": "Wayfarer",
+      "deltaV": 1.0009997244927158e-8,
+      "fuelUsed": 6.037392807911601e-9,
+      "beforeFuel": 1.2625452156049661,
+      "afterFuel": 1.2625452095675733,
+      "positionError": 2.8858741777424882e-11,
+      "velocityError": 9.997244927158204e-12
+    },
+    {
+      "t": 194.00467632722803,
+      "actor": 1,
+      "kind": "land",
+      "id": "land:Haven",
+      "label": "Land at Haven",
+      "port": "Haven",
+      "deltaV": 1.1495499379677585e-8,
+      "fuelUsed": 4.7163293270813256e-9,
+      "beforeFuel": 0.4911046946133072,
+      "afterFuel": 0.49110468989697786,
+      "positionError": 5.799140758075898e-10,
+      "velocityError": 1.4954993796775844e-9
+    },
+    {
+      "t": 200.00467632722803,
+      "actor": 1,
+      "kind": "dock",
+      "id": "dock:Wayfarer",
+      "label": "Join Wayfarer",
+      "port": "Wayfarer",
+      "deltaV": 1.0008917217616762e-8,
+      "fuelUsed": 6.78265354991936e-9,
+      "beforeFuel": 1.5606442535680265,
+      "afterFuel": 1.560644246785373,
+      "positionError": 3.8337039033016847e-11,
+      "velocityError": 8.917217616761598e-12
+    },
+    {
+      "t": 223.26402744277175,
+      "actor": 1,
+      "kind": "land",
+      "id": "land:Cairn",
+      "label": "Land at Cairn",
+      "port": "Cairn",
+      "deltaV": 1.1236373625053976e-8,
+      "fuelUsed": 4.171333056746107e-9,
+      "beforeFuel": 0.33493926467943014,
+      "afterFuel": 0.3349392605080971,
+      "positionError": 1.0293622343589526e-9,
+      "velocityError": 1.2363736250539763e-9
+    }
+  ],
+  "finalResources": {
+    "t": 241.00935265445608,
+    "fuelImported": 10.347912098219702,
+    "cargoImported": 0.6,
+    "cargoExported": 0.6
+  },
+  "finalShips": [
+    {
+      "t": 241.00935265445608,
+      "y": [
+        0.11597352228720299,
+        -4.359718033218944,
+        0,
+        0.3806092396476936,
+        0.22616232192762614,
+        0
+      ],
+      "propellant": 6,
+      "fuelUsed": 0,
+      "mass": 10,
+      "burnCursor": 0,
+      "status": "running",
+      "detail": "",
+      "logistics": {
+        "operationCursor": 0,
+        "cargoMass": 0,
+        "fuelUsed": 0,
+        "ports": []
+      },
+      "activity": {
+        "kind": "flying",
+        "reason": "Wayfarer coast"
+      }
+    },
+    {
+      "t": 241.00935265445608,
+      "y": [
+        0.9852111168533721,
+        0.17140319521097386,
+        0,
+        -0.015559030043903674,
+        0.08943199307248444,
+        0
+      ],
+      "propellant": 3,
+      "fuelUsed": 10.3479120982197,
+      "mass": 4.15,
+      "burnCursor": 0,
+      "status": "running",
+      "detail": "",
+      "logistics": {
+        "operationCursor": 0,
+        "cargoMass": 0.15,
+        "fuelUsed": 10.3479120982197,
+        "ports": [],
+        "dockedPortId": "Cairn"
+      },
+      "activity": {
+        "kind": "waiting",
+        "reason": "Turnaround"
+      },
+      "axis": [
+        0.9852012648407237,
+        0.1714014811961619,
+        0
+      ]
+    }
+  ],
+  "drawingSamples": 17675,
+  "replyBytes": 14996014
+}

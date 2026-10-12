@@ -1,3 +1,5 @@
+import {samplePassThrough} from '../cycler/query';
+import type {PassThroughTemplate,PassThroughPlayback} from '../cycler/types';
 import {sampleCompact} from '../compact/query';
 import {resourcesAt as compactResourcesAt} from '../compact/view';
 import type {CompactPlayback,CompactTemplate} from '../compact/types';
@@ -28,6 +30,7 @@ export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
 export interface ViewSample extends Sample {frameOrigin?:State;opacity?:number;activity?:Activity;mass?:number;aero?:AeroTelemetry;axis?:Vector3;entryPhase?:'coast'|'entry'|'braking'|'recovered'}
 export interface VesselView {
+ passThrough?:PassThroughPlayback;
  compact?:CompactPlayback;
  solar?:SolarPlayback;
  stagedService?:StagedPlayback;
@@ -51,6 +54,7 @@ export interface VesselView {
 export interface VesselRun extends Vessel,VesselView {}
 export interface MaintainedView extends VesselView {baseline:{t:number;y:State}[]}
 export interface SceneView {
+ passThrough?:PassThroughTemplate;
  compact?:CompactTemplate;
  solar?:SolarScene;
  playback?:{rateScale:number;trailSpan:number;forecastSpan:number;maxZoom:number};
@@ -114,6 +118,7 @@ function eventOrder(e: ViewerEvent): number {
   return (e.kind === 'undock' || e.kind==='launch') ? 0 : (e.kind === 'dock' || e.kind==='land') ? 1 : 2;
 }
 export function stockAt(run: SceneView, t: number): Stock[] {
+  if(run.passThrough)return run.world.ports.map(p=>({id:p.id,cargo:0,propellant:0,occupied:run.vessels.filter(v=>sampleVessel(v,t).logistics?.dockedPortId===p.id).length}));
   if(run.solar)return solarStockAt(run.solar,t);
   if(run.compact&&!run.traffic)return compactResourcesAt(run.compact,t).stocks.map(p=>({...p,occupied:run.vessels.filter(v=>sampleVessel(v,t).logistics?.dockedPortId===p.id).length}));
   const ports=portsOf(run);
@@ -214,6 +219,7 @@ export function presenceLabel(v:VesselView,t:number):string {
  return t<(v.lifetime?.start??-Infinity)?'Carried by '+(v.attachment?.before??'launch stack'):v.attachment?.after?'Aboard '+v.attachment.after:'Separated';
 }
 export function sampleVessel(v: VesselView, t: number): ViewSample {
+ if(v.passThrough)return samplePassThrough(v.passThrough,t);
  if(v.compact)return sampleCompact(v.compact,t);
  if(v.solar)return sampleSolar(v.solar,Math.max(v.solar.start,Math.min(v.solar.end,t)));
  if(v.stagedService)return sampleStagedService(v as StagedVessel,t);
@@ -272,6 +278,7 @@ function bracket(v: VesselView, t: number): [ViewSample, ViewSample] {
   return [a, b];
 }
 export function stateAt(v: VesselView, t: number): State {
+ if(v.passThrough)return samplePassThrough(v.passThrough,t).y;
  if(v.compact)return sampleCompact(v.compact,t).y;
  if(v.solar)return solarStateAt(v.solar.rows,t,v.solar.captures);
  if(v.stagedService)return stagedStateAt(v as StagedVessel,t);

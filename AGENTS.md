@@ -152,7 +152,7 @@ incoming future drawing rows across paused replies until Live; retain resource
 anchors at actual events/window cuts instead of every reply clock. Calendar1e6.
 Sun/Mars/Jupiter analog requires a fresh recurrence/physical admission gate.
 
-The owner rejected compact v1 morphology; active source is now profile-v2. Read
+The owner rejected compact v1 morphology; the historical refinement uses profile-v2. Read
 docs/evidence/compact-refinement.md and docs/design/compact-cycler/refinement/.
 Preserve legacy v1's seven singleton/control/zero-phase protocol; expanded groups
 require v2. Current period74, carrier64 coast/two4-unit burns; every taxi has literal
@@ -162,6 +162,20 @@ burns, keeping tanks/dry/cargo/reserves. Carrier delta-v is higher: do not claim
 cheaper maintenance or necessary/optimal natural cycling. Keep directional geometry
 and independent-vs-aboard gates, not just aggregate aboard time. Frozen controls are
 freshly replayed by compact_cycler_refined.py; native canonical physics remains authority.
+
+The owner rejected the Beacon turnaround, accepted the ballistic research plot and
+requested parking/phasing orbit service. The active finite Cycler is now
+pass-through-set-v1/profile-v1; read docs/design/compact-cycler/redesign/README.md,
+disposition.md and docs/evidence/pass-through.md. Two native carrier circuits and
+two actual-epoch Pipit round trips use direct finite history, never modulo resets.
+Carrier has no thrust/support/refill. Exact native carrier nodes own handoffs;
+intermediate orbital states never snap. Preserve every paid capture, all four
+landing reserves, separate tanks/attached mass, explicit four funded reloads,
+computed cubic bounds and reserved aggregate work allowances before propagation.
+Do not silently reuse the old supported-cycle continuous cache. Old Beacon-stop
+finite/service entries are retired from the chooser; legacy contracts/fixtures and
+unit regressions remain. Continuous drift correction, halo stations and general
+online targeting remain separate future gates.
 
 - Keep simulation independent of DOM, rendering, workers, and wall-clock time.
 - Prediction/execution use one dynamics/event implementation. View frames never alter a burn.

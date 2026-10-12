@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: schematic attitude turns during the coast and reaches physical thrust continuously at ignition
+ok 1 - schematic attitude turns during the coast and reaches physical thrust continuously at ignition
+  ---
+  duration_ms: 3.638228
+  type: 'test'
+  ...
+# Subtest: attitude remains physical during thrust and respects explicit axes, surface support, and short coasts
+ok 2 - attitude remains physical during thrust and respects explicit axes, surface support, and short coasts
+  ---
+  duration_ms: 0.610587
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 368.546867

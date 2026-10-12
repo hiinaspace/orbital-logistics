@@ -1,5 +1,6 @@
-import compactFinite from '../fixtures/model-sets/aster-selene-cycler.json';
-import compactService from '../fixtures/model-sets/aster-selene-cycler-service.json';
+import {passThroughResources} from './cycler/view';
+import passThroughDefinition from '../fixtures/model-sets/aster-selene-pass-through.json';
+import type {PassThroughDefinition} from './cycler/types';
 import {isCompact,type CompactDefinition} from './compact/types';
 import {CompactViewStore} from './compact/store';
 import type {CompactDelta} from './compact/engine';
@@ -93,12 +94,10 @@ import type {State,Vec3} from './sim/schema';
 import {orbitError,displayPortState as basePortState,portsOf, sampleVessel as uncachedSampleVessel, setEvents, stockAt, isPresent,presenceLabel,type ModelSet, type SetEvent, type SceneView, type VesselView} from './model-set/model';
 import {transform,transformDirection} from './model-set/frames';
 
-const compactUrl=new URL('../fixtures/model-sets/compact-cycler-profile.json',import.meta.url).href;
-const compactSet={...compactFinite,artifactUrl:compactUrl} as CompactDefinition;
-const compactTraffic={...compactService,artifactUrl:compactUrl} as CompactDefinition;
 const solarSet={...solarDefinition,artifactUrl:new URL('../fixtures/model-sets/solar-cycler.json',import.meta.url).href} as SolarDefinition;
-const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo,stagedApollo,solarSet,compactSet] as (CompactDefinition|SolarDefinition|StagedApolloMission|ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
-const trafficSets=[compactTraffic,asterSystem,stagedService,beacon,crossings,expeditionService,trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (CompactDefinition|TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition)[];
+const passThroughSet={...passThroughDefinition,artifactUrl:new URL('../fixtures/model-sets/pass-through-profile.json',import.meta.url).href} as PassThroughDefinition;
+const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo,stagedApollo,solarSet,passThroughSet] as (PassThroughDefinition|CompactDefinition|SolarDefinition|StagedApolloMission|ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
+const trafficSets=[asterSystem,stagedService,beacon,crossings,expeditionService,trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (CompactDefinition|TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
 const esc = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]!));
 const number = (v: number) => v.toFixed(2);
@@ -409,6 +408,7 @@ function updatePanels() {
 }
 function publishState() {
   $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, frame, selected, layers, traffic:traffic?{frontier:traffic.frontier,oldest:traffic.oldest,pending,sequence,live:liveMode,stats:run?.traffic?.stats,halt:traffic.halt,error:liveError}:undefined,
+    passThrough:run?.passThrough?{period:run.passThrough.period,duration:run.passThrough.duration,work:run.passThrough.work,resources:passThroughResources(run.passThrough,t)}:undefined,
     staging:run?.staging,assemblies:run?.assemblies,entry:run?.entry,recoveries:run?.recoveries,aeroVectors,
     ships: run?.vessels.map(v => !isPresent(v,t)?({id:v.id,present:false,lifetime:v.lifetime}):({id: v.id,present:true, ...sampleVessel(v, t), ...(v.glyph?{glyph:v.glyph,axis:rocketAxis(v,sampleVessel(v,t),t)}:{}), screen: project(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),occludedBy:occluder(project3(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),spheres)?.id})),
     labels:placedLabels.map(({id,anchor,alpha,left,top})=>({id,anchor,alpha,left,top})),

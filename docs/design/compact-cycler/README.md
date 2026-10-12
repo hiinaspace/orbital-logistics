@@ -1,4 +1,8 @@
-# Compact powered cycler
+# Historical Beacon-stop cycler
+
+The owner rejected this turnaround geometry. The active finite Cycler is now the
+[ballistic pass-through service](redesign/README.md). The contracts below remain
+historical/regression evidence; their continuous cache does not apply to a free carrier.
 
 Aster–Selene · Cycler and Aster–Selene · Cycler service are a fictional orrery with
 spaceships: one long-coasting carrier and a reusable parcel shuttle. The finite

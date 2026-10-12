@@ -499,7 +499,7 @@ includes32-unit lead, bounded worker transactions and held/rewind/Live semantics
 
 ## Compact cycler refinement — 2026-10-12
 
-The owner rejected v1's fully powered taxis/long Beacon burns. Current profile-v2
+The owner rejected v1's fully powered taxis/long Beacon burns. Historical profile-v2
 keeps the field but uses a closer2.171-radius carrier pass,86.5% coast, four-unit
 carrier burns and explicit coast intervals on every taxi leg. Earlier handoffs and
 Cairn longitude1.2 give Aster boarding radius3.198. Independent/aboard time is6.5/7
@@ -508,3 +508,17 @@ engines are explicit. This improves morphology, not a demonstrated optimal natur
 cycler. Both runtime modes use the admitted source; Wayfarer's label is shortened.
 [Current evidence](evidence/compact-refinement.md) and
 [review dispositions](design/compact-cycler/refinement/disposition.md).
+
+## Finite ballistic pass-through service — 2026-10-12
+
+The user rejected the remaining Beacon turnaround, accepted the zero-thrust research
+plot and requested real early parking/phasing coasts. **Aster–Selene · Cycler** now
+shows two uninterrupted native carrier circuits and two paid Pipit round trips:
+early Aster launch, four parking laps, small orbital connection, lunar braking/descent,
+return orbital capture/coast and separately phased ground landing. Wayfarer never
+stops, burns or resets. Native absolute-epoch targets, separate tanks/carried mass,
+all four reserves, funded reloads and bounded work/drawing publication remain explicit.
+The old supported-cycle service is retired from the chooser; continuous free-carrier
+correction and resource recurrence remain a later gate.
+[Contract/reviews](design/compact-cycler/redesign/README.md) and
+[validation](evidence/pass-through.md).

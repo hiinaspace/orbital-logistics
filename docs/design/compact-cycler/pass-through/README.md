@@ -1,5 +1,8 @@
 # Pass-through carrier research — 2026-10-12
 
+The owner accepted this plot. The subsequent [finite service implementation](../redesign/README.md)
+adds the parking/phasing and surface legs; the research record below predates that work.
+
 The owner rejected the refined compact cycler: Wayfarer still turns around to
 rendezvous with Beacon, and Pipit's shallow surface approach lacks an orbital phase.
 The existing profile remains available, but its aesthetic gate is **not accepted**.
