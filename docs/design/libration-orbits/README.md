@@ -1,6 +1,10 @@
-# Spatial libration exhibits — proposed sequence
+# Spatial libration exhibits — reviewed sequence
 
-2026-10-12. Planning only; no dynamics or viewer changes in this pass.
+2026-10-12. The first finite slice is implemented: accelerating binary, spatial
+halo, finite Lissajous center-motion witness and paid parking-to-halo departure.
+See [current evidence](../../evidence/libration-orbits.md) and
+[implementation disposition](implementation-disposition.md). The remaining
+maintenance/visitor/continuous sequence below is future work.
 
 The next visible target is a compact fictional binary with a spacecraft on a
 spatial halo orbit. Its three-dimensional trail in the binary rotating frame is
@@ -138,5 +142,5 @@ assumption. Larger traffic networks and third-body perturbations are later sets.
   solutions.
 
 [Review brief](brief.md), [Astra review](astra-review.md) and
-[disposition](disposition.md) record the reviewed boundaries and sequencing. No new orbit suitability, solver runtime or continuous stability has
-been measured in this planning pass.
+[disposition](disposition.md) record the reviewed boundaries and sequencing. The original review was planning-only. Current finite measurements are in the
+evidence above; continuous stability/control cost remain unmeasured.

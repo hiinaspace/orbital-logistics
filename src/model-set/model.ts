@@ -19,7 +19,7 @@ import {portState} from '../sim/logistics';
 import { validateBundle, type Bundle, type Port, type Scenario, type Rail, type State, type Vec3, type ThrustArc } from '../sim/schema';
 
 export interface Station { inventoryOwner?:'propulsion'; id: string; role: string; berths: number; maintenance?:{reference:Extract<Rail,{kind:'circular'}>;checks:{t:number;outcome:string;before:number[];after?:number[];evaluations:number}[]} }
-export interface Vessel { glyph?:'rocket'|'stack';initialAxis?:Vec3; name: string; color: string; cargo: string; bundle: Bundle }
+export interface Vessel { glyph?:'rocket'|'stack'|'observatory';initialAxis?:Vec3; name: string; color: string; cargo: string; bundle: Bundle }
 export interface ModelSet {
   frameExtents?:Record<string,number>;
   schemaVersion: 1; id: string; name: string; extent: number;
@@ -41,7 +41,7 @@ export interface VesselView {
  surfaceFlights?:SurfaceFlight[];surfaceEngine?:Scenario['ship']['engine'];
  entry?:{physics:EntryPhysics;recovery:RecoveryPose;activeFrom?:number;entryEpoch:number;brakingEpoch:number;heatScale:number};
  aerodynamics?:{scenario:Scenario;atmosphere:Atmosphere;aero:AeroConfiguration};
- glyph?:'rocket'|'stack';initialAxis?:Vec3;
+ glyph?:'rocket'|'stack'|'observatory';initialAxis?:Vec3;
  inheritedFuelUsed?:number;
  lifetime?:{start:number;end:number;retired?:boolean;parentId?:string};
  id:string;name:string;color:string;cargo:string;ship:Scenario['ship'];ports:Port[];cargoCapacity:number;
@@ -54,6 +54,7 @@ export interface VesselView {
 export interface VesselRun extends Vessel,VesselView {}
 export interface MaintainedView extends VesselView {baseline:{t:number;y:State}[]}
 export interface SceneView {
+ binary?:import('../binary/model').BinaryDescriptor;
  passThrough?:PassThroughTemplate;
  compact?:CompactTemplate;
  solar?:SolarScene;
@@ -77,6 +78,7 @@ export interface SetEvent extends ViewerEvent { vessel: string; color: string }
 // A curated set overlays independent test ships. Admission checks shared finite
 // inventories and berths; no ship's program may depend on another's future arrival.
 export function validateSet(value: ModelSet): ModelSet {
+  if('binary' in value||String((value as ModelSet&{modelVersion?:string}).modelVersion??'').startsWith('circular-binary-'))throw Error('Circular binary requires its admitted exhibit handler');
   if (value.schemaVersion !== 1 || !value.id || !value.name || !Number.isFinite(value.extent) || value.extent <= 0 ||
       !Number.isFinite(value.rotating.rate) || !Number.isFinite(value.rotating.phase) ||
       value.vessels.length < 1 || value.vessels.length > 8) throw new Error('Invalid model set');

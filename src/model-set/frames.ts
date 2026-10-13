@@ -1,3 +1,4 @@
+import {equilibria,binaryPoint} from '../binary/model';
 import {solarBodyState} from '../solar/ephemeris';
 import {solarPortState} from '../solar/view';
 import {stagedDisplayOrigin,type StagedVessel} from '../staged-service/query';
@@ -7,7 +8,8 @@ import { displayPortState, portsOf, stateAt, type SceneView } from './model';
 
 export function transform(run: SceneView, y: State, t: number, frame: string): State {
   let origin: State = [0, 0, 0, 0, 0, 0], angle = 0, rate = 0;
-  if (frame === 'rotating') { rate = run.rotating.rate; angle = run.rotating.phase + rate * t; }
+  if(frame==='libration'&&run.binary){const point=equilibria(run.binary).find(p=>p.id==='L2')!;origin=binaryPoint(run.binary,point.x,point.y,t);origin[3]=-run.binary.rate*origin[1];origin[4]=run.binary.rate*origin[0];rate=run.binary.rate;angle=run.binary.phase+rate*t;}
+  else if (frame === 'rotating') { rate = run.rotating.rate; angle = run.rotating.phase + rate * t; }
   else if (frame !== 'inertial') {
     const body = run.world.bodies.find(b => b.id === frame);
     const port = portsOf(run).find(p => p.id === frame);
@@ -26,7 +28,7 @@ export function transform(run: SceneView, y: State, t: number, frame: string): S
 // Forces/directions rotate with the axes. They have no translating origin or
 // angular-velocity term; that term belongs to velocities at a position.
 export function transformDirection(run:SceneView, direction:Vec3, t:number, frame:string):Vec3 {
-  if(frame!=='rotating')return [...direction];
+  if(frame!=='rotating'&&!(frame==='libration'&&run.binary))return [...direction];
   const angle=run.rotating.phase+run.rotating.rate*t,c=Math.cos(angle),s=Math.sin(angle);
   return [c*direction[0]+s*direction[1],-s*direction[0]+c*direction[1],direction[2]];
 }

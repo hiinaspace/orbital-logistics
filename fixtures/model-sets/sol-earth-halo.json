@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "modelVersion": "circular-binary-set-v1",
+  "id": "sol-earth-halo",
+  "name": "Sol\u2013Earth \u00b7 Webb halo",
+  "extent": 5,
+  "description": "A space observatory circles L2 above and below Earth\u2019s orbital plane.",
+  "provenance": "Webb-inspired fictional circular binary; compressed distances, exaggerated Earth mass. JPL seed continued to mass fraction .003; canonical unpowered spatial coast, not real mission data.",
+  "stations": [],
+  "rotating": {
+    "name": "Sol\u2013Earth rotating",
+    "rate": 0.125,
+    "phase": 0
+  },
+  "binary": {
+    "schemaVersion": 1,
+    "mu": 0.003,
+    "separation": 4,
+    "rate": 0.125,
+    "phase": 0,
+    "period": 25.76370375823563,
+    "kind": "halo"
+  },
+  "vessels": [
+    {
+      "name": "Webb",
+      "color": "#e4c879",
+      "cargo": "Observatory",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "sol-earth-halo-coast",
+          "units": {
+            "length": "model distance",
+            "time": "model time",
+            "mass": "mass unit"
+          },
+          "epoch": 0,
+          "duration": 60,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 20
+          },
+          "bodies": [
+            {
+              "id": "Sol",
+              "mu": 0.997,
+              "radius": 0.65,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.012,
+                "rate": 0.125,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "Earth",
+              "mu": 0.003,
+              "radius": 0.1,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 3.988,
+                "rate": 0.125,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "webb",
+            "state": [
+              4.431341494654667,
+              0,
+              0.24037111652794274,
+              0.0,
+              0.49280004606984346,
+              0.0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.4,
+            "tankCapacity": 0.4,
+            "exhaustVelocity": 3
+          }
+        },
+        "program": {
+          "schemaVersion": 3,
+          "id": "webb-halo-coast",
+          "burns": []
+        }
+      },
+      "glyph": "observatory"
+    }
+  ]
+}

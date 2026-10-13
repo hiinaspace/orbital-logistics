@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "modelVersion": "circular-binary-set-v1",
+  "id": "sol-earth-lissajous",
+  "name": "Sol\u2013Earth \u00b7 Gaia Lissajous",
+  "extent": 5,
+  "description": "A survey observatory weaves above and below the Sun\u2013Earth plane near L2.",
+  "provenance": "Gaia/WMAP-inspired finite center-motion witness in a fictional binary. Offline boundary-value initial state, canonical unpowered flight; no exact recurrence or real mission data.",
+  "stations": [],
+  "rotating": {
+    "name": "Sol\u2013Earth rotating",
+    "rate": 0.125,
+    "phase": 0
+  },
+  "binary": {
+    "schemaVersion": 1,
+    "mu": 0.003,
+    "separation": 4,
+    "rate": 0.125,
+    "phase": 0,
+    "period": 25.959956963240273,
+    "kind": "lissajous"
+  },
+  "vessels": [
+    {
+      "name": "Gaia",
+      "color": "#a8d8e8",
+      "cargo": "Observatory",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "sol-earth-lissajous-coast",
+          "units": {
+            "length": "model distance",
+            "time": "model time",
+            "mass": "mass unit"
+          },
+          "epoch": 0,
+          "duration": 60,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 20
+          },
+          "bodies": [
+            {
+              "id": "Sol",
+              "mu": 0.997,
+              "radius": 0.65,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.012,
+                "rate": 0.125,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "Earth",
+              "mu": 0.003,
+              "radius": 0.1,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 3.988,
+                "rate": 0.125,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "gaia",
+            "state": [
+              4.426287765623906,
+              0.0,
+              0.16,
+              0.0,
+              0.5182859707029882,
+              0.0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.4,
+            "tankCapacity": 0.4,
+            "exhaustVelocity": 3
+          }
+        },
+        "program": {
+          "schemaVersion": 3,
+          "id": "gaia-lissajous-coast",
+          "burns": []
+        }
+      },
+      "glyph": "observatory"
+    }
+  ]
+}

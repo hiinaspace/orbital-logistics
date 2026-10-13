@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "modelVersion": "circular-binary-set-v1",
+  "id": "sol-earth-observatory-insertion",
+  "name": "Sol\u2013Earth \u00b7 Observatory departure",
+  "extent": 5,
+  "description": "An observatory departs Earth parking orbit, coasts to L2 and enters a spatial halo.",
+  "provenance": "Webb-inspired fictional parking departure and halo insertion. Bounded finite thrust, paid propellant and continuous canonical flight; launch vehicle/ground ascent and actual mission data are not represented.",
+  "stations": [],
+  "rotating": {
+    "name": "Sol\u2013Earth rotating",
+    "rate": 0.125,
+    "phase": 0
+  },
+  "binary": {
+    "schemaVersion": 1,
+    "mu": 0.003,
+    "separation": 4,
+    "rate": 0.125,
+    "phase": 0,
+    "period": 25.76370375823563,
+    "kind": "insertion"
+  },
+  "vessels": [
+    {
+      "name": "Webb",
+      "color": "#e4c879",
+      "cargo": "Observatory",
+      "bundle": {
+        "scenario": {
+          "schemaVersion": 3,
+          "modelVersion": "rk4-canonical-v3",
+          "id": "sol-earth-observatory-departure",
+          "units": {
+            "length": "model distance",
+            "time": "model time",
+            "mass": "mass unit"
+          },
+          "epoch": 0,
+          "duration": 60,
+          "policy": {
+            "step": 0.0009765625,
+            "maxNodes": 65536,
+            "maxSubdivision": 20
+          },
+          "bodies": [
+            {
+              "id": "Sol",
+              "mu": 0.997,
+              "radius": 0.65,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 0.012,
+                "rate": 0.125,
+                "phase": 3.141592653589793
+              }
+            },
+            {
+              "id": "Earth",
+              "mu": 0.003,
+              "radius": 0.1,
+              "rail": {
+                "kind": "circular",
+                "center": [
+                  0,
+                  0,
+                  0
+                ],
+                "u": [
+                  1,
+                  0,
+                  0
+                ],
+                "v": [
+                  0,
+                  1,
+                  0
+                ],
+                "radius": 3.988,
+                "rate": 0.125,
+                "phase": 0
+              }
+            }
+          ],
+          "ship": {
+            "id": "webb",
+            "state": [
+              4.170116831286659,
+              -0.05416142319129596,
+              0.0,
+              0.03581956386681282,
+              0.6189426524475522,
+              0.0
+            ],
+            "dryMass": 1,
+            "cargoMass": 0,
+            "propellant": 0.4,
+            "tankCapacity": 0.4,
+            "exhaustVelocity": 3,
+            "engine": {
+              "maxThrust": 1,
+              "maxAcceleration": 0.04
+            }
+          }
+        },
+        "program": {
+          "schemaVersion": 3,
+          "id": "webb-departure-insertion",
+          "burns": [],
+          "thrustArcs": [
+            {
+              "id": "Earth departure",
+              "start": 1,
+              "end": 3.737767667642739,
+              "direction": [
+                0.4193472240786798,
+                0.608436537425777,
+                0.6737602582394102
+              ],
+              "throttle": 1
+            },
+            {
+              "id": "Halo insertion",
+              "start": 12.980459133529555,
+              "end": 14,
+              "direction": [
+                -0.5977170758544775,
+                -0.17986585048834464,
+                0.7812698465063638
+              ],
+              "throttle": 1
+            }
+          ]
+        }
+      },
+      "glyph": "observatory"
+    }
+  ]
+}

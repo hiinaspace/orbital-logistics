@@ -588,3 +588,5 @@ separate finite Lissajous witness, paid maintenance, quiet first visitor, then
 continuous service. Orbital-plane field rendering is optional; real spatial
 trails are never displaced onto the coplanar relief sheet. Planning only; orbit
 suitability/control costs remain unmeasured. Existing sets remain unchanged.
+
+- 2026-10-12: owner authorized Webb/Gaia/WMAP-inspired compact Sun–Earth observatories and departure/insertion exploration. Implemented accelerating circular-binary admission, five equilibria, finite spatial halo and center-motion Lissajous, plus paid parking-to-halo departure/insertion; L2 rotating view and schematic observatory glyph. Finite native/DOP853/three-grid/full-state, resource, frame, production browser and shader-fade gates pass; Astra implementation disposition retained. No ground ascent, exact Lissajous recurrence or continuous libration maintenance is claimed. See [evidence](evidence/libration-orbits.md).

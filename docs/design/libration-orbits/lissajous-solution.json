@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "mu": 0.003,
+  "separation": 4,
+  "rate": 0.125,
+  "duration": 60,
+  "rotatingState": [
+    1.1065719414059765,
+    0.0,
+    0.04,
+    0.0,
+    -0.07,
+    0.0
+  ],
+  "boundaryResidual": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -3.469446951953614e-18
+  ],
+  "meshNodes": 3570,
+  "maxResidual": 1.9969593520869592e-10,
+  "period": 3.244994620405034,
+  "verticalPeriod": 3.37536453102859
+}

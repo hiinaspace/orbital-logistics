@@ -1,3 +1,7 @@
+import insertionSet from '../fixtures/model-sets/sol-earth-observatory-insertion.json';
+import lissajousSet from '../fixtures/model-sets/sol-earth-lissajous.json';
+import haloSet from '../fixtures/model-sets/sol-earth-halo.json';
+import {binaryPoint,equilibria as binaryEquilibria} from './binary/model';
 import {EQUILIBRIA,basisPoint,reliefHeight} from './view/potential-field';
 import {PotentialLayer} from './view/potential-layer';
 import {FleetViewStore} from './cycler/service-store';
@@ -104,7 +108,7 @@ import {transform,transformDirection} from './model-set/frames';
 const solarSet={...solarDefinition,artifactUrl:new URL('../fixtures/model-sets/solar-cycler.json',import.meta.url).href} as SolarDefinition;
 const passThroughSet={...passThroughDefinition,artifactUrl:new URL('../fixtures/model-sets/pass-through-profile.json',import.meta.url).href} as PassThroughDefinition;
 const fleetSet={...fleetDefinition,artifactUrl:new URL('../fixtures/model-sets/cycler-fleet-profile.json',import.meta.url).href} as PassThroughDefinition;
-const sets = [freight, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo,stagedApollo,solarSet,passThroughSet,fleetSet] as (PassThroughDefinition|CompactDefinition|SolarDefinition|StagedApolloMission|ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
+const sets = [freight,haloSet,lissajousSet,insertionSet, lunar, seleneFreight,selenePowered,seleneGround,orisonPowered,surfaceAscent,surfaceReturn,stagedFlight,atmosphericEntry,atmosphericLaunch,northernAtmosphere,crossingPlanes,steered,maintainedSet,directSurface,lowOrbitShuttle,latitudeShuttle,apollo,stagedApollo,solarSet,passThroughSet,fleetSet] as (PassThroughDefinition|CompactDefinition|SolarDefinition|StagedApolloMission|ApolloMission|ModelSet|StagedFlight|EntryFlight|AtmosphericMission|DirectSurfaceSet|SurfaceShuttle)[];
 const fleetService={...fleetServiceDefinition,artifactUrl:new URL('../fixtures/model-sets/recurring-cycler-profile.json',import.meta.url).href} as FleetServiceDefinition;
 const trafficSets=[fleetService,asterSystem,stagedService,beacon,crossings,expeditionService,trafficDefinition,surfaceService,maintainedService,flexibleService,networkService,surfaceFlexible,shuttleService,freightDistrict,lunarService] as unknown as (FleetServiceDefinition|CompactDefinition|TrafficDefinition|MaintainedDefinition|AdaptiveDefinition|NetworkDefinition|LunarDefinition|ExpeditionDefinition|ExpeditionFleetDefinition|LibrationDefinition|StagedServiceDefinition|AsterSystemDefinition)[];
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id)! as T;
@@ -115,7 +119,7 @@ document.body.innerHTML = `
   <header><h1>Orbital Logistics</h1><select id="set" aria-label="Model set">${[...sets,...trafficSets].map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><span id="load-status" role="status">Preparing scene…</span></header>
   <div class="workspace">
     <section class="scene" aria-label="Orbital viewer">
-      <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><label>View <select id="camera-view" aria-label="Camera view"><option value="top">Top</option><option value="oblique">3D</option><option value="front">Front</option><option value="side">Side</option><option value="custom" hidden>Custom</option></select></label><label>Track <select id="tracking" aria-label="Camera tracking"><option value="off">Off</option><option value="follow">Follow</option><option value="chase">Chase</option></select></label><button id="drag-mode" title="Drag to orbit · Shift-drag to pan" aria-pressed="false">Orbit</button><button id="fit" title="Fit the scene (F)">Fit</button><button id="launch-view" hidden>Surface view</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<div id="potential-controls" hidden><label><input type="checkbox" id="layer-field">Potential map</label><label><input type="checkbox" id="layer-relief">Relief</label><label><input type="checkbox" id="layer-grid" checked>Relief grid</label><label><input type="checkbox" id="layer-equilibria">Lagrange points</label><label class="trail-control">Height <output id="relief-value">1×</output><input id="relief-height" type="range" min="0" max="3" step="0.05" value="1" aria-label="Relief height"></label></div><label class="entry-layer" hidden><input type="checkbox" id="layer-atmosphere" checked>Atmosphere</label><label class="entry-layer" hidden><input type="checkbox" id="layer-aero">Aerodynamic forces <span style="color:#80c6ed">D</span> / <span style="color:#bb9fee">L</span></label><label class="entry-layer" hidden><input type="checkbox" id="layer-glow" checked>Entry glow</label><label><input type="checkbox" id="see-through">See-through bodies</label><label class="trail-control">Trail length <output id="trail-value">1×</output><input id="trail-length" type="range" min="0.25" max="2" step="0.05" value="1" aria-label="Trail length"></label><button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
+      <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><label>View <select id="camera-view" aria-label="Camera view"><option value="top">Top</option><option value="oblique">3D</option><option value="front">Front</option><option value="side">Side</option><option value="custom" hidden>Custom</option></select></label><label>Track <select id="tracking" aria-label="Camera tracking"><option value="off">Off</option><option value="follow">Follow</option><option value="chase">Chase</option></select></label><button id="drag-mode" title="Drag to orbit · Shift-drag to pan" aria-pressed="false">Orbit</button><button id="fit" title="Fit the scene (F)">Fit</button><button id="launch-view" hidden>Surface view</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<label id="equilibrium-control" hidden><input type="checkbox" id="layer-equilibria">Lagrange points</label><div id="potential-controls" hidden><label><input type="checkbox" id="layer-field">Potential map</label><label><input type="checkbox" id="layer-relief">Relief</label><label><input type="checkbox" id="layer-grid" checked>Relief grid</label><label class="trail-control">Grid strength <output id="grid-strength-value">55%</output><input id="grid-strength" type="range" min="0" max="1" step="0.01" value="0.55" aria-label="Grid strength"></label><label class="trail-control">Height <output id="relief-value">1×</output><input id="relief-height" type="range" min="0" max="3" step="0.05" value="1" aria-label="Relief height"></label></div><label class="entry-layer" hidden><input type="checkbox" id="layer-atmosphere" checked>Atmosphere</label><label class="entry-layer" hidden><input type="checkbox" id="layer-aero">Aerodynamic forces <span style="color:#80c6ed">D</span> / <span style="color:#bb9fee">L</span></label><label class="entry-layer" hidden><input type="checkbox" id="layer-glow" checked>Entry glow</label><label><input type="checkbox" id="see-through">See-through bodies</label><label class="trail-control">Trail length <output id="trail-value">1×</output><input id="trail-length" type="range" min="0.25" max="2" step="0.05" value="1" aria-label="Trail length"></label><button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
       <div class="viewport"><canvas id="field-space" aria-hidden="true"></canvas><canvas id="relief-space" aria-hidden="true" hidden></canvas><canvas id="space" tabindex="0" aria-label="Orbital traffic. Drag to pan, scroll to zoom, click a ship or station to inspect."></canvas></div>
       <div id="field-key" title="Specific gravitational potential · length²/time² · fixed logarithmic color scale" hidden>Potential <span></span> −1.40 … −0.095</div><div id="timelines" aria-label="Ship activity timelines"></div>
       <div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><label class="speed-control"><span class="speed-track"><input id="speed" type="range" min="-1" max="1" step="0.0001" value="0" title="Reverse ← · 0× pause · → Forward" aria-label="Playback speed" aria-valuetext="1×"></span><output id="speed-value">1×</output></label><input id="time" type="range" min="0" max="64" value="0" step="0.001" aria-label="Simulation time"><output id="clock">0.00</output><button id="live" hidden>Live</button><label class="replay"><input type="checkbox" id="replay" title="Rewind the prepared scene at the end">Replay</label></div>
@@ -144,7 +148,7 @@ const trailSpan=()=>recommendedTrail()*trailScale;
 function syncTrail(){ $<HTMLInputElement>('trail-length').value=String(trailScale);$('trail-value').textContent=trailScale.toFixed(2).replace(/0+$/,'').replace(/\.$/,'')+'×';}
 let lastFrame = performance.now(), lastPanel = 0, playbackRate = 1, resumeRate=1;
 let layers = {orbits: true, trails: true, plan: true, labels: true,atmosphere:true,aero:false,glow:true,field:false,relief:false,equilibria:false,grid:true};
-let reliefGain=1;
+let reliefGain=1,gridStrength=.55;
 let savedLayers = {...layers}, cleared = false;
 let aeroVectors:{vessel:string;kind:'drag'|'lift';force:number;from:[number,number];to:[number,number]}[]=[];
 let thrustWhiskers:{vessel:string;t:number;force:number;from:[number,number];to:[number,number]}[]=[];
@@ -179,6 +183,8 @@ function projectRaw(y:State,time:number):ScreenPoint {
   try{const state=transform(run!,y,time,frame);return renderProjection?renderProjection(state):cameraPoint(camera,state,width,height);}catch{return [NaN,NaN,NaN];}
 }
 const hasField=()=>!!run?.passThrough||!!run?.compact;
+const equilibriumMarkers=()=>run?.binary?binaryEquilibria(run.binary):hasField()?EQUILIBRIA:[];
+const equilibriumPoint=(x:number,y:number,epoch:number)=>run?.binary?binaryPoint(run.binary,x,y,epoch):basisPoint(x,y,epoch);
 const reliefEnabled=()=>hasField()&&layers.relief;
 const reliefOrigins=new Map<number,number>();
 function reliefOrigin(epoch:number){if(frame==='inertial'||frame==='rotating')return 0;let height=reliefOrigins.get(epoch);if(height===undefined){const origin=transform(run!,[0,0,0,0,0,0],epoch,frame),q=basisPoint(-origin[0],-origin[1],-epoch);height=reliefHeight(q[0],q[1]);if(reliefOrigins.size>=2048)reliefOrigins.clear();reliefOrigins.set(epoch,height);}return height;}
@@ -430,7 +436,7 @@ function updatePanels() {
   publishState();
 }
 function publishState() {
-  $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, trailScale,trailSpan:trailSpan(), frame, selected, layers, reliefGain,equilibria:hasField()?EQUILIBRIA.map(e=>({...e,screen:project(basisPoint(e.x,e.y,t),t)})):[], field:potentialLayer.stats, traffic:traffic?{frontier:traffic.frontier,oldest:traffic.oldest,pending,sequence,live:liveMode,stats:run?.traffic?.stats,halt:traffic.halt,error:liveError}:undefined,
+  $('state-json').textContent = JSON.stringify({ready, revision, set: run?.id, t, playing, playbackRate, trailScale,trailSpan:trailSpan(), frame, selected, layers, reliefGain,gridStrength,equilibria:equilibriumMarkers().map(e=>({...e,screen:project(equilibriumPoint(e.x,e.y,t),t)})), field:potentialLayer.stats, traffic:traffic?{frontier:traffic.frontier,oldest:traffic.oldest,pending,sequence,live:liveMode,stats:run?.traffic?.stats,halt:traffic.halt,error:liveError}:undefined,
     passThrough:run?.passThrough?{period:run.passThrough.period,duration:run.passThrough.duration,work:run.passThrough.work,resources:passThroughResources(run.passThrough,t)}:undefined,
     staging:run?.staging,assemblies:run?.assemblies,entry:run?.entry,recoveries:run?.recoveries,aeroVectors,
     ships: run?.vessels.map(v => !isPresent(v,t)?({id:v.id,present:false,lifetime:v.lifetime}):({id: v.id,present:true, ...sampleVessel(v, t), ...(v.glyph?{glyph:v.glyph,axis:rocketAxis(v,sampleVessel(v,t),t)}:{}), screen: project(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),occludedBy:occluder(project3(sampleVessel(v,t).y,sampleVessel(v,t).activity?.knownEpoch??t),spheres)?.id})),
@@ -445,7 +451,7 @@ function loadSet(id: string) {
   resumeRate=setResumeSpeeds.get(id)??(playbackRate||1);playbackRate=Math.sign(playbackRate)*Math.min(Math.abs(playbackRate),maximumPlaybackRate(id));resumeRate=Math.sign(resumeRate)*Math.min(Math.abs(resumeRate),maximumPlaybackRate(id));if(playbackRate!==0)resumeRate=playbackRate;syncSpeed();
   const continuous=trafficSets.find(d=>d.id===id);
   const set = sets.find(s => s.id === id)!;
-  tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['crossing-planes','orison-steered','orison-maintained','orison-maintained-service','orison-flexible-service','orison-relay-network','orison-latitude-shuttle','aster-northern-launch','selene-ground','selene-ground-service'].includes(id)?'oblique':'top';orient(camera,cameraPreset);if(id==='orison-latitude-shuttle'||id==='selene-ground'||id==='selene-ground-service')camera.yaw=1.2;if(id==='aster-northern-launch')camera.yaw=2.6;panMode=false;cameraControls();
+  tracking='off';trackingOffset=[0,0,0];delete camera.rig;labelLayout.reset();placedLabels=[];hovered='';cameraPreset=['sol-earth-halo','sol-earth-lissajous','sol-earth-observatory-insertion','crossing-planes','orison-steered','orison-maintained','orison-maintained-service','orison-flexible-service','orison-relay-network','orison-latitude-shuttle','aster-northern-launch','selene-ground','selene-ground-service'].includes(id)?'oblique':'top';orient(camera,cameraPreset);if(id==='orison-latitude-shuttle'||id==='selene-ground'||id==='selene-ground-service')camera.yaw=1.2;if(id==='aster-northern-launch')camera.yaw=2.6;panMode=false;cameraControls();
   worker?.terminate();traffic=undefined;pending=false;sequence=0;desiredTarget=0;liveError='';liveMode=playbackRate>=0;trafficDirty=false;revision++; ready = false; playing = false; run = undefined; t = 0; inspectorKey = '';
   $('load-status').textContent = 'Preparing scene…';
   $<HTMLButtonElement>('play').disabled = true; $('fleet').innerHTML = ''; $('stations').innerHTML = ''; $('inspector').innerHTML = ''; $('timelines').innerHTML = '';
@@ -461,9 +467,9 @@ function loadSet(id: string) {
     if (e.data.error) { $('load-status').textContent = e.data.error; return; }
     run = e.data.run!; $<HTMLInputElement>('time').step=run.solar?'0.000001':'0.001'; events = setEvents(run); ready = true; selected = run.id==='orison-direct-surface'?run.vessels[0].id:Object.keys(run.maintained??{})[0]??run.vessels[0].id;
     $('launch-view').hidden=!run.entry&&!run.world.ports.some(p=>p.rail.kind==='surface');$('launch-view').textContent=run.entry?'Entry view':'Surface view';document.querySelectorAll<HTMLElement>('.entry-layer').forEach(e=>e.hidden=!run!.atmosphere);
-    frame = run.id==='selene-ground'?'moon':'inertial'; t = run.id === 'orison-freight' ? 2 : run.id==='orison-direct-surface'||run.id==='orison-low-orbit-shuttle'?start():0; playing = playbackRate!==0;
+    frame = run.binary?'libration':run.id==='selene-ground'?'moon':'inertial'; t = run.id === 'orison-freight' ? 2 : run.id==='orison-direct-surface'||run.id==='orison-low-orbit-shuttle'?start():0; playing = playbackRate!==0;
     $<HTMLInputElement>('time').min = String(start()); $<HTMLInputElement>('time').max = String(end());
-    $('frame').innerHTML = `<option value="inertial">${run.solar?'Heliocentric':'Inertial'}</option><option value="rotating">${esc(run.rotating.name)}</option>` +
+    $('frame').innerHTML = `<option value="inertial">${run.solar?'Heliocentric':'Inertial'}</option><option value="rotating">${esc(run.rotating.name)}</option>${run.binary?'<option value="libration">L2 rotating</option>':''}` +
       [...run.world.bodies.map(b => [b.id, b.id]), ...run.stations.map(s => [s.id, s.id]), ...run.vessels.map(v => [v.id, v.name])].map(([id, name]) => `<option value="${esc(id)}">${esc(name)} centered</option>`).join('');
     $<HTMLSelectElement>('frame').value=frame;
     $('description').textContent = run.description; $('provenance').textContent = run.provenance;
@@ -551,9 +557,9 @@ function draw() {
   }
   syncTracking();renderProjection=cameraProjection(camera,width,height);
   const fieldSupported=!!run.passThrough||!!run.compact;
-  $('potential-controls').hidden=!fieldSupported;
+  $('potential-controls').hidden=!fieldSupported;$('equilibrium-control').hidden=!fieldSupported&&!run.binary;
   const gridOrigin=fieldSupported&&layers.relief?transform(run,[0,0,0,0,0,0],t,frame):[0,0,0,0,0,0];
-  potentialLayer.draw(width,height,t,p=>projectRaw(p,t),(layers.field||layers.relief)&&fieldSupported,layers.relief,reliefGain,reliefEnabled()?reliefOrigin(t):0,layers.field,layers.grid,frame==='rotating'?-run.rotating.phase:run.rotating.rate*t,gridOrigin.slice(0,2),2**Math.round(Math.log2(50/camera.scale)));
+  potentialLayer.draw(width,height,t,p=>projectRaw(p,t),(layers.field||layers.relief)&&fieldSupported,layers.relief,reliefGain,reliefEnabled()?reliefOrigin(t):0,layers.field,layers.grid,frame==='rotating'?-run.rotating.phase:run.rotating.rate*t,gridOrigin.slice(0,2),2**Math.round(Math.log2(50/camera.scale)),gridStrength);
   if(layers.relief&&potentialLayer.stats.reliefError){layers.relief=false;layers.field=true;$<HTMLInputElement>('layer-field').checked=true;$<HTMLInputElement>('layer-relief').checked=false;$<HTMLInputElement>('layer-relief').disabled=true;$('layer-relief').title=potentialLayer.stats.reliefError;potentialLayer.draw(width,height,t,p=>projectRaw(p,t),layers.field&&fieldSupported);}
   $('field-key').hidden=!potentialLayer.visible||!layers.field||potentialLayer.outlineOnly;
   hits = [];thrustWhiskers=[];aeroVectors=[];
@@ -563,7 +569,7 @@ function draw() {
   spheres=seeThroughBodies?[]:displayedBodies.map(body=>({id:body.id,point:project3(bodyState(body,t),t),radius:Math.max(7,body.radius*camera.scale)}));
   for (const body of [...displayedBodies].sort((a,b)=>project3(bodyState(a,t),t)[2]-project3(bodyState(b,t),t)[2])) {
     const p = project(bodyState(body, t), t), r = Math.max(7, body.radius * camera.scale);
-    ctx.beginPath(); ctx.arc(...p, r, 0, Math.PI * 2); ctx.fillStyle = '#192a37';ctx.globalAlpha=seeThroughBodies?.18:1;ctx.fill();ctx.globalAlpha=seeThroughBodies?.45:1;ctx.strokeStyle = '#445c6e'; ctx.lineWidth = 1; ctx.stroke();ctx.globalAlpha=1;
+    ctx.beginPath(); ctx.arc(...p, r, 0, Math.PI * 2); ctx.fillStyle = run.binary&&body.id==='Sol'?'#4d4329':'#192a37';ctx.globalAlpha=seeThroughBodies?.18:1;ctx.fill();ctx.globalAlpha=seeThroughBodies?.45:1;ctx.strokeStyle = run.binary&&body.id==='Sol'?'#9d8851':'#445c6e'; ctx.lineWidth = 1; ctx.stroke();ctx.globalAlpha=1;
     drawPlanetGrid(ctx,project3(bodyState(body,t),t),r,bodySpin(run,body),t,v=>cameraVector(camera,transformDirection(run!,v,t,frame)),seeThroughBodies);
     if (selected === body.id) { ctx.beginPath(); ctx.arc(...p, r + 5, 0, Math.PI * 2); ctx.strokeStyle = '#b2c6d2'; ctx.stroke(); }
     if(!occluder(project3(bodyState(body,t),t),spheres.filter(s=>s.id!==body.id)))label(body.id, body.id === 'primary' ? 'Planet' : body.id === 'moon' ? 'Selene' : body.id, p[0] + r, p[1], colors.body);
@@ -719,7 +725,7 @@ function draw() {
     hits.push({id: v.id, name: v.name, x: p[0], y: p[1],depth:project3(state.y,epoch)[2]});
     }});
   }
-  if(layers.equilibria&&hasField())for(const marker of EQUILIBRIA){const point=project3(basisPoint(marker.x,marker.y,t),t);if(occluder(point,spheres))continue;path([[point[0]-4,point[1]-4],[point[0]+4,point[1]+4]],'#94a899',1,.7);path([[point[0]-4,point[1]+4],[point[0]+4,point[1]-4]],'#94a899',1,.7);if(layers.labels)label('equilibrium-'+marker.id,marker.id,point[0]+7,point[1]-5,'#94a899');}
+  if(layers.equilibria)for(const marker of equilibriumMarkers()){const point=project3(equilibriumPoint(marker.x,marker.y,t),t);if(occluder(point,spheres))continue;path([[point[0]-4,point[1]-4],[point[0]+4,point[1]+4]],'#94a899',1,.7);path([[point[0]-4,point[1]+4],[point[0]+4,point[1]-4]],'#94a899',1,.7);if(layers.labels)label('equilibrium-'+marker.id,marker.id,point[0]+7,point[1]-5,'#94a899');}
   icons.sort((a,b)=>a.depth-b.depth).forEach(icon=>icon.draw());
   placedLabels=labelLayout.layout(labelRequests,performance.now());
   ctx.font='11px ui-sans-serif, system-ui';
@@ -786,6 +792,7 @@ $<HTMLInputElement>('time').oninput = e => seek(Number((e.target as HTMLInputEle
 for (const key of Object.keys(layers) as (keyof typeof layers)[]) {
   $<HTMLInputElement>(`layer-${key}`).onchange = e => { layers[key] = (e.target as HTMLInputElement).checked;if(key==='relief'&&layers.relief){if(cameraPreset==='top')setCamera('oblique');} cleared = false; $('clear-view').setAttribute('aria-pressed', 'false'); draw();updatePanels(); };
 }
+$<HTMLInputElement>('grid-strength').oninput=e=>{gridStrength=Number((e.target as HTMLInputElement).value);$('grid-strength-value').textContent=Math.round(gridStrength*100)+'%';draw();if(ready)updatePanels();};
 $<HTMLInputElement>('relief-height').oninput=e=>{reliefGain=Number((e.target as HTMLInputElement).value);$('relief-value').textContent=reliefGain.toFixed(2).replace(/0+$/,'').replace(/\.$/,'')+'×';draw();if(ready)updatePanels();};
 $<HTMLInputElement>('trail-length').oninput=e=>{trailScale=Number((e.target as HTMLInputElement).value);trailScales.set(currentSet,trailScale);syncTrail();draw();if(ready)updatePanels();};
 $<HTMLInputElement>('see-through').onchange=e=>{seeThroughBodies=(e.target as HTMLInputElement).checked;draw();updatePanels();};

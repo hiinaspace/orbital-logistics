@@ -1,0 +1,11 @@
+{
+  "full": {
+    "inside": 42,
+    "fade": 11,
+    "outside": 0,
+    "corner": 0
+  },
+  "dim": 21,
+  "zero": 0,
+  "detail": 31
+}

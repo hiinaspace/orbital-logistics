@@ -51,7 +51,12 @@ export function rocketAxis(v:VesselView,sample:ViewSample,t:number):Vec3 {
  return held;
 }
 
-export function drawRocket(ctx:CanvasRenderingContext2D,glyph:'rocket'|'stack',color:string,axis:number[]):void {
+export function drawRocket(ctx:CanvasRenderingContext2D,glyph:'rocket'|'stack'|'observatory',color:string,axis:number[]):void {
+ if(glyph==='observatory'){
+  // Small gold segmented mirror over a schematic sunshield, not a velocity arrow.
+  ctx.fillStyle='#9baebc';ctx.globalAlpha=.8;ctx.beginPath();ctx.moveTo(-10,0);ctx.lineTo(0,-5);ctx.lineTo(10,0);ctx.lineTo(0,5);ctx.closePath();ctx.fill();ctx.globalAlpha=1;ctx.fillStyle=color;ctx.strokeStyle='#72664f';ctx.lineWidth=.55;
+  for(const [x,y] of [[0,0],[-3,0],[3,0],[-1.5,-2.6],[1.5,-2.6],[-1.5,2.6],[1.5,2.6]]){ctx.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3;const xx=x+1.8*Math.sin(a),yy=y+1.8*Math.cos(a);if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);}ctx.closePath();ctx.fill();ctx.stroke();}return;
+ }
  const projected=Math.hypot(axis[0],axis[1]);
  ctx.fillStyle=color;ctx.strokeStyle='#d6e3e8';ctx.lineWidth=.8;
  if(projected<.08) {

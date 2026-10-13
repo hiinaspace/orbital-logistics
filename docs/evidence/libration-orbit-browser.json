@@ -1,0 +1,728 @@
+{
+  "results": [
+    {
+      "id": "sol-earth-halo",
+      "state": {
+        "ready": true,
+        "revision": 2,
+        "set": "sol-earth-halo",
+        "t": 30.02720000038148,
+        "playing": true,
+        "playbackRate": 16,
+        "trailScale": 1,
+        "trailSpan": 51.52740751647126,
+        "frame": "libration",
+        "selected": "webb",
+        "layers": {
+          "orbits": true,
+          "trails": true,
+          "plan": true,
+          "labels": true,
+          "atmosphere": true,
+          "aero": false,
+          "glow": true,
+          "field": false,
+          "relief": false,
+          "equilibria": true,
+          "grid": true
+        },
+        "reliefGain": 1,
+        "gridStrength": 0.55,
+        "equilibria": [
+          {
+            "id": "L3",
+            "x": -4.004999994119915,
+            "y": 0,
+            "screen": [
+              -4058.994773181297,
+              2694.371847636209
+            ]
+          },
+          {
+            "id": "L1",
+            "x": 3.6014946185901513,
+            "y": 0,
+            "screen": [
+              482.56057051557116,
+              744.9378635197858
+            ]
+          },
+          {
+            "id": "L2",
+            "x": 4.401141473782383,
+            "y": 0,
+            "screen": [
+              960,
+              540
+            ]
+          },
+          {
+            "id": "L4",
+            "x": 1.988,
+            "y": 3.4641016151377544,
+            "screen": [
+              -2053.1175273409294,
+              -9.389259995170164
+            ]
+          },
+          {
+            "id": "L5",
+            "x": 1.988,
+            "y": -3.4641016151377544,
+            "screen": [
+              1091.5232810135103,
+              2326.29541374741
+            ]
+          }
+        ],
+        "field": {
+          "visible": false,
+          "outlineOnly": false,
+          "ready": false,
+          "pending": false,
+          "requests": 0,
+          "plateHits": 0,
+          "reliefError": "",
+          "mode": "flat",
+          "bytes": 180000,
+          "segments": 0,
+          "error": ""
+        },
+        "aeroVectors": [],
+        "ships": [
+          {
+            "id": "webb",
+            "present": true,
+            "t": 30.02720000038148,
+            "y": [
+              -3.712167296167464,
+              -2.3295965344930614,
+              0.16727043810442432,
+              0.28880064305640313,
+              -0.4209800949012686,
+              -0.03300324894483361
+            ],
+            "propellant": 0.4,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "glyph": "observatory",
+            "axis": [
+              1,
+              0,
+              0
+            ],
+            "screen": [
+              1047.6231965432269,
+              518.5598504298544
+            ]
+          }
+        ],
+        "labels": [
+          {
+            "id": "webb",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 1060.6231965432269,
+            "top": 508.55985042985435
+          },
+          {
+            "id": "Earth",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 801.3285746598741,
+            "top": 635.8821533763468
+          },
+          {
+            "id": "equilibrium-L1",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 502.56057051557116,
+            "top": 729.9378635197858
+          },
+          {
+            "id": "equilibrium-L2",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 980,
+            "top": 525
+          },
+          {
+            "id": "equilibrium-L3",
+            "anchor": 0,
+            "alpha": 1,
+            "left": -4038.994773181297,
+            "top": 2679.371847636209
+          },
+          {
+            "id": "equilibrium-L4",
+            "anchor": 0,
+            "alpha": 1,
+            "left": -2033.1175273409294,
+            "top": -24.389259995170164
+          },
+          {
+            "id": "equilibrium-L5",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 1111.5232810135103,
+            "top": 2311.29541374741
+          },
+          {
+            "id": "Sol",
+            "anchor": 0,
+            "alpha": 1,
+            "left": -1174.4228209872927,
+            "top": 1661.024000375893
+          }
+        ],
+        "stocks": [],
+        "events": [],
+        "thrustWhiskers": [],
+        "camera": {
+          "yaw": -0.65,
+          "pitch": 0.6,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "scale": 749.9999999999999,
+          "preset": "oblique",
+          "panMode": false,
+          "tracking": "off",
+          "trackingOffset": [
+            0,
+            0,
+            0
+          ]
+        },
+        "seeThroughBodies": false,
+        "hits": [
+          {
+            "id": "Earth",
+            "name": "Earth",
+            "x": 713.3285746598741,
+            "y": 645.8821533763468,
+            "depth": 154.76751445810808,
+            "radius": 74.99999999999999
+          },
+          {
+            "id": "Sol",
+            "name": "Sol",
+            "x": -1674.9228209872927,
+            "y": 1671.024000375893,
+            "depth": 1653.2131973975047,
+            "radius": 487.49999999999994
+          },
+          {
+            "id": "webb",
+            "name": "Webb",
+            "x": 1047.6231965432269,
+            "y": 518.5598504298544,
+            "depth": 190.84201884631744
+          }
+        ]
+      }
+    },
+    {
+      "id": "sol-earth-lissajous",
+      "state": {
+        "ready": true,
+        "revision": 3,
+        "set": "sol-earth-lissajous",
+        "t": 29.019200000381453,
+        "playing": true,
+        "playbackRate": 16,
+        "trailScale": 1,
+        "trailSpan": 51.91991392648055,
+        "frame": "libration",
+        "selected": "gaia",
+        "layers": {
+          "orbits": true,
+          "trails": true,
+          "plan": true,
+          "labels": true,
+          "atmosphere": true,
+          "aero": false,
+          "glow": true,
+          "field": false,
+          "relief": false,
+          "equilibria": true,
+          "grid": true
+        },
+        "reliefGain": 1,
+        "gridStrength": 0.55,
+        "equilibria": [
+          {
+            "id": "L3",
+            "x": -4.004999994119915,
+            "y": 0,
+            "screen": [
+              -4058.994773181297,
+              2694.3718476362096
+            ]
+          },
+          {
+            "id": "L1",
+            "x": 3.6014946185901513,
+            "y": 0,
+            "screen": [
+              482.5605705155709,
+              744.9378635197859
+            ]
+          },
+          {
+            "id": "L2",
+            "x": 4.401141473782383,
+            "y": 0,
+            "screen": [
+              960,
+              540
+            ]
+          },
+          {
+            "id": "L4",
+            "x": 1.988,
+            "y": 3.4641016151377544,
+            "screen": [
+              -2053.11752734093,
+              -9.389259995169937
+            ]
+          },
+          {
+            "id": "L5",
+            "x": 1.988,
+            "y": -3.4641016151377544,
+            "screen": [
+              1091.5232810135103,
+              2326.29541374741
+            ]
+          }
+        ],
+        "field": {
+          "visible": false,
+          "outlineOnly": false,
+          "ready": false,
+          "pending": false,
+          "requests": 0,
+          "plateHits": 0,
+          "reliefError": "",
+          "mode": "flat",
+          "bytes": 180000,
+          "segments": 0,
+          "error": ""
+        },
+        "aeroVectors": [],
+        "ships": [
+          {
+            "id": "gaia",
+            "present": true,
+            "t": 29.019200000381453,
+            "y": [
+              -3.9494408396253586,
+              -1.963407297539304,
+              0.14140299392032596,
+              0.2417922920821521,
+              -0.46600673312086915,
+              -0.014018036778038102
+            ],
+            "propellant": 0.4,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "glyph": "observatory",
+            "axis": [
+              1,
+              0,
+              0
+            ],
+            "screen": [
+              1013.786606723958,
+              486.7525281786002
+            ]
+          }
+        ],
+        "labels": [
+          {
+            "id": "gaia",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 1026.786606723958,
+            "top": 476.7525281786002
+          },
+          {
+            "id": "Earth",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 801.328574659874,
+            "top": 635.8821533763468
+          },
+          {
+            "id": "equilibrium-L1",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 502.5605705155709,
+            "top": 729.9378635197859
+          },
+          {
+            "id": "equilibrium-L2",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 980,
+            "top": 525
+          },
+          {
+            "id": "equilibrium-L3",
+            "anchor": 0,
+            "alpha": 1,
+            "left": -4038.994773181297,
+            "top": 2679.3718476362096
+          },
+          {
+            "id": "equilibrium-L4",
+            "anchor": 0,
+            "alpha": 1,
+            "left": -2033.1175273409299,
+            "top": -24.389259995169937
+          },
+          {
+            "id": "equilibrium-L5",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 1111.5232810135103,
+            "top": 2311.29541374741
+          },
+          {
+            "id": "Sol",
+            "anchor": 0,
+            "alpha": 1,
+            "left": -1174.4228209872936,
+            "top": 1661.024000375893
+          }
+        ],
+        "stocks": [],
+        "events": [],
+        "thrustWhiskers": [],
+        "camera": {
+          "yaw": -0.65,
+          "pitch": 0.6,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "scale": 749.9999999999999,
+          "preset": "oblique",
+          "panMode": false,
+          "tracking": "off",
+          "trackingOffset": [
+            0,
+            0,
+            0
+          ]
+        },
+        "seeThroughBodies": false,
+        "hits": [
+          {
+            "id": "Earth",
+            "name": "Earth",
+            "x": 713.328574659874,
+            "y": 645.8821533763468,
+            "depth": 154.76751445810802,
+            "radius": 74.99999999999999
+          },
+          {
+            "id": "Sol",
+            "name": "Sol",
+            "x": -1674.9228209872936,
+            "y": 1671.024000375893,
+            "depth": 1653.2131973975047,
+            "radius": 487.49999999999994
+          },
+          {
+            "id": "gaia",
+            "name": "Gaia",
+            "x": 1013.786606723958,
+            "y": 486.7525281786002,
+            "depth": 109.99032745220639
+          }
+        ]
+      }
+    },
+    {
+      "id": "sol-earth-observatory-insertion",
+      "state": {
+        "ready": true,
+        "revision": 4,
+        "set": "sol-earth-observatory-insertion",
+        "t": 29.24159999961855,
+        "playing": true,
+        "playbackRate": 16,
+        "trailScale": 1,
+        "trailSpan": 51.52740751647126,
+        "frame": "libration",
+        "selected": "webb",
+        "layers": {
+          "orbits": true,
+          "trails": true,
+          "plan": true,
+          "labels": true,
+          "atmosphere": true,
+          "aero": false,
+          "glow": true,
+          "field": false,
+          "relief": false,
+          "equilibria": true,
+          "grid": true
+        },
+        "reliefGain": 1,
+        "gridStrength": 0.55,
+        "equilibria": [
+          {
+            "id": "L3",
+            "x": -4.004999994119915,
+            "y": 0,
+            "screen": [
+              -4058.994773181297,
+              2694.3718476362096
+            ]
+          },
+          {
+            "id": "L1",
+            "x": 3.6014946185901513,
+            "y": 0,
+            "screen": [
+              482.5605705155714,
+              744.9378635197859
+            ]
+          },
+          {
+            "id": "L2",
+            "x": 4.401141473782383,
+            "y": 0,
+            "screen": [
+              960,
+              540
+            ]
+          },
+          {
+            "id": "L4",
+            "x": 1.988,
+            "y": 3.4641016151377544,
+            "screen": [
+              -2053.1175273409294,
+              -9.38925999517005
+            ]
+          },
+          {
+            "id": "L5",
+            "x": 1.988,
+            "y": -3.4641016151377544,
+            "screen": [
+              1091.5232810135108,
+              2326.29541374741
+            ]
+          }
+        ],
+        "field": {
+          "visible": false,
+          "outlineOnly": false,
+          "ready": false,
+          "pending": false,
+          "requests": 0,
+          "plateHits": 0,
+          "reliefError": "",
+          "mode": "flat",
+          "bytes": 180000,
+          "segments": 0,
+          "error": ""
+        },
+        "aeroVectors": [],
+        "ships": [
+          {
+            "id": "webb",
+            "present": true,
+            "t": 29.24159999961855,
+            "y": [
+              -3.6159288631799567,
+              -2.2397081783713495,
+              -0.10523802275322423,
+              0.3015910107002629,
+              -0.5078661195748148,
+              0.03783152652975892
+            ],
+            "propellant": 0.33159142822673027,
+            "fuelUsed": 0.06840857177326976,
+            "burnCursor": 0,
+            "status": "running",
+            "detail": "",
+            "glyph": "observatory",
+            "axis": [
+              -0.5977170758544775,
+              -0.17986585048834464,
+              0.7812698465063638
+            ],
+            "screen": [
+              790.6024359149487,
+              585.2154492678429
+            ]
+          }
+        ],
+        "labels": [
+          {
+            "id": "webb",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 803.6024359149487,
+            "top": 575.2154492678429
+          },
+          {
+            "id": "Earth",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 801.328574659874,
+            "top": 635.8821533763467
+          },
+          {
+            "id": "equilibrium-L1",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 502.5605705155714,
+            "top": 729.9378635197859
+          },
+          {
+            "id": "equilibrium-L2",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 980,
+            "top": 525
+          },
+          {
+            "id": "equilibrium-L3",
+            "anchor": 0,
+            "alpha": 1,
+            "left": -4038.994773181297,
+            "top": 2679.3718476362096
+          },
+          {
+            "id": "equilibrium-L4",
+            "anchor": 0,
+            "alpha": 1,
+            "left": -2033.1175273409294,
+            "top": -24.38925999517005
+          },
+          {
+            "id": "equilibrium-L5",
+            "anchor": 0,
+            "alpha": 1,
+            "left": 1111.5232810135108,
+            "top": 2311.29541374741
+          },
+          {
+            "id": "Sol",
+            "anchor": 0,
+            "alpha": 1,
+            "left": -1174.422820987293,
+            "top": 1661.024000375893
+          }
+        ],
+        "stocks": [],
+        "events": [
+          {
+            "t": 1,
+            "kind": "thrust-start",
+            "id": "Earth departure",
+            "deltaV": 0,
+            "fuelUsed": 0,
+            "propellantBefore": 0.4,
+            "propellantAfter": 0.4,
+            "vessel": "webb",
+            "color": "#e4c879"
+          },
+          {
+            "t": 3.737767667642739,
+            "kind": "thrust-end",
+            "id": "Earth departure",
+            "deltaV": 0.10951070670570937,
+            "fuelUsed": 0.05018348591646882,
+            "propellantBefore": 0.4,
+            "propellantAfter": 0.3498165140835312,
+            "detail": "completed",
+            "vessel": "webb",
+            "color": "#e4c879"
+          },
+          {
+            "t": 12.980459133529555,
+            "kind": "thrust-start",
+            "id": "Halo insertion",
+            "deltaV": 0,
+            "fuelUsed": 0,
+            "propellantBefore": 0.3498165140835312,
+            "propellantAfter": 0.3498165140835312,
+            "vessel": "webb",
+            "color": "#e4c879"
+          },
+          {
+            "t": 14,
+            "kind": "thrust-end",
+            "id": "Halo insertion",
+            "deltaV": 0.040781634658817664,
+            "fuelUsed": 0.018225085856800938,
+            "propellantBefore": 0.3498165140835312,
+            "propellantAfter": 0.33159142822673027,
+            "detail": "completed",
+            "vessel": "webb",
+            "color": "#e4c879"
+          }
+        ],
+        "thrustWhiskers": [],
+        "camera": {
+          "yaw": -0.65,
+          "pitch": 0.6,
+          "center": [
+            0,
+            0,
+            0
+          ],
+          "scale": 749.9999999999999,
+          "preset": "oblique",
+          "panMode": false,
+          "tracking": "off",
+          "trackingOffset": [
+            0,
+            0,
+            0
+          ]
+        },
+        "seeThroughBodies": false,
+        "hits": [
+          {
+            "id": "Earth",
+            "name": "Earth",
+            "x": 713.328574659874,
+            "y": 645.8821533763467,
+            "depth": 154.767514458108,
+            "radius": 74.99999999999999
+          },
+          {
+            "id": "Sol",
+            "name": "Sol",
+            "x": -1674.922820987293,
+            "y": 1671.024000375893,
+            "depth": 1653.2131973975042,
+            "radius": 487.49999999999994
+          },
+          {
+            "id": "webb",
+            "name": "Webb",
+            "x": 790.6024359149487,
+            "y": 585.2154492678429,
+            "depth": -73.69370601866504
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}
