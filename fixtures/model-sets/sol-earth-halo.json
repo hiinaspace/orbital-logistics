@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "modelVersion": "circular-binary-set-v1",
   "id": "sol-earth-halo",
-  "name": "Sol\u2013Earth \u00b7 Webb halo",
+  "name": "Helion\u2013Orison \u00b7 Halo observatory",
   "extent": 5,
-  "description": "A space observatory circles L2 above and below Earth\u2019s orbital plane.",
-  "provenance": "Webb-inspired fictional circular binary; compressed distances, exaggerated Earth mass. JPL seed continued to mass fraction .003; canonical unpowered spatial coast, not real mission data.",
+  "description": "A Webb-inspired observatory circles L2 above and below Orison\u2019s orbital plane.",
+  "provenance": "Webb-inspired fictional circular binary; compressed distances, exaggerated planet mass. JPL seed continued to mass fraction .003; canonical unpowered spatial coast, not real mission data.",
   "stations": [],
   "rotating": {
-    "name": "Sol\u2013Earth rotating",
+    "name": "Helion\u2013Orison rotating",
     "rate": 0.125,
     "phase": 0
   },
@@ -23,7 +23,7 @@
   },
   "vessels": [
     {
-      "name": "Webb",
+      "name": "Prism",
       "color": "#e4c879",
       "cargo": "Observatory",
       "bundle": {
@@ -45,7 +45,7 @@
           },
           "bodies": [
             {
-              "id": "Sol",
+              "id": "Helion",
               "mu": 0.997,
               "radius": 0.65,
               "rail": {
@@ -71,7 +71,7 @@
               }
             },
             {
-              "id": "Earth",
+              "id": "Orison",
               "mu": 0.003,
               "radius": 0.1,
               "rail": {

@@ -1,0 +1,2099 @@
+{
+  "state": {
+    "ready": true,
+    "revision": 2,
+    "set": "helion-orison-survey",
+    "t": 259.6370999996175,
+    "playing": false,
+    "playbackRate": 16,
+    "trailScale": 1,
+    "trailSpan": 512,
+    "frame": "libration",
+    "selected": "gaia",
+    "layers": {
+      "orbits": true,
+      "trails": true,
+      "plan": true,
+      "labels": true,
+      "atmosphere": true,
+      "aero": false,
+      "glow": true,
+      "field": false,
+      "relief": false,
+      "equilibria": false,
+      "grid": true
+    },
+    "reliefGain": 1,
+    "gridStrength": 0.55,
+    "equilibria": [
+      {
+        "id": "L3",
+        "x": -4.004999994119915,
+        "y": 0,
+        "screen": [
+          -5731.993030908397,
+          3412.4957968482795
+        ]
+      },
+      {
+        "id": "L1",
+        "x": 3.6014946185901513,
+        "y": 0,
+        "screen": [
+          323.41409402076124,
+          813.2504846930476
+        ]
+      },
+      {
+        "id": "L2",
+        "x": 4.401141473782383,
+        "y": 0,
+        "screen": [
+          960,
+          540
+        ]
+      },
+      {
+        "id": "L4",
+        "x": 1.988,
+        "y": 3.4641016151377544,
+        "screen": [
+          -3057.490036454573,
+          -192.51901332689317
+        ]
+      },
+      {
+        "id": "L5",
+        "x": 1.988,
+        "y": -3.4641016151377544,
+        "screen": [
+          1135.3643746846801,
+          2921.727218329879
+        ]
+      }
+    ],
+    "field": {
+      "visible": false,
+      "outlineOnly": false,
+      "ready": false,
+      "pending": false,
+      "requests": 0,
+      "plateHits": 0,
+      "reliefError": "",
+      "mode": "flat",
+      "bytes": 180000,
+      "segments": 0,
+      "error": ""
+    },
+    "traffic": {
+      "frontier": 292,
+      "oldest": 0,
+      "pending": false,
+      "sequence": 65,
+      "live": false,
+      "stats": {
+        "chunks": 73,
+        "rows": 2409,
+        "bytes": 867520,
+        "candidateWork": 219,
+        "retainedPhysicsNodes": 0,
+        "maxCandidateNodes": 8192,
+        "nominalCandidateStages": 28672,
+        "fuelUsed": 0.000029764920196018174
+      },
+      "error": ""
+    },
+    "aeroVectors": [],
+    "ships": [
+      {
+        "id": "gaia",
+        "present": true,
+        "t": 259.6370999996175,
+        "y": [
+          2.2346632309398076,
+          3.811792877930015,
+          -0.09010174461416479,
+          -0.4591130147147557,
+          0.27120779988999466,
+          0.01192141974199909
+        ],
+        "propellant": 0.3999720612820439,
+        "fuelUsed": 0.00002793871795614411,
+        "burnCursor": 0,
+        "status": "running",
+        "detail": "",
+        "mass": 1.3999720612820439,
+        "glyph": "observatory",
+        "axis": [
+          -0.9592430262295935,
+          0.2825824067947111,
+          0
+        ],
+        "screen": [
+          968.9299986153904,
+          604.7721407055128
+        ]
+      }
+    ],
+    "labels": [
+      {
+        "id": "gaia",
+        "anchor": 0,
+        "alpha": 1,
+        "left": 981.9299986153904,
+        "top": 594.7721407055128
+      },
+      {
+        "id": "Helion",
+        "anchor": 0,
+        "alpha": 1,
+        "left": -1890.2304279830578,
+        "top": 2038.0320005011909
+      },
+      {
+        "id": "Orison",
+        "anchor": 0,
+        "alpha": 1,
+        "left": 744.1047662131655,
+        "top": 671.1762045017954
+      }
+    ],
+    "stocks": [],
+    "events": [
+      {
+        "t": 0,
+        "kind": "thrust-start",
+        "id": "correction-0",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.4,
+        "propellantAfter": 0.4,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 0.5,
+        "kind": "thrust-end",
+        "id": "correction-0",
+        "deltaV": 4.217262854467241e-7,
+        "fuelUsed": 1.1808335975693751e-8,
+        "propellantBefore": 0.4,
+        "propellantAfter": 0.39999998819166405,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 4,
+        "kind": "thrust-start",
+        "id": "correction-4",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39999998819166405,
+        "propellantAfter": 0.39999998819166405,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 4.5,
+        "kind": "thrust-end",
+        "id": "correction-4",
+        "deltaV": 0.000011242596066914092,
+        "fuelUsed": 3.147926517232946e-7,
+        "propellantBefore": 0.39999998819166405,
+        "propellantAfter": 0.3999996733990123,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 8,
+        "kind": "thrust-start",
+        "id": "correction-8",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999996733990123,
+        "propellantAfter": 0.3999996733990123,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 8.5,
+        "kind": "thrust-end",
+        "id": "correction-8",
+        "deltaV": 0.0000369638346966847,
+        "fuelUsed": 0.0000010349867474168661,
+        "propellantBefore": 0.3999996733990123,
+        "propellantAfter": 0.3999986384122649,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 12,
+        "kind": "thrust-start",
+        "id": "correction-12",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999986384122649,
+        "propellantAfter": 0.3999986384122649,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 12.5,
+        "kind": "thrust-end",
+        "id": "correction-12",
+        "deltaV": 0.00003492369144346558,
+        "fuelUsed": 9.778620679856687e-7,
+        "propellantBefore": 0.3999986384122649,
+        "propellantAfter": 0.3999976605501969,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 16,
+        "kind": "thrust-start",
+        "id": "correction-16",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999976605501969,
+        "propellantAfter": 0.3999976605501969,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 16.5,
+        "kind": "thrust-end",
+        "id": "correction-16",
+        "deltaV": 0.000024327933522253622,
+        "fuelUsed": 6.811808346274262e-7,
+        "propellantBefore": 0.3999976605501969,
+        "propellantAfter": 0.3999969793693623,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 20,
+        "kind": "thrust-start",
+        "id": "correction-20",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999969793693623,
+        "propellantAfter": 0.3999969793693623,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 20.5,
+        "kind": "thrust-end",
+        "id": "correction-20",
+        "deltaV": 0.000012341767960977384,
+        "fuelUsed": 3.4556871453261806e-7,
+        "propellantBefore": 0.3999969793693623,
+        "propellantAfter": 0.39999663380064776,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 24,
+        "kind": "thrust-start",
+        "id": "correction-24",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39999663380064776,
+        "propellantAfter": 0.39999663380064776,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 24.5,
+        "kind": "thrust-end",
+        "id": "correction-24",
+        "deltaV": 0.000010061997810591872,
+        "fuelUsed": 2.8173523292096547e-7,
+        "propellantBefore": 0.39999663380064776,
+        "propellantAfter": 0.39999635206541484,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 28,
+        "kind": "thrust-start",
+        "id": "correction-28",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39999635206541484,
+        "propellantAfter": 0.39999635206541484,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 28.5,
+        "kind": "thrust-end",
+        "id": "correction-28",
+        "deltaV": 0.00002737774344867006,
+        "fuelUsed": 7.665746093454828e-7,
+        "propellantBefore": 0.39999635206541484,
+        "propellantAfter": 0.3999955854908055,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 32,
+        "kind": "thrust-start",
+        "id": "correction-32",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999955854908055,
+        "propellantAfter": 0.3999955854908055,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 32.5,
+        "kind": "thrust-end",
+        "id": "correction-32",
+        "deltaV": 0.000026934788483401936,
+        "fuelUsed": 7.541714963643642e-7,
+        "propellantBefore": 0.3999955854908055,
+        "propellantAfter": 0.39999483131930913,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 36,
+        "kind": "thrust-start",
+        "id": "correction-36",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39999483131930913,
+        "propellantAfter": 0.39999483131930913,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 36.5,
+        "kind": "thrust-end",
+        "id": "correction-36",
+        "deltaV": 0.0000362322595321501,
+        "fuelUsed": 0.0000010144991537952563,
+        "propellantBefore": 0.39999483131930913,
+        "propellantAfter": 0.39999381682015533,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 40,
+        "kind": "thrust-start",
+        "id": "correction-40",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39999381682015533,
+        "propellantAfter": 0.39999381682015533,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 40.5,
+        "kind": "thrust-end",
+        "id": "correction-40",
+        "deltaV": 0.000007843299172251033,
+        "fuelUsed": 2.196113897401375e-7,
+        "propellantBefore": 0.39999381682015533,
+        "propellantAfter": 0.3999935972087656,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 44,
+        "kind": "thrust-start",
+        "id": "correction-44",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999935972087656,
+        "propellantAfter": 0.3999935972087656,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 44.5,
+        "kind": "thrust-end",
+        "id": "correction-44",
+        "deltaV": 0.0000014375540440104333,
+        "fuelUsed": 4.0251328492502125e-8,
+        "propellantBefore": 0.3999935972087656,
+        "propellantAfter": 0.3999935569574371,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 48,
+        "kind": "thrust-start",
+        "id": "correction-48",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999935569574371,
+        "propellantAfter": 0.3999935569574371,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 48.5,
+        "kind": "thrust-end",
+        "id": "correction-48",
+        "deltaV": 0.0000070234710110945074,
+        "fuelUsed": 1.9665626949105786e-7,
+        "propellantBefore": 0.3999935569574371,
+        "propellantAfter": 0.3999933603011676,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 52,
+        "kind": "thrust-start",
+        "id": "correction-52",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999933603011676,
+        "propellantAfter": 0.3999933603011676,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 52.5,
+        "kind": "thrust-end",
+        "id": "correction-52",
+        "deltaV": 0.000009525825853312024,
+        "fuelUsed": 2.6672183350839873e-7,
+        "propellantBefore": 0.3999933603011676,
+        "propellantAfter": 0.3999930935793341,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 56,
+        "kind": "thrust-start",
+        "id": "correction-56",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999930935793341,
+        "propellantAfter": 0.3999930935793341,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 56.5,
+        "kind": "thrust-end",
+        "id": "correction-56",
+        "deltaV": 0.000022575746416010532,
+        "fuelUsed": 6.321176386769878e-7,
+        "propellantBefore": 0.3999930935793341,
+        "propellantAfter": 0.3999924614616954,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 60,
+        "kind": "thrust-start",
+        "id": "correction-60",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999924614616954,
+        "propellantAfter": 0.3999924614616954,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 60.5,
+        "kind": "thrust-end",
+        "id": "correction-60",
+        "deltaV": 6.711032462451321e-7,
+        "fuelUsed": 1.879078959099445e-8,
+        "propellantBefore": 0.3999924614616954,
+        "propellantAfter": 0.39999244267090583,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 64,
+        "kind": "thrust-start",
+        "id": "correction-64",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39999244267090583,
+        "propellantAfter": 0.39999244267090583,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 64.5,
+        "kind": "thrust-end",
+        "id": "correction-64",
+        "deltaV": 7.55692191996285e-7,
+        "fuelUsed": 2.1159267005188553e-8,
+        "propellantBefore": 0.39999244267090583,
+        "propellantAfter": 0.39999242151163883,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 68,
+        "kind": "thrust-start",
+        "id": "correction-68",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39999242151163883,
+        "propellantAfter": 0.39999242151163883,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 68.5,
+        "kind": "thrust-end",
+        "id": "correction-68",
+        "deltaV": 0.000014314150858474874,
+        "fuelUsed": 4.007939971018004e-7,
+        "propellantBefore": 0.39999242151163883,
+        "propellantAfter": 0.3999920207176417,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 72,
+        "kind": "thrust-start",
+        "id": "correction-72",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999920207176417,
+        "propellantAfter": 0.3999920207176417,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 72.5,
+        "kind": "thrust-end",
+        "id": "correction-72",
+        "deltaV": 0.00001244571403138669,
+        "fuelUsed": 3.4847796337444947e-7,
+        "propellantBefore": 0.3999920207176417,
+        "propellantAfter": 0.39999167223967835,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 76,
+        "kind": "thrust-start",
+        "id": "correction-76",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39999167223967835,
+        "propellantAfter": 0.39999167223967835,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 76.5,
+        "kind": "thrust-end",
+        "id": "correction-76",
+        "deltaV": 0.000014137377290803795,
+        "fuelUsed": 3.9584415345572666e-7,
+        "propellantBefore": 0.39999167223967835,
+        "propellantAfter": 0.3999912763955249,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 80,
+        "kind": "thrust-start",
+        "id": "correction-80",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999912763955249,
+        "propellantAfter": 0.3999912763955249,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 80.5,
+        "kind": "thrust-end",
+        "id": "correction-80",
+        "deltaV": 0.000016968338041996492,
+        "fuelUsed": 4.75110424114078e-7,
+        "propellantBefore": 0.3999912763955249,
+        "propellantAfter": 0.3999908012851008,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 84,
+        "kind": "thrust-start",
+        "id": "correction-84",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999908012851008,
+        "propellantAfter": 0.3999908012851008,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 84.5,
+        "kind": "thrust-end",
+        "id": "correction-84",
+        "deltaV": 0.000009436652967825898,
+        "fuelUsed": 2.6422452203966884e-7,
+        "propellantBefore": 0.3999908012851008,
+        "propellantAfter": 0.39999053706057874,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 88,
+        "kind": "thrust-start",
+        "id": "correction-88",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39999053706057874,
+        "propellantAfter": 0.39999053706057874,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 88.5,
+        "kind": "thrust-end",
+        "id": "correction-88",
+        "deltaV": 0.000004374919091002459,
+        "fuelUsed": 1.224969012891819e-7,
+        "propellantBefore": 0.39999053706057874,
+        "propellantAfter": 0.39999041456367745,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 92,
+        "kind": "thrust-start",
+        "id": "correction-92",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39999041456367745,
+        "propellantAfter": 0.39999041456367745,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 92.5,
+        "kind": "thrust-end",
+        "id": "correction-92",
+        "deltaV": 0.0000103321498672887,
+        "fuelUsed": 2.8929818562950516e-7,
+        "propellantBefore": 0.39999041456367745,
+        "propellantAfter": 0.3999901252654918,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 96,
+        "kind": "thrust-start",
+        "id": "correction-96",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999901252654918,
+        "propellantAfter": 0.3999901252654918,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 96.5,
+        "kind": "thrust-end",
+        "id": "correction-96",
+        "deltaV": 0.00001905571790284047,
+        "fuelUsed": 5.335562363040225e-7,
+        "propellantBefore": 0.3999901252654918,
+        "propellantAfter": 0.3999895917092555,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 100,
+        "kind": "thrust-start",
+        "id": "correction-100",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999895917092555,
+        "propellantAfter": 0.3999895917092555,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 100.5,
+        "kind": "thrust-end",
+        "id": "correction-100",
+        "deltaV": 0.00001786515190807974,
+        "fuelUsed": 5.002204450654801e-7,
+        "propellantBefore": 0.3999895917092555,
+        "propellantAfter": 0.39998909148881046,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 104,
+        "kind": "thrust-start",
+        "id": "correction-104",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39998909148881046,
+        "propellantAfter": 0.39998909148881046,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 104.5,
+        "kind": "thrust-end",
+        "id": "correction-104",
+        "deltaV": 0.000014499210894627678,
+        "fuelUsed": 4.0597468276004633e-7,
+        "propellantBefore": 0.39998909148881046,
+        "propellantAfter": 0.3999886855141277,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 108,
+        "kind": "thrust-start",
+        "id": "correction-108",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999886855141277,
+        "propellantAfter": 0.3999886855141277,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 108.5,
+        "kind": "thrust-end",
+        "id": "correction-108",
+        "deltaV": 0.000020464289271937898,
+        "fuelUsed": 5.729953516109276e-7,
+        "propellantBefore": 0.3999886855141277,
+        "propellantAfter": 0.3999881125187761,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 112,
+        "kind": "thrust-start",
+        "id": "correction-112",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999881125187761,
+        "propellantAfter": 0.3999881125187761,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 112.5,
+        "kind": "thrust-end",
+        "id": "correction-112",
+        "deltaV": 0.000013641412637118604,
+        "fuelUsed": 3.819562583995406e-7,
+        "propellantBefore": 0.3999881125187761,
+        "propellantAfter": 0.3999877305625177,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 116,
+        "kind": "thrust-start",
+        "id": "correction-116",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999877305625177,
+        "propellantAfter": 0.3999877305625177,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 116.5,
+        "kind": "thrust-end",
+        "id": "correction-116",
+        "deltaV": 0.000005960231819229743,
+        "fuelUsed": 1.6688501847106352e-7,
+        "propellantBefore": 0.3999877305625177,
+        "propellantAfter": 0.3999875636774992,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 120,
+        "kind": "thrust-start",
+        "id": "correction-120",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999875636774992,
+        "propellantAfter": 0.3999875636774992,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 120.5,
+        "kind": "thrust-end",
+        "id": "correction-120",
+        "deltaV": 0.00001287485911988077,
+        "fuelUsed": 3.6049280671690553e-7,
+        "propellantBefore": 0.3999875636774992,
+        "propellantAfter": 0.3999872031846925,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 124,
+        "kind": "thrust-start",
+        "id": "correction-124",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999872031846925,
+        "propellantAfter": 0.3999872031846925,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 124.5,
+        "kind": "thrust-end",
+        "id": "correction-124",
+        "deltaV": 0.000036439280082287225,
+        "fuelUsed": 0.0000010202901443712165,
+        "propellantBefore": 0.3999872031846925,
+        "propellantAfter": 0.3999861828945481,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 128,
+        "kind": "thrust-start",
+        "id": "correction-128",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999861828945481,
+        "propellantAfter": 0.3999861828945481,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 128.5,
+        "kind": "thrust-end",
+        "id": "correction-128",
+        "deltaV": 0.000009071831751055512,
+        "fuelUsed": 2.5400875913739185e-7,
+        "propellantBefore": 0.3999861828945481,
+        "propellantAfter": 0.399985928885789,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 132,
+        "kind": "thrust-start",
+        "id": "correction-132",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.399985928885789,
+        "propellantAfter": 0.399985928885789,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 132.5,
+        "kind": "thrust-end",
+        "id": "correction-132",
+        "deltaV": 0.000005334899226433203,
+        "fuelUsed": 1.4937566894523968e-7,
+        "propellantBefore": 0.399985928885789,
+        "propellantAfter": 0.39998577951012004,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 136,
+        "kind": "thrust-start",
+        "id": "correction-136",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39998577951012004,
+        "propellantAfter": 0.39998577951012004,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 136.5,
+        "kind": "thrust-end",
+        "id": "correction-136",
+        "deltaV": 0.000022244086243231373,
+        "fuelUsed": 6.228279498809997e-7,
+        "propellantBefore": 0.39998577951012004,
+        "propellantAfter": 0.39998515668217016,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 140,
+        "kind": "thrust-start",
+        "id": "correction-140",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39998515668217016,
+        "propellantAfter": 0.39998515668217016,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 140.5,
+        "kind": "thrust-end",
+        "id": "correction-140",
+        "deltaV": 0.000013212617175444074,
+        "fuelUsed": 3.6994930963096806e-7,
+        "propellantBefore": 0.39998515668217016,
+        "propellantAfter": 0.39998478673286053,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 144,
+        "kind": "thrust-start",
+        "id": "correction-144",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39998478673286053,
+        "propellantAfter": 0.39998478673286053,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 144.5,
+        "kind": "thrust-end",
+        "id": "correction-144",
+        "deltaV": 0.00003268410004648029,
+        "fuelUsed": 9.151445576893735e-7,
+        "propellantBefore": 0.39998478673286053,
+        "propellantAfter": 0.39998387158830284,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 148,
+        "kind": "thrust-start",
+        "id": "correction-148",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39998387158830284,
+        "propellantAfter": 0.39998387158830284,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 148.5,
+        "kind": "thrust-end",
+        "id": "correction-148",
+        "deltaV": 0.000003195915585509443,
+        "fuelUsed": 8.948460261670732e-8,
+        "propellantBefore": 0.39998387158830284,
+        "propellantAfter": 0.3999837821037002,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 152,
+        "kind": "thrust-start",
+        "id": "correction-152",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999837821037002,
+        "propellantAfter": 0.3999837821037002,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 152.5,
+        "kind": "thrust-end",
+        "id": "correction-152",
+        "deltaV": 0.0000328553869521224,
+        "fuelUsed": 9.199398756098986e-7,
+        "propellantBefore": 0.3999837821037002,
+        "propellantAfter": 0.3999828621638246,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 156,
+        "kind": "thrust-start",
+        "id": "correction-156",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999828621638246,
+        "propellantAfter": 0.3999828621638246,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 156.5,
+        "kind": "thrust-end",
+        "id": "correction-156",
+        "deltaV": 0.000004545221137153219,
+        "fuelUsed": 1.2726462816914363e-7,
+        "propellantBefore": 0.3999828621638246,
+        "propellantAfter": 0.39998273489919645,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 160,
+        "kind": "thrust-start",
+        "id": "correction-160",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39998273489919645,
+        "propellantAfter": 0.39998273489919645,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 160.5,
+        "kind": "thrust-end",
+        "id": "correction-160",
+        "deltaV": 0.000007833587309127729,
+        "fuelUsed": 2.1933772242910266e-7,
+        "propellantBefore": 0.39998273489919645,
+        "propellantAfter": 0.399982515561474,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 164,
+        "kind": "thrust-start",
+        "id": "correction-164",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.399982515561474,
+        "propellantAfter": 0.399982515561474,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 164.5,
+        "kind": "thrust-end",
+        "id": "correction-164",
+        "deltaV": 0.00004422541797546921,
+        "fuelUsed": 0.0000012382956906531462,
+        "propellantBefore": 0.399982515561474,
+        "propellantAfter": 0.39998127726578336,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 168,
+        "kind": "thrust-start",
+        "id": "correction-168",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39998127726578336,
+        "propellantAfter": 0.39998127726578336,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 168.5,
+        "kind": "thrust-end",
+        "id": "correction-168",
+        "deltaV": 0.0000422225320845028,
+        "fuelUsed": 0.0000011822145888906732,
+        "propellantBefore": 0.39998127726578336,
+        "propellantAfter": 0.3999800950511945,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 172,
+        "kind": "thrust-start",
+        "id": "correction-172",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999800950511945,
+        "propellantAfter": 0.3999800950511945,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 172.5,
+        "kind": "thrust-end",
+        "id": "correction-172",
+        "deltaV": 0.0000411906995597871,
+        "fuelUsed": 0.0000011533227146642844,
+        "propellantBefore": 0.3999800950511945,
+        "propellantAfter": 0.3999789417284798,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 176,
+        "kind": "thrust-start",
+        "id": "correction-176",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999789417284798,
+        "propellantAfter": 0.3999789417284798,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 176.5,
+        "kind": "thrust-end",
+        "id": "correction-176",
+        "deltaV": 0.000017670147886722144,
+        "fuelUsed": 4.947566112356583e-7,
+        "propellantBefore": 0.3999789417284798,
+        "propellantAfter": 0.3999784469718686,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 180,
+        "kind": "thrust-start",
+        "id": "correction-180",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999784469718686,
+        "propellantAfter": 0.3999784469718686,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 180.5,
+        "kind": "thrust-end",
+        "id": "correction-180",
+        "deltaV": 0.000004231304505370637,
+        "fuelUsed": 1.1847469716386172e-7,
+        "propellantBefore": 0.3999784469718686,
+        "propellantAfter": 0.3999783284971714,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 184,
+        "kind": "thrust-start",
+        "id": "correction-184",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999783284971714,
+        "propellantAfter": 0.3999783284971714,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 184.5,
+        "kind": "thrust-end",
+        "id": "correction-184",
+        "deltaV": 0.00002402115398003894,
+        "fuelUsed": 6.725817383035348e-7,
+        "propellantBefore": 0.3999783284971714,
+        "propellantAfter": 0.3999776559154331,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 188,
+        "kind": "thrust-start",
+        "id": "correction-188",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999776559154331,
+        "propellantAfter": 0.3999776559154331,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 188.5,
+        "kind": "thrust-end",
+        "id": "correction-188",
+        "deltaV": 0.000019441453808552245,
+        "fuelUsed": 5.44351912656893e-7,
+        "propellantBefore": 0.3999776559154331,
+        "propellantAfter": 0.39997711156352045,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 192,
+        "kind": "thrust-start",
+        "id": "correction-192",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39997711156352045,
+        "propellantAfter": 0.39997711156352045,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 192.5,
+        "kind": "thrust-end",
+        "id": "correction-192",
+        "deltaV": 0.0000280982008424133,
+        "fuelUsed": 7.867365401370563e-7,
+        "propellantBefore": 0.39997711156352045,
+        "propellantAfter": 0.3999763248269803,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 196,
+        "kind": "thrust-start",
+        "id": "correction-196",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999763248269803,
+        "propellantAfter": 0.3999763248269803,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 196.5,
+        "kind": "thrust-end",
+        "id": "correction-196",
+        "deltaV": 3.341579113350008e-7,
+        "fuelUsed": 9.356263319659774e-9,
+        "propellantBefore": 0.3999763248269803,
+        "propellantAfter": 0.399976315470717,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 200,
+        "kind": "thrust-start",
+        "id": "correction-200",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.399976315470717,
+        "propellantAfter": 0.399976315470717,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 200.5,
+        "kind": "thrust-end",
+        "id": "correction-200",
+        "deltaV": 0.000010843986187697463,
+        "fuelUsed": 3.03626443765026e-7,
+        "propellantBefore": 0.399976315470717,
+        "propellantAfter": 0.3999760118442732,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 204,
+        "kind": "thrust-start",
+        "id": "correction-204",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999760118442732,
+        "propellantAfter": 0.3999760118442732,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 204.5,
+        "kind": "thrust-end",
+        "id": "correction-204",
+        "deltaV": 0.00001877858055026616,
+        "fuelUsed": 5.257911475098354e-7,
+        "propellantBefore": 0.3999760118442732,
+        "propellantAfter": 0.3999754860531257,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 208,
+        "kind": "thrust-start",
+        "id": "correction-208",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999754860531257,
+        "propellantAfter": 0.3999754860531257,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 208.5,
+        "kind": "thrust-end",
+        "id": "correction-208",
+        "deltaV": 0.000006753674729645395,
+        "fuelUsed": 1.8909956844836984e-7,
+        "propellantBefore": 0.3999754860531257,
+        "propellantAfter": 0.39997529695355727,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 212,
+        "kind": "thrust-start",
+        "id": "correction-212",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39997529695355727,
+        "propellantAfter": 0.39997529695355727,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 212.5,
+        "kind": "thrust-end",
+        "id": "correction-212",
+        "deltaV": 0.00000776973067689527,
+        "fuelUsed": 2.1754860335398973e-7,
+        "propellantBefore": 0.39997529695355727,
+        "propellantAfter": 0.3999750794049539,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 216,
+        "kind": "thrust-start",
+        "id": "correction-216",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999750794049539,
+        "propellantAfter": 0.3999750794049539,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 216.5,
+        "kind": "thrust-end",
+        "id": "correction-216",
+        "deltaV": 0.000005711118262989118,
+        "fuelUsed": 1.5990845581015378e-7,
+        "propellantBefore": 0.3999750794049539,
+        "propellantAfter": 0.3999749194964981,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 220,
+        "kind": "thrust-start",
+        "id": "correction-220",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999749194964981,
+        "propellantAfter": 0.3999749194964981,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 220.5,
+        "kind": "thrust-end",
+        "id": "correction-220",
+        "deltaV": 0.000010481991652832691,
+        "fuelUsed": 2.9349047769855474e-7,
+        "propellantBefore": 0.3999749194964981,
+        "propellantAfter": 0.3999746260060204,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 224,
+        "kind": "thrust-start",
+        "id": "correction-224",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999746260060204,
+        "propellantAfter": 0.3999746260060204,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 224.5,
+        "kind": "thrust-end",
+        "id": "correction-224",
+        "deltaV": 0.000018030777295317807,
+        "fuelUsed": 5.048525228978917e-7,
+        "propellantBefore": 0.3999746260060204,
+        "propellantAfter": 0.3999741211534975,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 228,
+        "kind": "thrust-start",
+        "id": "correction-228",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999741211534975,
+        "propellantAfter": 0.3999741211534975,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 228.5,
+        "kind": "thrust-end",
+        "id": "correction-228",
+        "deltaV": 0.000011281268323593609,
+        "fuelUsed": 3.158696384453208e-7,
+        "propellantBefore": 0.3999741211534975,
+        "propellantAfter": 0.39997380528385906,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 232,
+        "kind": "thrust-start",
+        "id": "correction-232",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39997380528385906,
+        "propellantAfter": 0.39997380528385906,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 232.5,
+        "kind": "thrust-end",
+        "id": "correction-232",
+        "deltaV": 0.00000915694084419073,
+        "fuelUsed": 2.5638952294571027e-7,
+        "propellantBefore": 0.39997380528385906,
+        "propellantAfter": 0.3999735488943361,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 236,
+        "kind": "thrust-start",
+        "id": "correction-236",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999735488943361,
+        "propellantAfter": 0.3999735488943361,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 236.5,
+        "kind": "thrust-end",
+        "id": "correction-236",
+        "deltaV": 0.000019241861509801056,
+        "fuelUsed": 5.387618391416993e-7,
+        "propellantBefore": 0.3999735488943361,
+        "propellantAfter": 0.399973010132497,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 240,
+        "kind": "thrust-start",
+        "id": "correction-240",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.399973010132497,
+        "propellantAfter": 0.399973010132497,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 240.5,
+        "kind": "thrust-end",
+        "id": "correction-240",
+        "deltaV": 0.000012066601094458014,
+        "fuelUsed": 3.378582764668181e-7,
+        "propellantBefore": 0.399973010132497,
+        "propellantAfter": 0.3999726722742205,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 244,
+        "kind": "thrust-start",
+        "id": "correction-244",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999726722742205,
+        "propellantAfter": 0.3999726722742205,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 244.5,
+        "kind": "thrust-end",
+        "id": "correction-244",
+        "deltaV": 0.000010124596057864368,
+        "fuelUsed": 2.834831274167726e-7,
+        "propellantBefore": 0.3999726722742205,
+        "propellantAfter": 0.3999723887910931,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 248,
+        "kind": "thrust-start",
+        "id": "correction-248",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999723887910931,
+        "propellantAfter": 0.3999723887910931,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 248.5,
+        "kind": "thrust-end",
+        "id": "correction-248",
+        "deltaV": 0.000002174212440554568,
+        "fuelUsed": 6.087674631061191e-8,
+        "propellantBefore": 0.3999723887910931,
+        "propellantAfter": 0.3999723279143468,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 252,
+        "kind": "thrust-start",
+        "id": "correction-252",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999723279143468,
+        "propellantAfter": 0.3999723279143468,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 252.5,
+        "kind": "thrust-end",
+        "id": "correction-252",
+        "deltaV": 0.0000013000237717189793,
+        "fuelUsed": 3.639994550219683e-8,
+        "propellantBefore": 0.3999723279143468,
+        "propellantAfter": 0.3999722915144013,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 256,
+        "kind": "thrust-start",
+        "id": "correction-256",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999722915144013,
+        "propellantAfter": 0.3999722915144013,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 256.5,
+        "kind": "thrust-end",
+        "id": "correction-256",
+        "deltaV": 0.000008222747617238062,
+        "fuelUsed": 2.3023235740105008e-7,
+        "propellantBefore": 0.3999722915144013,
+        "propellantAfter": 0.3999720612820439,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 260,
+        "kind": "thrust-start",
+        "id": "correction-260",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999720612820439,
+        "propellantAfter": 0.3999720612820439,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 260.5,
+        "kind": "thrust-end",
+        "id": "correction-260",
+        "deltaV": 0.000010328860110612978,
+        "fuelUsed": 2.8920228167805817e-7,
+        "propellantBefore": 0.3999720612820439,
+        "propellantAfter": 0.3999717720797622,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 264,
+        "kind": "thrust-start",
+        "id": "correction-264",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999717720797622,
+        "propellantAfter": 0.3999717720797622,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 264.5,
+        "kind": "thrust-end",
+        "id": "correction-264",
+        "deltaV": 0.000007748124663272519,
+        "fuelUsed": 2.1694309948472323e-7,
+        "propellantBefore": 0.3999717720797622,
+        "propellantAfter": 0.3999715551366627,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 268,
+        "kind": "thrust-start",
+        "id": "correction-268",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999715551366627,
+        "propellantAfter": 0.3999715551366627,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 268.5,
+        "kind": "thrust-end",
+        "id": "correction-268",
+        "deltaV": 0.0000016806785791495968,
+        "fuelUsed": 4.705804323990037e-8,
+        "propellantBefore": 0.3999715551366627,
+        "propellantAfter": 0.3999715080786195,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 272,
+        "kind": "thrust-start",
+        "id": "correction-272",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.3999715080786195,
+        "propellantAfter": 0.3999715080786195,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 272.5,
+        "kind": "thrust-end",
+        "id": "correction-272",
+        "deltaV": 0.0000032863247486890323,
+        "fuelUsed": 9.201521722346229e-8,
+        "propellantBefore": 0.3999715080786195,
+        "propellantAfter": 0.39997141606340225,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 276,
+        "kind": "thrust-start",
+        "id": "correction-276",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39997141606340225,
+        "propellantAfter": 0.39997141606340225,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 276.5,
+        "kind": "thrust-end",
+        "id": "correction-276",
+        "deltaV": 0.000016024722323566013,
+        "fuelUsed": 4.486829923155966e-7,
+        "propellantBefore": 0.39997141606340225,
+        "propellantAfter": 0.39997096738040994,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 280,
+        "kind": "thrust-start",
+        "id": "correction-280",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39997096738040994,
+        "propellantAfter": 0.39997096738040994,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 280.5,
+        "kind": "thrust-end",
+        "id": "correction-280",
+        "deltaV": 0.000012861592468853457,
+        "fuelUsed": 3.6011707460481546e-7,
+        "propellantBefore": 0.39997096738040994,
+        "propellantAfter": 0.39997060726333533,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 284,
+        "kind": "thrust-start",
+        "id": "correction-284",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39997060726333533,
+        "propellantAfter": 0.39997060726333533,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 284.5,
+        "kind": "thrust-end",
+        "id": "correction-284",
+        "deltaV": 0.000010519544050575638,
+        "fuelUsed": 2.945410184640451e-7,
+        "propellantBefore": 0.39997060726333533,
+        "propellantAfter": 0.39997031272231687,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 288,
+        "kind": "thrust-start",
+        "id": "correction-288",
+        "deltaV": 0,
+        "fuelUsed": 0,
+        "propellantBefore": 0.39997031272231687,
+        "propellantAfter": 0.39997031272231687,
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      },
+      {
+        "t": 288.5,
+        "kind": "thrust-end",
+        "id": "correction-288",
+        "deltaV": 0.000002773005770271942,
+        "fuelUsed": 7.76425128634628e-8,
+        "propellantBefore": 0.39997031272231687,
+        "propellantAfter": 0.399970235079804,
+        "detail": "completed",
+        "vessel": "gaia",
+        "color": "#a8d8e8"
+      }
+    ],
+    "thrustWhiskers": [
+      {
+        "vessel": "gaia",
+        "t": 260.125,
+        "force": 0.000028920228162380554,
+        "from": [
+          975.1436166995426,
+          603.5493186401236
+        ],
+        "to": [
+          973.0043108794074,
+          604.4676021691304
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 260.375,
+        "force": 0.000028920228162380554,
+        "from": [
+          978.2146938228619,
+          602.687397586784
+        ],
+        "to": [
+          976.0753880027268,
+          603.6056811157907
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 264.125,
+        "force": 0.00002169430994024698,
+        "from": [
+          1007.0089270046018,
+          572.635642543513
+        ],
+        "to": [
+          1009.0749754076376,
+          571.7488042987039
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 264.375,
+        "force": 0.00002169430994024698,
+        "from": [
+          1007.3953865162972,
+          569.6754777884553
+        ],
+        "to": [
+          1009.461434919333,
+          568.7886395436462
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 268.125,
+        "force": 0.000004705804332774592,
+        "from": [
+          988.3887677154441,
+          519.4371636162289
+        ],
+        "to": [
+          986.57589463114,
+          520.2153279524484
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 268.375,
+        "force": 0.000004705804332774592,
+        "from": [
+          985.7401166732379,
+          516.1563772328302
+        ],
+        "to": [
+          983.9272435889338,
+          516.9345415690498
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 272.125,
+        "force": 0.000009201521714526661,
+        "from": [
+          938.6863079867024,
+          483.1658623439863
+        ],
+        "to": [
+          940.5870969758388,
+          482.3499606601723
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 272.375,
+        "force": 0.000009201521714526661,
+        "from": [
+          935.6230476531257,
+          482.57395465731423
+        ],
+        "to": [
+          937.523836642262,
+          481.75805297350024
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 276.125,
+        "force": 0.00004486829924044456,
+        "from": [
+          903.3509803026403,
+          503.59734987650677
+        ],
+        "to": [
+          901.0773124830242,
+          504.5733074462638
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 276.375,
+        "force": 0.00004486829924044456,
+        "from": [
+          902.4081190895458,
+          506.7460604046576
+        ],
+        "to": [
+          900.1344512699297,
+          507.72201797441465
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 280.125,
+        "force": 0.0000360117074512357,
+        "from": [
+          909.271868916442,
+          564.1882942607753
+        ],
+        "to": [
+          911.4745820419475,
+          563.242793545898
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 280.375,
+        "force": 0.0000360117074512357,
+        "from": [
+          911.0438687354363,
+          568.0166776172767
+        ],
+        "to": [
+          913.2465818609418,
+          567.0711769023995
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 284.125,
+        "force": 0.000029454101843829878,
+        "from": [
+          950.5199839363601,
+          610.8296759073121
+        ],
+        "to": [
+          948.37565106514,
+          611.7501172662875
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 284.375,
+        "force": 0.000029454101843829878,
+        "from": [
+          953.6268504012234,
+          612.3715059507906
+        ],
+        "to": [
+          951.4825175300033,
+          613.291947309766
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 288.125,
+        "force": 0.000007764251291870868,
+        "from": [
+          994.6645679180008,
+          611.3732871657537
+        ],
+        "to": [
+          996.5402308976193,
+          610.5681706630357
+        ]
+      },
+      {
+        "vessel": "gaia",
+        "t": 288.375,
+        "force": 0.000007764251291870868,
+        "from": [
+          996.55202986135,
+          609.6908793829151
+        ],
+        "to": [
+          998.4276928409685,
+          608.8857628801971
+        ]
+      }
+    ],
+    "camera": {
+      "yaw": -0.65,
+      "pitch": 0.6,
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "scale": 999.9999999999999,
+      "preset": "oblique",
+      "panMode": false,
+      "tracking": "off",
+      "trackingOffset": [
+        0,
+        0,
+        0
+      ]
+    },
+    "seeThroughBodies": false,
+    "hits": [
+      {
+        "id": "Orison",
+        "name": "Orison",
+        "x": 631.1047662131655,
+        "y": 681.1762045017954,
+        "depth": 206.35668594414372,
+        "radius": 100
+      },
+      {
+        "id": "Helion",
+        "name": "Helion",
+        "x": -2553.230427983058,
+        "y": 2048.032000501191,
+        "depth": 2204.284263196673,
+        "radius": 650
+      },
+      {
+        "id": "gaia",
+        "name": "Lumen",
+        "x": 968.9299986153904,
+        "y": 604.7721407055128,
+        "depth": -64.8959151366
+      }
+    ]
+  },
+  "errors": []
+}

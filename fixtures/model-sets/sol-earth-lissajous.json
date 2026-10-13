@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "modelVersion": "circular-binary-set-v1",
   "id": "sol-earth-lissajous",
-  "name": "Sol\u2013Earth \u00b7 Gaia Lissajous",
+  "name": "Helion\u2013Orison \u00b7 Lissajous observatory",
   "extent": 5,
-  "description": "A survey observatory weaves above and below the Sun\u2013Earth plane near L2.",
+  "description": "A Gaia/WMAP-inspired observatory weaves above and below the Helion\u2013Orison plane near L2.",
   "provenance": "Gaia/WMAP-inspired finite center-motion witness in a fictional binary. Offline boundary-value initial state, canonical unpowered flight; no exact recurrence or real mission data.",
   "stations": [],
   "rotating": {
-    "name": "Sol\u2013Earth rotating",
+    "name": "Helion\u2013Orison rotating",
     "rate": 0.125,
     "phase": 0
   },
@@ -23,7 +23,7 @@
   },
   "vessels": [
     {
-      "name": "Gaia",
+      "name": "Lumen",
       "color": "#a8d8e8",
       "cargo": "Observatory",
       "bundle": {
@@ -45,7 +45,7 @@
           },
           "bodies": [
             {
-              "id": "Sol",
+              "id": "Helion",
               "mu": 0.997,
               "radius": 0.65,
               "rail": {
@@ -71,7 +71,7 @@
               }
             },
             {
-              "id": "Earth",
+              "id": "Orison",
               "mu": 0.003,
               "radius": 0.1,
               "rail": {

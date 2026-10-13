@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import survey from '../fixtures/model-sets/libration-survey.json';
+import mission from '../fixtures/model-sets/observatory-mission.json';
+import {SurveyEngine} from '../src/binary/survey-engine';
+import {surveyEpisode,type SurveyDefinition} from '../src/binary/survey';
+import {Runner} from '../src/sim/runner';
+import {prepareObservatoryMission,type ObservatoryMission} from '../src/binary/mission';
+const started=performance.now();const r=prepareObservatoryMission(mission as ObservatoryMission);
+const data:any={missionBudget:{ms:performance.now()-started,nodes:[r.parent,r.lower,...r.upperSegments].reduce((n,v)=>n+v.retainedNodes,0),rows:r.view.vessels.reduce((n,v)=>n+v.samples.length,0),bytes:new TextEncoder().encode(JSON.stringify(r.view)).byteLength},mission:[r.parent,r.lower,...r.upperSegments].map(v=>({bundle:v.bundle,samples:[...new Set([...Array.from({length:33},(_,i)=>v.bundle.scenario.epoch+i*v.bundle.scenario.duration/32),...v.bundle.program.thrustArcs!.flatMap(a=>[a.start,a.end])])].sort((a,b)=>a-b).map(t=>v.sample(t))})),survey:[]};
+const engine=new SurveyEngine(survey as SurveyDefinition);while(engine.frontier<1320&&!engine.halt){engine.advanceTo(engine.frontier+32);if(engine.frontier===32||engine.frontier===1304){const a=engine.anchor(),c=surveyEpisode(engine.definition,a.t,a.y,a.fuel,a.phases),bundle=structuredClone(engine.definition.source.vessels[0].bundle);bundle.scenario.epoch=a.t;bundle.scenario.duration=4;bundle.scenario.ship.state=a.y;bundle.scenario.ship.propellant=a.fuel;bundle.scenario.policy={step:1/1024,maxNodes:8192,maxSubdivision:20};bundle.program={schemaVersion:4,id:'frozen',burns:[],thrustArcs:c.arcs};const runner=new Runner(bundle);runner.advanceTo(a.t+4);data.survey.push({bundle,samples:c.samples});}engine.delta();}if(engine.halt)throw Error(engine.halt);data.rollout=engine.anchor();fs.writeFileSync('docs/evidence/libration-extension-oracle-input.json',JSON.stringify(data)+'\n');console.log(data.rollout);

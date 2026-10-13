@@ -538,3 +538,10 @@ Relief now runs independently of Potential map, with a separately toggled rectan
 ## Spatial observatory exhibits — 2026-10-12
 
 **Sol–Earth · Webb halo**, **Sol–Earth · Gaia Lissajous** and **Sol–Earth · Observatory departure** are finite compact fictional circular-binary scenes. Both bodies orbit the barycenter; all five Lagrange points derive from the admitted field. Real spatial trails and a close **L2 rotating** frame show vertical motion. Departure starts in Earth parking orbit and pays two bounded finite burns into the halo; no ground ascent or real mission reconstruction is claimed. Lissajous is a finite center-motion witness with no exact recurrence. Old coplanar relief stays separate. Compact grids add a dimmer adjustable strength and circular fade. See [evidence](evidence/libration-orbits.md) and [review disposition](design/libration-orbits/implementation-disposition.md). Stationkeeping, physical visits and continuous libration service are later slices.
+
+The fictional Helion–Orison observatory extensions add a maintained Lissajous-like
+continuous survey and a finite airless staged launch/parking/halo mission. See
+[extension evidence](evidence/libration-extensions.md). The survey continues actual
+six-state flight with paid corrections and a bounded history, rather than replaying
+an orbit. The mission conserves stage mass/fuel and continues from actual parking
+states. New names are fictional; Webb/Gaia/WMAP remain aesthetic inspirations.

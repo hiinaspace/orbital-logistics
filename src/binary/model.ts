@@ -36,6 +36,6 @@ export function admitBinary(set:BinarySet):BinaryDescriptor {
  return b;
 }
 export function prepareBinary(set:BinarySet):SceneView {
- const binary=admitBinary(set);const {modelVersion:_domain,binary:_descriptor,...base}=set;const run=prepareSet(base);run.binary=binary;run.frameExtents={...run.frameExtents,libration:.4,Earth:.65,webb:.45,gaia:.35};
+ const binary=admitBinary(set);const {modelVersion:_domain,binary:_descriptor,...base}=set;const run=prepareSet(base);run.binary=binary;run.frameExtents={...run.frameExtents,libration:.4,[run.world.bodies[1].id]:.65,[run.vessels[0].id]:.45};
  run.playback={rateScale:1,trailSpan:2*binary.period,forecastSpan:binary.period,maxZoom:4000};return run;
 }

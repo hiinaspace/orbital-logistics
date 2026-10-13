@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {axes,cameraPoint,cameraVector,orient,pan,zoom,orbit,occluder,visibleSegment,type Camera} from '../../src/model-set/camera';
+import {chaseRig,axes,cameraPoint,cameraVector,orient,pan,zoom,orbit,occluder,visibleSegment,type Camera} from '../../src/model-set/camera';
 const camera=():Camera=>({yaw:0,pitch:Math.PI/2,center:[0,0,0],scale:100});
 const close=(a:readonly number[],b:readonly number[],eps=1e-10)=>assert.ok(Math.hypot(...a.map((x,i)=>x-b[i]))<eps,`${a} != ${b}`);
 test('orthographic presets preserve right-handed orthonormal axes and exact overhead compatibility',()=>{
@@ -48,4 +48,10 @@ test('chase rigs and selected pivots remain orthonormal and deterministic at deg
 test('one-draw projection snapshots camera axes and matches point queries',async()=>{
  const {cameraProjection}=await import('../../src/model-set/camera');
  for(const preset of ['top','oblique','front','side'] as const){const c=camera();orient(c,preset);c.center=[1,-2,3];const projection=cameraProjection(c,1440,900);for(const y of [[2,3,4],[-4,1,-2],[0,0,0]])close(projection(y),cameraPoint(c,y,1440,900));const before=projection([4,5,6]);c.center[0]+=2;orbit(c,50,10);close(projection([4,5,6]),before);}
+});
+
+test('flyby chase roll stays upright when angular momentum changes sign',()=>{
+ const velocity=[.2,.3,0],before=chaseRig([1,-1e-6,0],velocity),after=chaseRig([-1,1e-6,0],velocity);
+ close(before.up,[0,0,1]);close(after.up,before.up);close(after.forward,before.forward);close(after.right,before.right);
+ for(const vy of [-.01,0,.01]){const rig=chaseRig([2,0,0],[1,vy,0]);close(rig.up,[0,0,1]);}
 });

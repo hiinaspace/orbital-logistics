@@ -1,0 +1,396 @@
+{
+  "schemaVersion": 1,
+  "modelVersion": "libration-survey-v1",
+  "id": "helion-orison-survey",
+  "name": "Helion\u2013Orison \u00b7 Continuous survey",
+  "description": "Lumen traces a changing spatial survey pattern around L2.",
+  "provenance": "Gaia/WMAP-inspired fictional Lissajous-like survey. Canonical free flight and small paid growing-mode corrections; fitted two-frequency guide is not a physical rail or an exact torus. Finite fuel, bounded rolling history.",
+  "source": {
+    "schemaVersion": 1,
+    "modelVersion": "circular-binary-set-v1",
+    "id": "sol-earth-lissajous",
+    "name": "Helion\u2013Orison \u00b7 Lissajous observatory",
+    "extent": 5,
+    "description": "A Gaia/WMAP-inspired observatory weaves above and below the Helion\u2013Orison plane near L2.",
+    "provenance": "Gaia/WMAP-inspired finite center-motion witness in a fictional binary. Offline boundary-value initial state, canonical unpowered flight; no exact recurrence or real mission data.",
+    "stations": [],
+    "rotating": {
+      "name": "Helion\u2013Orison rotating",
+      "rate": 0.125,
+      "phase": 0
+    },
+    "binary": {
+      "schemaVersion": 1,
+      "mu": 0.003,
+      "separation": 4,
+      "rate": 0.125,
+      "phase": 0,
+      "period": 25.959956963240273,
+      "kind": "lissajous"
+    },
+    "vessels": [
+      {
+        "name": "Lumen",
+        "color": "#a8d8e8",
+        "cargo": "Observatory",
+        "bundle": {
+          "scenario": {
+            "schemaVersion": 3,
+            "modelVersion": "rk4-canonical-v3",
+            "id": "sol-earth-lissajous-coast",
+            "units": {
+              "length": "model distance",
+              "time": "model time",
+              "mass": "mass unit"
+            },
+            "epoch": 0,
+            "duration": 60,
+            "policy": {
+              "step": 0.0009765625,
+              "maxNodes": 65536,
+              "maxSubdivision": 20
+            },
+            "bodies": [
+              {
+                "id": "Helion",
+                "mu": 0.997,
+                "radius": 0.65,
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 0.012,
+                  "rate": 0.125,
+                  "phase": 3.141592653589793
+                }
+              },
+              {
+                "id": "Orison",
+                "mu": 0.003,
+                "radius": 0.1,
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 3.988,
+                  "rate": 0.125,
+                  "phase": 0
+                }
+              }
+            ],
+            "ship": {
+              "id": "gaia",
+              "state": [
+                4.415250198542028,
+                0.0,
+                0.10931800630310441,
+                0.0,
+                0.5341999609880641,
+                0.0
+              ],
+              "dryMass": 1,
+              "cargoMass": 0,
+              "propellant": 0.4,
+              "tankCapacity": 0.4,
+              "exhaustVelocity": 50,
+              "engine": {
+                "maxThrust": 0.003,
+                "maxAcceleration": 0.002
+              }
+            }
+          },
+          "program": {
+            "schemaVersion": 3,
+            "id": "gaia-lissajous-coast",
+            "burns": []
+          }
+        },
+        "glyph": "observatory"
+      }
+    ]
+  },
+  "reference": {
+    "schemaVersion": 1,
+    "mu": 0.003,
+    "separation": 4,
+    "rate": 0.125,
+    "xL": 1.100285368445594,
+    "frequencies": [
+      1.9360502924284329,
+      1.857624600681487
+    ],
+    "terms": [
+      {
+        "axis": 0,
+        "k": 1,
+        "l": 0,
+        "coefficient": 0.007
+      },
+      {
+        "axis": 2,
+        "k": 0,
+        "l": 1,
+        "coefficient": 0.025
+      },
+      {
+        "axis": 0,
+        "k": 0,
+        "l": 0,
+        "coefficient": -0.002508274688817941
+      },
+      {
+        "axis": 0,
+        "k": 0,
+        "l": 2,
+        "coefficient": -0.0008093310968828126
+      },
+      {
+        "axis": 0,
+        "k": 1,
+        "l": -2,
+        "coefficient": -0.0005072744207364017
+      },
+      {
+        "axis": 0,
+        "k": 1,
+        "l": 2,
+        "coefficient": 4.1243797557826454e-05
+      },
+      {
+        "axis": 0,
+        "k": 2,
+        "l": -2,
+        "coefficient": -1.37913698566326e-05
+      },
+      {
+        "axis": 0,
+        "k": 2,
+        "l": 0,
+        "coefficient": 0.00034803853995467494
+      },
+      {
+        "axis": 0,
+        "k": 2,
+        "l": 2,
+        "coefficient": -4.665680311796188e-06
+      },
+      {
+        "axis": 0,
+        "k": 3,
+        "l": -2,
+        "coefficient": 1.6544934230744239e-06
+      },
+      {
+        "axis": 0,
+        "k": 3,
+        "l": 0,
+        "coefficient": -2.0902068492932206e-05
+      },
+      {
+        "axis": 0,
+        "k": 3,
+        "l": 2,
+        "coefficient": 4.836840760013754e-07
+      },
+      {
+        "axis": 1,
+        "k": 0,
+        "l": 2,
+        "coefficient": 0.00047213598911885365
+      },
+      {
+        "axis": 1,
+        "k": 1,
+        "l": -2,
+        "coefficient": -0.0014522757639200455
+      },
+      {
+        "axis": 1,
+        "k": 1,
+        "l": 0,
+        "coefficient": -0.020987480592311286
+      },
+      {
+        "axis": 1,
+        "k": 1,
+        "l": 2,
+        "coefficient": 6.572625672169279e-06
+      },
+      {
+        "axis": 1,
+        "k": 2,
+        "l": -2,
+        "coefficient": 2.128122121140915e-06
+      },
+      {
+        "axis": 1,
+        "k": 2,
+        "l": 0,
+        "coefficient": 0.0002610484798586843
+      },
+      {
+        "axis": 1,
+        "k": 2,
+        "l": 2,
+        "coefficient": -1.3035670731635244e-06
+      },
+      {
+        "axis": 1,
+        "k": 3,
+        "l": -2,
+        "coefficient": -1.1109316424472028e-05
+      },
+      {
+        "axis": 1,
+        "k": 3,
+        "l": 0,
+        "coefficient": -2.3274130197105936e-05
+      },
+      {
+        "axis": 1,
+        "k": 3,
+        "l": 2,
+        "coefficient": 2.3492733746998457e-07
+      },
+      {
+        "axis": 2,
+        "k": 0,
+        "l": 3,
+        "coefficient": -3.237772195908199e-05
+      },
+      {
+        "axis": 2,
+        "k": 1,
+        "l": -3,
+        "coefficient": 3.9304281686136495e-05
+      },
+      {
+        "axis": 2,
+        "k": 1,
+        "l": -1,
+        "coefficient": 0.0020135824171756615
+      },
+      {
+        "axis": 2,
+        "k": 1,
+        "l": 1,
+        "coefficient": -0.0006481176865566257
+      },
+      {
+        "axis": 2,
+        "k": 1,
+        "l": 3,
+        "coefficient": 3.873544892203569e-06
+      },
+      {
+        "axis": 2,
+        "k": 2,
+        "l": -3,
+        "coefficient": 6.774458236577928e-05
+      },
+      {
+        "axis": 2,
+        "k": 2,
+        "l": -1,
+        "coefficient": 0.0008714811566513034
+      },
+      {
+        "axis": 2,
+        "k": 2,
+        "l": 1,
+        "coefficient": 4.178096539408971e-05
+      },
+      {
+        "axis": 2,
+        "k": 2,
+        "l": 3,
+        "coefficient": -4.864804543651515e-07
+      },
+      {
+        "axis": 2,
+        "k": 3,
+        "l": -3,
+        "coefficient": 1.5289330257645594e-06
+      },
+      {
+        "axis": 2,
+        "k": 3,
+        "l": -1,
+        "coefficient": -2.5713369298867605e-05
+      },
+      {
+        "axis": 2,
+        "k": 3,
+        "l": 1,
+        "coefficient": -3.157078801601437e-06
+      },
+      {
+        "axis": 2,
+        "k": 3,
+        "l": 3,
+        "coefficient": 5.803165570340739e-08
+      }
+    ],
+    "maxCollocationResidual": 0.00045349328293229664,
+    "solveCalls": 7,
+    "unstableLeft": [
+      1.88959359697732,
+      -0.34931746663722224,
+      0.0,
+      0.5440996051429458,
+      0.3235776509418185,
+      0.0
+    ],
+    "unstableRight": [
+      0.34478515864797066,
+      -0.20504475772520073,
+      0.0,
+      0.7873085748181124,
+      -0.4682147474432861,
+      0.0
+    ],
+    "stableLeft": [
+      -1.8895935969773208,
+      -0.3493174666372217,
+      0.0,
+      0.5440996051429459,
+      -0.323577650941819,
+      0.0
+    ],
+    "stableRight": [
+      -0.3447851586479707,
+      -0.20504475772520075,
+      0.0,
+      0.7873085748181123,
+      0.46821474744328606,
+      0.0
+    ],
+    "growth": 2.283475825657458
+  }
+}

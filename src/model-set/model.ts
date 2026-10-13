@@ -30,6 +30,7 @@ export type PortSamples=Record<string,{t:number;y:State}[]>;
 export interface Activity {kind:'service'|'waiting'|'flying'|'fault'|'unavailable';reason?:string;nextDeparture?:number;retryAt?:number;knownEpoch?:number}
 export interface ViewSample extends Sample {frameOrigin?:State;opacity?:number;activity?:Activity;mass?:number;aero?:AeroTelemetry;axis?:Vector3;entryPhase?:'coast'|'entry'|'braking'|'recovered'}
 export interface VesselView {
+ maintenance?:boolean;
  passThrough?:PassThroughPlayback;
  compact?:CompactPlayback;
  solar?:SolarPlayback;

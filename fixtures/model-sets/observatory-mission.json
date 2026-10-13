@@ -1,0 +1,411 @@
+{
+  "schemaVersion": 1,
+  "modelVersion": "binary-observatory-mission-v1",
+  "id": "helion-orison-observatory-mission",
+  "name": "Helion\u2013Orison \u00b7 Observatory mission",
+  "description": "A Webb-inspired observatory launches from Cairn, circles Orison, then settles into a spatial halo around L2.",
+  "provenance": "Fictional airless accelerating binary. Zero-kick staging, reserved upper fuel, paid finite launch/booster recovery/departure/insertion, actual parking coasts and canonical continuation. Not a real mission reconstruction.",
+  "source": {
+    "schemaVersion": 1,
+    "modelVersion": "circular-binary-set-v1",
+    "id": "sol-earth-halo",
+    "name": "Helion\u2013Orison \u00b7 Halo observatory",
+    "extent": 5,
+    "description": "A Webb-inspired observatory circles L2 above and below Orison\u2019s orbital plane.",
+    "provenance": "Webb-inspired fictional circular binary; compressed distances, exaggerated planet mass. JPL seed continued to mass fraction .003; canonical unpowered spatial coast, not real mission data.",
+    "stations": [],
+    "rotating": {
+      "name": "Helion\u2013Orison rotating",
+      "rate": 0.125,
+      "phase": 0
+    },
+    "binary": {
+      "schemaVersion": 1,
+      "mu": 0.003,
+      "separation": 4,
+      "rate": 0.125,
+      "phase": 0,
+      "period": 25.76370375823563,
+      "kind": "halo"
+    },
+    "vessels": [
+      {
+        "name": "Prism",
+        "color": "#e4c879",
+        "cargo": "Observatory",
+        "bundle": {
+          "scenario": {
+            "schemaVersion": 3,
+            "modelVersion": "rk4-canonical-v3",
+            "id": "sol-earth-halo-coast",
+            "units": {
+              "length": "model distance",
+              "time": "model time",
+              "mass": "mass unit"
+            },
+            "epoch": 0,
+            "duration": 60,
+            "policy": {
+              "step": 0.0009765625,
+              "maxNodes": 65536,
+              "maxSubdivision": 20
+            },
+            "bodies": [
+              {
+                "id": "Helion",
+                "mu": 0.997,
+                "radius": 0.65,
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 0.012,
+                  "rate": 0.125,
+                  "phase": 3.141592653589793
+                }
+              },
+              {
+                "id": "Orison",
+                "mu": 0.003,
+                "radius": 0.1,
+                "rail": {
+                  "kind": "circular",
+                  "center": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "u": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "v": [
+                    0,
+                    1,
+                    0
+                  ],
+                  "radius": 3.988,
+                  "rate": 0.125,
+                  "phase": 0
+                }
+              }
+            ],
+            "ship": {
+              "id": "webb",
+              "state": [
+                4.431341494654667,
+                0,
+                0.24037111652794274,
+                0.0,
+                0.49280004606984346,
+                0.0
+              ],
+              "dryMass": 1,
+              "cargoMass": 0,
+              "propellant": 0.4,
+              "tankCapacity": 0.4,
+              "exhaustVelocity": 3
+            }
+          },
+          "program": {
+            "schemaVersion": 3,
+            "id": "webb-halo-coast",
+            "burns": []
+          }
+        },
+        "glyph": "observatory"
+      }
+    ]
+  },
+  "end": 80,
+  "launch": 0.5,
+  "split": 1.5,
+  "parking": 2.5,
+  "departure": 23.5,
+  "arrival": 37.5,
+  "land": 6.0,
+  "pad": {
+    "id": "Cairn",
+    "rail": {
+      "kind": "surface",
+      "bodyId": "Orison",
+      "bodyRail": {
+        "kind": "circular",
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ],
+        "radius": 3.988,
+        "rate": 0.125,
+        "phase": 0
+      },
+      "centerHeight": 1e-06,
+      "latitude": 0,
+      "center": [
+        0,
+        0,
+        0
+      ],
+      "u": [
+        1,
+        0,
+        0
+      ],
+      "v": [
+        0,
+        1,
+        0
+      ],
+      "radius": 0.100001,
+      "rate": 0.2,
+      "phase": 0
+    },
+    "cargo": 0,
+    "cargoCapacity": 0,
+    "propellant": 0,
+    "tankCapacity": 0,
+    "serviceDuration": 0.1
+  },
+  "booster": {
+    "id": "kestrel",
+    "name": "Kestrel",
+    "color": "#86c5cc",
+    "dryMass": 1,
+    "propellant": 1.5,
+    "tankCapacity": 1.5,
+    "exhaustVelocity": 4,
+    "engine": {
+      "maxThrust": 1.5,
+      "maxAcceleration": 0.3270409789031892
+    }
+  },
+  "upper": {
+    "id": "prism",
+    "name": "Prism",
+    "color": "#e4c879",
+    "dryMass": 0.2,
+    "propellant": 0.4,
+    "tankCapacity": 0.4,
+    "exhaustVelocity": 3,
+    "engine": {
+      "maxThrust": 0.3,
+      "maxAcceleration": 0.06183824862726067
+    }
+  },
+  "stack": {
+    "id": "kestrel-prism",
+    "name": "Kestrel \u00b7 Prism",
+    "color": "#a9cda8"
+  },
+  "programs": {
+    "stack": {
+      "schemaVersion": 4,
+      "id": "stack-launch",
+      "burns": [],
+      "thrustArcs": [
+        {
+          "id": "Cairn ascent",
+          "start": 0.5,
+          "end": 1.5,
+          "direction": [
+            0.9950041652780258,
+            0.09983341664682815,
+            0
+          ],
+          "throttle": 1,
+          "steering": {
+            "kind": "spherical-smoothstep-v1",
+            "keys": [
+              {
+                "offset": 0.0,
+                "direction": [
+                  0.9950041652780258,
+                  0.09983341664682815,
+                  0
+                ]
+              },
+              {
+                "offset": 0.25,
+                "direction": [
+                  0.9643146740845401,
+                  0.26475877576621953,
+                  0
+                ]
+              },
+              {
+                "offset": 0.5,
+                "direction": [
+                  0.9064872281959074,
+                  0.4222332354489647,
+                  0
+                ]
+              },
+              {
+                "offset": 0.75,
+                "direction": [
+                  0.4969136478642841,
+                  0.8677999922598584,
+                  0
+                ]
+              },
+              {
+                "offset": 1.0,
+                "direction": [
+                  -0.09466958886814635,
+                  0.9955087488031112,
+                  0
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "operations": [
+        {
+          "id": "pad-initial",
+          "kind": "dock",
+          "t": 0,
+          "portId": "Cairn"
+        },
+        {
+          "id": "launch",
+          "kind": "launch",
+          "t": 0.5,
+          "portId": "Cairn",
+          "thrustArcId": "Cairn ascent"
+        }
+      ]
+    },
+    "booster": {
+      "schemaVersion": 4,
+      "id": "booster-return",
+      "burns": [],
+      "thrustArcs": [
+        {
+          "id": "Boostback",
+          "start": 1.5,
+          "end": 1.9048919175817312,
+          "direction": [
+            0.9987576023721291,
+            -0.04983223558978845,
+            0
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "Landing",
+          "start": 4.774507081354801,
+          "end": 6.0,
+          "direction": [
+            0.49631489269868395,
+            0.8681425731327164,
+            0
+          ],
+          "throttle": 1
+        }
+      ],
+      "operations": [
+        {
+          "id": "booster-land",
+          "kind": "land",
+          "t": 6.0,
+          "portId": "Cairn"
+        }
+      ]
+    },
+    "upper": {
+      "schemaVersion": 4,
+      "id": "observatory-flight",
+      "burns": [],
+      "thrustArcs": [
+        {
+          "id": "Parking insertion",
+          "start": 1.5,
+          "end": 2.5,
+          "direction": [
+            -0.09466958886814635,
+            0.9955087488031112,
+            0
+          ],
+          "throttle": 1,
+          "steering": {
+            "kind": "spherical-smoothstep-v1",
+            "keys": [
+              {
+                "offset": 0.0,
+                "direction": [
+                  -0.09466958886814635,
+                  0.9955087488031112,
+                  0
+                ]
+              },
+              {
+                "offset": 0.5,
+                "direction": [
+                  -0.9980840390664076,
+                  0.06187286126312227,
+                  0
+                ]
+              },
+              {
+                "offset": 1.0,
+                "direction": [
+                  -0.21689867325041787,
+                  -0.9761941228783384,
+                  0
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "Orison departure",
+          "start": 24.5,
+          "end": 26.814077111814882,
+          "direction": [
+            -0.5167392153751561,
+            -0.026503093520943825,
+            0.8557325337553132
+          ],
+          "throttle": 1
+        },
+        {
+          "id": "Halo insertion",
+          "start": 36.713412325711275,
+          "end": 37.5,
+          "direction": [
+            0.4451334487043945,
+            0.19113638912222086,
+            0.8748274650454518
+          ],
+          "throttle": 1
+        }
+      ]
+    }
+  }
+}

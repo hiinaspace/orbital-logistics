@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "modelVersion": "circular-binary-set-v1",
   "id": "sol-earth-observatory-insertion",
-  "name": "Sol\u2013Earth \u00b7 Observatory departure",
+  "name": "Helion\u2013Orison \u00b7 Observatory departure",
   "extent": 5,
-  "description": "An observatory departs Earth parking orbit, coasts to L2 and enters a spatial halo.",
+  "description": "An observatory departs Orison parking orbit, coasts to L2 and enters a spatial halo.",
   "provenance": "Webb-inspired fictional parking departure and halo insertion. Bounded finite thrust, paid propellant and continuous canonical flight; launch vehicle/ground ascent and actual mission data are not represented.",
   "stations": [],
   "rotating": {
-    "name": "Sol\u2013Earth rotating",
+    "name": "Helion\u2013Orison rotating",
     "rate": 0.125,
     "phase": 0
   },
@@ -23,7 +23,7 @@
   },
   "vessels": [
     {
-      "name": "Webb",
+      "name": "Prism",
       "color": "#e4c879",
       "cargo": "Observatory",
       "bundle": {
@@ -45,7 +45,7 @@
           },
           "bodies": [
             {
-              "id": "Sol",
+              "id": "Helion",
               "mu": 0.997,
               "radius": 0.65,
               "rail": {
@@ -71,7 +71,7 @@
               }
             },
             {
-              "id": "Earth",
+              "id": "Orison",
               "mu": 0.003,
               "radius": 0.1,
               "rail": {
@@ -124,7 +124,7 @@
           "burns": [],
           "thrustArcs": [
             {
-              "id": "Earth departure",
+              "id": "Orison departure",
               "start": 1,
               "end": 3.737767667642739,
               "direction": [

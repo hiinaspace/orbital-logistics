@@ -12,7 +12,7 @@ a = halo["separation"]
 m = halo["mu"]
 n = halo["rate"]
 bodies: list[dict[str, Any]] = []
-for i, (name, mass, radius) in enumerate([("Sol", 1 - m, 0.65), ("Earth", m, 0.10)]):
+for i, (name, mass, radius) in enumerate([("Helion", 1 - m, 0.65), ("Orison", m, 0.10)]):
     bodies.append(
         {
             "id": name,
@@ -59,16 +59,16 @@ fixture: dict[str, Any] = {
     "schemaVersion": 1,
     "modelVersion": "circular-binary-set-v1",
     "id": "sol-earth-halo",
-    "name": "Sol–Earth · Webb halo",
+    "name": "Helion–Orison · Halo observatory",
     "extent": 5,
-    "description": "A space observatory circles L2 above and below Earth’s orbital plane.",
+    "description": "A Webb-inspired observatory circles L2 above and below Orison’s orbital plane.",
     "provenance": (
         "Webb-inspired fictional circular binary; compressed distances, "
-        "exaggerated Earth mass. JPL seed continued to mass fraction .003; "
+        "exaggerated planet mass. JPL seed continued to mass fraction .003; "
         "canonical unpowered spatial coast, not real mission data."
     ),
     "stations": [],
-    "rotating": {"name": "Sol–Earth rotating", "rate": n, "phase": 0},
+    "rotating": {"name": "Helion–Orison rotating", "rate": n, "phase": 0},
     "binary": {
         "schemaVersion": 1,
         "mu": m,
@@ -80,7 +80,7 @@ fixture: dict[str, Any] = {
     },
     "vessels": [
         {
-            "name": "Webb",
+            "name": "Prism",
             "color": "#e4c879",
             "cargo": "Observatory",
             "bundle": {
@@ -102,8 +102,10 @@ li = json.loads((BASE / "lissajous-solution.json").read_text())
 d = copy.deepcopy(fixture)
 d.update(
     id="sol-earth-lissajous",
-    name="Sol–Earth · Gaia Lissajous",
-    description="A survey observatory weaves above and below the Sun–Earth plane near L2.",
+    name="Helion–Orison · Lissajous observatory",
+    description=(
+        "A Gaia/WMAP-inspired observatory weaves above and below the Helion–Orison plane near L2."
+    ),
     provenance=(
         "Gaia/WMAP-inspired finite center-motion witness in a fictional "
         "binary. Offline boundary-value initial state, canonical unpowered "
@@ -112,7 +114,7 @@ d.update(
 )
 d["binary"].update(kind="lissajous", period=li["period"] / n)
 v = d["vessels"][0]
-v.update(name="Gaia", color="#a8d8e8")
+v.update(name="Lumen", color="#a8d8e8")
 v["bundle"]["scenario"]["id"] = "sol-earth-lissajous-coast"
 v["bundle"]["scenario"]["ship"].update(id="gaia", state=state(li))
 v["bundle"]["program"]["id"] = "gaia-lissajous-coast"
@@ -121,9 +123,9 @@ ins = json.loads((BASE / "insertion-solution.json").read_text())
 d = copy.deepcopy(fixture)
 d.update(
     id="sol-earth-observatory-insertion",
-    name="Sol–Earth · Observatory departure",
+    name="Helion–Orison · Observatory departure",
     description=(
-        "An observatory departs Earth parking orbit, coasts to L2 and enters a spatial halo."
+        "An observatory departs Orison parking orbit, coasts to L2 and enters a spatial halo."
     ),
     provenance=(
         "Webb-inspired fictional parking departure and halo insertion. "
@@ -150,7 +152,7 @@ v["bundle"]["program"] = {
             "direction": b["direction"],
             "throttle": 1,
         }
-        for name, b in zip(["Earth departure", "Halo insertion"], ins["burns"], strict=True)
+        for name, b in zip(["Orison departure", "Halo insertion"], ins["burns"], strict=True)
     ],
 }
 save(d)

@@ -1,0 +1,1109 @@
+{
+  "records": [
+    {
+      "t": 0,
+      "ships": [
+        {
+          "id": "prism",
+          "present": false,
+          "lifetime": {
+            "start": 1.5,
+            "end": 80,
+            "parentId": "kestrel-prism"
+          }
+        },
+        {
+          "id": "kestrel-prism",
+          "present": true,
+          "t": 0,
+          "y": [
+            4.088001,
+            0,
+            0,
+            0,
+            0.5185002,
+            0
+          ],
+          "propellant": 1.5,
+          "fuelUsed": 0,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 1,
+            "cargoMass": 0.6000000000000001,
+            "fuelUsed": 0,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ],
+            "dockedPortId": "Cairn"
+          },
+          "mass": 3.1,
+          "glyph": "stack",
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "screen": [
+            793.8092947679131,
+            611.3363119252411
+          ],
+          "occludedBy": "Orison"
+        },
+        {
+          "id": "kestrel",
+          "present": false,
+          "lifetime": {
+            "start": 1.5,
+            "end": 80,
+            "parentId": "kestrel-prism"
+          }
+        }
+      ]
+    },
+    {
+      "t": 0.5,
+      "ships": [
+        {
+          "id": "prism",
+          "present": false,
+          "lifetime": {
+            "start": 1.5,
+            "end": 80,
+            "parentId": "kestrel-prism"
+          }
+        },
+        {
+          "id": "kestrel-prism",
+          "present": true,
+          "t": 0.5,
+          "y": [
+            4.079714884203963,
+            0.2590712010535117,
+            0,
+            -0.033132658244046424,
+            0.517426966390393,
+            0
+          ],
+          "propellant": 1.5,
+          "fuelUsed": 0,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 2,
+            "cargoMass": 0.6000000000000001,
+            "fuelUsed": 0,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ]
+          },
+          "thrust": {
+            "id": "Cairn ascent",
+            "force": 1.0138270345998865,
+            "acceleration": 0.3270409789031891,
+            "direction": [
+              0.9950041652780256,
+              0.09983341664682813,
+              0
+            ]
+          },
+          "mass": 3.1,
+          "glyph": "stack",
+          "axis": [
+            0.9950041652780256,
+            0.09983341664682813,
+            0
+          ],
+          "screen": [
+            792.2593557755727,
+            610.2288233642013
+          ],
+          "occludedBy": "Orison"
+        },
+        {
+          "id": "kestrel",
+          "present": false,
+          "lifetime": {
+            "start": 1.5,
+            "end": 80,
+            "parentId": "kestrel-prism"
+          }
+        }
+      ]
+    },
+    {
+      "t": 1,
+      "ships": [
+        {
+          "id": "prism",
+          "present": false,
+          "lifetime": {
+            "start": 1.5,
+            "end": 80,
+            "parentId": "kestrel-prism"
+          }
+        },
+        {
+          "id": "kestrel-prism",
+          "present": true,
+          "t": 1,
+          "y": [
+            4.059006665951166,
+            0.5206327651400973,
+            0,
+            -0.0495499330976102,
+            0.5351595212136449,
+            0
+          ],
+          "propellant": 1.3758270165679187,
+          "fuelUsed": 0.12417298343208127,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 2,
+            "cargoMass": 0.6000000000000001,
+            "fuelUsed": 0.12417298343208127,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ]
+          },
+          "thrust": {
+            "id": "Cairn ascent",
+            "force": 0.9732173805449291,
+            "acceleration": 0.3270409789031892,
+            "direction": [
+              0.9064872281959074,
+              0.4222332354489647,
+              0
+            ]
+          },
+          "mass": 2.975827016567919,
+          "glyph": "stack",
+          "axis": [
+            0.9064872281959074,
+            0.4222332354489647,
+            0
+          ],
+          "screen": [
+            791.820208204461,
+            607.2180763612334
+          ],
+          "occludedBy": "Orison"
+        },
+        {
+          "id": "kestrel",
+          "present": false,
+          "lifetime": {
+            "start": 1.5,
+            "end": 80,
+            "parentId": "kestrel-prism"
+          }
+        }
+      ]
+    },
+    {
+      "t": 1.5,
+      "ships": [
+        {
+          "id": "prism",
+          "present": true,
+          "t": 1.5,
+          "y": [
+            4.023261047706075,
+            0.8067832783862195,
+            0,
+            -0.11450879909093872,
+            0.6223055091885771,
+            0
+          ],
+          "propellant": 0.4000000000000001,
+          "fuelUsed": -5.551115123125783e-17,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "thrust": {
+            "id": "Parking insertion",
+            "force": 0.03710294917635641,
+            "acceleration": 0.06183824862726068,
+            "direction": [
+              -0.09466958886814636,
+              0.9955087488031114,
+              0
+            ]
+          },
+          "mass": 0.6000000000000001,
+          "glyph": "observatory",
+          "axis": [
+            -0.09466958886814636,
+            0.9955087488031114,
+            0
+          ],
+          "screen": [
+            784.6153601387774,
+            595.0949266038067
+          ],
+          "occludedBy": "Orison"
+        },
+        {
+          "id": "kestrel-prism",
+          "present": false,
+          "lifetime": {
+            "start": 0,
+            "end": 1.5,
+            "retired": true
+          }
+        },
+        {
+          "id": "kestrel",
+          "present": true,
+          "t": 1.5,
+          "y": [
+            4.023261047706075,
+            0.8067832783862195,
+            0,
+            -0.11450879909093872,
+            0.6223055091885771,
+            0
+          ],
+          "propellant": 1.2566278814630705,
+          "fuelUsed": 0,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 0,
+            "cargoMass": 0,
+            "fuelUsed": 0,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ]
+          },
+          "thrust": {
+            "id": "Boostback",
+            "force": 0.7380097913739125,
+            "acceleration": 0.3270409789031892,
+            "direction": [
+              0.9987576023721291,
+              -0.04983223558978845,
+              0
+            ]
+          },
+          "mass": 2.2566278814630705,
+          "glyph": "rocket",
+          "axis": [
+            0.9987576023721291,
+            -0.04983223558978845,
+            0
+          ],
+          "screen": [
+            784.6153601387774,
+            595.0949266038067
+          ],
+          "occludedBy": "Orison"
+        }
+      ]
+    },
+    {
+      "t": 2.5,
+      "ships": [
+        {
+          "id": "prism",
+          "present": true,
+          "t": 2.5,
+          "y": [
+            3.806634648166502,
+            1.3756013877153654,
+            0,
+            -0.29424255010136335,
+            0.48546448836252654,
+            0
+          ],
+          "propellant": 0.38775894459658294,
+          "fuelUsed": 0.012241055403417078,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "mass": 0.587758944596583,
+          "glyph": "observatory",
+          "axis": [
+            -0.2168986732504179,
+            -0.9761941228783385,
+            0
+          ],
+          "screen": [
+            715.1372352625947,
+            579.5346844526297
+          ],
+          "occludedBy": "Orison"
+        },
+        {
+          "id": "kestrel-prism",
+          "present": false,
+          "lifetime": {
+            "start": 0,
+            "end": 1.5,
+            "retired": true
+          }
+        },
+        {
+          "id": "kestrel",
+          "present": true,
+          "t": 2.5,
+          "y": [
+            3.9313345311777588,
+            1.3711819603478852,
+            0,
+            -0.12867067950538122,
+            0.5196528081520713,
+            0
+          ],
+          "propellant": 1.1831472948771933,
+          "fuelUsed": 0.0734805865858772,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 0,
+            "cargoMass": 0,
+            "fuelUsed": 0.0734805865858772,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ]
+          },
+          "mass": 2.1831472948771933,
+          "glyph": "rocket",
+          "axis": [
+            0.9987576023721291,
+            -0.04983223558978845,
+            0
+          ],
+          "screen": [
+            794.5561651380044,
+            565.5610401549437
+          ]
+        }
+      ]
+    },
+    {
+      "t": 6,
+      "ships": [
+        {
+          "id": "prism",
+          "present": true,
+          "t": 6,
+          "y": [
+            2.9264676524990545,
+            2.5549112118114845,
+            0,
+            -0.2097089948918269,
+            0.3610723361179355,
+            0
+          ],
+          "propellant": 0.38775894459658294,
+          "fuelUsed": 0.012241055403417078,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "mass": 0.587758944596583,
+          "glyph": "observatory",
+          "axis": [
+            -0.2168986732504179,
+            -0.9761941228783385,
+            0
+          ],
+          "screen": [
+            735.4903979279496,
+            695.661749953884
+          ]
+        },
+        {
+          "id": "kestrel-prism",
+          "present": false,
+          "lifetime": {
+            "start": 0,
+            "end": 1.5,
+            "retired": true
+          }
+        },
+        {
+          "id": "kestrel",
+          "present": true,
+          "t": 6,
+          "y": [
+            2.9542113468742195,
+            2.811580215608865,
+            0,
+            -0.3584378899987938,
+            0.37199412869468407,
+            0
+          ],
+          "propellant": 0.9750050354644499,
+          "fuelUsed": 0.28162284599862053,
+          "burnCursor": 0,
+          "status": "horizon",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 1,
+            "cargoMass": 0,
+            "fuelUsed": 0.28162284599862053,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ],
+            "dockedPortId": "Cairn",
+            "completedAt": 6
+          },
+          "mass": 1.97500503546445,
+          "glyph": "rocket",
+          "axis": [
+            0.3623577544766734,
+            0.9320390859672264,
+            0
+          ],
+          "screen": [
+            770.9765546345628,
+            600.5695656526484
+          ],
+          "occludedBy": "Orison"
+        }
+      ]
+    },
+    {
+      "t": 15,
+      "ships": [
+        {
+          "id": "prism",
+          "present": true,
+          "t": 15,
+          "y": [
+            -1.0255164184357943,
+            3.806511517457992,
+            0,
+            -0.4877827111966284,
+            -0.02652191494581893,
+            0
+          ],
+          "propellant": 0.38775894459658294,
+          "fuelUsed": 0.012241055403417078,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "mass": 0.587758944596583,
+          "glyph": "observatory",
+          "axis": [
+            -0.2168986732504179,
+            -0.9761941228783385,
+            0
+          ],
+          "screen": [
+            779.9441195217426,
+            693.7699893218036
+          ]
+        },
+        {
+          "id": "kestrel-prism",
+          "present": false,
+          "lifetime": {
+            "start": 0,
+            "end": 1.5,
+            "retired": true
+          }
+        },
+        {
+          "id": "kestrel",
+          "present": true,
+          "t": 15,
+          "y": [
+            -1.2935398623365628,
+            3.819006238985454,
+            0,
+            -0.47843419051763136,
+            -0.16911750076601095,
+            0
+          ],
+          "propellant": 0.9750050354644499,
+          "fuelUsed": 0.28162284599862053,
+          "burnCursor": 0,
+          "status": "horizon",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 1,
+            "cargoMass": 0,
+            "fuelUsed": 0.28162284599862053,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ],
+            "dockedPortId": "Cairn",
+            "completedAt": 6
+          },
+          "glyph": "rocket",
+          "axis": [
+            -0.9899924966004454,
+            0.1411200080598672,
+            0
+          ],
+          "screen": [
+            727.2172127540351,
+            597.2563828915943
+          ],
+          "occludedBy": "Orison"
+        }
+      ]
+    },
+    {
+      "t": 23.5,
+      "ships": [
+        {
+          "id": "prism",
+          "present": true,
+          "t": 23.5,
+          "y": [
+            -3.8467580411675097,
+            0.9579034919303152,
+            0,
+            -0.22906173517802908,
+            -0.46324878099783845,
+            0
+          ],
+          "propellant": 0.38775894459658294,
+          "fuelUsed": 0.012241055403417078,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "mass": 0.587758944596583,
+          "glyph": "observatory",
+          "axis": [
+            -0.2168986732504179,
+            -0.9761941228783385,
+            0
+          ],
+          "screen": [
+            790.3363622504821,
+            687.710640674404
+          ]
+        },
+        {
+          "id": "kestrel-prism",
+          "present": false,
+          "lifetime": {
+            "start": 0,
+            "end": 1.5,
+            "retired": true
+          }
+        },
+        {
+          "id": "kestrel",
+          "present": true,
+          "t": 23.5,
+          "y": [
+            -3.9064690849121564,
+            0.7082894446186704,
+            0,
+            -0.08103668115135873,
+            -0.488401551519141,
+            0
+          ],
+          "propellant": 0.9750050354644499,
+          "fuelUsed": 0.28162284599862053,
+          "burnCursor": 0,
+          "status": "horizon",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 1,
+            "cargoMass": 0,
+            "fuelUsed": 0.28162284599862053,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ],
+            "dockedPortId": "Cairn",
+            "completedAt": 6
+          },
+          "glyph": "rocket",
+          "axis": [
+            -0.01238866346289056,
+            -0.9999232575641008,
+            0
+          ],
+          "screen": [
+            691.0174018034187,
+            609.0398193783353
+          ],
+          "occludedBy": "Orison"
+        }
+      ]
+    },
+    {
+      "t": 24.5,
+      "ships": [
+        {
+          "id": "prism",
+          "present": true,
+          "t": 24.5,
+          "y": [
+            -4.0495386598015,
+            0.4247259525828607,
+            0,
+            -0.15392854645799461,
+            -0.6081699808376712,
+            0
+          ],
+          "propellant": 0.38775894459658294,
+          "fuelUsed": 0.012241055403417078,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "thrust": {
+            "id": "Orison departure",
+            "force": 0.03634598374885983,
+            "acceleration": 0.061838248627260686,
+            "direction": [
+              -0.5167392153751561,
+              -0.026503093520943825,
+              0.8557325337553132
+            ]
+          },
+          "mass": 0.587758944596583,
+          "glyph": "observatory",
+          "axis": [
+            -0.5167392153751561,
+            -0.026503093520943825,
+            0.8557325337553132
+          ],
+          "screen": [
+            826.2224944065638,
+            646.3363029587854
+          ]
+        },
+        {
+          "id": "kestrel-prism",
+          "present": false,
+          "lifetime": {
+            "start": 0,
+            "end": 1.5,
+            "retired": true
+          }
+        },
+        {
+          "id": "kestrel",
+          "present": true,
+          "t": 24.5,
+          "y": [
+            -3.9568813159947247,
+            0.21684650067354422,
+            0,
+            -0.019737344305564584,
+            -0.4932113077402436,
+            0
+          ],
+          "propellant": 0.9750050354644499,
+          "fuelUsed": 0.28162284599862053,
+          "burnCursor": 0,
+          "status": "horizon",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 1,
+            "cargoMass": 0,
+            "fuelUsed": 0.28162284599862053,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ],
+            "dockedPortId": "Cairn",
+            "completedAt": 6
+          },
+          "glyph": "rocket",
+          "axis": [
+            0.18651236942257576,
+            -0.9824526126243325,
+            0
+          ],
+          "screen": [
+            687.8292937399463,
+            611.2138579015686
+          ],
+          "occludedBy": "Orison"
+        }
+      ]
+    },
+    {
+      "t": 28.5,
+      "ships": [
+        {
+          "id": "prism",
+          "present": true,
+          "t": 28.5,
+          "y": [
+            -3.660133670763644,
+            -1.955347521271443,
+            0.21114030293116753,
+            0.24069659321553025,
+            -0.5013941322662027,
+            0.051618585562003584
+          ],
+          "propellant": 0.3603812825508879,
+          "fuelUsed": 0.039618717449112106,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "mass": 0.5603812825508879,
+          "glyph": "observatory",
+          "axis": [
+            -0.5167392153751561,
+            -0.026503093520943825,
+            0.8557325337553132
+          ],
+          "screen": [
+            704.51982478942,
+            396.7441408801652
+          ]
+        },
+        {
+          "id": "kestrel-prism",
+          "present": false,
+          "lifetime": {
+            "start": 0,
+            "end": 1.5,
+            "retired": true
+          }
+        },
+        {
+          "id": "kestrel",
+          "present": true,
+          "t": 28.5,
+          "y": [
+            -3.5564496018570892,
+            -1.684521131940847,
+            0,
+            0.2146953243635039,
+            -0.4382957917423836,
+            0
+          ],
+          "propellant": 0.9750050354644499,
+          "fuelUsed": 0.28162284599862053,
+          "burnCursor": 0,
+          "status": "horizon",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 1,
+            "cargoMass": 0,
+            "fuelUsed": 0.28162284599862053,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ],
+            "dockedPortId": "Cairn",
+            "completedAt": 6
+          },
+          "glyph": "rocket",
+          "axis": [
+            0.8347127848391598,
+            -0.5506855425976376,
+            0
+          ],
+          "screen": [
+            678.2051196561459,
+            621.0650843550046
+          ],
+          "occludedBy": "Orison"
+        }
+      ]
+    },
+    {
+      "t": 37.5,
+      "ships": [
+        {
+          "id": "prism",
+          "present": true,
+          "t": 37.5,
+          "y": [
+            -0.11028018500679596,
+            -4.429969043164057,
+            0.2403711165446692,
+            0.4926474186593763,
+            -0.01226402441694941,
+            4.13247737353524e-12
+          ],
+          "propellant": 0.3513686705808677,
+          "fuelUsed": 0.04863132941913234,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "mass": 0.5513686705808677,
+          "glyph": "observatory",
+          "axis": [
+            0.4451334487043945,
+            0.19113638912222086,
+            0.8748274650454518
+          ],
+          "screen": [
+            976.027831579367,
+            400.8622588790265
+          ]
+        },
+        {
+          "id": "kestrel-prism",
+          "present": false,
+          "lifetime": {
+            "start": 0,
+            "end": 1.5,
+            "retired": true
+          }
+        },
+        {
+          "id": "kestrel",
+          "present": true,
+          "t": 37.5,
+          "y": [
+            -0.06458312800073936,
+            -3.8929639221636485,
+            0,
+            0.4795854200946472,
+            -0.005473100118680887,
+            0
+          ],
+          "propellant": 0.9750050354644499,
+          "fuelUsed": 0.28162284599862053,
+          "burnCursor": 0,
+          "status": "horizon",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 1,
+            "cargoMass": 0,
+            "fuelUsed": 0.28162284599862053,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ],
+            "dockedPortId": "Cairn",
+            "completedAt": 6
+          },
+          "glyph": "rocket",
+          "axis": [
+            0.3466353178350258,
+            0.9379999767747389,
+            0
+          ],
+          "screen": [
+            677.4725710730393,
+            645.991180799948
+          ]
+        }
+      ]
+    },
+    {
+      "t": 64,
+      "ships": [
+        {
+          "id": "prism",
+          "present": true,
+          "t": 64,
+          "y": [
+            -0.6001622519067839,
+            4.388916928442213,
+            0.23811227481875996,
+            -0.4881954100607707,
+            -0.07107929242974281,
+            -0.006129175548577754
+          ],
+          "propellant": 0.3513686705808677,
+          "fuelUsed": 0.04863132941913234,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "mass": 0.5513686705808677,
+          "glyph": "observatory",
+          "axis": [
+            0.4451334487043945,
+            0.19113638912222086,
+            0.8748274650454518
+          ],
+          "screen": [
+            993.1487476898527,
+            415.94548304942185
+          ]
+        },
+        {
+          "id": "kestrel-prism",
+          "present": false,
+          "lifetime": {
+            "start": 0,
+            "end": 1.5,
+            "retired": true
+          }
+        },
+        {
+          "id": "kestrel",
+          "present": true,
+          "t": 64,
+          "y": [
+            -0.4829699054264415,
+            3.9687119015540255,
+            0,
+            -0.49782532874575164,
+            -0.053074920973131996,
+            0
+          ],
+          "propellant": 0.9750050354644499,
+          "fuelUsed": 0.28162284599862053,
+          "burnCursor": 0,
+          "status": "horizon",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 1,
+            "cargoMass": 0,
+            "fuelUsed": 0.28162284599862053,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ],
+            "dockedPortId": "Cairn",
+            "completedAt": 6
+          },
+          "glyph": "rocket",
+          "axis": [
+            0.9728325656974354,
+            0.23150982510153895,
+            0
+          ],
+          "screen": [
+            785.5717459732097,
+            661.9763537937854
+          ]
+        }
+      ]
+    },
+    {
+      "t": 79,
+      "ships": [
+        {
+          "id": "prism",
+          "present": true,
+          "t": 79,
+          "y": [
+            -3.7430458021685005,
+            -2.03290005795148,
+            -0.08541085762222118,
+            0.26631899000045045,
+            -0.5187581948964537,
+            0.04211110691160047
+          ],
+          "propellant": 0.3513686705808677,
+          "fuelUsed": 0.04863132941913234,
+          "burnCursor": 0,
+          "status": "running",
+          "detail": "",
+          "mass": 0.5513686705808677,
+          "glyph": "observatory",
+          "axis": [
+            0.4451334487043945,
+            0.19113638912222086,
+            0.8748274650454518
+          ],
+          "screen": [
+            800.9927957954415,
+            559.9788629046078
+          ]
+        },
+        {
+          "id": "kestrel-prism",
+          "present": false,
+          "lifetime": {
+            "start": 0,
+            "end": 1.5,
+            "retired": true
+          }
+        },
+        {
+          "id": "kestrel",
+          "present": true,
+          "t": 79,
+          "y": [
+            -3.690175553623086,
+            -1.7446306233107833,
+            0,
+            0.2187681361835693,
+            -0.46874027595200607,
+            0
+          ],
+          "propellant": 0.9750050354644499,
+          "fuelUsed": 0.28162284599862053,
+          "burnCursor": 0,
+          "status": "horizon",
+          "detail": "",
+          "logistics": {
+            "operationCursor": 1,
+            "cargoMass": 0,
+            "fuelUsed": 0.28162284599862053,
+            "ports": [
+              {
+                "id": "Cairn",
+                "cargo": 0,
+                "propellant": 0
+              }
+            ],
+            "dockedPortId": "Cairn",
+            "completedAt": 6
+          },
+          "glyph": "rocket",
+          "axis": [
+            -0.9957676088732885,
+            -0.09190685022768164,
+            0
+          ],
+          "screen": [
+            804.5853747941519,
+            623.2878698807881
+          ],
+          "occludedBy": "Orison"
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

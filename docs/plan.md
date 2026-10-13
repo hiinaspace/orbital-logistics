@@ -590,3 +590,9 @@ trails are never displaced onto the coplanar relief sheet. Planning only; orbit
 suitability/control costs remain unmeasured. Existing sets remain unchanged.
 
 - 2026-10-12: owner authorized Webb/Gaia/WMAP-inspired compact Sun–Earth observatories and departure/insertion exploration. Implemented accelerating circular-binary admission, five equilibria, finite spatial halo and center-motion Lissajous, plus paid parking-to-halo departure/insertion; L2 rotating view and schematic observatory glyph. Finite native/DOP853/three-grid/full-state, resource, frame, production browser and shader-fade gates pass; Astra implementation disposition retained. No ground ascent, exact Lissajous recurrence or continuous libration maintenance is claimed. See [evidence](evidence/libration-orbits.md).
+
+2026-10-13: user accepted finite L2 witnesses. Continuous Lumen survey and staged
+Prism observatory mission implemented; full-state/fuel continuation, offline launch
+and return solves, narrow empty-pad domain, long rollout and browser gates are
+recorded in [libration extension evidence](evidence/libration-extensions.md).
+Reported coplanar Chase flyby roll flips addressed without changing physics.

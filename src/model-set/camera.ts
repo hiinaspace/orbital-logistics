@@ -80,15 +80,14 @@ export function visibleSegment(a:ScreenPoint,b:ScreenPoint,spheres:Sphere[]):[Sc
 
 const cross=(a:readonly number[],b:readonly number[]):Vec3=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
 const unit=(v:Vec3):Vec3=>{const n=Math.hypot(...v);return v.map(x=>x/n) as Vec3;};
-// Deterministic velocity-relative rig. No wall-clock lag, so scrubbing/rewind
-// produces exactly the same pose. Degenerate radial/zero-speed states stay finite.
-export function chaseRig(position:readonly number[],velocity:readonly number[]):NonNullable<Camera['rig']> {
+// Velocity-relative heading with a fixed orbital-north roll reference. An
+// osculating r×v normal can reverse during a flyby even while velocity is smooth.
+// Queries remain deterministic; no render-frequency-dependent camera history.
+export function chaseRig(_position:readonly number[],velocity:readonly number[]):NonNullable<Camera['rig']> {
  const forward:Vec3=Math.hypot(...velocity)>1e-10?unit([...velocity] as Vec3):[1,0,0];
- let normal=cross(position,forward);
- if(Math.hypot(...normal)<=1e-10*Math.max(1,Math.hypot(...position))) {
-  const axis=forward.map(Math.abs).indexOf(Math.min(...forward.map(Math.abs))),fallback:Vec3=[0,0,0];fallback[axis]=1;normal=cross(forward,fallback);
- }
- const up=unit(normal),right=unit(cross(forward,up));
+ let north:Vec3=[0,0,1];
+ if(Math.abs(forward[2])>1-1e-8)north=[0,1,0];
+ const along=dot(north,forward),up=unit(north.map((x,i)=>x-along*forward[i]) as Vec3),right=unit(cross(forward,up));
  return {right,forward,up};
 }
 export function orbitAround(c:Camera,pivot:Vec3|undefined,dx:number,dy:number):void {
