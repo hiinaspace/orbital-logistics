@@ -115,7 +115,7 @@ document.body.innerHTML = `
   <header><h1>Orbital Logistics</h1><select id="set" aria-label="Model set">${[...sets,...trafficSets].map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select><span id="load-status" role="status">Preparing scene…</span></header>
   <div class="workspace">
     <section class="scene" aria-label="Orbital viewer">
-      <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><label>View <select id="camera-view" aria-label="Camera view"><option value="top">Top</option><option value="oblique">3D</option><option value="front">Front</option><option value="side">Side</option><option value="custom" hidden>Custom</option></select></label><label>Track <select id="tracking" aria-label="Camera tracking"><option value="off">Off</option><option value="follow">Follow</option><option value="chase">Chase</option></select></label><button id="drag-mode" title="Drag to orbit · Shift-drag to pan" aria-pressed="false">Orbit</button><button id="fit" title="Fit the scene (F)">Fit</button><button id="launch-view" hidden>Surface view</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<div id="potential-controls" hidden><label><input type="checkbox" id="layer-field">Potential map</label><label><input type="checkbox" id="layer-relief">Relief</label><label><input type="checkbox" id="layer-equilibria">Lagrange points</label><label class="trail-control">Height <output id="relief-value">1×</output><input id="relief-height" type="range" min="0" max="3" step="0.05" value="1" aria-label="Relief height"></label></div><label class="entry-layer" hidden><input type="checkbox" id="layer-atmosphere" checked>Atmosphere</label><label class="entry-layer" hidden><input type="checkbox" id="layer-aero">Aerodynamic forces <span style="color:#80c6ed">D</span> / <span style="color:#bb9fee">L</span></label><label class="entry-layer" hidden><input type="checkbox" id="layer-glow" checked>Entry glow</label><label><input type="checkbox" id="see-through">See-through bodies</label><label class="trail-control">Trail length <output id="trail-value">1×</output><input id="trail-length" type="range" min="0.25" max="2" step="0.05" value="1" aria-label="Trail length"></label><button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
+      <div class="view-tools"><label>Frame <select id="frame" aria-label="Reference frame"></select></label><label>View <select id="camera-view" aria-label="Camera view"><option value="top">Top</option><option value="oblique">3D</option><option value="front">Front</option><option value="side">Side</option><option value="custom" hidden>Custom</option></select></label><label>Track <select id="tracking" aria-label="Camera tracking"><option value="off">Off</option><option value="follow">Follow</option><option value="chase">Chase</option></select></label><button id="drag-mode" title="Drag to orbit · Shift-drag to pan" aria-pressed="false">Orbit</button><button id="fit" title="Fit the scene (F)">Fit</button><button id="launch-view" hidden>Surface view</button><details id="layers"><summary>Layers</summary><div class="layer-options">${['orbits', 'trails', 'plan', 'labels'].map(id => `<label><input type="checkbox" id="layer-${id}" checked>${id === 'plan' ? 'Selected route' : id[0].toUpperCase() + id.slice(1)}</label>`).join('')}<div id="potential-controls" hidden><label><input type="checkbox" id="layer-field">Potential map</label><label><input type="checkbox" id="layer-relief">Relief</label><label><input type="checkbox" id="layer-grid" checked>Relief grid</label><label><input type="checkbox" id="layer-equilibria">Lagrange points</label><label class="trail-control">Height <output id="relief-value">1×</output><input id="relief-height" type="range" min="0" max="3" step="0.05" value="1" aria-label="Relief height"></label></div><label class="entry-layer" hidden><input type="checkbox" id="layer-atmosphere" checked>Atmosphere</label><label class="entry-layer" hidden><input type="checkbox" id="layer-aero">Aerodynamic forces <span style="color:#80c6ed">D</span> / <span style="color:#bb9fee">L</span></label><label class="entry-layer" hidden><input type="checkbox" id="layer-glow" checked>Entry glow</label><label><input type="checkbox" id="see-through">See-through bodies</label><label class="trail-control">Trail length <output id="trail-value">1×</output><input id="trail-length" type="range" min="0.25" max="2" step="0.05" value="1" aria-label="Trail length"></label><button id="clear-view" aria-pressed="false">Clear view</button></div></details><span id="frame-name"></span></div>
       <div class="viewport"><canvas id="field-space" aria-hidden="true"></canvas><canvas id="relief-space" aria-hidden="true" hidden></canvas><canvas id="space" tabindex="0" aria-label="Orbital traffic. Drag to pan, scroll to zoom, click a ship or station to inspect."></canvas></div>
       <div id="field-key" title="Specific gravitational potential · length²/time² · fixed logarithmic color scale" hidden>Potential <span></span> −1.40 … −0.095</div><div id="timelines" aria-label="Ship activity timelines"></div>
       <div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><label class="speed-control"><span class="speed-track"><input id="speed" type="range" min="-1" max="1" step="0.0001" value="0" title="Reverse ← · 0× pause · → Forward" aria-label="Playback speed" aria-valuetext="1×"></span><output id="speed-value">1×</output></label><input id="time" type="range" min="0" max="64" value="0" step="0.001" aria-label="Simulation time"><output id="clock">0.00</output><button id="live" hidden>Live</button><label class="replay"><input type="checkbox" id="replay" title="Rewind the prepared scene at the end">Replay</label></div>
@@ -143,7 +143,7 @@ const recommendedTrail=()=>run?.playback?.trailSpan??(run?.id==='lunar-loop'?9:1
 const trailSpan=()=>recommendedTrail()*trailScale;
 function syncTrail(){ $<HTMLInputElement>('trail-length').value=String(trailScale);$('trail-value').textContent=trailScale.toFixed(2).replace(/0+$/,'').replace(/\.$/,'')+'×';}
 let lastFrame = performance.now(), lastPanel = 0, playbackRate = 1, resumeRate=1;
-let layers = {orbits: true, trails: true, plan: true, labels: true,atmosphere:true,aero:false,glow:true,field:false,relief:false,equilibria:false};
+let layers = {orbits: true, trails: true, plan: true, labels: true,atmosphere:true,aero:false,glow:true,field:false,relief:false,equilibria:false,grid:true};
 let reliefGain=1;
 let savedLayers = {...layers}, cleared = false;
 let aeroVectors:{vessel:string;kind:'drag'|'lift';force:number;from:[number,number];to:[number,number]}[]=[];
@@ -179,7 +179,7 @@ function projectRaw(y:State,time:number):ScreenPoint {
   try{const state=transform(run!,y,time,frame);return renderProjection?renderProjection(state):cameraPoint(camera,state,width,height);}catch{return [NaN,NaN,NaN];}
 }
 const hasField=()=>!!run?.passThrough||!!run?.compact;
-const reliefEnabled=()=>hasField()&&layers.field&&layers.relief;
+const reliefEnabled=()=>hasField()&&layers.relief;
 const reliefOrigins=new Map<number,number>();
 function reliefOrigin(epoch:number){if(frame==='inertial'||frame==='rotating')return 0;let height=reliefOrigins.get(epoch);if(height===undefined){const origin=transform(run!,[0,0,0,0,0,0],epoch,frame),q=basisPoint(-origin[0],-origin[1],-epoch);height=reliefHeight(q[0],q[1]);if(reliefOrigins.size>=2048)reliefOrigins.clear();reliefOrigins.set(epoch,height);}return height;}
 function displayTransform(y:State,epoch:number):State {const state=transform(run!,y,epoch,frame);if(reliefEnabled()){const q=basisPoint(y[0],y[1],-epoch);state[2]+=reliefGain*(reliefHeight(q[0],q[1])-reliefOrigin(epoch));}return state;}
@@ -531,7 +531,7 @@ function worldPath(points:ScreenPoint[],color:string,lineWidth=1,alpha=1,dash:nu
 function draw() {
   reliefOrigins.clear();
   ctx.clearRect(0, 0, width, height);
-  if(!run||!ready||!layers.field||(!run.passThrough&&!run.compact)){ctx.fillStyle = '#0c141d'; ctx.fillRect(0, 0, width, height);}
+  if(!run||!ready||(!layers.field&&!layers.relief)||(!run.passThrough&&!run.compact)){ctx.fillStyle = '#0c141d'; ctx.fillRect(0, 0, width, height);}
   // Quiet schematic background; no decorative planetary rendering.
   ctx.fillStyle = '#7e98aa';
   for (let i = 0; i < 65; i++) { ctx.globalAlpha = 0.12 + (i % 4) * 0.035; ctx.fillRect((i * 313.47) % width, (i * 137.33) % height, 1, 1); }
@@ -552,9 +552,10 @@ function draw() {
   syncTracking();renderProjection=cameraProjection(camera,width,height);
   const fieldSupported=!!run.passThrough||!!run.compact;
   $('potential-controls').hidden=!fieldSupported;
-  potentialLayer.draw(width,height,t,p=>projectRaw(p,t),layers.field&&fieldSupported,layers.relief,reliefGain,reliefEnabled()?reliefOrigin(t):0);
-  if(layers.relief&&potentialLayer.stats.reliefError){layers.relief=false;$<HTMLInputElement>('layer-relief').checked=false;$<HTMLInputElement>('layer-relief').disabled=true;$('layer-relief').title=potentialLayer.stats.reliefError;potentialLayer.draw(width,height,t,p=>projectRaw(p,t),layers.field&&fieldSupported);}
-  $('field-key').hidden=!potentialLayer.visible;
+  const gridOrigin=fieldSupported&&layers.relief?transform(run,[0,0,0,0,0,0],t,frame):[0,0,0,0,0,0];
+  potentialLayer.draw(width,height,t,p=>projectRaw(p,t),(layers.field||layers.relief)&&fieldSupported,layers.relief,reliefGain,reliefEnabled()?reliefOrigin(t):0,layers.field,layers.grid,frame==='rotating'?-run.rotating.phase:run.rotating.rate*t,gridOrigin.slice(0,2),2**Math.round(Math.log2(50/camera.scale)));
+  if(layers.relief&&potentialLayer.stats.reliefError){layers.relief=false;layers.field=true;$<HTMLInputElement>('layer-field').checked=true;$<HTMLInputElement>('layer-relief').checked=false;$<HTMLInputElement>('layer-relief').disabled=true;$('layer-relief').title=potentialLayer.stats.reliefError;potentialLayer.draw(width,height,t,p=>projectRaw(p,t),layers.field&&fieldSupported);}
+  $('field-key').hidden=!potentialLayer.visible||!layers.field||potentialLayer.outlineOnly;
   hits = [];thrustWhiskers=[];aeroVectors=[];
   const scenario = run.world;
   const labelRequests:Label[]=[];
@@ -783,13 +784,13 @@ $('live').onclick=goLive;
 $('restart').onclick=()=>{if(ready){if(traffic)loadSet(traffic.definition.id);else seek(start());}};
 $<HTMLInputElement>('time').oninput = e => seek(Number((e.target as HTMLInputElement).value));
 for (const key of Object.keys(layers) as (keyof typeof layers)[]) {
-  $<HTMLInputElement>(`layer-${key}`).onchange = e => { layers[key] = (e.target as HTMLInputElement).checked;if(key==='relief'&&layers.relief){layers.field=true;$<HTMLInputElement>('layer-field').checked=true;if(cameraPreset==='top')setCamera('oblique');} cleared = false; $('clear-view').setAttribute('aria-pressed', 'false'); draw();updatePanels(); };
+  $<HTMLInputElement>(`layer-${key}`).onchange = e => { layers[key] = (e.target as HTMLInputElement).checked;if(key==='relief'&&layers.relief){if(cameraPreset==='top')setCamera('oblique');} cleared = false; $('clear-view').setAttribute('aria-pressed', 'false'); draw();updatePanels(); };
 }
 $<HTMLInputElement>('relief-height').oninput=e=>{reliefGain=Number((e.target as HTMLInputElement).value);$('relief-value').textContent=reliefGain.toFixed(2).replace(/0+$/,'').replace(/\.$/,'')+'×';draw();if(ready)updatePanels();};
 $<HTMLInputElement>('trail-length').oninput=e=>{trailScale=Number((e.target as HTMLInputElement).value);trailScales.set(currentSet,trailScale);syncTrail();draw();if(ready)updatePanels();};
 $<HTMLInputElement>('see-through').onchange=e=>{seeThroughBodies=(e.target as HTMLInputElement).checked;draw();updatePanels();};
 $('clear-view').onclick = () => {
-  if (!cleared) {savedLayers = {...layers}; layers = {orbits: false, trails: false, plan: false, labels: false,atmosphere:false,aero:false,glow:false,field:false,relief:false,equilibria:false};}
+  if (!cleared) {savedLayers = {...layers}; layers = {orbits: false, trails: false, plan: false, labels: false,atmosphere:false,aero:false,glow:false,field:false,relief:false,equilibria:false,grid:false};}
   else layers = {...savedLayers};
   cleared = !cleared; $('clear-view').setAttribute('aria-pressed', String(cleared));
   for (const key of Object.keys(layers) as (keyof typeof layers)[]) $<HTMLInputElement>(`layer-${key}`).checked = layers[key];

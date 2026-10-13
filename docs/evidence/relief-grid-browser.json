@@ -1,0 +1,31 @@
+{
+  "alpha": {
+    "transparent": 455140,
+    "partial": 134684,
+    "opaque": 0
+  },
+  "context": {
+    "alpha": true,
+    "depth": false,
+    "blend": true
+  },
+  "field": {
+    "visible": true,
+    "outlineOnly": false,
+    "ready": true,
+    "pending": false,
+    "requests": 0,
+    "plateHits": 0,
+    "reliefError": "",
+    "mode": "relief",
+    "bounds": {
+      "x": -12,
+      "y": -12,
+      "span": 24
+    },
+    "bytes": 7240844,
+    "segments": 0,
+    "error": ""
+  },
+  "errors": []
+}

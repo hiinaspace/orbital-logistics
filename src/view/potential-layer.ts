@@ -12,8 +12,8 @@ export class PotentialLayer {
  private relief?:ReliefRenderer;
  constructor(private plate:HTMLCanvasElement,private reliefCanvas:HTMLCanvasElement){}
  private desired?:Bounds;private pending?:FieldRequest;private serial=0;
- error='';visible=false;requests=0;private reliefBounds?:Bounds;
- get stats(){return {visible:this.visible,ready:!!this.overview||!this.reliefCanvas.hidden&&!this.relief?.error,pending:!!this.pending,requests:this.requests,plateHits:this.plateHits,reliefError:this.relief?.error??'',mode:this.reliefCanvas.hidden?'flat':'relief',bounds:this.reliefBounds,bytes:(this.relief?.bytes??0)+this.plate.width*this.plate.height*4+(this.overview?.bytes??0)+(this.detail?.bytes??0)+(this.pending?this.pending.size**2*16+20000*80:0),segments:(this.overview?.grid.segments.length??0)/4+(this.detail?.grid.segments.length??0)/4,error:this.error};}
+ error='';visible=false;requests=0;outlineOnly=false;private reliefBounds?:Bounds;
+ get stats(){return {visible:this.visible,outlineOnly:this.outlineOnly,ready:!!this.overview||!this.reliefCanvas.hidden&&!this.relief?.error,pending:!!this.pending,requests:this.requests,plateHits:this.plateHits,reliefError:this.relief?.error??'',mode:this.reliefCanvas.hidden?'flat':'relief',bounds:this.reliefBounds,bytes:(this.relief?.bytes??0)+this.plate.width*this.plate.height*4+(this.overview?.bytes??0)+(this.detail?.bytes??0)+(this.pending?this.pending.size**2*16+20000*80:0),segments:(this.overview?.grid.segments.length??0)/4+(this.detail?.grid.segments.length??0)/4,error:this.error};}
  private request(bounds:Bounds,size:number){
   if(this.pending||this.error)return;const reserve=size**2*16+20000*80;if(this.stats.bytes+reserve>FIELD_LIMIT){if(this.detail){this.detail.image.width=this.detail.image.height=1;this.detail=undefined;}if(this.stats.bytes+reserve>FIELD_LIMIT)return;}
   if(!this.worker){this.worker=new Worker(new URL('./potential-worker.ts',import.meta.url),{type:'module'});const owner=this.worker;
@@ -32,11 +32,16 @@ export class PotentialLayer {
   }
   this.pending={id:++this.serial,bounds,size};this.requests++;this.worker.postMessage(this.pending);
  }
- draw(width:number,height:number,epoch:number,project:Project,enabled:boolean,relief=false,gain=1,originHeight=0){
-  this.visible=false;if(relief&&enabled){if(this.pending){this.worker?.terminate();this.worker=undefined;this.pending=undefined;}if(this.detail){this.detail.image.width=this.detail.image.height=1;this.detail=undefined;}}if(!enabled||!relief)this.relief?.hide();this.plate.hidden=!enabled;this.reliefCanvas.hidden=true;if(!enabled)return;
+ private planeOutline(width:number,height:number,epoch:number,project:Project){
+  const points=[[-12,-12],[12,-12],[12,12],[-12,12]].map(([x,y])=>project(basisPoint(x,y,epoch)));if(points.some(p=>!p.every(Number.isFinite)))return;
+  this.visible=true;this.outlineOnly=true;this.plate.hidden=false;const key='outline:'+points.flat().join(',')+width+','+height;if(key===this.plateKey)return;this.plateKey=key;
+  const ratio=Math.min(1,1280/Math.max(width,height));this.plate.width=Math.ceil(width*ratio);this.plate.height=Math.ceil(height*ratio);const ctx=this.plate.getContext('2d')!;ctx.fillStyle='#0c141d';ctx.fillRect(0,0,this.plate.width,this.plate.height);ctx.scale(ratio,ratio);ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);for(const p of [...points.slice(1),points[0]])ctx.lineTo(p[0],p[1]);ctx.strokeStyle='rgba(145,175,182,.55)';ctx.lineWidth=1;ctx.stroke();
+ }
+ draw(width:number,height:number,epoch:number,project:Project,enabled:boolean,relief=false,gain=1,originHeight=0,colored=true,grid=true,gridPhase=0,gridOffset:readonly number[]=[0,0],gridSpacing=1){
+  this.visible=false;this.outlineOnly=false;if(relief&&enabled){if(this.pending){this.worker?.terminate();this.worker=undefined;this.pending=undefined;}if(this.detail){this.detail.image.width=this.detail.image.height=1;this.detail=undefined;}}if(!enabled||!relief)this.relief?.hide();this.plate.hidden=!enabled;this.reliefCanvas.hidden=true;if(!enabled)return;
   const o=project(basisPoint(0,0,epoch)),x=project(basisPoint(1,0,epoch)),y=project(basisPoint(0,1,epoch));
   const a=x[0]-o[0],b=x[1]-o[1],c=y[0]-o[0],d=y[1]-o[1],det=a*d-b*c,scale=Math.max(Math.hypot(a,b),Math.hypot(c,d));
-  if(Math.abs(det)<.12*scale**2){this.plate.hidden=true;if(relief){this.plate.width=this.plate.height=1;this.plateKey='';}if(relief){this.relief??=new ReliefRenderer(this.reliefCanvas);this.reliefBounds=OVERVIEW;this.visible=this.relief.draw(width,height,epoch,project,OVERVIEW,gain,originHeight);}return;}this.visible=true;
+  if(Math.abs(det)<.12*scale**2){this.plate.hidden=true;if(!relief){this.planeOutline(width,height,epoch,project);return;}if(relief){this.plate.width=this.plate.height=1;this.plateKey='';}if(relief){this.relief??=new ReliefRenderer(this.reliefCanvas);this.reliefBounds=OVERVIEW;this.visible=this.relief.draw(width,height,epoch,project,OVERVIEW,gain,originHeight,colored,grid?gridSpacing:0,gridPhase,gridOffset);}return;}this.visible=true;
   // Invert only a well-conditioned physical plane. No source/cursor sampling.
   const z=project([0,0,1,0,0,0]).map((v,i)=>v-o[i]);
   const corners=relief?reliefFootprint(width,height,o,a,b,c,d,z,gain,originHeight):[[0,0],[width,0],[width,height],[0,height]].map(([u,v])=>[(d*(u-o[0])-c*(v-o[1]))/det,(-b*(u-o[0])+a*(v-o[1]))/det]);
@@ -46,13 +51,13 @@ export class PotentialLayer {
   if(!this.overview&&!relief)this.request(OVERVIEW,256);
   else if(this.desired&&!relief){const q=this.detail?.grid.bounds;const covered=q&&q.span<=span*2&&q.span>=span/2&&left>=q.x&&right<=q.x+q.span&&bottom>=q.y&&top<=q.y+q.span;if(!covered&&(!q||!same(q,this.desired)))this.request(this.desired,512);}
   const detail=this.desired?this.detail:undefined;
-  if(relief){this.plate.hidden=true;this.plate.width=this.plate.height=1;this.plateKey='';this.relief??=new ReliefRenderer(this.reliefCanvas);const bounds=this.desired??OVERVIEW;this.reliefBounds=bounds;this.visible=this.relief.draw(width,height,epoch,project,bounds,gain,originHeight);return;}
+  if(relief){this.plate.hidden=true;this.plate.width=this.plate.height=1;this.plateKey='';this.relief??=new ReliefRenderer(this.reliefCanvas);const bounds=this.desired??OVERVIEW;this.reliefBounds=bounds;this.visible=this.relief.draw(width,height,epoch,project,bounds,gain,originHeight,colored,grid?gridSpacing:0,gridPhase,gridOffset);return;}
   const paint=(ctx:CanvasRenderingContext2D,patch:Patch,exclude?:Bounds)=>{
    const q=patch.grid.bounds;ctx.save();ctx.transform(a,b,c,d,o[0],o[1]);
    ctx.beginPath();ctx.rect(q.x,q.y,q.span,q.span);for(const s of SOURCES){ctx.moveTo(s.x+s.radius,s.y);ctx.arc(s.x,s.y,s.radius,0,2*Math.PI);}ctx.clip('evenodd');
    if(exclude){ctx.beginPath();ctx.rect(q.x,q.y,q.span,q.span);ctx.rect(exclude.x,exclude.y,exclude.span,exclude.span);ctx.clip('evenodd');}
    ctx.imageSmoothingEnabled=false;ctx.drawImage(patch.image,q.x,q.y,q.span,q.span);
-   ctx.strokeStyle='rgba(170,191,172,.30)';ctx.lineWidth=.8/Math.sqrt(Math.abs(det));ctx.stroke(patch.path);ctx.restore();
+   ctx.strokeStyle='rgba(170,191,172,.30)';ctx.lineWidth=.8/Math.sqrt(Math.abs(det));ctx.stroke(patch.path);if(Math.abs(det)/scale**2<.45){ctx.strokeStyle='rgba(145,175,182,.55)';ctx.lineWidth=1/scale;ctx.strokeRect(q.x,q.y,q.span,q.span);}ctx.restore();
   };
   const affine=[a,b,c,d,o[0],o[1],width,height].map(v=>Math.round(v*1e8)/1e8).join(',');
   // The field is an independent bounded canvas behind the moving freight.

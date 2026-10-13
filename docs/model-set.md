@@ -529,6 +529,8 @@ Compact cycler sets now offer **Layers → Potential map**: fixed colors and iso
 
 The accepted scalar layer now fades to the background before the overview edges. **Layers → Relief** adds an adjustable schematic height mesh with bodies and ships riding its curve; **Lagrange points** adds three equilibria derived from this fixed-primary rotating force. Physical states/resources remain unchanged. Named-frame centering, historical epochs and Follow use the same display deformation. WebGL failure falls back to the flat map. See [relief evidence](evidence/relief.md) and [Astra disposition](design/potential-field/relief/disposition.md), including the current 4K rendering envelope.
 
+Relief now runs independently of Potential map, with a separately toggled rectangular **Relief grid**, transparent tint/isolines and shallow-angle silhouettes/perimeter outlines. The multiplier slot has fixed width. L4/L5 are explicitly deferred pending a corresponding dynamics model; no geometric guides are shown. See [current relief-grid evidence](evidence/relief-grid.md).
+
 ## Continuous stabilized cycler fleet — 2026-10-12
 
 **Aster–Selene · Continuous cycler fleet** extends the accepted later-carrier visits using a separately admitted numerical stabilization contract. Two carriers/two riders repeat their funded missions, while carrier maintenance fuel remains permanently debited. Immutable clipped drawing chunks support four-loop rolling history, held/reverse/Live and bounded resource publication. Cyclers recommend two-loop trails with a remembered Layers slider; the timeline can resize vertically and scroll. See [design/reviews](design/continuous-cycler-fleet/README.md) and [evidence](evidence/continuous-cycler-fleet.md). Extra ships are a later content gate.

@@ -185,3 +185,8 @@ details p { line-height: 1.7; }
 
 #relief-space { position: absolute; inset: 0; pointer-events: none; }
 .layer-options { max-height: calc(100dvh - 160px); overflow-y: auto; }
+
+.layer-options .trail-control { display: grid; grid-template-columns: minmax(0,1fr) 6ch; gap: 0; }
+.layer-options .trail-control output { width: 6ch; min-width: 6ch; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.layer-options .trail-control input { grid-column: 1 / -1; min-width: 0; }
+.layer-options { scrollbar-gutter: stable; }
