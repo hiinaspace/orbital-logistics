@@ -577,3 +577,14 @@ continuous free-carrier correction/resource protocol. See [evidence](evidence/pa
 - 2026-10-12: owner-approved darker/fading potential, schematic relief and model-derived equilibrium crosses implemented. Nonuniform bounded GPU mesh, height control, common glyph/trail/frame/Follow deformation and WebGL fallback. Astra P2 coverage/allocation findings fixed with height-slab and delayed-worker regressions;13 focused numerical/camera/trail tests and flat/relief production browser gates pass. 1080p16× remains~60fps; live4K16× averaged~30fps with50ms frame p95. Physical dynamics/resources unchanged. See [evidence](evidence/relief.md).
 
 - 2026-10-12: independent relief/grid/tint controls, transparent surface blending, profile silhouettes/perimeter and fixed-width multiplier implemented. GPU readback verifies transparent/partial-alpha pixels with no opaque grid backdrop; five production browser checks and thirteen focused numerical tests pass. Owner explicitly deferred L4/L5 pending dynamics support; the existing three equilibrium crosses and forces are unchanged. See [evidence](evidence/relief-grid.md).
+
+## Proposed next slice: spatial libration exhibits
+
+The user accepted transparent relief/grid and requested dimmer adjustable grid
+strength, circular edge fade, then spatial halo/Lissajous sets with accelerating
+primaries. [Reviewed sequence](design/libration-orbits/README.md): admitted
+barycentric circular binary, internal planar check, finite true-spatial halo,
+separate finite Lissajous witness, paid maintenance, quiet first visitor, then
+continuous service. Orbital-plane field rendering is optional; real spatial
+trails are never displaced onto the coplanar relief sheet. Planning only; orbit
+suitability/control costs remain unmeasured. Existing sets remain unchanged.
