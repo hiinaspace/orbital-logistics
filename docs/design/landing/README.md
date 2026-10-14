@@ -1,17 +1,35 @@
-# Public entry scaffold
+# Public entry
 
-The introduction, features, exhibit choices and FAQ are static editorial HTML in
-`index.html`; this is draft copy for the owner to rewrite before publication.
-The visual language continues Space Grotesk, Plex Mono and the viewer's restrained
-panel trim. The page is independently readable without JavaScript. No site-builder
-runtime, framework router, backend or third-party font/image host is required.
+The root page is a linear project article: title/byline, a small cycler animation,
+paired-frame and relief screenshots, exhibit links, and open simulation notes.
+There are no feature cards, promotional navigation bars or FAQ accordions. The
+single reading column is752px wide at desktop sizes; the animation is capped
+at560px. Space Grotesk and the viewer's palette keep the two pages related without
+copying the workspace's panel controls. Copy in `index.html` remains a draft for
+the owner to rewrite before publication.
+
+The article is readable without JavaScript. Both viewer screenshots are lazy
+static WebP images with reserved dimensions, alt text and full-resolution links.
+They add62,110bytes combined and do not embed another running viewer. The captures
+come from the current Cycler fleet at epoch20 in a1460×960 Chrome viewport, with
+the sidebars collapsed and only the viewport area captured (1460×706):
+
+- `public/images/paired-frames.webp`: Inertial + Rotating layout, both Top cameras.
+- `public/images/gravity-relief.webp`: single rotating frame, relief gain1.8, grid
+  and potential layers enabled, default oblique camera.
+
+PNG captures were encoded as WebP at quality90 without compositing or altering
+the rendered scene. The desktop/narrow page images below show their placement.
+
+## Loading and lifetime
 
 The implementation follows Vite's multi-page entry pattern. `/` and `/viewer/`
 are separate documents and dependency graphs. The root page never imports the
 viewer registry, numerical engines or worker bootstraps. A full navigation owns
-each page's lifetime. Pagehide disposes the hero/workspace; a BFCache restore
+each page's lifetime. Pagehide disposes the preview/workspace; a BFCache restore
 reloads the relevant document rather than exposing disposed canvases or sessions.
-Simulation persistence while reading the landing page is intentionally unnecessary.
+Simulation persistence while reading the article is intentionally unnecessary.
+No framework router, backend or third-party font/image host is required.
 
 `npm run prepare:landing` creates `src/landing/preview.json` and
 `public/orbital-preview.svg` from the admitted recurring cycler profile. The
@@ -28,43 +46,39 @@ motion. Reduced-motion arrivals retain the SVG without downloading the animation
 module until Play. The poster reserves its aspect ratio so enhancement cannot
 change layout height. Resizing does not restart simulation because there is none.
 
+## Validation, 2026-10-14 editorial revision
+
+- `npm run build` passes strict TypeScript and produces both HTML documents.
+- All five production entry browser cases pass: unloaded viewer/fixtures/workers,
+  animation pause/offscreen behavior, no-JS/reduced-motion at360px, lazy image
+  loading, viewer navigation/back/forward, native camera radios and static hosting
+  under `/collection/`.
+- A1440px desktop article visit, followed by scrolling both figures into view,
+  fetched21,321decoded bytes of JavaScript,2,522bytes CSS,12,210bytes SVG,
+  23,060bytes local font and62,110bytes WebP. Including HTML, the complete article
+  is approximately131KB decoded. These are local resource measurements, not
+  network field percentiles.
+- The installed Firefox156 isolated-profile smoke passes the article animation
+  and existing viewer controls, dropdown stability and field/relief checks.
+- Desktop and360px browser screenshots were inspected; neither has horizontal
+  overflow. No real-phone, deployed-domain, certificate or Cloudflare header
+  result is claimed.
+- The previous scaffold's21-case workspace/entry validation remains historical;
+  this revision changes only the article, its illustrations and entry assertions.
+
+The read-only [Pages investigation](../../deployment/cloudflare-pages.md) records
+publishing prerequisites. No production changes were authorized or performed.
+
+![Draft desktop article](desktop.png)
+
+![Draft narrow article](mobile.png)
+
+## Viewer controls from the initial entry slice
+
 Camera View/Track controls are native radio groups with per-pane names, styled as
 exclusive button panels. Compact menus expose every option immediately; wide views
 use those same controls inline. Native arrow keys stay within their own group.
 Surface retains its deliberate framing behavior and tracking retains its own
-locked target.
-
-Verification includes production browser navigation, no-JS/reduced-motion narrow
-screens, no viewer/fixture/worker requests on arrival, preview pause/offscreen
-behavior, native keyboard radio behavior, pane independence and full viewer
-regressions. Narrow-screen desktop emulation is not a real-device performance
-claim. The read-only [Pages investigation](../../deployment/cloudflare-pages.md)
-records publishing prerequisites; no production changes were authorized.
-
-![Draft desktop layout](desktop.png)
-
-![Draft narrow layout](mobile.png)
-
-## Validation, 2026-10-14
-
-- `npm run build` passes strict TypeScript and produces both HTML documents.
-- All21 distinct production browser cases passed: the20-case workspace/entry run,
-  followed by the new static-subdirectory case; all five entry cases also passed
-  together after its test-server path correction.
-- The installed Firefox156 isolated-profile smoke passes the landing enhancement,
-  viewer radio choices, paused native frame dropdown and existing field/control checks.
-- A1440px desktop landing visit fetched21,321decoded bytes of JavaScript (entry,
-  shared preload helper and preview), with no viewer, worker or full exhibit data.
-  Its other loaded resources were6,710bytes CSS,12,210bytes SVG and37,768bytes of
-  local fonts, plus the HTML document. The total is about90KB decoded. These are
-  local build/resource measurements, not network field percentiles.
-- Reduced-motion arrivals do not request the preview module until Play. The
-  no-JavaScript360px page remains readable, expands native FAQ entries and retains
-  working viewer links. Both tested narrow widths fit without horizontal overflow.
-- Plain static hosting under `/collection/` loads the landing, its optional preview,
-  the viewer's lazy fixture/worker assets, and the relative Home link. No SPA
-  rewrite or backend route was involved.
-- Screenshot evidence is desktop browser rendering and narrow viewport emulation;
-  no real-phone, deployed-domain, certificate or Cloudflare header result is claimed.
+locked target. The article revision does not change these controls.
 
 ![Exclusive camera panels](camera.png)

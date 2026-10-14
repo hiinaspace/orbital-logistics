@@ -7,9 +7,11 @@ local two-view camera/selection/display state and unified timeline player. One
 SceneSession retains all physical/service ownership; fixtures/workers load through
 separate boundaries. [Current evidence](evidence/viewer-workspace.md) includes
 Astra disposition, numerical/browser/lifecycle checks and desktop performance.
-The October14 static arrival page and lightweight hero are now implemented as a
-separate Vite multi-page entry (`/`, with the workspace at `/viewer/`). The draft
-copy awaits owner editing; Cloudflare publishing remains unexecuted. See
+The October14 static article and small prepared animation are implemented as a
+separate Vite multi-page entry (`/`, with the workspace at `/viewer/`). It uses a
+linear article with a small inline animation, paired-frame
+and relief screenshots, and open simulation notes. The draft copy awaits owner
+editing; Cloudflare publishing remains unexecuted. See
 [entry evidence](design/landing/README.md) and [deployment plan](deployment/cloudflare-pages.md).
 Real-device mobile viewer work remains a later slice.
 The older milestone inventory below records the project's historical progression.

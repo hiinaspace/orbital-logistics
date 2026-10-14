@@ -10,7 +10,7 @@ test("arrival is readable and animated without downloading the viewer, fixtures 
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "An orrery with spaceships.",
+    "Orbital Logistics",
   );
   await expect
     .poll(() => page.locator("#hero-canvas").getAttribute("data-frames"))
@@ -76,9 +76,7 @@ test("reduced motion leaves the poster; page works without JavaScript at phone w
   await plain.goto("/");
   await expect(plain.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(plain.locator("#hero-poster")).toBeVisible();
-  await plain
-    .getByText("How much physics is simulated?", { exact: true })
-    .click();
+  await expect(plain.locator("details")).toHaveCount(0);
   await expect(
     plain.getByText("Ships follow three-dimensional Newtonian trajectories", {
       exact: false,
@@ -89,6 +87,19 @@ test("reduced motion leaves the poster; page works without JavaScript at phone w
       .getByRole("link", { name: "Explore the exhibits" })
       .getAttribute("href"),
   ).toBe("./viewer/");
+  for (const image of await plain.locator('figure img[loading="lazy"]').all()) {
+    await image.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        image.evaluate(
+          (e: HTMLImageElement) => e.complete && e.naturalWidth > 0,
+        ),
+      )
+      .toBe(true);
+  }
+  expect(
+    await plain.evaluate(() => document.documentElement.scrollWidth),
+  ).toBeLessThanOrEqual(360);
   await context.close();
 });
 test("exhibit links enter the separate viewer; back/forward and returning home release its session", async ({
@@ -111,7 +122,7 @@ test("exhibit links enter the separate viewer; back/forward and returning home r
     .getByRole("link", { name: "About Orbital Logistics", exact: true })
     .click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "An orrery with spaceships.",
+    "Orbital Logistics",
   );
   expect(await page.locator("#state-json").count()).toBe(0);
   await page.goBack();
@@ -125,7 +136,7 @@ test("exhibit links enter the separate viewer; back/forward and returning home r
     .toBe(true);
   await page.goBack();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "An orrery with spaceships.",
+    "Orbital Logistics",
   );
 });
 test("camera panels select in one click, use native radio keys and remain independent between panes", async ({
@@ -198,6 +209,7 @@ test("built pages and lazy viewer assets work under a plain static subdirectory"
         ".css": "text/css",
         ".json": "application/json",
         ".svg": "image/svg+xml",
+        ".webp": "image/webp",
         ".woff2": "font/woff2",
       };
       res.setHeader(
@@ -237,7 +249,7 @@ test("built pages and lazy viewer assets work under a plain static subdirectory"
       .click();
     await expect(page).toHaveURL(/\/collection\/$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "An orrery with spaceships.",
+      "Orbital Logistics",
     );
     expect(errors).toEqual([]);
   } finally {
