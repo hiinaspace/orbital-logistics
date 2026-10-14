@@ -1,0 +1,269 @@
+{
+  "note": "Nonisolated headless desktop Chrome, DPR1; same held epoch16/system rotating/oblique, off-on-off. Three-second samples. No GPU/worker/native memory attribution.",
+  "records": [
+    {
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "relief": false,
+      "metrics": {
+        "draw": {
+          "n": 181,
+          "p50": 2.5,
+          "p95": 3.3999998569488525
+        },
+        "frameGap": {
+          "n": 180,
+          "p50": 16.699999999999818,
+          "p95": 16.799999999999272
+        },
+        "panels": {
+          "n": 26,
+          "p50": 0.6000001430511475,
+          "p95": 0.7000000476837158
+        }
+      },
+      "t": 16,
+      "frame": "rotating",
+      "camera": {
+        "yaw": -0.65,
+        "pitch": 0.6,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "scale": 83.07692307692308,
+        "preset": "oblique",
+        "panMode": false,
+        "tracking": "off",
+        "trackingOffset": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "relief": true,
+      "metrics": {
+        "draw": {
+          "n": 180,
+          "p50": 2.700000047683716,
+          "p95": 3.700000047683716
+        },
+        "frameGap": {
+          "n": 179,
+          "p50": 16.69999999999891,
+          "p95": 16.700000000000728
+        },
+        "panels": {
+          "n": 26,
+          "p50": 0.6999998092651367,
+          "p95": 0.9000000953674316
+        }
+      },
+      "t": 16,
+      "frame": "rotating",
+      "camera": {
+        "yaw": -0.65,
+        "pitch": 0.6,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "scale": 83.07692307692308,
+        "preset": "oblique",
+        "panMode": false,
+        "tracking": "off",
+        "trackingOffset": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "relief": false,
+      "metrics": {
+        "draw": {
+          "n": 181,
+          "p50": 3.799999952316284,
+          "p95": 4.700000047683716
+        },
+        "frameGap": {
+          "n": 180,
+          "p50": 16.69999999999891,
+          "p95": 16.700000000000728
+        },
+        "panels": {
+          "n": 26,
+          "p50": 0.9000000953674316,
+          "p95": 1.1000001430511475
+        }
+      },
+      "t": 16,
+      "frame": "rotating",
+      "camera": {
+        "yaw": -0.65,
+        "pitch": 0.6,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "scale": 83.07692307692308,
+        "preset": "oblique",
+        "panMode": false,
+        "tracking": "off",
+        "trackingOffset": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "size": {
+        "width": 3840,
+        "height": 2160
+      },
+      "relief": false,
+      "metrics": {
+        "draw": {
+          "n": 179,
+          "p50": 4,
+          "p95": 6.799999952316284
+        },
+        "frameGap": {
+          "n": 178,
+          "p50": 16.699999999999818,
+          "p95": 16.800000000000182
+        },
+        "panels": {
+          "n": 26,
+          "p50": 1,
+          "p95": 1.5
+        }
+      },
+      "t": 16,
+      "frame": "rotating",
+      "camera": {
+        "yaw": -0.65,
+        "pitch": 0.6,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "scale": 166.15384615384616,
+        "preset": "oblique",
+        "panMode": false,
+        "tracking": "off",
+        "trackingOffset": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "size": {
+        "width": 3840,
+        "height": 2160
+      },
+      "relief": true,
+      "metrics": {
+        "draw": {
+          "n": 112,
+          "p50": 2.8999998569488525,
+          "p95": 3.3999998569488525
+        },
+        "frameGap": {
+          "n": 111,
+          "p50": 33.29999999999927,
+          "p95": 33.399999999999636
+        },
+        "panels": {
+          "n": 23,
+          "p50": 0.5,
+          "p95": 0.5999999046325684
+        }
+      },
+      "t": 16,
+      "frame": "rotating",
+      "camera": {
+        "yaw": -0.65,
+        "pitch": 0.6,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "scale": 166.15384615384616,
+        "preset": "oblique",
+        "panMode": false,
+        "tracking": "off",
+        "trackingOffset": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "size": {
+        "width": 3840,
+        "height": 2160
+      },
+      "relief": false,
+      "metrics": {
+        "draw": {
+          "n": 180,
+          "p50": 4,
+          "p95": 5.200000047683716
+        },
+        "frameGap": {
+          "n": 179,
+          "p50": 16.69999999999891,
+          "p95": 16.700000000000728
+        },
+        "panels": {
+          "n": 26,
+          "p50": 1,
+          "p95": 1.6000001430511475
+        }
+      },
+      "t": 16,
+      "frame": "rotating",
+      "camera": {
+        "yaw": -0.65,
+        "pitch": 0.6,
+        "center": [
+          0,
+          0,
+          0
+        ],
+        "scale": 166.15384615384616,
+        "preset": "oblique",
+        "panMode": false,
+        "tracking": "off",
+        "trackingOffset": [
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ]
+}
