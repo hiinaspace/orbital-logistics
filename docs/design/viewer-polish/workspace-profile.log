@@ -1,0 +1,15 @@
+{"id":"orison-steered","layout":"single","relief":false,"rate":1,"run":1,"frame":16.700000000000728,"draw":4.1000001430511475}
+{"id":"orison-steered","layout":"single","relief":false,"rate":1,"run":2,"frame":16.700000000004366,"draw":3.8000001907348633}
+{"id":"orison-steered","layout":"single","relief":false,"rate":1,"run":3,"frame":16.79999999998836,"draw":4}
+{"id":"orison-steered","layout":"axes","relief":false,"rate":1,"run":1,"frame":16.700000000000728,"draw":9.799999952316284}
+{"id":"orison-steered","layout":"axes","relief":false,"rate":1,"run":2,"frame":16.700000000004366,"draw":9}
+{"id":"orison-steered","layout":"axes","relief":false,"rate":1,"run":3,"frame":16.70000000001164,"draw":9.799999952316284}
+{"id":"orison-steered","layout":"axes","relief":false,"rate":16,"run":1,"frame":16.700000000000728,"draw":8.899999856948853}
+{"id":"orison-steered","layout":"axes","relief":false,"rate":16,"run":2,"frame":16.700000000004366,"draw":9.599999904632568}
+{"id":"orison-steered","layout":"axes","relief":false,"rate":16,"run":3,"frame":16.799999999995634,"draw":9.400000095367432}
+{"id":"aster-selene-system","layout":"frames","relief":false,"rate":16,"run":1,"frame":33.400000000001455,"draw":18.899999856948853,"refresh":5.3999998569488525}
+{"id":"aster-selene-system","layout":"frames","relief":false,"rate":16,"run":2,"frame":33.400000000001455,"draw":18.899999856948853,"refresh":5.1000001430511475}
+{"id":"aster-selene-system","layout":"frames","relief":false,"rate":16,"run":3,"frame":33.40000000000873,"draw":19.200000047683716,"refresh":5.200000047683716}
+{"id":"aster-selene-cycler-fleet-service","layout":"frames","relief":true,"rate":0.5,"run":1,"frame":33.399999999999636,"draw":6.800000190734863,"refresh":1.1000001430511475}
+{"id":"aster-selene-cycler-fleet-service","layout":"frames","relief":true,"rate":0.5,"run":2,"frame":33.400000000001455,"draw":7.200000047683716,"refresh":1.2000000476837158}
+{"id":"aster-selene-cycler-fleet-service","layout":"frames","relief":true,"rate":0.5,"run":3,"frame":33.400000000001455,"draw":8,"refresh":1.2000000476837158}

@@ -13,7 +13,7 @@
     "build": "npm run typecheck && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test:browser": "playwright test",
-    "test:sim": "node --import tsx --test tests/sim/*.test.ts",
+    "test:sim": "node --import tsx --test --test-concurrency=2 tests/sim/*.test.ts",
     "test": "npm run test:sim && npm run test:browser",
     "evidence:m0": "tsx scripts/m0-evidence.ts && uv run --project spikes/numerics python spikes/numerics/m0_oracle.py",
     "evidence:m1": "tsx scripts/m1-evidence.ts && uv run --project spikes/numerics python spikes/numerics/m1_oracle.py",

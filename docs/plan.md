@@ -1,5 +1,15 @@
 # Tactical plan — updated 2026-10-09
 
+## October13 workspace slice
+
+Implemented the reviewed docked observation workspace, curated eleven-set library,
+local two-view camera/selection/display state and unified timeline player. One
+SceneSession retains all physical/service ownership; fixtures/workers load through
+separate boundaries. [Current evidence](evidence/viewer-workspace.md) includes
+Astra disposition, numerical/browser/lifecycle checks and desktop performance.
+The static arrival page/light hero and mobile-device viewer remain later slices.
+The older milestone inventory below records the project's historical progression.
+
 Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic, continuous airless surface service and orthographic 3D viewer and smooth finite steering, tracking cameras and finite/continuous maintained relay and flexible funded service implemented**.
 
 On 2026-10-08 the user chose fictional orbital buildups and traffic as the next

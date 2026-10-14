@@ -1,0 +1,105 @@
+{
+  "environment": {
+    "cpu": "AMD Ryzen 7 7840U w/ Radeon  780M Graphics",
+    "platform": "linux",
+    "browser": "155.0.8059.39",
+    "headless": true,
+    "deviceScaleFactor": 1
+  },
+  "note": "Final geometry/projection optimization check: one30-second sample per case. Nonisolated desktop/production/SwiftShader/DPR1; no mobile or hardware-GPU claim.",
+  "results": [
+    {
+      "id": "orison-steered",
+      "width": 1920,
+      "height": 1080,
+      "layout": "axes",
+      "speed": "1",
+      "run": 1,
+      "seconds": 30,
+      "metrics": {
+        "draw": {
+          "n": 1800,
+          "p50": 5.799999952316284,
+          "p95": 8.200000047683716,
+          "max": 11.900000095367432
+        },
+        "frameGap": {
+          "n": 1799,
+          "p50": 16.69999999999891,
+          "p95": 16.700000000000728,
+          "max": 16.80000000000291
+        },
+        "panels": {
+          "n": 261,
+          "p50": 1.5999999046325684,
+          "p95": 2.0999999046325684,
+          "max": 3.3999998569488525
+        }
+      },
+      "epoch": 20.79840000000003,
+      "rate": 16,
+      "backingPixels": 1094181,
+      "fieldBytes": [
+        4,
+        4
+      ],
+      "errors": []
+    },
+    {
+      "id": "aster-selene-system",
+      "width": 3840,
+      "height": 2160,
+      "layout": "frames",
+      "speed": "1",
+      "run": 1,
+      "seconds": 30,
+      "metrics": {
+        "draw": {
+          "n": 1484,
+          "p50": 6.099999904632568,
+          "p95": 15.899999856948853,
+          "max": 33.69999980926514
+        },
+        "frameGap": {
+          "n": 1483,
+          "p50": 16.700000000000728,
+          "p95": 33.400000000001455,
+          "max": 83.40000000000146
+        },
+        "panels": {
+          "n": 255,
+          "p50": 2.299999952316284,
+          "p95": 3.200000047683716,
+          "max": 4.700000047683716
+        },
+        "workerTurnaround": {
+          "n": 445,
+          "p50": 48.40000009536743,
+          "p95": 125.69999980926514,
+          "max": 823.8999998569489
+        },
+        "ingestion": {
+          "n": 445,
+          "p50": 1.5,
+          "p95": 3.200000047683716,
+          "max": 6.099999904632568
+        },
+        "refresh": {
+          "n": 276,
+          "p50": 3.799999952316284,
+          "p95": 5.900000095367432,
+          "max": 10.5
+        }
+      },
+      "epoch": 494.9820999999999,
+      "frontier": 495.5149,
+      "rate": 16,
+      "backingPixels": 6180381,
+      "fieldBytes": [
+        4,
+        4
+      ],
+      "errors": []
+    }
+  ]
+}

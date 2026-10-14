@@ -8,6 +8,17 @@ and acceptance evidence remain in Git and the earlier milestone documents.
 The current framing is an **orrery with spaceships** or an operating model train set:
 selective compression of distance, time and operations preserves visible journeys.
 
+## Current workspace
+
+The October13 viewer polish implements a docked11-set library, independent paired
+views and one shared timeline player. `viewer/session.ts` owns the only clock,
+worker and immutable scene publication; each `viewer/viewport.ts` owns camera,
+selection, locked tracking target and disposable drawing resources. The numerical
+engines and retained regression fixtures are unchanged. See
+[architecture/validation](evidence/viewer-workspace.md) and the
+[reviewed plan](design/viewer-polish/plan.md). Older exhibit inventories below are
+historical milestones; the public library is `src/viewer/catalog.ts`.
+
 ## What matters
 
 The scene centers on schematic ships and stations, their transfers and loadouts, and

@@ -1,3 +1,4 @@
+// Historical pre-polish baseline script; current selectors are in workspace-profile.mjs.
 // Bounded planning baseline, isolated browser. Not a mobile-device benchmark.
 import {chromium} from '@playwright/test';
 import fs from 'node:fs';

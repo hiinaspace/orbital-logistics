@@ -10,46 +10,32 @@ npm ci
 npm run dev
 ```
 
-The sets are **Orison · orbital freight** (four stations, four freighters),
-**Selene · lunar loop** (a distant retrograde orbit), and **Selene · lunar freight**
-(three freighters supplying a lunar depot and returning). **Selene · powered freight**
-and **Orison · powered transfer** add finite-thrust departure and braking with continuous
-fuel use. **Orison · continuous service** runs two freighters repeatedly with finite
-station buffers and explicit supply/export flows. Pause/scrub holds history; Play
-catches up, Live resumes the head, and Restart run starts a fresh session. The speed slider adjusts smoothly from 2^-12× to 16×. **Selene · Surface freight**
-adds an airless ascent from Cairn to Lantern. **Selene · Surface round trip** adds
-orbital refueling, return freight, finite braking, touchdown and unloading at Cairn.
-**Selene · continuous surface service** repeats the flights with finite shared stocks
-and explicit supply/export flows. **Orison · crossing planes** adds two ships making
-paid changes between inclined circular orbits around different node axes.
-**Orison · inclined transfer** delivers freight to a 35° depot with smooth finite-thrust
-departure and braking, an acceleration cap and paid fuel. **Orison · maintained relay**
-adds a perturbed station with its own paid maintenance burns and a visiting ship.
-**Orison · maintained service** computes station corrections and repeated paid
-visit/return flights online, with finite tanks and rolling history.
-**Selene · Lunar ground service** repeats northern-pad launches and landings around
-the moving Moon, solving each visit to the evolving inclined depot. It starts at
-0.01×, supports held history and Live, and runs a validated 64-unit calendar.
-**Selene · Launch & recovery** follows a two-stage launch, courier delivery and reusable booster return.
-**Aster · Atmospheric arrival** follows Petrel through a rotating atmosphere, bounded lift/drag,
-terminal rocket braking and ocean recovery. **Entry view** follows the close approach;
-Layers adds density shading, optional drag/lift arrows and entry glow. Staging and entry
-start at0.1×; each set remembers its chosen rate within the page session.
-**Surface view** shows the close scale; choose a slower rate for launch or landing,
-then Fit or a ship frame to follow the orbit. Playback starts
-immediately. Click a ship or station to inspect it; overlapping objects open a chooser.
-Use the shared time slider or a ship's activity lane to scrub. View selects Top, 3D,
-Front or Side. In 3D, drag to orbit and Shift-drag (or right/middle-drag) to pan; the
-Orbit/Pan button changes the default gesture. Orbit gestures pivot about the selection.
-Track → Follow holds it at the current angle; Chase follows its direction of travel.
-Fit releases tracking. Top drags pan. Scroll zooms at the
-pointer. Frame or View from here changes the physical reference frame while keeping
-the camera orientation. Space pauses; F fits; T returns overhead. Focus the canvas
-and use arrow keys to orbit, Shift-arrows to pan. Layers includes a clear view and optional See-through bodies; occlusion starts on. Replay explicitly rewinds the finite set.
+The library groups eleven exhibits into Aster–Selene, Orison, Helion–Orison and Sol:
+continuous freight networks, staged expeditions, cycler fleets, atmospheric launch,
+a quiet lunar loop, inclined transfer, halo insertion and maintained Lissajous motion.
+Superseded studies remain in Git rather than the public library.
 
-Cargo, propellant, docking and burns come from the simulation ledger. The model details
-are available under About this set. These scenes use normalized fictional systems,
-impulsive or finite-thrust test ships, and prescribed massive bodies; they are not real mission replays.
+Choose one or two views from the header. Overview + Chase, Inertial + Rotating, and
+Top + Front share one simulation clock. Each pane has independent selection,
+reference frame, camera and Display settings; click or focus a pane to make it active.
+The object inspector and timeline selection follow the active pane. Follow/Chase locks
+its target until Track selected is chosen again. Wheel zoom does not change which
+pane owns the inspector. Drag the divider, stack the panes, or maximize either view.
+
+The bottom ruler and activity lanes seek the same time. Play/pause, textual time,
+bipolar playback speed, Live and finite Replay are in that player. Collapse the lanes
+to keep just the ruler; drag its top edge to resize them. Continuous scenes hold
+history while paused/scrubbed; Live returns to the head. Restart starts a fresh run.
+The speed range and recommended starting speed depend on the exhibit.
+
+In 3D, drag to orbit and Shift/right/middle-drag to pan. Top drags pan. Scroll zooms
+at the pointer. Space pauses, F fits and releases tracking, T returns overhead;
+focused-canvas arrows orbit and Shift-arrows pan. Camera contains the deliberate
+Surface/Entry preset. Display groups paths and trail length, labels/occlusion and
+supported field/relief/atmosphere options. Cargo, fuel, docking and burns come from
+the simulation ledger; optional About contains the set's model and provenance.
+
+See [workspace architecture and validation](docs/evidence/viewer-workspace.md).
 
 Atmospheric entry [model](docs/design/entry/model.md) and [validation](docs/evidence/entry.md) document the finite exhibit.
 

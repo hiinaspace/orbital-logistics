@@ -1,0 +1,42 @@
+2026-10-13 client date / 2026-10-14 UTC. Local production workspace verification.
+
+Numerical suite (before adding the display-only range selector):
+node --import tsx --test --test-concurrency=2 tests/sim/*.test.ts
+1..305
+# tests 305
+# suites 0
+# pass 305
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 427024.265844
+
+Additional display range selector:
+node --import tsx --test tests/sim/sample-window.test.ts
+1 passed,0failed (tool exit0). Exhaustive edge/open/closed/duplicate epoch membership against prior filter semantics.
+
+Production build:
+npm run build: exit0; typecheck passes. Main entry~223kBdecoded,~71kBgzip.
+One known warning: district fixture is dynamically loaded but also imported by its existing validation module.
+
+Production browser:
+PLAYWRIGHT_PREVIEW=1 npm run test:browser -- --reporter=line
+[1/12] tests/browser/workspace.spec.ts:71:1 › curated catalog loads every retained scene and supports paired frames
+[2/12] tests/browser/workspace.spec.ts:95:1 › retired links show an intentional empty state; catalog metadata does not start an unrelated set
+[3/12] tests/browser/workspace.spec.ts:112:1 › views preserve physical state, independent selection, locked tracking and camera pose on resize
+[4/12] tests/browser/workspace.spec.ts:154:1 › split divider, maximize, close, duplicate and stacked axes retain local settings
+[5/12] tests/browser/workspace.spec.ts:192:1 › unified ruler and lanes scrub, collapse keeps ruler, reverse/center and keyboard preserve native controls
+[6/12] tests/browser/workspace.spec.ts:227:1 › pending continuous replies preserve held cursor and Live shares one worker for two views
+[7/12] tests/browser/workspace.spec.ts:260:1 › local display and repeated field pane disposal do not leak workers or GL resources
+[8/12] tests/browser/workspace.spec.ts:333:1 › loading cancellation rejects obsolete replies and all visible surfaces fit viewport budget
+[9/12] tests/browser/workspace.spec.ts:352:1 › focused camera shortcuts and per-pane display keep canonical samples unchanged
+[10/12] tests/browser/workspace.spec.ts:383:1 › a playing scrub pins its axis while held and resumes history on release
+[11/12] tests/browser/workspace.spec.ts:420:1 › observatory staging, entry and halo phases remain inspectable in paired spatial frames
+[12/12] tests/browser/workspace.spec.ts:454:1 › cycler Chase stays upright across the lunar flyby in both physical frames
+  12 passed (1.1m)
+
+Astra implementation review: gpt-6-astra/high, read-only CLI, exit0.
+Session01a13809-9a3d-7720-88ea-568529f432a8. Findings/disposition preserved separately.
+
+Performance: workspace-performance.json (initial triples) and workspace-finalspot.json (final indexed display/system projection sample). Desktop/headless, not mobile or hardware-GPU evidence.

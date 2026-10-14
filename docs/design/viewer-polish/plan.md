@@ -1,6 +1,6 @@
 # Viewer polish and public-entry plan
 
-2026-10-13. Planning only, based on checkout7e9936b and the user's accepted viewer direction. [Astra review](astra-review.md), [disposition](disposition.md), [human clarifications](clarifications.md), [layout sketch](layout-study.png). No application/simulation code changed in this planning pass.
+2026-10-13. Steps1–2 implemented after the reviewed proposal, based on checkout7e9936b and the user's accepted viewer direction. [Astra review](astra-review.md), [disposition](disposition.md), [human clarifications](clarifications.md), [layout sketch](layout-study.png). The original planning pass changed no application code; see [implementation evidence](../../evidence/viewer-workspace.md) for the subsequent workspace slice.
 
 Accepted styling: Flight deck panels with Space Grotesk text/headings and IBM Plex Mono numerical values. Selected set/ship rows use a background fill, without accent stripes. See [copy/style guidance](playback-and-type.md#accepted-combination-and-copy-review).
 
@@ -106,7 +106,7 @@ Landing targets: mobile-readable at360CSSpx, no horizontal scroll/viewer downloa
 3. **Measured efficiency pass:** isolate refresh/copy/query/draw/composition costs, loading cancellation and repeated-switch memory. Share sample work, stabilize aggregate quality budgets; change representations/rendering only where evidence supports it. Can overlap earlier steps, not postpone all profiling until UI completion.
 4. **Public entry:** static landing/direct links/posters, then tiny optional hero; reduced-motion/noJS/narrow-screen/static-subpath gates. Desktop viewer release polish. Real-device mobile viewer work remains a separate optional slice.
 
-First implementation should target steps1–2 through a working two-pane layout, with a human viewing checkpoint. The screenshot/HTML in this directory is a layout proposal, not implemented multiview.
+Steps1–2 now have a working two-pane implementation for the human viewing checkpoint. The layout-study screenshot/HTML remains a proposal; implementation.png and two-views.png show the implemented viewer. The static arrival page/hero and real-device mobile viewer remain later slices.
 
 ## Current external references
 

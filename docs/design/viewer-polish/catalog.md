@@ -1,6 +1,6 @@
 # Proposed release catalog
 
-2026-10-13, revised after the user's explicit preference to retire superseded entries entirely. This is a curation plan, not an implemented registry change. Current43visible entries → proposed11. Git retains retired authored compositions; required regression/build inputs can remain outside the public catalog.
+2026-10-13, revised after the user's explicit preference to retire superseded entries entirely. Implemented in src/viewer/catalog.ts for the workspace slice. Current43visible entries → proposed11. Git retains retired authored compositions; required regression/build inputs can remain outside the public catalog.
 
 ## Keep
 
