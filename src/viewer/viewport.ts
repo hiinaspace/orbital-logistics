@@ -36,10 +36,17 @@ import { StableLabels, type Label, type PlacedLabel } from "../view/labels";
 import { markerStep, planMarkers } from "../view/plan-markers";
 import { bodySpin, drawPlanetGrid } from "../view/planet-grid";
 import { EQUILIBRIA, basisPoint, reliefHeight } from "../view/potential-field";
+import {
+  sceneField,
+  fieldPoint,
+  fieldCoordinates,
+  type FieldModel,
+} from "../view/field-model";
 import { PotentialLayer } from "../view/potential-layer";
 import { drawRocket, rocketAxis } from "../view/rocket";
 import type { ScenePresentation } from "./session";
 import { esc, sampleVessel } from "./shared";
+import { displayName, displayText, bodyDisplayRadius } from "./presentation";
 import { epochIndex, sampleWindow } from "./sample-window";
 export function createViewport(
   root: HTMLElement,
@@ -132,11 +139,12 @@ export function createViewport(
     hovered = "";
   const colors = { body: "#7893a4", station: "#c7d5de" };
   let renderProjection: ReturnType<typeof cameraProjection> | undefined;
-  const hasField = () => !!session.run?.passThrough || !!session.run?.compact;
+  let fieldModel: FieldModel | undefined;
+  const hasField = () => !!fieldModel;
   const equilibriumMarkers = () =>
     session.run?.binary
       ? binaryEquilibria(session.run.binary)
-      : hasField()
+      : session.run?.passThrough || session.run?.compact
         ? EQUILIBRIA
         : [];
   const equilibriumPoint = (x: number, y: number, epoch: number) =>
@@ -208,8 +216,22 @@ export function createViewport(
     let height = reliefOrigins.get(epoch);
     if (height === undefined) {
       const origin = transform(session.run!, [0, 0, 0, 0, 0, 0], epoch, frame),
-        q = basisPoint(-origin[0], -origin[1], -epoch);
-      height = reliefHeight(q[0], q[1]);
+        angle =
+          frame === "libration"
+            ? session.run!.rotating.phase + session.run!.rotating.rate * epoch
+            : 0,
+        c = Math.cos(angle),
+        s = Math.sin(angle),
+        q = fieldCoordinates(
+          fieldModel!,
+          [
+            -c * origin[0] + s * origin[1],
+            -s * origin[0] - c * origin[1],
+            -origin[2],
+          ],
+          epoch,
+        );
+      height = reliefHeight(q[0], q[1], fieldModel!.sources);
       if (reliefOrigins.size >= 2048) reliefOrigins.clear();
       reliefOrigins.set(epoch, height);
     }
@@ -218,8 +240,11 @@ export function createViewport(
   function displayTransform(y: State, epoch: number): State {
     const state = transform(session.run!, y, epoch, frame);
     if (reliefEnabled()) {
-      const q = basisPoint(y[0], y[1], -epoch);
-      state[2] += reliefGain * (reliefHeight(q[0], q[1]) - reliefOrigin(epoch));
+      const q = fieldCoordinates(fieldModel!, y, epoch);
+      state[2] +=
+        fieldModel!.length *
+        reliefGain *
+        (reliefHeight(q[0], q[1], fieldModel!.sources) - reliefOrigin(epoch));
     }
     return state;
   }
@@ -329,17 +354,11 @@ export function createViewport(
   function cameraControls() {
     $<HTMLSelectElement>("tracking").value = tracking;
     $<HTMLSelectElement>("camera-view").value = cameraPreset;
-    $("tracking-target").textContent = tracking === "off" ? "" : trackingTarget;
-    $("camera-summary").textContent =
-      tracking === "chase"
-        ? "Chase"
-        : {
-            top: "Top",
-            oblique: "3D",
-            front: "Front",
-            side: "Side",
-            custom: "3D",
-          }[cameraPreset] + (tracking === "follow" ? " · Follow" : "");
+    $("tracking-target").textContent =
+      tracking === "off" || !session.run
+        ? ""
+        : displayName(session.run!, trackingTarget);
+    $("camera-summary").textContent = "Camera";
     $("drag-mode").textContent =
       cameraPreset === "top" || panMode ? "Pan" : "Orbit";
     $<HTMLButtonElement>("drag-mode").disabled = cameraPreset === "top";
@@ -467,7 +486,7 @@ export function createViewport(
       !session.run ||
       !session.ready ||
       (!layers.field && !layers.relief) ||
-      (!session.run.passThrough && !session.run.compact)
+      !hasField()
     ) {
       ctx.fillStyle = "#0c141d";
       ctx.fillRect(0, 0, width, height);
@@ -482,9 +501,8 @@ export function createViewport(
     if (!session.run || !session.ready) return;
     renderedEpoch = session.t;
     renderProjection = cameraProjection(camera, width, height);
-    const fieldSupported = !!session.run.passThrough || !!session.run.compact;
-    $("potential-controls").hidden = !fieldSupported;
-    $("equilibrium-control").hidden = !fieldSupported && !session.run.binary;
+    const fieldSupported = hasField();
+
     const gridOrigin =
       fieldSupported && layers.relief
         ? transform(session.run, [0, 0, 0, 0, 0, 0], session.t, frame)
@@ -492,19 +510,19 @@ export function createViewport(
     potentialLayer.draw(
       width,
       height,
-      session.t,
-      (p) => projectRaw(p, session.t),
+      (p) => projectRaw(fieldPoint(fieldModel!, p, session.t), session.t),
       (layers.field || layers.relief) && fieldSupported,
       layers.relief,
       reliefGain,
       reliefEnabled() ? reliefOrigin(session.t) : 0,
       layers.field,
       layers.grid,
-      frame === "rotating"
-        ? -session.run.rotating.phase
-        : session.run.rotating.rate * session.t,
-      gridOrigin.slice(0, 2),
-      2 ** Math.round(Math.log2(50 / camera.scale)),
+      (fieldModel?.rate ?? 0) * session.t -
+        (frame === "rotating" || frame === "libration"
+          ? session.run.rotating.phase + session.run.rotating.rate * session.t
+          : 0),
+      gridOrigin.slice(0, 2).map((x) => x / (fieldModel?.length ?? 1)),
+      2 ** Math.round(Math.log2(50 / camera.scale / (fieldModel?.length ?? 1))),
       gridStrength,
     );
     $("field-key").hidden =
@@ -524,7 +542,10 @@ export function createViewport(
         return true;
       const m = project(bodyState(b, session.t), session.t),
         e = project(
-          bodyState(scenario.bodies.find((b) => b.id === "Earth")!, session.t),
+          bodyState(
+            scenario.bodies.find((b) => b.id === "Earth")!,
+            session.t,
+          ),
           session.t,
         );
       return Math.hypot(m[0] - e[0], m[1] - e[1]) > 18;
@@ -534,7 +555,12 @@ export function createViewport(
       : displayedBodies.map((body) => ({
           id: body.id,
           point: project3(bodyState(body, session.t), session.t),
-          radius: Math.max(7, body.radius * camera.scale),
+          radius: bodyDisplayRadius(
+            session.run!,
+            body.id,
+            body.radius,
+            camera.scale,
+          ),
         }));
     for (const body of [...displayedBodies].sort(
       (a, b) =>
@@ -542,20 +568,24 @@ export function createViewport(
         project3(bodyState(b, session.t), session.t)[2],
     )) {
       const p = project(bodyState(body, session.t), session.t),
-        r = Math.max(7, body.radius * camera.scale);
+        r = bodyDisplayRadius(session.run!, body.id, body.radius, camera.scale);
       ctx.beginPath();
       ctx.arc(...p, r, 0, Math.PI * 2);
       ctx.fillStyle =
-        session.run.binary && body === session.run.world.bodies[0]
-          ? "#4d4329"
-          : "#192a37";
+        body === session.run.world.bodies[0] && session.run.solar
+          ? "#705b28"
+          : body === session.run.world.bodies[0] && session.run.binary
+            ? "#4d4329"
+            : "#192a37";
       ctx.globalAlpha = seeThroughBodies ? 0.18 : 1;
       ctx.fill();
       ctx.globalAlpha = seeThroughBodies ? 0.45 : 1;
       ctx.strokeStyle =
-        session.run.binary && body === session.run.world.bodies[0]
-          ? "#9d8851"
-          : "#445c6e";
+        body === session.run.world.bodies[0] && session.run.solar
+          ? "#e1bd64"
+          : body === session.run.world.bodies[0] && session.run.binary
+            ? "#9d8851"
+            : "#445c6e";
       ctx.lineWidth = 1;
       ctx.stroke();
       ctx.globalAlpha = 1;
@@ -586,18 +616,14 @@ export function createViewport(
       )
         label(
           body.id,
-          body.id === "primary"
-            ? "Planet"
-            : body.id === "moon"
-              ? "Selene"
-              : body.id,
+          displayName(session.run!, body.id),
           p[0] + r,
           p[1],
           colors.body,
         );
       hits.push({
         id: body.id,
-        name: body.id,
+        name: displayName(session.run!, body.id),
         x: p[0],
         y: p[1],
         depth: project3(bodyState(body, session.t), session.t)[2],
@@ -1188,13 +1214,14 @@ export function createViewport(
           }
           label(
             port.id,
-            port.id + (known?.activity?.kind === "fault" ? " · fault" : ""),
+            displayName(session.run!, port.id) +
+              (known?.activity?.kind === "fault" ? " · fault" : ""),
             ...p,
             "#a7bac7",
           );
           hits.push({
             id: port.id,
-            name: port.id,
+            name: displayName(session.run!, port.id),
             x: p[0],
             y: p[1],
             depth: p3[2],
@@ -1238,10 +1265,15 @@ export function createViewport(
               "#ef8a81",
               2,
             );
-            label(v.id, `${v.name} · fault`, ...p, "#ef8a81");
+            label(
+              v.id,
+              `${displayName(session.run!, v.id)} · fault`,
+              ...p,
+              "#ef8a81",
+            );
             hits.push({
               id: v.id,
-              name: v.name,
+              name: displayName(session.run!, v.id),
               x: p[0],
               y: p[1],
               depth: project3(state.y, epoch)[2],
@@ -1394,10 +1426,10 @@ export function createViewport(
             (state.opacity ?? 1) > 0.5 &&
             (!state.logistics?.dockedPortId || selected === v.id)
           )
-            label(v.id, v.name, ...p, v.color);
+            label(v.id, displayName(session.run!, v.id), ...p, v.color);
           hits.push({
             id: v.id,
-            name: v.name,
+            name: displayName(session.run!, v.id),
             x: p[0],
             y: p[1],
             depth: project3(state.y, epoch)[2],
@@ -1482,7 +1514,10 @@ export function createViewport(
   };
   $("camera-view").onchange = (e) => {
     const p = (e.target as HTMLSelectElement).value;
-    if (p !== "custom") setCamera(p as CameraPreset);
+    if (p === "surface") {
+      surfaceView();
+      $<HTMLSelectElement>("camera-view").value = "surface";
+    } else if (p !== "custom") setCamera(p as CameraPreset);
   };
   $("drag-mode").onclick = () => {
     panMode = !panMode;
@@ -1498,7 +1533,7 @@ export function createViewport(
     actions.changed();
     updatePanels();
   };
-  $("launch-view").onclick = () => {
+  function surfaceView() {
     if (
       session.run?.entry ||
       (vessel()?.entry && session.t >= (vessel()!.entry!.activeFrom ?? 0))
@@ -1584,7 +1619,7 @@ export function createViewport(
     }
     camera.scale = Math.min(width, height) / (0.22 * surfaceBody.radius);
     updatePanels();
-  };
+  }
   for (const key of Object.keys(layers) as (keyof typeof layers)[]) {
     $<HTMLInputElement>(`layer-${key}`).onchange = (e) => {
       layers[key] = (e.target as HTMLInputElement).checked;
@@ -1817,9 +1852,23 @@ export function createViewport(
         positionMenus();
       }
     });
+  const cameraMenu = root.querySelector<HTMLDetailsElement>(".camera-menu")!;
+  const cameraControlsPanel =
+    cameraMenu.querySelector<HTMLElement>(".popover")!;
+  const toolBar = root.querySelector<HTMLElement>(".view-tools")!;
+  function responsiveControls() {
+    const inline = root.getBoundingClientRect().width >= 1040;
+    if (root.classList.contains("camera-inline") === inline) return;
+    root.classList.toggle("camera-inline", inline);
+    if (inline)
+      toolBar.insertBefore(cameraControlsPanel, cameraMenu.nextSibling);
+    else cameraMenu.append(cameraControlsPanel);
+    cameraMenu.open = false;
+  }
   const observer = new ResizeObserver(() => resize());
   observer.observe(canvas);
   function resize() {
+    responsiveControls();
     const r = canvas.getBoundingClientRect();
     if (!r.width || !r.height) return;
     width = r.width;
@@ -1878,11 +1927,12 @@ export function createViewport(
         ...session.run.vessels,
         ...Object.values(session.run.maintained ?? {}),
       ].find((v) => v.id === option.value);
-      option.disabled =
+      const disabled =
         !!v &&
         ((!isPresent(v, session.t) && !v.attachment) ||
           sampleVessel(v, session.t).activity?.kind === "fault" ||
           (sampleVessel(v, session.t).opacity === 0 && !v.attachment));
+      if (option.disabled !== disabled) option.disabled = disabled;
     }
   }
   function reset() {
@@ -1899,9 +1949,11 @@ export function createViewport(
       old.replaceWith(old.cloneNode(false));
     }
     $("field-key").hidden = true;
+    fieldModel = session.run ? sceneField(session.run) : undefined;
     potentialLayer = new PotentialLayer(
       $<HTMLCanvasElement>("field-space"),
       $<HTMLCanvasElement>("relief-space"),
+      fieldModel?.sources,
     );
     renderedEpoch = undefined;
     labelLayout.reset();
@@ -1913,6 +1965,8 @@ export function createViewport(
     delete camera.rig;
     const run = session.run;
     if (!run) return;
+    $("potential-controls").hidden = !hasField();
+    $("equilibrium-control").hidden = equilibriumMarkers().length === 0;
     selected = run.vessels[0]?.id ?? "";
     frame = run.binary
       ? "libration"
@@ -1939,13 +1993,13 @@ export function createViewport(
       '<option value="inertial">' +
       (run.solar ? "Heliocentric" : "Inertial") +
       '</option><option value="rotating">' +
-      esc(run.rotating.name) +
+      esc(displayText(run, run.rotating.name)) +
       "</option>" +
       (run.binary ? '<option value="libration">L2 rotating</option>' : "") +
       [
-        ...run.world.bodies.map((b) => [b.id, b.id]),
-        ...run.stations.map((s) => [s.id, s.id]),
-        ...run.vessels.map((v) => [v.id, v.name]),
+        ...run.world.bodies.map((b) => [b.id, displayName(run, b.id)]),
+        ...run.stations.map((s) => [s.id, displayName(run, s.id)]),
+        ...run.vessels.map((v) => [v.id, displayName(run, v.id)]),
       ]
         .map(
           ([id, name]) =>
@@ -1957,7 +2011,7 @@ export function createViewport(
         )
         .join("");
     $<HTMLSelectElement>("frame").value = frame;
-    $("launch-view").hidden =
+    $("surface-option").hidden =
       !run.entry && !run.world.ports.some((p) => p.rail.kind === "surface");
     root
       .querySelectorAll<HTMLElement>(".entry-layer")
@@ -1978,7 +2032,11 @@ export function createViewport(
       layers: { ...layers },
       reliefGain,
       gridStrength,
-      field: potentialLayer.stats,
+      field: {
+        ...potentialLayer.stats,
+        supported: hasField(),
+        sources: fieldModel?.sources,
+      },
       equilibria: equilibriumMarkers().map((e) => ({
         ...e,
         screen: project(equilibriumPoint(e.x, e.y, session.t), session.t),

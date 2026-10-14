@@ -1,32 +1,37 @@
-import { RATE } from "../compact/physics";
-import type { Bounds } from "./potential-field";
+import { SOURCES, type FieldSource, type Bounds } from "./potential-field";
 export type ReliefProjection = (
   point: [number, number, number, number, number, number],
 ) => readonly number[];
 const VERTEX = `#version 300 es
 precision highp float;
+precision highp int;
 in vec2 uv;
 uniform vec3 origin,axisX,axisY,axisZ;
 uniform vec3 bounds;
 uniform vec2 viewport;
 uniform float gain;
+uniform int sourceCount;
+uniform vec4 sources[2];
 out vec2 q;
 float tone(float p){return clamp(log(max(.095,-p)/.095)/log(1.4/.095),0.,1.);}
-void main(){q=bounds.xy+uv*bounds.z;float p=-1./max(1.,length(q))-.03/max(.2,length(q-vec2(5.,0.)));float z=-2.4*gain*tone(p);vec3 screen=origin+axisX*q.x+axisY*q.y+axisZ*z;gl_Position=vec4(2.*screen.x/viewport.x-1.,1.-2.*screen.y/viewport.y,-screen.z/(8.*max(viewport.x,viewport.y)),1.);}`;
+void main(){q=bounds.xy+uv*bounds.z;float p=0.;for(int i=0;i<2;i++){if(i>=sourceCount)break;vec4 source=sources[i];p-=source.z/max(source.w,length(q-source.xy));}float z=-2.4*gain*tone(p);vec3 screen=origin+axisX*q.x+axisY*q.y+axisZ*z;gl_Position=vec4(2.*screen.x/viewport.x-1.,1.-2.*screen.y/viewport.y,-screen.z/(8.*max(viewport.x,viewport.y)),1.);}`;
 const FRAGMENT = `#version 300 es
 precision highp float;
+precision highp int;
 in vec2 q;
 out vec4 color;
 uniform vec3 view,bounds;
 uniform vec2 gridOffset;
+uniform int sourceCount;
+uniform vec4 sources[2];
 uniform float gain,colored,gridStep,gridPhase,outline,gridStrength;
 float tone(float p){return clamp(log(max(.095,-p)/.095)/log(1.4/.095),0.,1.);}
-void main(){float fade=1.-smoothstep(8.,11.,length(q));float r=length(q),m=length(q-vec2(5.,0.));if(r<=1.||m<=.2)discard;if(outline>.5){discard;}float p=-1./r-.03/m;float t=tone(p),u=t*4.;vec3 a,b;
+void main(){float fade=1.-smoothstep(8.,11.,length(q));float p=0.;vec2 grad=vec2(0.);for(int i=0;i<2;i++){if(i>=sourceCount)break;vec4 source=sources[i];vec2 d=q-source.xy;float r=length(d);if(r<=source.w)discard;p-=source.z/r;grad+=source.z*d/(r*r*r);}if(outline>.5){discard;}float t=tone(p),u=t*4.;vec3 a,b;
 if(u<1.){a=vec3(12,20,29);b=vec3(17,29,36);}else if(u<2.){a=vec3(17,29,36);b=vec3(24,43,42);}else if(u<3.){a=vec3(24,43,42);b=vec3(54,63,45);}else{a=vec3(54,63,45);b=vec3(104,90,62);}
 vec3 tint=mix(a,b,clamp(u-min(3.,floor(u)),0.,1.))/255.;
 float levels[10]=float[10](-.1,-.13,-.17,-.22,-.29,-.38,-.5,-.66,-.87,-1.15);float contour=0.;float w=max(fwidth(p),.000001);for(int i=0;i<10;i++)contour=max(contour,1.-smoothstep(0.,.65*w,abs(p-levels[i])));
 float c=cos(gridPhase),s=sin(gridPhase);vec2 coordinate=(mat2(c,s,-s,c)*q+gridOffset)/max(gridStep,.000001);vec2 distance=abs(fract(coordinate+.5)-.5)/max(fwidth(coordinate),vec2(.000001));float grid=gridStep>0.?1.-smoothstep(.15,.85,min(distance.x,distance.y)):0.;
-vec2 grad=vec2(q.x/(r*r*r)+.03*(q.x-5.)/(m*m*m),q.y/(r*r*r)+.03*q.y/(m*m*m));vec2 slope=(t>0.&&t<1.)?(-2.4*gain/(log(1.4/.095)*p))*grad:vec2(0.);vec3 normal=normalize(vec3(-slope,1.));float facing=abs(dot(normal,normalize(view)));float silhouette=1.-smoothstep(.012,.045,facing);
+vec2 slope=(t>0.&&t<1.)?(-2.4*gain/(log(1.4/.095)*p))*grad:vec2(0.);vec3 normal=normalize(vec3(-slope,1.));float facing=abs(dot(normal,normalize(view)));float silhouette=1.-smoothstep(.012,.045,facing);
 vec2 boundary=min(q-bounds.xy,bounds.xy+vec2(bounds.z)-q)/max(fwidth(q),vec2(.000001));float rim=abs(normalize(view).z)<.45?1.-smoothstep(.3,1.2,min(boundary.x,boundary.y)):0.;
 float line=max(max(grid*.33*gridStrength,contour*.28*colored),silhouette*.65);float fill=colored*.20*t;float baseAlpha=line+fill*(1.-line);float alpha=baseAlpha*fade;if(alpha<.002)discard;vec3 rgb=(vec3(.52,.64,.66)*line+tint*fill*(1.-line))/baseAlpha;color=vec4(rgb,alpha);}`;
 // Disposable display mesh; no spacecraft state or event time enters its buffers.
@@ -45,7 +50,10 @@ export class ReliefRenderer {
   error = "";
   hits = 0;
   private readonly listeners = new AbortController();
-  constructor(private canvas: HTMLCanvasElement) {
+  constructor(
+    private canvas: HTMLCanvasElement,
+    private sources: FieldSource[] = SOURCES,
+  ) {
     this.gl = canvas.getContext("webgl2", {
       alpha: true,
       antialias: false,
@@ -117,15 +125,10 @@ export class ReliefRenderer {
         { length: 97 },
         (_, i) => low + (bounds.span * i) / 96,
       );
-      for (const [center, radius] of axis === 0
-        ? [
-            [0, 1],
-            [5, 0.2],
-          ]
-        : [
-            [0, 1],
-            [0, 0.2],
-          ])
+      for (const [center, radius] of this.sources.map((s) => [
+        axis === 0 ? s.x : s.y,
+        s.radius,
+      ]))
         for (let i = -48; i <= 48; i++) {
           const point = center + Math.sign(i) * radius * 4 * (i / 48) ** 2;
           if (point > low && point < low + bounds.span) values.push(point);
@@ -210,7 +213,6 @@ export class ReliefRenderer {
   draw(
     width: number,
     height: number,
-    epoch: number,
     project: ReliefProjection,
     bounds: Bounds,
     gain: number,
@@ -227,18 +229,8 @@ export class ReliefRenderer {
       return false;
     }
     this.canvas.hidden = false;
-    const angle = RATE * epoch,
-      c = Math.cos(angle),
-      s = Math.sin(angle),
-      at = (x: number, y: number, z = 0) =>
-        project([
-          c * x - s * y,
-          s * x + c * y,
-          z - gain * originHeight,
-          0,
-          0,
-          0,
-        ]);
+    const at = (x: number, y: number, z = 0) =>
+      project([x, y, z - gain * originHeight, 0, 0, 0]);
     const origin = at(0, 0),
       axes = [at(1, 0), at(0, 1), at(0, 0, 1)].map((p) =>
         p.map((x, i) => x - origin[i]),
@@ -288,6 +280,12 @@ export class ReliefRenderer {
     gl.uniform3f(loc("bounds"), bounds.x, bounds.y, bounds.span);
     gl.uniform2f(loc("viewport"), width, height);
     gl.uniform1f(loc("gain"), gain);
+    gl.uniform1i(loc("sourceCount"), this.sources.length);
+    const values = new Float32Array(8);
+    this.sources.forEach((s, i) =>
+      values.set([s.x, s.y, s.mu, s.radius], i * 4),
+    );
+    gl.uniform4fv(loc("sources[0]"), values);
     gl.uniform1f(loc("gridStrength"), gridStrength);
     gl.uniform1f(loc("colored"), colored ? 1 : 0);
     gl.uniform1f(loc("gridStep"), gridStep);

@@ -606,3 +606,12 @@ Prism observatory mission implemented; full-state/fuel continuation, offline lau
 and return solves, narrow empty-pad domain, long rollout and browser gates are
 recorded in [libration extension evidence](evidence/libration-extensions.md).
 Reported coplanar Chase flyby roll flips addressed without changing physics.
+
+## October14 viewer refinements
+
+Implemented the accepted workspace nits: centered bipolar playback controls with
+Firefox track support, stable native frame options, dock-edge sidebar resizing,
+inline camera controls on wide panes, Surface in the View selector, expanded
+viewer-facing library descriptions and concept links, fictional interplanetary
+labels/star/giant glyphs, and potential/relief across all ten planar-source exhibits.
+See [validation and field contract](evidence/viewer-workspace.md#october14-control-and-content-polish).

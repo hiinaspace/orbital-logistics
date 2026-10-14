@@ -46,6 +46,8 @@ const pane = (p: Page, n: number) => p.locator(".scene").nth(n);
 const control = (p: Page, n: number, id: string) =>
   pane(p, n).locator(`[data-control="${id}"]`);
 async function camera(p: Page, n: number) {
+  if (await pane(p, n).evaluate((e) => e.classList.contains("camera-inline")))
+    return;
   const details = pane(p, n).locator(".camera-menu");
   if (!(await details.evaluate((e) => (e as HTMLDetailsElement).open)))
     await details.locator("summary").click();
@@ -315,7 +317,9 @@ test("local display and repeated field pane disposal do not leak workers or GL r
   expect((await probe()).workers).toBe(2);
   await page.locator('[data-set="orison-steered"]').click();
   await ready(page, "orison-steered");
-  expect((await probe()).workers).toBe(0);
+  // The display layer remains enabled; Orison now owns one field worker.
+  expect((await probe()).workers).toBe(1);
+  expect((await state(page)).field.sources).toHaveLength(1);
   await page.locator('[data-set="aster-selene-cycler-fleet-service"]').click();
   await ready(page, "aster-selene-cycler-fleet-service");
   await pause(page);
@@ -448,7 +452,7 @@ test("observatory staging, entry and halo phases remain inspectable in paired sp
   await seek(page, 74);
   expect((await state(page)).equilibria).toHaveLength(5);
   await display(page, 1);
-  await expect(control(page, 1, "layer-relief")).toBeHidden();
+  await expect(control(page, 1, "layer-relief")).toBeVisible();
 });
 
 test("cycler Chase stays upright across the lunar flyby in both physical frames", async ({

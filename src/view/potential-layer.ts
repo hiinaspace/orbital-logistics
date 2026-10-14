@@ -1,15 +1,16 @@
+import type { State } from "../sim/schema";
 import { ReliefRenderer } from "./relief";
 import { viewerProfile } from "./profile";
 import {
-  basisPoint,
   FIELD_LIMIT,
   SOURCES,
   reliefFootprint,
   type Bounds,
   type FieldGrid,
   type FieldRequest,
+  type FieldSource,
 } from "./potential-field";
-type Project = (point: ReturnType<typeof basisPoint>) => readonly number[];
+type Project = (point: State) => readonly number[];
 interface Patch {
   grid: FieldGrid;
   image: HTMLCanvasElement;
@@ -20,6 +21,7 @@ const OVERVIEW: Bounds = { x: -12, y: -12, span: 24 };
 const same = (a: Bounds, b: Bounds) =>
   a.x === b.x && a.y === b.y && a.span === b.span;
 // One lazy display worker, one request and one replaceable desired region.
+// Points use the normalized source basis; the caller owns its world/frame projection.
 export class PotentialLayer {
   private worker?: Worker;
   private overview?: Patch;
@@ -30,6 +32,7 @@ export class PotentialLayer {
   constructor(
     private plate: HTMLCanvasElement,
     private reliefCanvas: HTMLCanvasElement,
+    private sources: FieldSource[] = SOURCES,
   ) {}
   private desired?: Bounds;
   private pending?: FieldRequest;
@@ -168,21 +171,14 @@ export class PotentialLayer {
         }
       };
     }
-    this.pending = { id: ++this.serial, bounds, size };
+    this.pending = { id: ++this.serial, bounds, size, sources: this.sources };
     this.requests++;
     this.worker.postMessage(this.pending);
   }
-  private planeOutline(
-    width: number,
-    height: number,
-    epoch: number,
-    project: Project,
-  ) {
+  private planeOutline(width: number, height: number, project: Project) {
     const points = Array.from({ length: 97 }, (_, i) => {
       const angle = (2 * Math.PI * i) / 96;
-      return project(
-        basisPoint(10 * Math.cos(angle), 10 * Math.sin(angle), epoch),
-      );
+      return project([10 * Math.cos(angle), 10 * Math.sin(angle), 0, 0, 0, 0]);
     });
     if (points.some((p) => !p.every(Number.isFinite))) return;
     this.visible = true;
@@ -208,7 +204,6 @@ export class PotentialLayer {
   draw(
     width: number,
     height: number,
-    epoch: number,
     project: Project,
     enabled: boolean,
     relief = false,
@@ -238,9 +233,9 @@ export class PotentialLayer {
     this.plate.hidden = !enabled;
     this.reliefCanvas.hidden = true;
     if (!enabled) return;
-    const o = project(basisPoint(0, 0, epoch)),
-      x = project(basisPoint(1, 0, epoch)),
-      y = project(basisPoint(0, 1, epoch));
+    const o = project([0, 0, 0, 0, 0, 0]),
+      x = project([1, 0, 0, 0, 0, 0]),
+      y = project([0, 1, 0, 0, 0, 0]);
     const a = x[0] - o[0],
       b = x[1] - o[1],
       c = y[0] - o[0],
@@ -250,7 +245,7 @@ export class PotentialLayer {
     if (Math.abs(det) < 0.12 * scale ** 2) {
       this.plate.hidden = true;
       if (!relief) {
-        this.planeOutline(width, height, epoch, project);
+        this.planeOutline(width, height, project);
         return;
       }
       if (relief) {
@@ -258,12 +253,11 @@ export class PotentialLayer {
         this.plateKey = "";
       }
       if (relief) {
-        this.relief ??= new ReliefRenderer(this.reliefCanvas);
+        this.relief ??= new ReliefRenderer(this.reliefCanvas, this.sources);
         this.reliefBounds = OVERVIEW;
         this.visible = this.relief.draw(
           width,
           height,
-          epoch,
           project,
           OVERVIEW,
           gain,
@@ -330,13 +324,12 @@ export class PotentialLayer {
       this.plate.hidden = true;
       this.plate.width = this.plate.height = 1;
       this.plateKey = "";
-      this.relief ??= new ReliefRenderer(this.reliefCanvas);
+      this.relief ??= new ReliefRenderer(this.reliefCanvas, this.sources);
       const bounds = this.desired ?? OVERVIEW;
       this.reliefBounds = bounds;
       this.visible = this.relief.draw(
         width,
         height,
-        epoch,
         project,
         bounds,
         gain,
@@ -359,7 +352,7 @@ export class PotentialLayer {
       ctx.transform(a, b, c, d, o[0], o[1]);
       ctx.beginPath();
       ctx.rect(q.x, q.y, q.span, q.span);
-      for (const s of SOURCES) {
+      for (const s of this.sources) {
         ctx.moveTo(s.x + s.radius, s.y);
         ctx.arc(s.x, s.y, s.radius, 0, 2 * Math.PI);
       }

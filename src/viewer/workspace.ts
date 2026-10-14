@@ -19,6 +19,7 @@ import {
 import { viewerProfile } from "../view/profile";
 import { rocketAxis } from "../view/rocket";
 import { catalog, defaultExhibit, type ExhibitId } from "./catalog";
+import { displayName, displayText } from "./presentation";
 import { viewportControls } from "./controls";
 import { createSceneSession } from "./session";
 import { esc, sampleVessel } from "./shared";
@@ -59,12 +60,12 @@ export function mountWorkspace(host: HTMLElement) {
     } else root.innerHTML = value;
   }
   host.innerHTML = `<main class="shell">
-<header><button id="library-toggle" aria-label="Toggle set library" aria-expanded="true">Sets</button><h1>Orbital Logistics</h1><span id="set-title"></span><span id="load-status" role="status"></span>
-<select id="layout" aria-label="View layout"><option value="single">Single view</option><option value="custom" hidden>Custom split</option><option value="overview">Overview + Chase</option><option value="frames">Inertial + Rotating</option><option value="axes">Top + Front</option></select><button id="split-direction" aria-label="Stack views" title="Stack views">↕</button><button id="duplicate" title="Duplicate active view">Split</button><button id="inspector-toggle" aria-label="Toggle inspector" aria-expanded="true">Inspector</button></header>
-<div class="workspace"><nav class="library" aria-label="Set library"><h2>Sets</h2><input id="set-search" type="search" placeholder="Find a set" aria-label="Find a set"><div id="catalog"></div></nav><div id="viewports" class="viewports"></div>
-<aside><div class="section-heading"><h2 id="inspector-pane">View 1</h2></div><div class="section-heading"><h2>Traffic</h2><span id="traffic-count"></span></div><div id="fleet"></div><div class="section-heading" id="station-heading"><h2>Stations</h2></div><div id="stations"></div><section id="inspector"></section><details id="model-details"><summary>About this set</summary><p id="description"></p><p id="provenance"></p></details></aside></div>
-<section class="player" aria-label="Playback"><div id="timeline-resize" tabindex="0" role="separator" aria-label="Timeline height" aria-orientation="horizontal"></div><div class="ruler-row"><button id="collapse-timeline" aria-expanded="true">Activity ▾</button><div id="ruler" tabindex="0" role="slider" aria-label="Simulation time"><div id="ticks"></div><span class="time-cursor"></span><output id="hover-time" hidden></output></div></div><div id="timelines" aria-label="Ship activity timelines"></div>
-<div class="transport"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><output id="clock">0.00</output><label class="speed-control"><span class="speed-track"><input id="speed" type="range" min="-1" max="1" step="0.0001" value="0" title="Reverse ← · 0× pause · → Forward" aria-label="Playback speed"></span><output id="speed-value">1×</output></label><button id="live" hidden>Live</button><label class="replay"><input type="checkbox" id="replay">Replay</label></div></section></main><pre id="state-json" hidden></pre>`;
+<header><button id="library-toggle" aria-label="Toggle set library" aria-expanded="true"><span class="sidebar-icon left" aria-hidden="true"></span>Sets</button><h1>Orbital Logistics</h1><span id="set-title"></span><span id="load-status" role="status"></span>
+<select id="layout" aria-label="View layout"><option value="single">Single view</option><option value="custom" hidden>Custom split</option><option value="overview">Overview + Chase</option><option value="frames">Inertial + Rotating</option><option value="axes">Top + Front</option></select><button id="split-direction" aria-label="Stack views" title="Stack views">↕</button><button id="duplicate" title="Duplicate active view">Split</button><button id="inspector-toggle" aria-label="Toggle inspector" aria-expanded="true"><span class="sidebar-icon right" aria-hidden="true"></span>Inspector</button></header>
+<div class="workspace"><nav class="library" aria-label="Set library"><h2>Sets</h2><input id="set-search" type="search" placeholder="Find a set" aria-label="Find a set"><div id="catalog"></div></nav><div id="library-resize" class="sidebar-resize" tabindex="0" role="separator" aria-label="Set library width" aria-orientation="vertical"></div><div id="viewports" class="viewports"></div><div id="inspector-resize" class="sidebar-resize" tabindex="0" role="separator" aria-label="Inspector width" aria-orientation="vertical"></div>
+<aside><div class="section-heading"><h2 id="inspector-pane">View 1</h2></div><div class="section-heading"><h2>Traffic</h2><span id="traffic-count"></span></div><div id="fleet"></div><div class="section-heading" id="station-heading"><h2>Stations</h2></div><div id="stations"></div><section id="inspector"></section></aside></div>
+<section class="player" aria-label="Playback"><div id="timeline-resize" tabindex="0" role="separator" aria-label="Timeline height" aria-orientation="horizontal"></div><div class="ruler-row"><button id="collapse-timeline" aria-expanded="true" title="Collapse activity lanes"><span class="disclosure" aria-hidden="true"></span>Activity</button><div id="ruler" tabindex="0" role="slider" aria-label="Simulation time"><div id="ticks"></div><span class="time-cursor"></span><output id="hover-time" hidden></output></div></div><div id="timelines" aria-label="Ship activity timelines"></div>
+<div class="transport"><div class="transport-position"><button id="restart" title="Rewind">↤</button><button id="play" disabled>Play</button><output id="clock">0.00</output></div><label class="speed-control"><span class="speed-track"><span class="speed-groove" aria-hidden="true"></span><input id="speed" type="range" min="-1" max="1" step="0.0001" value="0" title="Reverse ← · 0× pause · → Forward" aria-label="Playback speed"></span><output id="speed-value">1×</output></label><div class="transport-mode"><button id="live" hidden>Live</button><label class="replay"><input type="checkbox" id="replay">Replay</label></div></div></section></main><pre id="state-json" hidden></pre>`;
   const panes: Viewport[] = [];
   let activeId = 0,
     nextId = 1,
@@ -89,8 +90,6 @@ export function mountWorkspace(host: HTMLElement) {
     } else if (kind === "ready") {
       for (const pane of panes) pane.reset();
       if (panes.length === 2) applyPreset($<HTMLSelectElement>("layout").value);
-      $("description").textContent = session.run!.description;
-      $("provenance").textContent = session.run!.provenance;
       publicationDirty = true;
       $<HTMLButtonElement>("play").disabled = false;
       syncSpeed();
@@ -292,8 +291,9 @@ export function mountWorkspace(host: HTMLElement) {
   const budgetCursorTransform = () =>
     `translate(${4 + ((session.t - session.start()) / (session.end() - session.start())) * 232},0)`;
   function eventLabel(e: SetEvent): string {
-    if ((session.run?.solar || session.run?.compact) && e.label) return e.label;
-    const port = e.portId ?? "";
+    if ((session.run?.solar || session.run?.compact) && e.label)
+      return displayText(session.run, e.label);
+    const port = displayName(session.run!, e.portId ?? "");
     if (e.kind === "burn" && e.id.includes("plane-change"))
       return "Plane change";
     if (e.kind === "separation") return e.label ?? "Stage separation";
@@ -425,7 +425,7 @@ export function mountWorkspace(host: HTMLElement) {
               `<path d="M${(1000 * (e.t - axisStart())) / (axisEnd() - axisStart())} 4v12" stroke="${v.color}" stroke-width="1"/>`,
           )
           .join("");
-        return `<div class="timeline-row ${active.selected === v.id ? "selected" : ""}" data-vessel="${esc(v.id)}"><button class="timeline-name" data-select="${esc(v.id)}" style="color:${v.color}" title="${esc(v.name)}">${esc(v.name)}</button><div class="timeline-track"><svg viewBox="0 0 1000 20" preserveAspectRatio="none" aria-label="${esc(v.name)} ${maintenance ? "stationkeeping; small teal spans are corrections" : "activity; colored spans are flight, gold is cargo service"}">${blocks}${burns}</svg>${session.traffic ? `<span class="future-region" style="left:${Math.min(100, (100 * (session.traffic.frontier - axisStart())) / (axisEnd() - axisStart()))}%" title="Planned"></span><span class="frontier-cursor" style="left:${Math.min(100, (100 * (session.traffic.frontier - axisStart())) / (axisEnd() - axisStart()))}%" title="Simulation head"></span>` : ""}<span class="time-cursor"></span><button class="timeline-seek" aria-label="Scrub ${esc(v.name)} timeline"></button></div></div>`;
+        return `<div class="timeline-row ${active.selected === v.id ? "selected" : ""}" data-vessel="${esc(v.id)}"><button class="timeline-name" data-select="${esc(v.id)}" style="color:${v.color}" title="${esc(displayName(session.run!, v.id))}">${esc(displayName(session.run!, v.id))}</button><div class="timeline-track"><svg viewBox="0 0 1000 20" preserveAspectRatio="none" aria-label="${esc(displayName(session.run!, v.id))} ${maintenance ? "stationkeeping; small teal spans are corrections" : "activity; colored spans are flight, gold is cargo service"}">${blocks}${burns}</svg>${session.traffic ? `<span class="future-region" style="left:${Math.min(100, (100 * (session.traffic.frontier - axisStart())) / (axisEnd() - axisStart()))}%" title="Planned"></span><span class="frontier-cursor" style="left:${Math.min(100, (100 * (session.traffic.frontier - axisStart())) / (axisEnd() - axisStart()))}%" title="Simulation head"></span>` : ""}<span class="time-cursor"></span><button class="timeline-seek" aria-label="Scrub ${esc(displayName(session.run!, v.id))} timeline"></button></div></div>`;
       })
       .join("");
     // Keep interactive rows/buttons alive while forecast spans change. Replacing
@@ -548,7 +548,7 @@ export function mountWorkspace(host: HTMLElement) {
       session.run.vessels
         .map(
           (v) =>
-            `<button class="object-row ${active.selected === v.id ? "selected" : ""}" data-object="${esc(v.id)}"><i style="background:${v.color}"></i><span><strong>${esc(v.name)}</strong><small>${esc(status(v))}</small></span></button>`,
+            `<button class="object-row ${active.selected === v.id ? "selected" : ""}" data-object="${esc(v.id)}"><i style="background:${v.color}"></i><span><strong>${esc(displayName(session.run!, v.id))}</strong><small>${esc(displayText(session.run!, status(v)))}</small></span></button>`,
         )
         .join(""),
     );
@@ -561,7 +561,7 @@ export function mountWorkspace(host: HTMLElement) {
         ? session.run.stations
             .map((station) => {
               const stock = stocks.find((s) => s.id === station.id)!;
-              return `<button class="object-row ${active.selected === station.id ? "selected" : ""}" data-object="${esc(station.id)}"><i class="station-dot"></i><span><strong>${esc(station.id)}</strong></span><span class="berths">${stock.occupied}/${station.berths}</span></button>`;
+              return `<button class="object-row ${active.selected === station.id ? "selected" : ""}" data-object="${esc(station.id)}"><i class="station-dot"></i><span><strong>${esc(displayName(session.run!, station.id))}</strong></span><span class="berths">${stock.occupied}/${station.berths}</span></button>`;
             })
             .join("")
         : "",
@@ -571,13 +571,9 @@ export function mountWorkspace(host: HTMLElement) {
       .forEach((b) => (b.onclick = () => select(b.dataset.object!)));
     const v = active.vessel(),
       key = session.run.id + ":" + active.selected;
-    $("launch-view").textContent =
-      session.run.entry || (v?.entry && session.t >= (v.entry.activeFrom ?? 0))
-        ? "Entry view"
-        : "Surface view";
     if (key !== inspectorKey) {
       inspectorKey = key;
-      const heading = v?.name ?? active.selected;
+      const heading = displayName(session.run, active.selected);
       $("inspector").innerHTML =
         `<div class="section-heading"><h2>${esc(heading)}</h2><button id="object-frame">View from here</button></div><p id="object-status"></p><dl id="readouts"></dl><button id="next-event" class="next-event"></button>${v ? fuelChart(v) : ""}<details id="schedule"><summary>Schedule</summary><div id="event-list"></div></details>`;
       $("object-frame").onclick = () => {
@@ -603,7 +599,7 @@ export function mountWorkspace(host: HTMLElement) {
     } else if (v) {
       const s = sampleVessel(v, session.t),
         cargo = s.logistics?.cargoMass ?? v.ship.cargoMass;
-      $("object-status").textContent = status(v);
+      $("object-status").textContent = displayText(session.run, status(v));
       const maintenance = session.run.stations.find(
         (p) => p.id === active.selected,
       )?.maintenance;
@@ -858,7 +854,7 @@ export function mountWorkspace(host: HTMLElement) {
               .includes(query),
         );
         return entries.length
-          ? `<details ${query || open.get(family) !== false ? "open" : ""} data-family="${esc(family)}" class="set-family"><summary>${esc(family)}</summary>${entries.map((s) => `<button class="set-entry ${s.id === session.currentSet ? "selected" : ""}" data-set="${s.id}" aria-pressed="${s.id === session.currentSet}"><strong>${esc(s.title)}</strong><span>${esc(s.summary)}</span></button>`).join("")}</details>`
+          ? `<details ${query || open.get(family) !== false ? "open" : ""} data-family="${esc(family)}" class="set-family"><summary>${esc(family)}</summary>${entries.map((s) => `<article class="set-card ${s.id === session.currentSet ? "selected" : ""}"><button class="set-entry" data-set="${s.id}" aria-pressed="${s.id === session.currentSet}"><strong>${esc(s.title)}</strong>${s.id === session.currentSet ? "" : `<span>${esc(s.summary)}</span>`}</button>${s.id === session.currentSet ? `<div class="set-description"><p>${esc(s.description)}</p><div class="set-links">${s.links.map((link) => `<a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer">${esc(link.label)} ↗</a>`).join("")}</div></div>` : ""}</article>`).join("")}</details>`
           : "";
       })
       .join("");
@@ -874,10 +870,86 @@ export function mountWorkspace(host: HTMLElement) {
     host.querySelector<HTMLElement>(".replay")!.hidden = entry.continuous;
     void session.loadSet(id);
     renderCatalog();
+    $("catalog")
+      .querySelector(".set-card.selected")
+      ?.scrollIntoView({ block: "nearest" });
     if (innerWidth < 1100) {
       host.classList.add("library-closed");
       $("library-toggle").setAttribute("aria-expanded", "false");
     }
+  }
+  for (const side of ["library", "inspector"] as const) {
+    const grip = $(side + "-resize");
+    const panel = host.querySelector<HTMLElement>(
+      side === "library" ? ".library" : "aside",
+    )!;
+    const setWidth = (value: number) => {
+      const opposite = host.querySelector<HTMLElement>(
+        side === "library" ? "aside" : ".library",
+      )!;
+      const other = opposite.getBoundingClientRect().width;
+      const max = Math.max(
+        180,
+        Math.min(520, innerWidth * 0.32, innerWidth - other - 280),
+      );
+      const width = Math.max(180, Math.min(max, value));
+      host.style.setProperty(`--${side}-width`, `${width}px`);
+      grip.setAttribute("aria-valuenow", String(Math.round(width)));
+      grip.setAttribute("aria-valuemin", "180");
+      grip.setAttribute("aria-valuemax", String(Math.round(max)));
+    };
+    let drag: { id: number; x: number; width: number } | undefined;
+    grip.onpointerdown = (e) => {
+      e.preventDefault();
+      drag = {
+        id: e.pointerId,
+        x: e.clientX,
+        width: panel.getBoundingClientRect().width,
+      };
+      grip.setPointerCapture(e.pointerId);
+    };
+    grip.onpointermove = (e) => {
+      if (drag?.id === e.pointerId)
+        setWidth(
+          drag.width + (e.clientX - drag.x) * (side === "library" ? 1 : -1),
+        );
+    };
+    grip.onpointerup = grip.onpointercancel = (e) => {
+      drag = undefined;
+      if (grip.hasPointerCapture(e.pointerId))
+        grip.releasePointerCapture(e.pointerId);
+    };
+    grip.onkeydown = (e) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+      e.preventDefault();
+      setWidth(
+        e.key === "Home"
+          ? side === "library"
+            ? 232
+            : 272
+          : e.key === "End"
+            ? 520
+            : panel.getBoundingClientRect().width +
+              (e.key === "ArrowRight" ? 20 : -20) *
+                (side === "library" ? 1 : -1),
+      );
+    };
+    const panelObserver = new ResizeObserver(() => {
+      const width = Math.round(panel.getBoundingClientRect().width);
+      if (width > 0) grip.setAttribute("aria-valuenow", String(width));
+    });
+    panelObserver.observe(panel);
+    lifetime.signal.addEventListener(
+      "abort",
+      () => panelObserver.disconnect(),
+      { once: true },
+    );
+    grip.setAttribute(
+      "aria-valuenow",
+      String(Math.round(panel.getBoundingClientRect().width)),
+    );
+    grip.setAttribute("aria-valuemin", "180");
+    grip.setAttribute("aria-valuemax", "520");
   }
   $("set-search").oninput = renderCatalog;
   $("library-toggle").onclick = () => {
@@ -923,6 +995,10 @@ export function mountWorkspace(host: HTMLElement) {
       speedPosition(rate, maximumPlaybackRate(session.currentSet)),
     );
     input.setAttribute("aria-valuetext", text);
+    const percent = 50 + Number(input.value) * 50;
+    const groove = host.querySelector<HTMLElement>(".speed-groove")!;
+    groove.style.setProperty("--speed-low", `${Math.min(50, percent)}%`);
+    groove.style.setProperty("--speed-high", `${Math.max(50, percent)}%`);
   }
   $<HTMLInputElement>("speed").oninput = () =>
     session.setSpeed(
@@ -1094,9 +1170,9 @@ export function mountWorkspace(host: HTMLElement) {
   $("collapse-timeline").onclick = () => {
     const collapsed = host.classList.toggle("timeline-collapsed");
     $("collapse-timeline").setAttribute("aria-expanded", String(!collapsed));
-    $("collapse-timeline").textContent = collapsed
-      ? "Activity ▸"
-      : "Activity ▾";
+    $("collapse-timeline").title = collapsed
+      ? "Expand activity lanes"
+      : "Collapse activity lanes";
   };
   host.addEventListener(
     "pointerdown",

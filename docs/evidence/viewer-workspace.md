@@ -131,3 +131,72 @@ The static landing/poster/hero boundary remains next, after owner review of the
 working layout. Its no-viewer-download/no-worker requirement is not claimed yet.
 
 ![Two independent frames](../design/viewer-polish/two-views.png)
+
+## October14 control and content polish
+
+The selected library entry now expands into a viewer-focused description with
+Wikipedia concept links. The inspector retains ship/station details. Library and
+inspector widths resize from their dock edges, with pointer capture and keyboard
+arrows/Home/End; collapsing preserves their widths. Widths clamp to keep a usable
+central view on narrower desktop windows. Sidebar symbols show panel state and
+Activity has a button/disclosure treatment. The playback group is centered in
+three independent transport columns, so Live/Return to live cannot move it.
+A shared DOM groove plus native Chrome/Firefox thumbs show the bipolar range and
+the colored span from zero to the selected speed.
+
+Wide viewports expose View, Track and Orbit/Pan inline. Narrow ones use a stable
+Camera disclosure. Both presentations own the same controls; resizing does not
+copy state or create duplicate selectors. Surface is a View option for sets with
+surface/entry framing. The interplanetary cycler is now skinned as Helion, Aster,
+Selene, Ember and Brontes, with shorter ship labels and larger schematic star/giant
+glyphs. The existing `solar-cycler` permalink, physical IDs, body radii, ephemerides
+and cached flights are retained. The lunar ground-service primary reads Aster.
+
+### Planar field reuse
+
+`view/field-model.ts` recognizes fixed or coherently rotating coplanar gravity
+sources from each scene's immutable physical rails. The display worker, exterior
+mask, contour sampler, relief mesh refinement and shader receive the same
+normalized sources. Source mass ratios, positions, radii, phase and rotation are
+preserved; normalization changes only the visual transfer scale. CPU relief and
+GPU relief use the same scalar function. The existing per-view16MiB field budget,
+one outstanding sample request, lazy field worker and disposal rules remain.
+
+Potential map and relief are available in all ten planar-source exhibits, including
+the binary observatories (the spacecraft may leave the source plane). The
+interplanetary scene has inclined source orbits and remains unsupported by this
+stationary planar renderer. Equilibrium crosses still use only their existing
+validated dynamics: binary L1–L5 or the compact fixed-primary roots. Enabling a
+scalar map does not invent equilibrium points for unrelated fields.
+
+### Browser reproduction and validation
+
+The installed Firefox156.0 was driven headlessly through geckodriver0.37.1 with a
+fresh profile, separate from the user's session. Before the fix, the paused Solar
+frame selector received146 redundant `disabled` attribute mutations in1.2seconds;
+its Firefox range track computed as transparent. Frame-option attributes now change
+only when availability changes. The native open dropdown remains the same DOM node
+and receives zero mutations during the paused smoke interval. The smoke test
+checks the native `:open` state explicitly; viewport screenshots omit native popups. Both the custom groove
+and colored bipolar fill render in Firefox. The repeatable runner is
+`scripts/firefox-ui-smoke.mjs` (`npm run test:firefox`). This validates the installed
+browser and headless WebGL path, not a hardware-GPU/mobile performance percentile.
+
+The production Chrome workspace suite covers16 cases, including the four new polish
+cases. It checks centered playback, expanded descriptions/link structure, independent
+sidebar resizing without camera changes, inline/compact controls and Surface framing,
+paused selector stability, all eleven loaders, paired views, worker/GL ownership and
+physical-state parity with fields enabled. Existing resource assertions were updated
+for Orison's newly supported field worker rather than treating it as a leak.
+
+Eighteen focused numerical/display tests cover field/force agreement and rotating
+symmetry, source masks/bounds, relief footprint, camera bases/occlusion/chase,
+bidirectional playback and indexed sample windows. New source-normalization tests
+check single-primary, fixed-primary/moon and accelerating-binary worlds against
+actual physical source positions at multiple epochs. Noncoplanar/time-varying source
+patterns reject explicitly. No numerical engine, solver, route or canonical step
+changed. `npm run build` also performs the strict TypeScript check.
+
+![Firefox controls and selected exhibit card](../design/viewer-polish/firefox-controls.png)
+
+![Lunar loop relief in Firefox](../design/viewer-polish/firefox-relief.png)
