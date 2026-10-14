@@ -2,6 +2,8 @@
 
 2026-10-13. Planning only, based on checkout7e9936b and the user's accepted viewer direction. [Astra review](astra-review.md), [disposition](disposition.md), [human clarifications](clarifications.md), [layout sketch](layout-study.png). No application/simulation code changed in this planning pass.
 
+Accepted styling: Flight deck panels with Space Grotesk text/headings and IBM Plex Mono numerical values. Selected set/ship rows use a background fill, without accent stripes. See [copy/style guidance](playback-and-type.md#accepted-combination-and-copy-review).
+
 ## Product shape
 
 A curated collection of operating miniature space systems. Public visitors arrive at a descriptive lightweight page; opening an exhibit enters an observation workspace. Watching, changing frames and inspecting a spacecraft remain sufficient. The viewer keeps the current schematic visual language and minimal permanent copy. Explain exhibits in the library/About, not repeated captions or model caveats.

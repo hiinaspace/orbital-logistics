@@ -16,13 +16,13 @@
       "style": "flight",
       "headingFonts": [
         {
-          "familyName": "Barlow Condensed Medium",
-          "postScriptName": "BarlowCondensed-Medium",
+          "familyName": "Space Grotesk Light",
+          "postScriptName": "SpaceGroteskLight-Regular",
           "isCustomFont": true,
           "glyphCount": 17
         }
       ],
-      "body": "Barlow, sans-serif"
+      "body": "\"Space Grotesk\", sans-serif"
     },
     {
       "style": "observatory",

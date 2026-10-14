@@ -20,10 +20,10 @@ The standalone study demonstrates ruler/lane seeking, one shared playhead, play/
 | Direction | Type | Trim |
 |---|---|---|
 |A · Telemetry|IBM Plex Sans + IBM Plex Mono|Cool graphite, compact type, fine machined borders and light raised controls.|
-|B · Flight deck|Barlow body + Barlow Condensed headings + IBM Plex Mono values|Warm gray-green modules, engraved-looking section labels, shallow beveled keys and recessed slider grooves.|
+|B · Flight deck|Space Grotesk + IBM Plex Mono values|Warm gray-green modules, engraved-looking section labels, shallow beveled keys and recessed slider grooves.|
 |C · Observatory|Space Grotesk + IBM Plex Mono|Deep blue panels, softer corners and more geometric lettering.|
 
-Current recommendation: B's panel trim, with Barlow or IBM Plex chosen after the same-layout comparison. Keep body text straightforward; put most character in headings, numerical typography and small controls. Use restrained gradients/edges and a limited amber accent. The fonts, palette and trim are independent design choices: the study permits a separate Typeface override and Panel trim toggle.
+Accepted choice: B's panel trim with Space Grotesk and IBM Plex Mono values. Keep body text straightforward; put most character in headings, numerical typography and small controls. Use restrained gradients/edges and a limited amber accent. The fonts, palette and trim are independent design choices: the study permits a separate Typeface override and Panel trim toggle.
 
 The light Style study toolbar is audition-only, not planned production chrome. All font files are local Latin subsets, with source records and OFL license texts under fonts/. No runtime font service is used. The current audition downloads245860bytes of candidate fonts across11files; a chosen production pairing should include only its used faces/weights. Retain candidate assets with this design record until selection, then prune unused production assets.
 
@@ -38,3 +38,11 @@ Sources: [IBM Plex](https://github.com/IBM/plex), [Barlow](https://github.com/jp
 - Chrome screenshots and platform-font readback verify the actual custom headings loaded for all three variants. Interaction checks cover seek, speed, collapse, trim and independent selection; no external browser requests/page exceptions occurred. This is prototype verification, not integrated viewer/mobile performance evidence.
 
 Next application implementation should use the unified player and selected visual tokens from the start, alongside the previously reviewed Session/Viewport extraction. No new external senior review is needed merely to choose fonts or rearrange the same shared seek control.
+
+## Accepted combination and copy review
+
+User selected **Flight deck panels + Space Grotesk**, with IBM Plex Mono retained for numerical values. B now defaults to that combination; Barlow remains available only as an alternate audition. Selected set/ship/timeline-name rows use a solid active background, without an accent stripe or decorative selection border. The active viewport outline still communicates command ownership.
+
+Read the user's [10 tells of a slop UI](https://godobject.dev/blog/10-tells-of-slop/#redundant-text-due-to-chat-context) reference. Use it as a critique aid alongside the user's requested subtle tactile controls. Visible copy should name content, show changing state or explain a necessary action. Planning history and design intentions belong in docs. Keep labels/descriptions useful in context; avoid repetition, decorative badges, arbitrary colors, ornamental prefixes, excessive card treatments and hype. Check alignment, focus/selection meaning and typography at actual sizes. The intentional shallow button/slider shading stays restrained.
+
+Concept cleanup removes the duplicate set description in the inspector, repeated current-set mode badge and in-product study caption. Exhibit descriptions remain in the library where they help choose a set. The separate audition toolbar identifies this as a design study, so no production-style disclaimer is needed inside the workspace. The real viewer's existing concise copy is the baseline; this feedback does not call for adding new explanation there.

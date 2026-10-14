@@ -1,7 +1,9 @@
 // Presentation study only: sample drawing/telemetry, with a working shared player.
-const themes={telemetry:'IBM Plex Sans · IBM Plex Mono',flight:'Barlow · Barlow Condensed · Plex Mono',observatory:'Space Grotesk · IBM Plex Mono'};
+const themes={telemetry:'Telemetry',flight:'Flight deck',observatory:'Observatory'};
 const fontPairs={telemetry:['IBM Plex Sans','IBM Plex Sans'],flight:['Barlow','Barlow Condensed'],observatory:['Space Grotesk','Space Grotesk']};
-function fonts(){const choice=document.querySelector('#font-choice').value,style=document.body.dataset.style;if(choice==='matched'){document.body.style.removeProperty('--font');document.body.style.removeProperty('--heading');}else{document.body.style.setProperty('--font',`'${fontPairs[choice][0]}',sans-serif`);document.body.style.setProperty('--heading',`'${fontPairs[choice][1]}',sans-serif`);}document.querySelector('#style-detail').textContent=themes[choice==='matched'?style:choice];}
+const fontLabels={telemetry:'IBM Plex Sans · IBM Plex Mono',flight:'Barlow · Barlow Condensed · Plex Mono',observatory:'Space Grotesk · IBM Plex Mono'};
+const defaults={telemetry:'telemetry',flight:'observatory',observatory:'observatory'};
+function fonts(){const choice=document.querySelector('#font-choice').value,style=document.body.dataset.style,resolved=choice==='matched'?defaults[style]:choice;document.body.style.setProperty('--font',`'${fontPairs[resolved][0]}',sans-serif`);document.body.style.setProperty('--heading',`'${fontPairs[resolved][1]}',sans-serif`);document.querySelector('#style-detail').textContent=fontLabels[resolved];}
 function theme(name){if(!themes[name])name='flight';document.body.dataset.style=name;document.querySelector('#style-detail').textContent=themes[name];document.querySelectorAll('[data-theme]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.theme===name)));fonts();}
 document.querySelector('#font-choice').onchange=fonts;
 theme(new URL(location.href).searchParams.get('style')||'flight');document.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>theme(b.dataset.theme));document.querySelector('#panel-trim').onchange=e=>document.body.classList.toggle('flat',!e.target.checked);
