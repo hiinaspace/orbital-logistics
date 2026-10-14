@@ -74,7 +74,7 @@ test("curated catalog loads every retained scene and supports paired frames", as
   page,
 }) => {
   test.setTimeout(180000);
-  await page.goto("/#set=orison-steered");
+  await page.goto("/viewer/#set=orison-steered");
   await ready(page);
   expect(await page.locator("[data-set]").count()).toBe(11);
   const ids = await page
@@ -99,7 +99,7 @@ test("retired links show an intentional empty state; catalog metadata does not s
 }) => {
   let workers = 0;
   page.on("worker", () => workers++);
-  await page.goto("/#set=orison-freight");
+  await page.goto("/viewer/#set=orison-freight");
   await expect(page.locator("#load-status")).toContainText("retired");
   expect(workers).toBe(0);
   expect((await state(page)).ready).not.toBe(true);
@@ -115,14 +115,14 @@ test("views preserve physical state, independent selection, locked tracking and 
   page,
 }) => {
   await page.setViewportSize({ width: 1600, height: 1000 });
-  await page.goto("/#set=orison-steered");
+  await page.goto("/viewer/#set=orison-steered");
   await ready(page);
   await pause(page);
   await seek(page, 2);
   const before = physical(await state(page));
   await page.getByLabel("View layout").selectOption("overview");
   await camera(page, 1);
-  await control(page, 1, "tracking").selectOption("chase");
+  await control(page, 1, "tracking").locator('input[value="chase"]').check();
   await page.locator('[data-object="Incline"]').click();
   await expect.poll(async () => (await state(page)).selected).toBe("Incline");
   let s = await state(page);
@@ -156,7 +156,7 @@ test("views preserve physical state, independent selection, locked tracking and 
 test("split divider, maximize, close, duplicate and stacked axes retain local settings", async ({
   page,
 }) => {
-  await page.goto("/#set=orison-steered");
+  await page.goto("/viewer/#set=orison-steered");
   await ready(page);
   await pause(page);
   await page.getByLabel("View layout").selectOption("axes");
@@ -194,7 +194,7 @@ test("split divider, maximize, close, duplicate and stacked axes retain local se
 test("unified ruler and lanes scrub, collapse keeps ruler, reverse/center and keyboard preserve native controls", async ({
   page,
 }) => {
-  await page.goto("/#set=orison-steered");
+  await page.goto("/viewer/#set=orison-steered");
   await ready(page);
   await pause(page);
   expect(
@@ -232,7 +232,7 @@ test("pending continuous replies preserve held cursor and Live shares one worker
   test.setTimeout(90000);
   let workers = 0;
   page.on("worker", () => workers++);
-  await page.goto("/#set=orison-freight-district");
+  await page.goto("/viewer/#set=orison-freight-district");
   await ready(page);
   await page.getByLabel("Playback speed").fill("1");
   await expect
@@ -292,7 +292,7 @@ test("local display and repeated field pane disposal do not leak workers or GL r
       get: () => ({ workers: active.size, buffers: glBuffers }),
     });
   });
-  await page.goto("/#set=aster-selene-cycler-fleet-service");
+  await page.goto("/viewer/#set=aster-selene-cycler-fleet-service");
   await ready(page);
   await pause(page);
   const probe = () => page.evaluate(() => (window as any).resourceProbe);
@@ -338,7 +338,7 @@ test("loading cancellation rejects obsolete replies and all visible surfaces fit
   page,
 }) => {
   await page.setViewportSize({ width: 3840, height: 2160 });
-  await page.goto("/#set=aster-selene-system");
+  await page.goto("/viewer/#set=aster-selene-system");
   await page.locator('[data-set="orison-steered"]').click();
   await ready(page, "orison-steered");
   await pause(page);
@@ -356,7 +356,7 @@ test("loading cancellation rejects obsolete replies and all visible surfaces fit
 test("focused camera shortcuts and per-pane display keep canonical samples unchanged", async ({
   page,
 }) => {
-  await page.goto("/#set=orison-steered");
+  await page.goto("/viewer/#set=orison-steered");
   await ready(page);
   await pause(page);
   await seek(page, 13.7);
@@ -387,7 +387,7 @@ test("focused camera shortcuts and per-pane display keep canonical samples uncha
 test("a playing scrub pins its axis while held and resumes history on release", async ({
   page,
 }) => {
-  await page.goto("/#set=orison-freight-district");
+  await page.goto("/viewer/#set=orison-freight-district");
   await ready(page);
   await page.getByLabel("Playback speed").fill("1");
   await expect
@@ -425,7 +425,7 @@ test("observatory staging, entry and halo phases remain inspectable in paired sp
   page,
 }) => {
   test.setTimeout(90000);
-  await page.goto("/#set=helion-orison-observatory-mission");
+  await page.goto("/viewer/#set=helion-orison-observatory-mission");
   await ready(page);
   await pause(page);
   await page.getByLabel("View layout").selectOption("axes");
@@ -448,7 +448,9 @@ test("observatory staging, entry and halo phases remain inspectable in paired sp
   expect(physical(await state(page))).toEqual(before);
   await control(page, 1, "frame").selectOption("libration");
   await camera(page, 1);
-  await control(page, 1, "camera-view").selectOption("oblique");
+  await control(page, 1, "camera-view")
+    .locator('input[value="oblique"]')
+    .check();
   await seek(page, 74);
   expect((await state(page)).equilibria).toHaveLength(5);
   await display(page, 1);
@@ -458,13 +460,13 @@ test("observatory staging, entry and halo phases remain inspectable in paired sp
 test("cycler Chase stays upright across the lunar flyby in both physical frames", async ({
   page,
 }) => {
-  await page.goto("/#set=aster-selene-cycler-fleet-service");
+  await page.goto("/viewer/#set=aster-selene-cycler-fleet-service");
   await ready(page);
   await pause(page);
   await page.getByLabel("View layout").selectOption("frames");
   await page.locator('[data-select="Nomad"]').click();
   await camera(page, 0);
-  await control(page, 0, "tracking").selectOption("chase");
+  await control(page, 0, "tracking").locator('input[value="chase"]').check();
   for (const frame of ["inertial", "rotating"]) {
     await control(page, 0, "frame").selectOption(frame);
     let previous: any;

@@ -45,7 +45,8 @@
     "evidence:crossings": "tsx scripts/crossings-evidence.ts && uv run --project spikes/numerics python spikes/numerics/crossings_oracle.py && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py 0 --phase-half && uv run --project spikes/numerics python spikes/numerics/apollo_oracle.py 17 --phase-half",
     "evidence:libration": "tsx scripts/libration-evidence.ts && uv run --project spikes/numerics python spikes/numerics/libration_oracle.py",
     "evidence:staged-apollo": "tsx scripts/staged-apollo-evidence.ts && uv run --project spikes/numerics python spikes/numerics/staged_apollo_oracle.py 0 && uv run --project spikes/numerics python spikes/numerics/staged_apollo_oracle.py 17 && uv run --project spikes/numerics python spikes/numerics/staged_apollo_oracle.py 9000",
-    "test:firefox": "node scripts/firefox-ui-smoke.mjs"
+    "test:firefox": "node scripts/firefox-ui-smoke.mjs",
+    "prepare:landing": "tsx scripts/landing-preview.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

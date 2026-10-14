@@ -7,7 +7,11 @@ local two-view camera/selection/display state and unified timeline player. One
 SceneSession retains all physical/service ownership; fixtures/workers load through
 separate boundaries. [Current evidence](evidence/viewer-workspace.md) includes
 Astra disposition, numerical/browser/lifecycle checks and desktop performance.
-The static arrival page/light hero and mobile-device viewer remain later slices.
+The October14 static arrival page and lightweight hero are now implemented as a
+separate Vite multi-page entry (`/`, with the workspace at `/viewer/`). The draft
+copy awaits owner editing; Cloudflare publishing remains unexecuted. See
+[entry evidence](design/landing/README.md) and [deployment plan](deployment/cloudflare-pages.md).
+Real-device mobile viewer work remains a later slice.
 The older milestone inventory below records the project's historical progression.
 
 Status: **model-set viewer accepted; spatial engine, lunar freight, bounded propulsion, continuous analytical traffic, continuous airless surface service and orthographic 3D viewer and smooth finite steering, tracking cameras and finite/continuous maintained relay and flexible funded service implemented**.

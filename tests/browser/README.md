@@ -1,3 +1,8 @@
+The landing suite covers the separate static entry, no-viewer download boundary,
+no-JS/reduced-motion/narrow-screen behavior, static subdirectory hosting,
+Back/Forward lifecycle and radio-panel controls. The workspace now lives at
+`/viewer/`; exhibit hashes are local to that document.
+
 The workspace suite exercises the public eleven-set library, shared playback and
 independent views. It replaces the historical single-canvas/standalone-scrubber
 browser suite, whose selectors and retired set registrations no longer exist.

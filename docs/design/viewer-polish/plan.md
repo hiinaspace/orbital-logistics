@@ -93,7 +93,7 @@ Proposed gates, to be tested on named desktop hardware/browser at60Hz:
 
 ## Static landing and future mobile
 
-The root page contains readable semantic HTML before JavaScript: brief explanation, curated exhibits/posters and an explicit Open viewer action. Hash/query routes work on static hosts and subdirectories without rewrite configuration. Direct exhibit links still enter the viewer intentionally. No backend, SSR framework or service worker is required for this scope.
+The root page contains readable semantic HTML before JavaScript: brief explanation, curated exhibits/posters and an explicit Open viewer action. The accepted October14 implementation uses Vite multi-page HTML at `/` and `/viewer/`, with exhibit hashes local to the viewer. The owner explicitly released strict compatibility with old root hash links. Both pages and lazy assets work under a static subdirectory without SPA rewrites. No backend, SSR framework or service worker is required for this scope.
 
 Gate the arrival boundary with a poster first: before viewer entry there is no viewer bootstrap, simulation worker or heavy fixture/profile download. Then add a tiny prepared-trajectory hero and minimal renderer with its own visible-only clock (~15–24fps), stopped for reduced motion/offscreen/background. Reuse canonical prepared positions, not a hidden full planner. A decorative clip can loop without claiming continuous resource execution. Shared utility imports must not pull the full viewer into the hero. Back/re-entry disposes the initial viewer session; persistence of a background simulation is unnecessary.
 
@@ -106,7 +106,7 @@ Landing targets: mobile-readable at360CSSpx, no horizontal scroll/viewer downloa
 3. **Measured efficiency pass:** isolate refresh/copy/query/draw/composition costs, loading cancellation and repeated-switch memory. Share sample work, stabilize aggregate quality budgets; change representations/rendering only where evidence supports it. Can overlap earlier steps, not postpone all profiling until UI completion.
 4. **Public entry:** static landing/direct links/posters, then tiny optional hero; reduced-motion/noJS/narrow-screen/static-subpath gates. Desktop viewer release polish. Real-device mobile viewer work remains a separate optional slice.
 
-Steps1–2 now have a working two-pane implementation for the human viewing checkpoint. The layout-study screenshot/HTML remains a proposal; implementation.png and two-views.png show the implemented viewer. The static arrival page/hero and real-device mobile viewer remain later slices.
+Steps1–2 now have a working two-pane implementation for the human viewing checkpoint. The layout-study screenshot/HTML remains a proposal; implementation.png and two-views.png show the implemented viewer. The October14 arrival scaffold/hero is implemented in a separate multi-page entry; see [entry evidence](../landing/README.md). Owner copy editing, publishing and real-device mobile viewer work remain later.
 
 ## Current external references
 

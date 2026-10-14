@@ -10,6 +10,13 @@ selective compression of distance, time and operations preserves visible journey
 
 ## Current workspace
 
+October14 public-entry scaffold: `/` is a separate, readable landing page with
+an optional small prepared cycler preview; `/viewer/` owns the full workspace.
+The landing imports no viewer, simulation workers or heavy exhibit assets. See
+[entry/loading evidence](design/landing/README.md) and the read-only
+[Cloudflare Pages plan](deployment/cloudflare-pages.md). Intro/FAQ copy is a draft
+for the owner to rewrite before publishing; no production deployment is live.
+
 The October13 viewer polish implements a docked11-set library, independent paired
 views and one shared timeline player. `viewer/session.ts` owns the only clock,
 worker and immutable scene publication; each `viewer/viewport.ts` owns camera,

@@ -148,8 +148,47 @@ try {
       created.capabilities["moz:profile"],
   );
   await wd("/window/rect", { width: 1700, height: 1050 });
-  await wd("/url", { url: baseURL + "/#set=solar-cycler" });
+  await wd("/url", { url: baseURL + "/" });
+  await until(
+    () =>
+      js(
+        'return Number(document.querySelector("#hero-canvas")?.dataset.frames)>0',
+      ),
+    "landing preview",
+  );
+  assert.equal(
+    await js('return !!document.querySelector("#state-json")'),
+    false,
+    "landing has no workspace",
+  );
+  assert.equal(
+    await js(
+      'return performance.getEntriesByType("resource").some(e => /viewer-|prepare\.worker|traffic\.worker|recurring-cycler|solar-cycler/.test(e.name))',
+    ),
+    false,
+    "landing has no viewer downloads",
+  );
+  await screenshot("landing");
+  await wd("/url", { url: baseURL + "/viewer/#set=solar-cycler" });
   await ready("solar-cycler");
+  for (const value of ["oblique", "top"]) {
+    await wd(
+      "/element/" +
+        (await element(
+          '[data-control="camera-view"] input[value="' + value + '"]',
+        )) +
+        "/click",
+      {},
+    );
+    assert.equal(
+      await js(
+        `return [...document.querySelectorAll('[data-control="camera-view"] input')].find(e => e.value===arguments[0]).checked`,
+        value,
+      ),
+      true,
+    );
+  }
+
   await js(
     'window.uiErrors=[];addEventListener("error",e=>uiErrors.push(e.message));addEventListener("unhandledrejection",e=>uiErrors.push(String(e.reason)));window.optionChanges=0;window.frameElementProbe=document.querySelector("[data-control=frame]");window.optionObserver=new MutationObserver(ms=>optionChanges+=ms.length);optionObserver.observe(frameElementProbe,{attributes:true,childList:true,subtree:true});',
   );

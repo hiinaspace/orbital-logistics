@@ -351,9 +351,21 @@ export function createViewport(
     actions.changed();
     if (session.ready) updatePanels();
   }
+  for (const group of ["tracking", "camera-view"]) {
+    $(group)
+      .querySelectorAll<HTMLInputElement>('input[type="radio"]')
+      .forEach((input) => {
+        input.name = `pane-${root.dataset.pane}-${group}`;
+      });
+  }
+  function setChoice(group: string, value: string) {
+    $(group)
+      .querySelectorAll<HTMLInputElement>('input[type="radio"]')
+      .forEach((input) => (input.checked = input.value === value));
+  }
   function cameraControls() {
-    $<HTMLSelectElement>("tracking").value = tracking;
-    $<HTMLSelectElement>("camera-view").value = cameraPreset;
+    setChoice("tracking", tracking);
+    setChoice("camera-view", cameraPreset);
     $("tracking-target").textContent =
       tracking === "off" || !session.run
         ? ""
@@ -1513,10 +1525,10 @@ export function createViewport(
     updatePanels();
   };
   $("camera-view").onchange = (e) => {
-    const p = (e.target as HTMLSelectElement).value;
+    const p = (e.target as HTMLInputElement).value;
     if (p === "surface") {
       surfaceView();
-      $<HTMLSelectElement>("camera-view").value = "surface";
+      setChoice("camera-view", "surface");
     } else if (p !== "custom") setCamera(p as CameraPreset);
   };
   $("drag-mode").onclick = () => {
@@ -1526,7 +1538,7 @@ export function createViewport(
   $("track-selected").onclick = () =>
     track(tracking === "off" ? "follow" : tracking);
   $("tracking").onchange = (e) =>
-    track((e.target as HTMLSelectElement).value as typeof tracking);
+    track((e.target as HTMLInputElement).value as typeof tracking);
   $("fit").onclick = () => {
     track("off");
     fit();

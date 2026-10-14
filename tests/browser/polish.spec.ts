@@ -19,7 +19,7 @@ const control = (p: Page, id: string) =>
 test("library descriptions are expanded at selection, links are separate and presentation names remain fictional", async ({
   page,
 }) => {
-  await page.goto("/#set=solar-cycler");
+  await page.goto("/viewer/#set=solar-cycler");
   await ready(page, "solar-cycler");
   const card = page.locator(".set-card.selected");
   await expect(card).toHaveCount(1);
@@ -47,7 +47,7 @@ test("speed control stays centered across live/history and highlights either sid
   page,
 }) => {
   await page.setViewportSize({ width: 1600, height: 1000 });
-  await page.goto("/#set=aster-selene-cycler-fleet-service");
+  await page.goto("/viewer/#set=aster-selene-cycler-fleet-service");
   await ready(page, "aster-selene-cycler-fleet-service");
   const speed = page.locator(".speed-control"),
     before = (await speed.boundingBox())!;
@@ -74,7 +74,7 @@ test("sidebar resize, disclosure buttons and wide/compact camera controls retain
   page,
 }) => {
   await page.setViewportSize({ width: 1700, height: 1050 });
-  await page.goto("/#set=aster-northern-launch");
+  await page.goto("/viewer/#set=aster-northern-launch");
   await ready(page, "aster-northern-launch");
   await expect(page.locator(".scene")).toHaveClass(/camera-inline/);
   await expect(control(page, "camera-view")).toBeVisible();
@@ -107,7 +107,7 @@ test("sidebar resize, disclosure buttons and wide/compact camera controls retain
   await page.locator("#collapse-timeline").click();
   await expect(page.locator("#timelines")).toBeHidden();
   await expect(page.locator("#ruler")).toBeVisible();
-  await control(page, "camera-view").selectOption("surface");
+  await control(page, "camera-view").locator('input[value="surface"]').check();
   await expect
     .poll(async () => (await state(page)).views[0].camera.scale)
     .toBeGreaterThan(camera.scale);
@@ -121,7 +121,7 @@ test("sidebar resize, disclosure buttons and wide/compact camera controls retain
 test("paused frame options do not mutate and planar fields use each set’s real sources", async ({
   page,
 }) => {
-  await page.goto("/#set=solar-cycler");
+  await page.goto("/viewer/#set=solar-cycler");
   await ready(page, "solar-cycler");
   const changes = await control(page, "frame").evaluate(
     (e) =>

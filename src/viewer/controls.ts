@@ -2,8 +2,12 @@ export const viewportControls = `
 <div class="view-tools">
  <label>Frame <select data-control="frame" aria-label="Reference frame"></select></label>
  <details class="camera-menu"><summary data-control="camera-summary">Camera</summary><div class="popover">
- <label>View <select data-control="camera-view" aria-label="Camera view"><option value="top">Top</option><option value="oblique">3D</option><option value="front">Front</option><option value="side">Side</option><option value="custom" hidden>Custom</option><option value="surface" data-control="surface-option" hidden>Surface</option></select></label>
- <label>Track <select data-control="tracking" aria-label="Camera tracking"><option value="off">Off</option><option value="follow">Follow</option><option value="chase">Chase</option></select></label>
+ <div class="choice-panel" data-control="camera-view" role="radiogroup" aria-label="Camera view"><span class="choice-heading">View</span><div class="choice-options">
+ <label><input type="radio" value="top"><span>Top</span></label><label><input type="radio" value="oblique"><span>3D</span></label><label><input type="radio" value="front"><span>Front</span></label><label><input type="radio" value="side"><span>Side</span></label><label data-control="surface-option" hidden><input type="radio" value="surface"><span>Surface</span></label>
+ </div></div>
+ <div class="choice-panel" data-control="tracking" role="radiogroup" aria-label="Camera tracking"><span class="choice-heading">Track</span><div class="choice-options">
+ <label><input type="radio" value="off"><span>Off</span></label><label><input type="radio" value="follow"><span>Follow</span></label><label><input type="radio" value="chase"><span>Chase</span></label>
+ </div></div>
  <output data-control="tracking-target"></output><button data-control="track-selected" title="Track selected object" aria-label="Track selected object">Track selected</button>
  <button data-control="drag-mode" title="Drag to orbit · Shift-drag to pan" aria-pressed="false">Orbit</button>
 

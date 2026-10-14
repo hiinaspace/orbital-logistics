@@ -1,3 +1,265 @@
 <!doctype html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" href="data:,"><title>Orbital Logistics · model sets</title></head>
-<body><script type="module" src="/src/main.ts"></script></body></html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="An orrery with spaceships. Watch fictional orbital traffic, follow a ship, and explore its journey through different reference frames."
+    />
+    <meta name="theme-color" content="#0c141d" />
+    <link rel="icon" href="data:," />
+    <title>Orbital Logistics — an orrery with spaceships</title>
+    <link rel="stylesheet" href="/src/landing/style.css" />
+  </head>
+  <body>
+    <!-- Draft editorial copy for the layout; owner will rewrite before publishing. -->
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="page-wrap">
+      <header class="site-header">
+        <a class="wordmark" href="./">Orbital Logistics</a>
+        <nav aria-label="Main">
+          <a href="#exhibits">Exhibits</a><a href="#about">About</a
+          ><a class="small-launch" href="./viewer/"
+            >Open viewer <span aria-hidden="true">↗</span></a
+          >
+        </nav>
+      </header>
+      <main id="main">
+        <section class="hero" aria-labelledby="intro-heading">
+          <div class="intro">
+            <p class="eyebrow">A model railway for space</p>
+            <h1 id="intro-heading">
+              An orrery<br />
+              with spaceships.
+            </h1>
+            <p class="lede">
+              Watch a little spacefaring system go about its day. Freighters
+              meet passing cyclers, landers return to the surface, and
+              observatories trace quiet loops beyond a planet.
+            </p>
+            <div class="intro-actions">
+              <a class="launch" href="./viewer/"
+                >Explore the exhibits <span aria-hidden="true">↗</span></a
+              ><a class="text-link" href="#about">How it works ↓</a>
+            </div>
+          </div>
+          <figure class="hero-figure" id="preview">
+            <div class="figure-heading">
+              <span>Aster–Selene</span><span>Rotating frame</span>
+            </div>
+            <div class="preview-image">
+              <img
+                id="hero-poster"
+                src="./orbital-preview.svg"
+                width="900"
+                height="600"
+                alt="Two cyclers trace looping paths between Aster and Selene."
+              /><canvas id="hero-canvas" aria-hidden="true" hidden></canvas>
+            </div>
+            <figcaption>
+              <a href="./viewer/#set=aster-selene-cycler-fleet-service"
+                >Cycler fleet <span aria-hidden="true">↗</span></a
+              ><button
+                id="hero-motion"
+                hidden
+                aria-label="Pause orbital preview"
+              >
+                Pause preview
+              </button>
+            </figcaption>
+          </figure>
+        </section>
+        <section class="observing" aria-labelledby="observing-heading">
+          <div class="section-title">
+            <p class="eyebrow">Inside the viewer</p>
+            <h2 id="observing-heading">One journey. Several ways to see it.</h2>
+          </div>
+          <dl class="feature-list">
+            <div>
+              <dt>Change your frame</dt>
+              <dd>
+                An intricate path in an inertial view becomes a simple loop when
+                you rotate with the planet and moon.
+              </dd>
+            </div>
+            <div>
+              <dt>Take your time</dt>
+              <dd>
+                Scrub to a departure, reverse an encounter, or slow down for a
+                landing. Leave a continuous service running and watch the
+                traffic settle into its rhythm.
+              </dd>
+            </div>
+            <div>
+              <dt>Look closer</dt>
+              <dd>
+                Follow a ship alongside a system-wide overview. Add trails,
+                inspect its fuel and freight, or unfold a gravitational
+                landscape beneath the routes.
+              </dd>
+            </div>
+          </dl>
+        </section>
+        <section id="exhibits" aria-labelledby="exhibits-heading">
+          <div class="section-title horizontal">
+            <div>
+              <p class="eyebrow">Start somewhere</p>
+              <h2 id="exhibits-heading">A few routes to follow</h2>
+            </div>
+            <a class="text-link" href="./viewer/">All exhibits ↗</a>
+          </div>
+          <div class="exhibit-list">
+            <a href="./viewer/#set=aster-selene-cycler-fleet-service"
+              ><span class="exhibit-number">01</span>
+              <div>
+                <h3>Cycler fleet</h3>
+                <p>
+                  Catch a ride between two worlds. Carriers loop past Aster and
+                  Selene while smaller shuttles ferry freight to the ground.
+                </p>
+              </div>
+              <span class="exhibit-kind">Aster–Selene</span
+              ><span aria-hidden="true">↗</span></a
+            ><a href="./viewer/#set=aster-selene-system"
+              ><span class="exhibit-number">02</span>
+              <div>
+                <h3>Full service</h3>
+                <p>
+                  A busier neighborhood of staged expeditions, lunar landers,
+                  ground ports and relay stations.
+                </p>
+              </div>
+              <span class="exhibit-kind">Aster–Selene</span
+              ><span aria-hidden="true">↗</span></a
+            ><a href="./viewer/#set=helion-orison-survey"
+              ><span class="exhibit-number">03</span>
+              <div>
+                <h3>Continuous survey</h3>
+                <p>
+                  An observatory weaves a three-dimensional Lissajous figure
+                  near L2. Long trails gradually reveal its pattern.
+                </p>
+              </div>
+              <span class="exhibit-kind">Helion–Orison</span
+              ><span aria-hidden="true">↗</span></a
+            >
+          </div>
+        </section>
+        <section id="about" class="about" aria-labelledby="about-heading">
+          <div class="section-title">
+            <p class="eyebrow">About the project</p>
+            <h2 id="about-heading">A place to watch orbital motion.</h2>
+            <p>
+              Part orrery, part operating model railway. The interest is in the
+              journeys and the changing views of them.
+            </p>
+          </div>
+          <div class="faq">
+            <details open>
+              <summary>What am I looking at?</summary>
+              <p>
+                Prepared, fictional space-traffic exhibits: ships carrying
+                freight, meeting stations, launching, landing and riding between
+                worlds. There are no objectives to complete. Select a set and
+                look around.
+              </p>
+            </details>
+            <details>
+              <summary>How much physics is simulated?</summary>
+              <p>
+                Ships follow three-dimensional Newtonian trajectories under the
+                gravity of prescribed moving bodies. Powered flights can model
+                finite thrust, steering, acceleration limits and fuel use. Some
+                exhibits also include staging, stationkeeping and simplified
+                atmospheric drag and lift.
+              </p>
+              <p>
+                This is not a fully interacting N-body system: ships do not pull
+                on one another, the large bodies follow specified paths, and
+                docking uses bounded position and velocity capture rather than
+                hull contact. The atmosphere and vehicles are schematic.
+              </p>
+            </details>
+            <details>
+              <summary>Are these real missions or realistic scales?</summary>
+              <p>
+                The systems are deliberately small enough to read as an orrery.
+                Distances, body sizes, engines and schedules are chosen to make
+                the movement visible. Apollo, Webb and proposed cyclers are
+                inspirations, rather than mission reconstructions.
+              </p>
+            </details>
+            <details>
+              <summary>Is everything calculated live?</summary>
+              <p>
+                Some journeys are prepared in advance; continuous services
+                combine reusable trajectories with bounded planning as traffic
+                runs. Both use the same underlying flight dynamics. The small
+                preview at the top of this page is a repeating recording of
+                prepared positions, without the viewer or its planners.
+              </p>
+            </details>
+            <details>
+              <summary>What do the frames and gravity maps show?</summary>
+              <p>
+                Frames change the origin and orientation of your view, not a
+                ship’s flight. The potential map shows a planar slice of the
+                gravitational landscape. Relief bends that slice into a
+                schematic rubber sheet; its height is a visual aid, not an extra
+                physical dimension the ships move through.
+              </p>
+            </details>
+            <details>
+              <summary>What inspired it?</summary>
+              <p>
+                The maneuver views of
+                <a
+                  href="https://store.steampowered.com/app/476530/Children_of_a_Dead_Earth/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Children of a Dead Earth</a
+                >, the small worlds of
+                <a
+                  href="https://www.mobiusdigitalgames.com/outer-wilds.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Outer Wilds</a
+                >,
+                <a
+                  href="https://eyes.nasa.gov/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >NASA’s Eyes</a
+                >, and the pleasure of watching an operating model railway.
+              </p>
+            </details>
+            <details>
+              <summary>How is it built?</summary>
+              <p>
+                TypeScript and Vite, with a Canvas 2D schematic viewer and
+                optional WebGL relief. Numerical engines run independently of
+                the interface; workers handle the heavier preparation and
+                planning. Shared playback can feed two independently controlled
+                views.
+              </p>
+            </details>
+            <details>
+              <summary>Does it work on a phone?</summary>
+              <p>
+                This page is built to be lightweight and readable on a small
+                screen. The full viewer currently works best on a desktop with a
+                mouse and keyboard; its mobile controls are still a future pass.
+              </p>
+            </details>
+          </div>
+        </section>
+      </main>
+      <footer>
+        <a href="https://hiina.space/">Hiina</a><span>Orbital Logistics</span
+        ><a href="./viewer/">Open viewer ↗</a>
+      </footer>
+    </div>
+    <script type="module" src="/src/landing/main.ts"></script>
+  </body>
+</html>
