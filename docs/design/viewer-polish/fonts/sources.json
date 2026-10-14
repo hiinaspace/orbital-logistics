@@ -1,0 +1,82 @@
+{
+  "cssProvider": "Google Fonts CSS2 latin subsets",
+  "families": [
+    {
+      "family": "IBM Plex Sans",
+      "weights": "400",
+      "url": "https://fonts.gstatic.com/s/ibmplexsans/v23/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxeKYY.woff2",
+      "file": "ibm-plex-sans-400.woff2",
+      "bytes": 45712
+    },
+    {
+      "family": "IBM Plex Mono",
+      "weights": "400",
+      "url": "https://fonts.gstatic.com/s/ibmplexmono/v20/-F63fjptAgt5VM-kVkqdyU8n1i8q1w.woff2",
+      "file": "ibm-plex-mono-400.woff2",
+      "bytes": 14708
+    },
+    {
+      "family": "IBM Plex Mono",
+      "weights": "500",
+      "url": "https://fonts.gstatic.com/s/ibmplexmono/v20/-F6qfjptAgt5VM-kVkqdyU8n3twJwlBFgg.woff2",
+      "file": "ibm-plex-mono-500.woff2",
+      "bytes": 14888
+    },
+    {
+      "family": "IBM Plex Mono",
+      "weights": "600",
+      "url": "https://fonts.gstatic.com/s/ibmplexmono/v20/-F6qfjptAgt5VM-kVkqdyU8n3vAOwlBFgg.woff2",
+      "file": "ibm-plex-mono-600.woff2",
+      "bytes": 15620
+    },
+    {
+      "family": "Barlow",
+      "weights": "400",
+      "url": "https://fonts.gstatic.com/s/barlow/v13/7cHpv4kjgoGqM7E_DMs5.woff2",
+      "file": "barlow-400.woff2",
+      "bytes": 22196
+    },
+    {
+      "family": "Barlow",
+      "weights": "500",
+      "url": "https://fonts.gstatic.com/s/barlow/v13/7cHqv4kjgoGqM7E3_-gs51os.woff2",
+      "file": "barlow-500.woff2",
+      "bytes": 22008
+    },
+    {
+      "family": "Barlow",
+      "weights": "600",
+      "url": "https://fonts.gstatic.com/s/barlow/v13/7cHqv4kjgoGqM7E30-8s51os.woff2",
+      "file": "barlow-600.woff2",
+      "bytes": 22772
+    },
+    {
+      "family": "Barlow Condensed",
+      "weights": "400",
+      "url": "https://fonts.gstatic.com/s/barlowcondensed/v13/HTx3L3I-JCGChYJ8VI-L6OO_au7B6xHT2g.woff2",
+      "file": "barlow-condensed-400.woff2",
+      "bytes": 21164
+    },
+    {
+      "family": "Barlow Condensed",
+      "weights": "500",
+      "url": "https://fonts.gstatic.com/s/barlowcondensed/v13/HTxwL3I-JCGChYJ8VI-L6OO_au7B4-Lwz3bWuQ.woff2",
+      "file": "barlow-condensed-500.woff2",
+      "bytes": 21424
+    },
+    {
+      "family": "Barlow Condensed",
+      "weights": "600",
+      "url": "https://fonts.gstatic.com/s/barlowcondensed/v13/HTxwL3I-JCGChYJ8VI-L6OO_au7B4873z3bWuQ.woff2",
+      "file": "barlow-condensed-600.woff2",
+      "bytes": 22308
+    },
+    {
+      "family": "Space Grotesk",
+      "weights": "400",
+      "url": "https://fonts.gstatic.com/l/font?kit=V8mloQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUSkoFDG70JFMnmBvWvQ8kCxH&skey=c04ef52a878abc32&v=v22",
+      "file": "space-grotesk-400.woff2",
+      "bytes": 23060
+    }
+  ]
+}

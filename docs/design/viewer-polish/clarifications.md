@@ -7,3 +7,6 @@
 - Existing fullscreen plus floating panels may conflict with multiview. Consider Blender-like docked hierarchy/inspector/timeline panels; compact controls duplicated within viewports. Main-loop recommendation adopts this: docked workspace chrome, per-pane view controls, collapsible library/inspector and maximizable viewport.
 
 These supersede the initial brief's tentative floating-layout/Studies options. They do not change the one-session/many-viewports architecture. Final plan and disposition must reflect these answers even if the ongoing review read the earlier draft.
+
+- Follow-up: timeline lanes/ruler should replace the separate scrubber. Playback controls, textual time and speed should form a familiar video-player-like bottom panel while retaining per-ship tracks.
+- Follow-up: audition fonts and restrained NASA/control-room modular trim, including light button/slider skeuomorphism. Three local-font directions and independent trim/type controls are recorded in playback-and-type.md.

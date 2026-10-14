@@ -1,0 +1,55 @@
+{
+  "faces": [
+    {
+      "style": "telemetry",
+      "headingFonts": [
+        {
+          "familyName": "IBM Plex Sans",
+          "postScriptName": "IBMPlexSans-Regular",
+          "isCustomFont": true,
+          "glyphCount": 17
+        }
+      ],
+      "body": "\"IBM Plex Sans\", sans-serif"
+    },
+    {
+      "style": "flight",
+      "headingFonts": [
+        {
+          "familyName": "Barlow Condensed Medium",
+          "postScriptName": "BarlowCondensed-Medium",
+          "isCustomFont": true,
+          "glyphCount": 17
+        }
+      ],
+      "body": "Barlow, sans-serif"
+    },
+    {
+      "style": "observatory",
+      "headingFonts": [
+        {
+          "familyName": "Space Grotesk Light",
+          "postScriptName": "SpaceGroteskLight-Regular",
+          "isCustomFont": true,
+          "glyphCount": 17
+        }
+      ],
+      "body": "\"Space Grotesk\", sans-serif"
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "checks": [
+    "independent type override",
+    "ruler seek",
+    "lane seek",
+    "reverse",
+    "pause detent",
+    "play/pause",
+    "Live",
+    "seek survives collapsed lanes",
+    "trim toggle",
+    "pane selection isolation"
+  ],
+  "note": "Static layout and player study only; no spacecraft physics or viewer integration claimed."
+}
