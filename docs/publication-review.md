@@ -79,6 +79,8 @@ publication remain separate, unexecuted operations.
   86KB optional Markdown and less than1KB dedicated CSS, with no client JS in the
   production transcript entry.
 - `npm audit --json` reports zero known vulnerabilities for the installed lockfile.
+- The clean-tree export was inspected:1493 files, approximately45MB compressed,
+  with no Git/scratch/untracked payloads or credential-pattern matches.
 - `publication/orbital-logistics-source.tar.gz` is a local, ignored, clean-tree
   snapshot prepared after the publication commit. It contains neither Git history
   nor scratch/untracked files. Recreate it after subsequent changes before release:
