@@ -64,14 +64,16 @@ transcript, Markdown transcript and notices returned200 and matched local `dist`
 bytes. Unknown paths returned404; HTML used `no-cache`, hashed JavaScript used
 one-year immutable caching, and security headers were present.
 
-The live browser checks passed for landing playback, reduced motion/no-JS, narrow
-layout, viewer navigation, camera panels and paired/relief figure links. Browser
-requests were temporarily directed to the current public-DNS edge because this
-machine's resolver still cached the previous wildcard record. The transcript's
-separate Node API request initially followed that stale record and failed TLS;
-the Markdown response was independently byte-checked through the correct edge.
-No certificate-validation bypass was used. Temporary test routing/configuration
-was kept outside tracked source and removed afterward.
+Cloudflare reports the domain, verification and validation all `active`. After
+this machine's stale wildcard DNS cache expired, ordinary DNS resolution and
+HTTPS returned200. All seven production entry/browser tests then passed against
+`https://orbital.hiina.space` without DNS overrides or TLS bypasses. The initial
+cache-related API-request failure was resolved by normal DNS propagation.
+
+Additional live smoke checks loaded and played `solar-cycler` and
+`aster-selene-system` for20 seconds each. Both advanced with no page exceptions,
+failed requests or HTTP errors, covering the largest lazy profile and continuous
+staged activity. Temporary test routing/configuration was removed afterward.
 
 ## Sources
 
