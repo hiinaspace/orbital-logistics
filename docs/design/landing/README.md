@@ -71,8 +71,9 @@ change layout height. Resizing does not restart simulation because there is none
   found no overflow; keyboard Enter on Open Viewer entered `/viewer/`. Screenshots
   below reflect the owner copy and button.
 - The later [publication review](../../publication-review.md) adds the Unlicense
-  and deployable third-party notices. Source visibility remains private pending a
-  remote cache cleanup. October15 rewrote those historical raw log bodies and
+  and deployable third-party notices. Source visibility remains private for owner
+  review; the remaining low-sensitivity cached objects do not require a Support
+  purge. October15 rewrote those historical raw log bodies and
   updated the private GitHub branch in place; the provider still retains original
   objects by SHA.
 - The implementation paragraph links to `/build-log/`, a separate static transcript
@@ -80,7 +81,7 @@ change layout height. Resizing does not restart simulation because there is none
 - The previous scaffold's21-case workspace/entry validation remains historical;
   this revision changes only the article, its illustrations and entry assertions.
 
-The read-only [Pages investigation](../../deployment/cloudflare-pages.md) records
+The [Pages deployment record](../../deployment/cloudflare-pages.md) records
 publishing prerequisites. No production changes were authorized or performed.
 
 ![Desktop article](desktop.png)
@@ -114,3 +115,6 @@ implementation summaries stay plain. All seven production entry/browser cases
 pass, including both figure links, resume, same-set switching without a new
 simulation revision and the existing no-JS/subdirectory checks. Desktop and narrow
 screenshots were inspected; the centered header action fits without overflow.
+
+October15: the static site was soft-deployed to Cloudflare Pages at
+`orbital.hiina.space`; see the [deployment record](../../deployment/cloudflare-pages.md).

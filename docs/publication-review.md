@@ -88,8 +88,8 @@ publication remain separate, unexecuted operations.
   `git archive --format=tar.gz --prefix=orbital-logistics/ --output=publication/orbital-logistics-source.tar.gz HEAD`.
 
 The source-release artifact is separate from `dist/`, which remains the static-site
-upload directory. The static site has not been uploaded. The rewritten source branch was pushed
-on October15 as described below.
+upload directory. At that review point the static site had not been uploaded. The
+rewritten source branch was pushed on October15 as described below.
 
 ## October15 in-place history rewrite
 
@@ -117,12 +117,23 @@ they were removed before the cleaned refs were installed in this checkout.
 **Remaining remote privacy boundary:** authenticated GitHub API lookups still
 retrieve two original raw blobs by their SHA after the force-push. The cleaned
 reachable history is in place, but server-side cached/unreachable data has not
-been purged. Keep visibility private until this is resolved. An unsent Support
-request and the original-object pointers are retained in the private recovery
-folder, not in this public source tree.
+been purged. A second inspection of the eight flagged bodies found no credentials,
+private keys, recognizable secret tokens or LAN IP addresses. They contain local
+paths, host/user names, tooling context and short notes about other projects.
+
+The owner accepted this as incidental nonpublic metadata worth rewriting, but not
+sensitive enough to warrant a GitHub Support purge. Server-side cleanup is optional,
+not a publication blocker. Repository visibility remains private for the owner's
+own review and later decision. The unsent Support draft and original-object pointers
+remain outside the source tree in the private recovery folder.
 
 [GitHub's removal procedure](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
-explains that force-pushing does not necessarily remove cached views and that
-Support handles server-side garbage collection. The project's URLs can remain
-unchanged once that final host-side step is complete. Do not merge or restore
-old history from the private recovery copy into this cleaned branch.
+explains the cached-object boundary. Do not merge or restore old history from the
+private recovery copy into this cleaned branch.
+
+## October15 soft deployment
+
+The owner authorized public static hosting at `orbital.hiina.space` while retaining
+private repository visibility for further review. Only the production `dist` tree
+was uploaded to Cloudflare Pages; the site includes the intended public transcript,
+not Git history or local recovery material. See the [deployment record](deployment/cloudflare-pages.md).

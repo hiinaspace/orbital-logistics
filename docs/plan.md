@@ -12,10 +12,12 @@ separate Vite multi-page entry (`/`, with the workspace at `/viewer/`). It uses 
 linear article with a small inline animation, paired-frame
 and relief screenshots, and open simulation notes. The owner copy rewrite and
 proofreading pass are complete, with a prominent viewer action. Public source
-visibility and Cloudflare publishing remain pending; Unlicense/notices and the
+visibility remains pending; the Cloudflare Pages soft deployment is live at
+`orbital.hiina.space`. Unlicense/notices and the
 static prompt transcript are implemented. The October15 rewrite removes raw review
-context from reachable history; host-side GitHub cache cleanup remains. See the [publication review](publication-review.md),
-[entry evidence](design/landing/README.md) and [deployment plan](deployment/cloudflare-pages.md).
+context from reachable history; the owner accepted the remaining low-sensitivity
+cached-object exposure without requiring a Support purge. See the [publication review](publication-review.md),
+[entry evidence](design/landing/README.md) and [deployment record](deployment/cloudflare-pages.md).
 Real-device mobile viewer work remains a later slice.
 The older milestone inventory below records the project's historical progression.
 

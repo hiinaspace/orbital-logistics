@@ -30,7 +30,8 @@ retain their individual licenses and are installed from the lockfiles.
 See the [publication review](docs/publication-review.md) before exposing the
 repository. Raw review bodies have been scrubbed from all reachable local history
 and the private GitHub branch has been updated. GitHub still retains original
-objects by SHA, so host-side cache cleanup remains before changing visibility.
+objects by SHA; the owner reviewed their low sensitivity and does not require a
+Support purge before publication.
 A separate private recovery copy preserves the original development history.
 
 Choose one or two views from the header. Overview + Chase, Inertial + Rotating, and
@@ -133,6 +134,8 @@ The [recovered Fable consultation](docs/design/orbital-model-set/README.md) and
 [Codex synthesis](docs/design/orbital-model-set/synthesis.md) explain the change in
 product direction. Earlier [topology](docs/design/topology-study/proposal.md) and
 [periodic-service](docs/design/periodic-transfer/proposal.md) studies remain reference
-material. The upstream repository remains private; production deployment is pending.
+material. The site is deployed at [orbital.hiina.space](https://orbital.hiina.space/);
+the upstream repository remains private pending the owner’s review.
+See the [deployment notes](docs/deployment/cloudflare-pages.md) for updates.
 
 Published hobby identity: Hiina <hiina@hiina.space>.

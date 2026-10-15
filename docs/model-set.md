@@ -13,14 +13,15 @@ selective compression of distance, time and operations preserves visible journey
 October14 public-entry scaffold: `/` is a separate, readable landing page with
 an optional small prepared cycler preview; `/viewer/` owns the full workspace.
 The landing imports no viewer, simulation workers or heavy exhibit assets. See
-[entry/loading evidence](design/landing/README.md) and the read-only
-[Cloudflare Pages plan](deployment/cloudflare-pages.md). The owner has rewritten
+[entry/loading evidence](design/landing/README.md) and
+[Cloudflare Pages deployment](deployment/cloudflare-pages.md). The owner has rewritten
 the article; proofreading and the viewer action button are complete. Public source
-visibility and production deployment remain pending. The project now uses the
-Unlicense, retains third-party notices and includes a static build transcript at
+visibility remains pending; the static site is deployed at `orbital.hiina.space`.
+The project now uses the Unlicense, retains third-party notices and includes a static build transcript at
 `/build-log/`. The October15 follow-up rewrites the historical raw review bodies
-and updates the private GitHub branch in place; GitHub cache cleanup remains before
-changing visibility. See the [publication review](publication-review.md).
+and updates the private GitHub branch in place. The owner accepted the remaining
+low-sensitivity cached-object exposure without requiring a Support purge. See the
+[publication review](publication-review.md).
 
 The October13 viewer polish implements a docked11-set library, independent paired
 views and one shared timeline player. `viewer/session.ts` owns the only clock,
