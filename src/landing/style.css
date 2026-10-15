@@ -67,9 +67,42 @@ h1 {
 .byline {
   font-size: 14px;
   color: var(--muted);
+  margin: 0;
 }
 .byline a {
   color: inherit;
+}
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+}
+.viewer-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding: 9px 17px;
+  border: 1px solid #a99b72;
+  border-radius: 3px;
+  background: linear-gradient(#dfce9e, #c2af7b);
+  box-shadow:
+    inset 0 1px #fff5,
+    0 2px 3px #0003;
+  color: #172320;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.viewer-action:hover {
+  background: #e7d6a8;
+  color: #101c19;
+}
+.viewer-action:active {
+  background: #c2af7b;
+  box-shadow: inset 0 1px 2px #0003;
 }
 p {
   margin: 0 0 20px;

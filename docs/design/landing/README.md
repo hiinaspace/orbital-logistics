@@ -5,8 +5,10 @@ paired-frame and relief screenshots, exhibit links, and open simulation notes.
 There are no feature cards, promotional navigation bars or FAQ accordions. The
 single reading column is752px wide at desktop sizes; the animation is capped
 at560px. Space Grotesk and the viewer's palette keep the two pages related without
-copying the workspace's panel controls. Copy in `index.html` remains a draft for
-the owner to rewrite before publication.
+copying the workspace's panel controls. The owner rewrote `index.html` on October14;
+a proofreading pass corrected spelling/grammar and narrowed the Hohmann claim.
+The header now pairs the author credit with a prominent native Open Viewer link,
+styled as a raised gold action. The article otherwise retains the owner's register.
 
 The article is readable without JavaScript. Both viewer screenshots are lazy
 static WebP images with reserved dimensions, alt text and full-resolution links.
@@ -53,7 +55,8 @@ change layout height. Resizing does not restart simulation because there is none
   animation pause/offscreen behavior, no-JS/reduced-motion at360px, lazy image
   loading, viewer navigation/back/forward, native camera radios and static hosting
   under `/collection/`.
-- A1440px desktop article visit, followed by scrolling both figures into view,
+- Before the owner rewrite, a1440px desktop article visit followed by scrolling
+  both figures into view,
   fetched21,321decoded bytes of JavaScript,2,522bytes CSS,12,210bytes SVG,
   23,060bytes local font and62,110bytes WebP. Including HTML, the complete article
   is approximately131KB decoded. These are local resource measurements, not
@@ -63,15 +66,21 @@ change layout height. Resizing does not restart simulation because there is none
 - Desktop and360px browser screenshots were inspected; neither has horizontal
   overflow. No real-phone, deployed-domain, certificate or Cloudflare header
   result is claimed.
+- After proofreading and the action-button change, the build and all five
+  production entry cases passed again. Desktop1440px and narrow360px checks
+  found no overflow; keyboard Enter on Open Viewer entered `/viewer/`. Screenshots
+  below reflect the owner copy and button.
+- The linked GitHub repository is currently private with no license; public source
+  availability/licensing remains an owner decision before publication.
 - The previous scaffold's21-case workspace/entry validation remains historical;
   this revision changes only the article, its illustrations and entry assertions.
 
 The read-only [Pages investigation](../../deployment/cloudflare-pages.md) records
 publishing prerequisites. No production changes were authorized or performed.
 
-![Draft desktop article](desktop.png)
+![Desktop article](desktop.png)
 
-![Draft narrow article](mobile.png)
+![Narrow article](mobile.png)
 
 ## Viewer controls from the initial entry slice
 

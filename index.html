@@ -5,36 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="An orrery with spaceships. Notes and scenes from a fictional orbital model railway."
+      content="An orrery-scale simulation of interplanetary space logistics, sort of like a model train set."
     />
     <meta name="theme-color" content="#111b21" />
     <link rel="icon" href="data:," />
-    <title>Orbital Logistics — an orrery with spaceships</title>
+    <title>Orbital Logistics</title>
     <link rel="stylesheet" href="/src/landing/style.css" />
   </head>
   <body>
-    <!-- Draft editorial copy for the layout; owner will rewrite before publishing. -->
     <a class="skip-link" href="#main">Skip to content</a>
     <main id="main" class="page-wrap">
       <article>
         <header class="article-header">
           <h1>Orbital Logistics</h1>
-          <p class="subtitle">An orrery with spaceships</p>
-          <p class="byline">
-            <a href="https://hiina.space/" rel="author">Hiina</a> ·
-            <a href="./viewer/">Open viewer ↗</a>
+          <p class="subtitle">
+            A web-based viewer for orrery-scale model spaceship sets
           </p>
+          <div class="article-meta">
+            <p class="byline">
+              Author: <a href="https://hiina.space/" rel="author">Hiina</a>
+            </p>
+            <a class="viewer-action" href="./viewer/"
+              >Open Viewer <span aria-hidden="true">↗</span></a
+            >
+          </div>
         </header>
-        <p>
-          This is a model railway for spaceships: small fictional worlds, with
-          freighters, landers and stations going about their day.
-        </p>
-        <p>
-          There is nothing to build or win. You can follow a ship, change your
-          point of view, slow down for a burn, or leave the traffic running.
-          <a href="./viewer/">Explore the exhibits</a>, or read on for a few
-          views of what is inside.
-        </p>
         <figure id="preview" class="preview-figure">
           <div class="preview-image">
             <img
@@ -58,13 +53,30 @@
             </button>
           </figcaption>
         </figure>
+        <p>
+          Have you ever stared at the animations on Wikipedia's
+          <a href="https://en.wikipedia.org/wiki/Hohmann_transfer_orbit"
+            >Hohmann transfer orbit</a
+          >
+          article and wished for more? Or have you tried out
+          <a href="https://science.nasa.gov/eyes/">NASA’s Eyes</a>
+          but found the real scale of space a bit hard to navigate? Me too.
+        </p>
+        <p>
+          Orbital Logistics is a collection of exhibits demonstrating various
+          orbits and maneuvers in small-scale fictional settings: a model train
+          set but for spaceships. You can follow a ship, change your point of
+          view, scrub through time, slow down for a burn, or just leave the
+          traffic running as a sort of screensaver.
+          <a href="./viewer/">Explore the exhibits</a>, or read on for some
+          brief explanations of the viewer's features.
+        </p>
         <section aria-labelledby="frames-heading">
-          <h2 id="frames-heading">One flight, different frames</h2>
+          <h2 id="frames-heading">Simultaneous views</h2>
           <p>
-            Much of the fun has been finding another way to look at the same
-            journey. A path that seems tangled in an inertial frame can resolve
-            into a simple loop when the view rotates with a planet and its moon.
-            The ships have not changed course; only the observer has moved.
+            Some really complicated orbits become easier to understand when you
+            change the view (a.k.a. the "reference frame"). Orbital Logistics
+            lets you see multiple frames at the same time.
           </p>
           <figure>
             <a
@@ -85,21 +97,15 @@
               (right).
             </figcaption>
           </figure>
-          <p>
-            Each view has its own camera and selection, but they share a clock.
-            You can also keep a system-wide overview beside a chase camera, or
-            compare top and front views of an orbit. Playback runs forwards or
-            backwards, and the activity lanes let you scrub to a particular
-            departure or encounter.
-          </p>
         </section>
         <section aria-labelledby="landscape-heading">
-          <h2 id="landscape-heading">A gravity landscape</h2>
+          <h2 id="landscape-heading">The rubber sheet analogy</h2>
           <p>
-            For the coplanar sets, a potential map adds contours beneath the
-            trajectories. The relief view bends that map into a rubber sheet. I
-            like how this makes the space between the bodies feel like a
-            landscape, rather than an empty background.
+            Yes, we have the ol' classic of gravity analogies, the rubber sheet
+            with planets indented into it and spaceships circling the well.
+            While it's a somewhat dubious/leaky analogy for some parts of
+            orbital mechanics, it definitely looks cool. For sets where
+            everything happens in a single plane, you can turn it on.
           </p>
           <figure>
             <a
@@ -119,17 +125,9 @@
               Relief, with the grid and potential contours enabled.
             </figcaption>
           </figure>
-          <p>
-            This is a schematic height map of a planar slice of the potential.
-            Its vertical scale is adjustable; the ships are not physically
-            climbing and sliding along a surface.
-          </p>
         </section>
         <section id="exhibits" aria-labelledby="exhibits-heading">
-          <h2 id="exhibits-heading">Some places to start</h2>
-          <p>
-            The sets explore different kinds of motion and different scales:
-          </p>
+          <h2 id="exhibits-heading">A few of the available sets</h2>
           <ul>
             <li>
               <a href="./viewer/#set=aster-selene-cycler-fleet-service"
@@ -151,59 +149,82 @@
               <a href="https://en.wikipedia.org/wiki/Lissajous_orbit"
                 >Lissajous orbit</a
               >
-              near L2. Long trails gradually reveal its pattern.
+              near L2. Long trails gradually reveal the pattern.
             </li>
           </ul>
         </section>
         <section id="about" aria-labelledby="about-heading">
-          <h2 id="about-heading">About the simulation</h2>
-          <h3>How much physics is simulated?</h3>
+          <h2 id="about-heading">Hypothetically Asked Questions</h2>
+          <h3>Why?</h3>
           <p>
-            Ships follow three-dimensional Newtonian trajectories under the
-            gravity of prescribed moving bodies. Powered flights can model
-            finite thrust, steering, acceleration limits and fuel use. Some
-            exhibits also include staging, stationkeeping and simplified
-            atmospheric drag and lift.
+            Space is cool! This project actually started as a video game idea to
+            make some sort of logistics/space trucking simulator at the scale of
+            <a href="https://www.mobiusdigitalgames.com/outer-wilds.html"
+              >Outer Wilds</a
+            >
+            but with, like, more "real" orbital maneuvers. However, it turns out
+            even at a small scale, low delta-V ballistic orbits are still slow;
+            gravity doesn't really scale the way I thought it would.
           </p>
           <p>
-            The large bodies follow specified paths, and ships do not pull on
-            one another. Docking uses bounded position and velocity capture
-            rather than hull contact. Vehicles and atmospheres are schematic.
-          </p>
-          <h3>Scale and missions</h3>
-          <p>
-            These are fictional systems, deliberately small enough to read as an
-            orrery. Distances, body sizes, engines and schedules are chosen to
-            make the movement interesting to watch. Apollo, Webb and proposed
-            cyclers are inspirations, rather than mission reconstructions.
-          </p>
-          <h3>Prepared and live trajectories</h3>
-          <p>
-            Some journeys are prepared in advance; continuous services combine
-            reusable trajectories with planning as traffic runs. Both use the
-            same underlying flight dynamics. The small animation at the top of
-            this page plays back prepared positions without loading the viewer
-            or its planners.
-          </p>
-          <h3>Implementation</h3>
-          <p>
-            The viewer is built with TypeScript and Vite, Canvas 2D for the
-            schematic views and WebGL for relief. The numerical engines are
-            independent of the interface, with heavier preparation and planning
-            running in workers. The full viewer currently works best on a
-            desktop with a mouse and keyboard.
-          </p>
-          <h3>Inspiration</h3>
-          <p>
-            The maneuver views of
+            My second idea was to turn this into some sort of automation puzzle
+            game, like
+            <a href="https://www.zachtronics.com/opus-magnum/">Opus Magnum</a>
+            but between planets, where you solve a puzzle and also get a cool
+            looping GIF out of it. I also played
             <a
               href="https://store.steampowered.com/app/476530/Children_of_a_Dead_Earth/"
               >Children of a Dead Earth</a
-            >, the small worlds of
-            <a href="https://www.mobiusdigitalgames.com/outer-wilds.html"
-              >Outer Wilds</a
-            >, <a href="https://eyes.nasa.gov/">NASA’s Eyes</a>, and the
-            pleasure of watching an operating model railway.
+            >
+            and liked its orbital maneuver editor, and thought that could be a
+            neat interface. However, for simple circular orbits in the same
+            plane, making optimal maneuvers usually boils down to Hohmann
+            transfers (at least for the "low delta-V" meaning of optimal), so it
+            didn't quite have the same tradeoffs that make Opus Magnum
+            interesting. There's maybe still a way to make this work, but I also
+            realized I still got most of the enjoyment just watching the
+            maneuvers work, even if I didn't design them.
+          </p>
+          <p>
+            So here we are. Just the viewer, minus any gameplay. I hope you also
+            still find it compelling.
+          </p>
+          <h3>How much of the physics is simulated?</h3>
+          <p>
+            A fair bit. Ships follow three-dimensional Newtonian trajectories
+            under the gravity of prescribed moving bodies. Powered flights can
+            model finite thrust, steering, acceleration limits and fuel use.
+            Some exhibits also include staging, stationkeeping and (simplified)
+            atmospheric drag and lift.
+          </p>
+          <p>
+            However, the large bodies follow specified paths and ships do not
+            pull on one another. Docking uses bounded position and velocity
+            capture rather than hull contact; ships are essentially just point
+            particles.
+          </p>
+          <p>
+            Also, real space is kind of big. These sets also use fictional
+            systems to keep things at an interesting scale, again sort of like
+            train sets. If you want real space and real spaceships, I recommend
+            <a href="https://eyes.nasa.gov/">NASA’s Eyes</a>, which is also a
+            web app.
+          </p>
+          <h3>Can you edit or make your own sets?</h3>
+          <p>
+            Not in the viewer, at least not yet. The viewer code is nominally
+            <a href="https://github.com/hiinaspace/orbital-logistics"
+              >open source on GitHub</a
+            >. However, it was entirely implemented (appropriately, I suppose)
+            by GPT-6 Astra and GPT-6.1 Sol. Unfortunately there are no carefully
+            human-crafted algorithms or architecture or comments to study,
+            sorry. If you'd like to vibecode up your own sets though, I'll take
+            submissions.
+          </p>
+          <h3>Does it work on mobile?</h3>
+          <p>
+            It might, but the interface will be awkward and cramped. Sorry. I
+            may get around to making a friendlier mobile UI at some point.
           </p>
         </section>
       </article>
