@@ -72,8 +72,9 @@ change layout height. Resizing does not restart simulation because there is none
   below reflect the owner copy and button.
 - The later [publication review](../../publication-review.md) adds the Unlicense
   and deployable third-party notices. Source visibility remains private pending a
-  clean-history release; copied private context in old raw review logs must not be
-  exposed by changing visibility on the existing development history.
+  remote cache cleanup. October15 rewrote those historical raw log bodies and
+  updated the private GitHub branch in place; the provider still retains original
+  objects by SHA.
 - The implementation paragraph links to `/build-log/`, a separate static transcript
   entry with105 owner exchanges and retrospective summaries.
 - The previous scaffold's21-case workspace/entry validation remains historical;

@@ -47,13 +47,14 @@ Ordinary local checkout paths in historical stack traces are not credentials; ra
 session identifiers and operational context are excluded from the public transcript.
 Scratch and publication artifacts are ignored to reduce accidental additions.
 
-## Release boundary
+## Initial October14 release recommendation
 
-**Do not expose the existing development history as-is.** Removing material from
+**The original development history was unsafe to expose as-is.** Removing material from
 HEAD does not remove its historical Git objects. Keep this private repository as
 the development archive and seed a public repository from the scrubbed tree, or
 explicitly plan a complete history rewrite before changing repository visibility.
-No history was rewritten by this pass.
+That initial pass did not rewrite history; the October15 follow-up below supersedes
+this recommendation for the local and reachable remote history.
 
 `git archive HEAD` exports only the committed current tree, with no `.git` history,
 ignored artifacts, credentials or untracked research notes. A clean release can be
@@ -87,4 +88,41 @@ publication remain separate, unexecuted operations.
   `git archive --format=tar.gz --prefix=orbital-logistics/ --output=publication/orbital-logistics-source.tar.gz HEAD`.
 
 The source-release artifact is separate from `dist/`, which remains the static-site
-upload directory. Neither has been uploaded by this review.
+upload directory. The static site has not been uploaded. The rewritten source branch was pushed
+on October15 as described below.
+
+## October15 in-place history rewrite
+
+The owner authorized losing the old hashes to retain the existing repository.
+A private recovery copy was made outside the project, then git-filter-repo2.47.0
+rewrote all local branch histories and the app's standalone snapshot-tree refs in
+an isolated mirror. Temporary wrapper commits let the filter visit those trees;
+they were removed before the cleaned refs were installed in this checkout.
+
+- Replaced36 original historical raw log blobs, including all eight known private
+  context blobs. Retained all81 implementation commits and the public written
+  reviews/model headers.
+- Verified the current source tree hash was identical before/after the rewrite.
+  Untracked owner research notes were hashed before/after and retained unchanged.
+- Updated local refs atomically with expected-old-value checks, expired old
+  reflogs, pruned unreachable objects and verified that every original raw blob
+  was absent locally. The temporary rewrite mirror was removed.
+- GitHub had one private branch, zero forks and zero open/closed pull requests.
+  Replaced that branch using an explicit force-with-lease against its observed tip.
+  The repository is still private; no visibility, DNS or site deployment changed.
+- Build and all seven production entry/browser cases passed before the rewrite;
+  the rewrite changed no source files. Figure links and transcript styling are
+  documented in the entry evidence.
+
+**Remaining remote privacy boundary:** authenticated GitHub API lookups still
+retrieve two original raw blobs by their SHA after the force-push. The cleaned
+reachable history is in place, but server-side cached/unreachable data has not
+been purged. Keep visibility private until this is resolved. An unsent Support
+request and the original-object pointers are retained in the private recovery
+folder, not in this public source tree.
+
+[GitHub's removal procedure](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+explains that force-pushing does not necessarily remove cached views and that
+Support handles server-side garbage collection. The project's URLs can remain
+unchanged once that final host-side step is complete. Do not merge or restore
+old history from the private recovery copy into this cleaned branch.

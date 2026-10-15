@@ -28,9 +28,10 @@ retains its MIT notice. The deployed notices are in
 retain their individual licenses and are installed from the lockfiles.
 
 See the [publication review](docs/publication-review.md) before exposing the
-development repository's history. Raw review bodies have been removed from the
-current tree, but older commits contain unrelated private context. A clean source
-snapshot can be released while retaining that development history privately.
+repository. Raw review bodies have been scrubbed from all reachable local history
+and the private GitHub branch has been updated. GitHub still retains original
+objects by SHA, so host-side cache cleanup remains before changing visibility.
+A separate private recovery copy preserves the original development history.
 
 Choose one or two views from the header. Overview + Chase, Inertial + Rotating, and
 Top + Front share one simulation clock. Each pane has independent selection,

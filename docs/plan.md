@@ -13,7 +13,8 @@ linear article with a small inline animation, paired-frame
 and relief screenshots, and open simulation notes. The owner copy rewrite and
 proofreading pass are complete, with a prominent viewer action. Public source
 visibility and Cloudflare publishing remain pending; Unlicense/notices and the
-static prompt transcript are implemented. See the [publication review](publication-review.md),
+static prompt transcript are implemented. The October15 rewrite removes raw review
+context from reachable history; host-side GitHub cache cleanup remains. See the [publication review](publication-review.md),
 [entry evidence](design/landing/README.md) and [deployment plan](deployment/cloudflare-pages.md).
 Real-device mobile viewer work remains a later slice.
 The older milestone inventory below records the project's historical progression.
