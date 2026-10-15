@@ -7,8 +7,8 @@ single reading column is752px wide at desktop sizes; the animation is capped
 at560px. Space Grotesk and the viewer's palette keep the two pages related without
 copying the workspace's panel controls. The owner rewrote `index.html` on October14;
 a proofreading pass corrected spelling/grammar and narrowed the Hohmann claim.
-The header now pairs the author credit with a prominent native Open Viewer link,
-styled as a raised gold action. The article otherwise retains the owner's register.
+The header has a centered native Open Viewer link styled as a raised gold action.
+The author credit appears once at the foot of the article. The article otherwise retains the owner's register.
 
 The article is readable without JavaScript. Both viewer screenshots are lazy
 static WebP images with reserved dimensions, alt text and full-resolution links.
@@ -95,3 +95,21 @@ Surface retains its deliberate framing behavior and tracking retains its own
 locked target. The article revision does not change these controls.
 
 ![Exclusive camera panels](camera.png)
+
+## October15 figure links and transcript styling
+
+Each figure caption now links into its captured Cycler fleet presentation:
+`#set=aster-selene-cycler-fleet-service&view=frames` and `&view=relief`.
+These are two validated named entry presets, not a general physical-state importer.
+Both seek the admitted initial history to epoch20 and pause; sidebars start closed.
+Frames opens independent inertial/rotating Top views. Relief opens one rotating
+oblique view with field/grid enabled and gain1.8. Changing the hash between these
+views does not reload the physical session, and Play and other controls still work.
+Unknown view tokens and view presets on other sets are ignored. Choosing another
+set clears the entry preset. The presentation never changes the flight program.
+
+The transcript differentiates owner messages with rounded, bordered backgrounds;
+implementation summaries stay plain. All seven production entry/browser cases
+pass, including both figure links, resume, same-set switching without a new
+simulation revision and the existing no-JS/subdirectory checks. Desktop and narrow
+screenshots were inspected; the centered header action fits without overflow.

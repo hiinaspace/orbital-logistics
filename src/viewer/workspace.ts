@@ -24,6 +24,15 @@ import { viewportControls } from "./controls";
 import { createSceneSession } from "./session";
 import { esc, sampleVessel } from "./shared";
 import { createViewport, type Viewport } from "./viewport";
+type ArticleView = "frames" | "relief";
+const articleSet = "aster-selene-cycler-fleet-service";
+function articleView(params: URLSearchParams): ArticleView | undefined {
+  const view = params.get("view");
+  return params.get("set") === articleSet &&
+    (view === "frames" || view === "relief")
+    ? view
+    : undefined;
+}
 /** Mount owns one session and every foreground resource. Safe to dispose before
  * a pending fixture/worker reply, so a later landing page can leave the viewer. */
 export function mountWorkspace(host: HTMLElement) {
@@ -32,6 +41,7 @@ export function mountWorkspace(host: HTMLElement) {
     animation = 0;
   const number = (v: number) => v.toFixed(2);
   let active: Viewport;
+  let pendingArticleView: ArticleView | undefined;
   const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
     (host.querySelector("#" + id) ??
       active?.root.querySelector('[data-control="' + id + '"]'))! as T;
@@ -90,6 +100,9 @@ export function mountWorkspace(host: HTMLElement) {
     } else if (kind === "ready") {
       for (const pane of panes) pane.reset();
       if (panes.length === 2) applyPreset($<HTMLSelectElement>("layout").value);
+      const view = pendingArticleView;
+      pendingArticleView = undefined;
+      if (view) applyArticleView(view);
       publicationDirty = true;
       $<HTMLButtonElement>("play").disabled = false;
       syncSpeed();
@@ -237,6 +250,34 @@ export function mountWorkspace(host: HTMLElement) {
       second.fit();
     }
     activate(first);
+  }
+  function applyArticleView(view: ArticleView) {
+    // These two entry views reproduce the article figures; they do not restore
+    // simulation snapshots or turn presentation data into a physical target.
+    host.classList.add("library-closed", "inspector-closed");
+    $("library-toggle").setAttribute("aria-expanded", "false");
+    $("inspector-toggle").setAttribute("aria-expanded", "false");
+    const layout = view === "frames" ? "frames" : "single";
+    $<HTMLSelectElement>("layout").value = layout;
+    applyPreset(layout);
+    for (const pane of panes) {
+      pane.track("off");
+      pane.selected = "Wayfarer";
+      pane.setCamera("top");
+      pane.setPotentialDisplay({
+        field: view === "relief",
+        relief: view === "relief",
+        gain: 1.8,
+      });
+      pane.resize();
+      pane.fit();
+    }
+    if (view === "relief") {
+      panes[0].frame = "rotating";
+      panes[0].fit();
+    }
+    activate(panes[0]);
+    session.seek(20);
   }
   function bindDivider(divider: HTMLElement) {
     const set = (value: number) => {
@@ -862,10 +903,13 @@ export function mountWorkspace(host: HTMLElement) {
       .querySelectorAll<HTMLButtonElement>("[data-set]")
       .forEach((b) => (b.onclick = () => openSet(b.dataset.set as ExhibitId)));
   }
-  function openSet(id: ExhibitId) {
+  function openSet(id: ExhibitId, view?: ArticleView) {
     const entry = catalog.find((s) => s.id === id)!;
+    pendingArticleView = id === articleSet ? view : undefined;
     $("set-title").textContent = entry.family + " / " + entry.title;
-    history.replaceState(null, "", "#set=" + encodeURIComponent(id));
+    const params = new URLSearchParams({ set: id });
+    if (pendingArticleView) params.set("view", pendingArticleView);
+    history.replaceState(null, "", "#" + params.toString());
     $("live").hidden = !entry.continuous;
     host.querySelector<HTMLElement>(".replay")!.hidden = entry.continuous;
     void session.loadSet(id);
@@ -1250,23 +1294,32 @@ export function mountWorkspace(host: HTMLElement) {
       planning: session.traffic?.stats.planningPending ?? 0,
     }),
   });
-  const requested = new URLSearchParams(location.hash.slice(1)).get("set");
+  const initialParams = new URLSearchParams(location.hash.slice(1));
+  const requested = initialParams.get("set");
   if (requested && !catalog.some((s) => s.id === requested)) {
     $("load-status").textContent =
       "This set has been retired. Choose a set from the library.";
     renderCatalog();
-  } else openSet((requested as ExhibitId) || defaultExhibit);
+  } else
+    openSet(
+      (requested as ExhibitId) || defaultExhibit,
+      articleView(initialParams),
+    );
   window.addEventListener(
     "hashchange",
     () => {
-      const id =
-        new URLSearchParams(location.hash.slice(1)).get("set") ||
-        defaultExhibit;
+      const params = new URLSearchParams(location.hash.slice(1));
+      const id = params.get("set") || defaultExhibit;
       if (!catalog.some((s) => s.id === id)) {
         location.reload();
         return;
       }
-      if (id !== session.currentSet) openSet(id as ExhibitId);
+      const view = articleView(params);
+      if (id !== session.currentSet) openSet(id as ExhibitId, view);
+      else if (view) {
+        if (session.ready) applyArticleView(view);
+        else pendingArticleView = view;
+      }
     },
     { signal: lifetime.signal },
   );

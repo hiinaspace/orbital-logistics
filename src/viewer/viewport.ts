@@ -403,6 +403,31 @@ export function createViewport(
             : session.run.extent)) *
         (frame === "inertial" || frame === "rotating" ? 1 : 1.8));
   }
+  function setPotentialDisplay(options: {
+    field: boolean;
+    relief: boolean;
+    gain?: number;
+  }) {
+    layers.field = hasField() && options.field;
+    layers.relief = hasField() && options.relief;
+    if (layers.relief) {
+      layers.grid = true;
+      gridStrength = 0.55;
+      $<HTMLInputElement>("grid-strength").value = String(gridStrength);
+      $("grid-strength-value").textContent = "55%";
+      setCamera("oblique");
+    }
+    reliefGain = Math.max(0, Math.min(3, options.gain ?? 1));
+    for (const key of ["field", "relief", "grid"] as const)
+      $<HTMLInputElement>("layer-" + key).checked = layers[key];
+    $<HTMLInputElement>("relief-height").value = String(reliefGain);
+    $("relief-value").textContent =
+      reliefGain.toFixed(2).replace(/0+$/, "").replace(/\.$/, "") + "×";
+    cleared = false;
+    $("clear-view").setAttribute("aria-pressed", "false");
+    actions.changed();
+    if (session.ready) updatePanels();
+  }
   function path(
     points: [number, number][],
     color: string,
@@ -2108,6 +2133,7 @@ export function createViewport(
     fit,
     track,
     setCamera,
+    setPotentialDisplay,
     select,
     reset,
     resize,

@@ -186,6 +186,89 @@ test("camera panels select in one click, use native radio keys and remain indepe
   ).toBe(0);
 });
 
+test("article figure links restore the captured presentation and remain interactive", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1460, height: 960 });
+  for (const [heading, view] of [
+    ["Simultaneous views", "frames"],
+    ["The rubber sheet analogy", "relief"],
+  ] as const) {
+    await page.goto("/");
+    await page
+      .getByRole("heading", { name: heading, exact: true })
+      .locator("..")
+      .getByRole("link", { name: "Open this view" })
+      .click();
+    await expect
+      .poll(
+        async () =>
+          JSON.parse((await page.locator("#state-json").textContent()) || "{}")
+            .ready,
+        { timeout: 60000 },
+      )
+      .toBe(true);
+    const state = () =>
+      page
+        .locator("#state-json")
+        .textContent()
+        .then((t) => JSON.parse(t || "{}"));
+    await expect.poll(async () => (await state()).t).toBe(20);
+    expect((await state()).playing).toBe(false);
+    expect((await state()).views).toHaveLength(view === "frames" ? 2 : 1);
+    await expect(
+      page.getByRole("button", { name: "Toggle set library" }),
+    ).toHaveAttribute("aria-expanded", "false");
+    await expect(
+      page.getByRole("button", { name: "Toggle inspector", exact: true }),
+    ).toHaveAttribute("aria-expanded", "false");
+    if (view === "frames") {
+      expect((await state()).views.map((p: any) => p.frame)).toEqual([
+        "inertial",
+        "rotating",
+      ]);
+      expect(
+        (await state()).views.every(
+          (p: any) => p.camera.preset === "top" && !p.layers.relief,
+        ),
+      ).toBe(true);
+    } else {
+      await expect
+        .poll(async () => (await state()).views[0].field.mode)
+        .toBe("relief");
+      const pane = (await state()).views[0];
+      expect(pane.frame).toBe("rotating");
+      expect(pane.camera.preset).toBe("oblique");
+      expect(pane.reliefGain).toBe(1.8);
+      expect(pane.layers.field).toBe(true);
+    }
+    await page.getByRole("button", { name: "Play", exact: true }).click();
+    await expect.poll(async () => (await state()).t).toBeGreaterThan(20);
+  }
+  const revision = JSON.parse(
+    (await page.locator("#state-json").textContent()) || "{}",
+  ).revision;
+  await page.evaluate(() => {
+    location.hash = "set=aster-selene-cycler-fleet-service&view=frames";
+  });
+  await expect(page.locator(".scene")).toHaveCount(2);
+  await expect
+    .poll(
+      async () =>
+        JSON.parse((await page.locator("#state-json").textContent()) || "{}").t,
+    )
+    .toBe(20);
+  const state = JSON.parse(
+    (await page.locator("#state-json").textContent()) || "{}",
+  );
+  expect(state.revision).toBe(revision);
+  expect(
+    state.views.every(
+      (p: any) => !p.layers.relief && p.camera.preset === "top",
+    ),
+  ).toBe(true);
+});
+
 test("public transcript is complete static prose with working anchors and a Markdown export", async ({
   browser,
   request,

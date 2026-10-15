@@ -35,7 +35,19 @@
 }
 .exchange blockquote {
   margin: 0 0 24px;
+  padding: 18px 22px;
+  border: 1px solid #91a5a73b;
+  border-radius: 14px;
+  background: #1a282f;
   color: #d9e0d9;
+}
+.exchange blockquote p:last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 520px) {
+  .exchange blockquote {
+    padding: 15px 16px;
+  }
 }
 .exchange blockquote p {
   white-space: pre-wrap;

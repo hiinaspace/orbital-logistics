@@ -35,3 +35,8 @@ screenshots were inspected. The page does not load the viewer, workers or fixtur
 ![Transcript index](desktop.png)
 
 ![Transcript at phone width](mobile.png)
+
+October15: owner messages have a rounded panel background and border to distinguish
+them from the plain condensed Codex responses. The content and summaries are unchanged.
+
+![Owner messages and summaries](conversation.png)
