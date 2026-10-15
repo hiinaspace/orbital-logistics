@@ -186,6 +186,56 @@ test("camera panels select in one click, use native radio keys and remain indepe
   ).toBe(0);
 });
 
+test("public transcript is complete static prose with working anchors and a Markdown export", async ({
+  browser,
+  request,
+}) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: { width: 360, height: 800 },
+  });
+  const page = await context.newPage();
+  const requests: string[] = [];
+  page.on("request", (r) => requests.push(r.url()));
+  try {
+    await page.goto("/build-log/");
+    await expect(
+      page.getByRole("heading", { name: "Prompt source code", exact: true }),
+    ).toBeVisible();
+    await expect(page.locator(".exchange")).toHaveCount(105);
+    await page
+      .getByRole("navigation", { name: "Transcript chapters" })
+      .getByRole("link", {
+        name: "Licensing and the prompt source code",
+        exact: true,
+      })
+      .click();
+    await expect(page).toHaveURL(/#publication$/);
+    await expect(page.locator("#prompt-105")).toContainText("simon willison");
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBeLessThanOrEqual(360);
+    expect(
+      requests.some((url) => /\.js(?:\?|$)|\.json(?:\?|$)/.test(url)),
+    ).toBe(false);
+    const markdown = await request.get("/build-log.md");
+    expect(markdown.ok()).toBe(true);
+    const text = await markdown.text();
+    expect(text).toContain("### #001 — Hiina");
+    expect(text).toContain("### #105 — Hiina");
+    expect(text).toContain("Codex · condensed");
+    expect(text).not.toMatch(
+      /AGENTS\.md instructions|ambient-ui-state|MEMORY_SUMMARY|Task Group:|\/home\//,
+    );
+    const notices = await request.get("/THIRD-PARTY-NOTICES.txt");
+    expect(notices.ok()).toBe(true);
+    expect(await notices.text()).toContain("SIL OPEN FONT LICENSE");
+    expect(await notices.text()).toContain("MIT License");
+  } finally {
+    await context.close();
+  }
+});
+
 test("built pages and lazy viewer assets work under a plain static subdirectory", async ({
   browser,
 }) => {
@@ -210,6 +260,8 @@ test("built pages and lazy viewer assets work under a plain static subdirectory"
         ".json": "application/json",
         ".svg": "image/svg+xml",
         ".webp": "image/webp",
+        ".md": "text/markdown",
+        ".txt": "text/plain",
         ".woff2": "font/woff2",
       };
       res.setHeader(
@@ -251,6 +303,16 @@ test("built pages and lazy viewer assets work under a plain static subdirectory"
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "Orbital Logistics",
     );
+    await page
+      .getByRole("link", { name: "prompt source code", exact: true })
+      .click();
+    await expect(page).toHaveURL(/\/collection\/build-log\/$/);
+    await expect(page.locator(".exchange")).toHaveCount(105);
+    const markdown = await page.request.get(
+      `http://127.0.0.1:${address.port}/collection/build-log.md`,
+    );
+    expect(markdown.ok()).toBe(true);
+    expect(await markdown.text()).toContain("### #105 — Hiina");
     expect(errors).toEqual([]);
   } finally {
     await page.close();

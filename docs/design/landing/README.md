@@ -70,8 +70,12 @@ change layout height. Resizing does not restart simulation because there is none
   production entry cases passed again. Desktop1440px and narrow360px checks
   found no overflow; keyboard Enter on Open Viewer entered `/viewer/`. Screenshots
   below reflect the owner copy and button.
-- The linked GitHub repository is currently private with no license; public source
-  availability/licensing remains an owner decision before publication.
+- The later [publication review](../../publication-review.md) adds the Unlicense
+  and deployable third-party notices. Source visibility remains private pending a
+  clean-history release; copied private context in old raw review logs must not be
+  exposed by changing visibility on the existing development history.
+- The implementation paragraph links to `/build-log/`, a separate static transcript
+  entry with105 owner exchanges and retrospective summaries.
 - The previous scaffold's21-case workspace/entry validation remains historical;
   this revision changes only the article, its illustrations and entry assertions.
 

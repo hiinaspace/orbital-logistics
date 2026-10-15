@@ -1,0 +1,56 @@
+.back-link {
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+.chapter-index {
+  margin: 34px 0 50px;
+}
+.chapter-index h2 {
+  margin-top: 0;
+}
+.chapter-index ol {
+  padding-left: 24px;
+}
+.chapter-index li {
+  margin-bottom: 7px;
+}
+.chapter-index span {
+  color: var(--muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.exchange {
+  padding: 24px 0 28px;
+  border-bottom: 1px solid #91a5a72c;
+  scroll-margin-top: 24px;
+}
+.exchange h3 {
+  margin: 0 0 18px;
+  font-size: 15px;
+}
+.exchange h3 a {
+  margin-right: 10px;
+  font-weight: 400;
+  color: var(--muted);
+}
+.exchange blockquote {
+  margin: 0 0 24px;
+  color: #d9e0d9;
+}
+.exchange blockquote p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.summary-label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.editorial-note {
+  color: var(--muted);
+  font-size: 13px;
+  font-style: italic;
+}
+.exchange > p:last-child {
+  margin-bottom: 0;
+}

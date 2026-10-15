@@ -15,6 +15,23 @@ continuous freight networks, staged expeditions, cycler fleets, atmospheric laun
 a quiet lunar loop, inclined transfer, halo insertion and maintained Lissajous motion.
 Superseded studies remain in Git rather than the public library.
 
+The root page introduces the project; `/viewer/` opens the workspace and
+`/build-log/` contains the owner messages and condensed implementation history.
+All three are static Vite multi-page entries. `npm run dev` watches local edits.
+
+## License and publication
+
+Original project code is released under the [Unlicense](LICENSE). Third-party
+fonts retain their SIL Open Font License notices; Vite's generated browser helper
+retains its MIT notice. The deployed notices are in
+[THIRD-PARTY-NOTICES.txt](public/THIRD-PARTY-NOTICES.txt). Build/test dependencies
+retain their individual licenses and are installed from the lockfiles.
+
+See the [publication review](docs/publication-review.md) before exposing the
+development repository's history. Raw review bodies have been removed from the
+current tree, but older commits contain unrelated private context. A clean source
+snapshot can be released while retaining that development history privately.
+
 Choose one or two views from the header. Overview + Chase, Inertial + Rotating, and
 Top + Front share one simulation clock. Each pane has independent selection,
 reference frame, camera and Display settings; click or focus a pane to make it active.
@@ -106,14 +123,15 @@ the 3D engine; [lunar freight evidence](docs/evidence/lunar-freight.md)
 covers the initial lunar set; [bounded propulsion evidence](docs/evidence/bounded-propulsion.md)
 covers the powered trips, acceleration caps and deterministic fuel/depletion model. [Prototype evidence](docs/evidence/model-set.md) records the original
 viewer checks. [Tactical plan](docs/plan.md) preserves the earlier
-editor/puzzle milestones as history. The main application now opens the viewer;
-the previous CoaDE-style editor is recoverable at `c61325a` in Git history. Its pure
+editor/puzzle milestones as history. The root now introduces the project and
+`/viewer/` opens the workspace. The previous CoaDE-style editor is retained in the
+private development history. Its pure
 simulation/planning helpers and regression checks remain available for fixture authoring.
 
 The [recovered Fable consultation](docs/design/orbital-model-set/README.md) and
 [Codex synthesis](docs/design/orbital-model-set/synthesis.md) explain the change in
 product direction. Earlier [topology](docs/design/topology-study/proposal.md) and
 [periodic-service](docs/design/periodic-transfer/proposal.md) studies remain reference
-material. No remote repository or deployment is configured.
+material. The upstream repository remains private; production deployment is pending.
 
 Published hobby identity: Hiina <hiina@hiina.space>.

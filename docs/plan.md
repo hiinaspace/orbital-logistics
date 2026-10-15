@@ -12,7 +12,8 @@ separate Vite multi-page entry (`/`, with the workspace at `/viewer/`). It uses 
 linear article with a small inline animation, paired-frame
 and relief screenshots, and open simulation notes. The owner copy rewrite and
 proofreading pass are complete, with a prominent viewer action. Public source
-visibility/licensing and Cloudflare publishing remain pending. See
+visibility and Cloudflare publishing remain pending; Unlicense/notices and the
+static prompt transcript are implemented. See the [publication review](publication-review.md),
 [entry evidence](design/landing/README.md) and [deployment plan](deployment/cloudflare-pages.md).
 Real-device mobile viewer work remains a later slice.
 The older milestone inventory below records the project's historical progression.

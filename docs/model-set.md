@@ -16,7 +16,10 @@ The landing imports no viewer, simulation workers or heavy exhibit assets. See
 [entry/loading evidence](design/landing/README.md) and the read-only
 [Cloudflare Pages plan](deployment/cloudflare-pages.md). The owner has rewritten
 the article; proofreading and the viewer action button are complete. Public source
-visibility/licensing and production deployment remain pending.
+visibility and production deployment remain pending. The project now uses the
+Unlicense, retains third-party notices and includes a static build transcript at
+`/build-log/`. See the [publication review](publication-review.md) before exposing
+the development history.
 
 The October13 viewer polish implements a docked11-set library, independent paired
 views and one shared timeline player. `viewer/session.ts` owns the only clock,

@@ -9,5 +9,11 @@
   Cache-Control: no-cache
 /viewer/index.html
   Cache-Control: no-cache
+/build-log/
+  Cache-Control: no-cache
+/build-log/index.html
+  Cache-Control: no-cache
+/build-log.md
+  Cache-Control: no-cache
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
