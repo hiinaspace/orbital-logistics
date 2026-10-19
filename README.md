@@ -1,5 +1,16 @@
 # Orbital Logistics
 
+A web-based viewer for watching spaceship orbital maneuvers at a small scale, i.e. a
+model train set but in space. Check out the viewer and some more explanation at:
+
+https://orbital.hiina.space/
+
+This repo is technically the source code. However, it's entirely AI-generated.
+If you're a human hoping to learn something from it, you may be better served
+reading the "prompt source" at https://orbital.hiina.space/build-log/ .
+
+## AI-generated readme below
+
 A schematic orbital model-set viewer: watch fictional spacecraft carry freight between
 stations, scrub their history, and explore the same motion in different reference frames.
 
